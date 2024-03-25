@@ -16,6 +16,7 @@ public class Chat extends UnicastRemoteObject implements ChatInterface{
     }
     public String getName() throws RemoteException {
         return this.Name;
+
     }
     public void setPlayer(ChatInterface c) throws RemoteException, Exception {
         if (i < PlayersNo) {
