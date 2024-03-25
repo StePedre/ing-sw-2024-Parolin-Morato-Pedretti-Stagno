@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Model;
 
-public class Resource {
+public enum Resource {
+    PIUMA,POZIONE,PERGAMENA,VOLPE,FUNGO,FOGLIA,INSETTO;
 }
