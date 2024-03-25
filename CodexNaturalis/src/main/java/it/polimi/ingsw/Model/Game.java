@@ -19,6 +19,7 @@ public class Game {
         this.chat = chat;
         this.chatPrivate = chatPrivate;
         this.commonObj = commonObj;
+        
     }
     public void start(){
 

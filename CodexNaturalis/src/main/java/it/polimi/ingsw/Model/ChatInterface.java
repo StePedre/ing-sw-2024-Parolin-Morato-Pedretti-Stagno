@@ -11,5 +11,4 @@ public interface ChatInterface extends Remote {
     public ChatInterface[] getPlayersList() throws RemoteException;
 
     // show previous method
-
 }
