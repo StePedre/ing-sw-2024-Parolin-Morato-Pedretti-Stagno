@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class Chat extends UnicastRemoteObject implements ChatInterface{
     private String Name;                   //cosa va private?
     private int PlayersNo;
-    public ChatInterface[] playersList;
+    private ChatInterface[] playersList;
     private int i = 0;
 
     public Chat(String Name, int PlayersNo) throws RemoteException{

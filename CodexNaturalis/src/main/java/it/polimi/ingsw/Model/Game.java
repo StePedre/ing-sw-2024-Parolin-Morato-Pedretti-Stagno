@@ -40,9 +40,9 @@ public class Game {
     // qui per ogni player nell'array creo una chat per ogni player successivo nell'array (così non ho doppioni)
     public void createPrivateChats{
         for (int i = 0; i < (numPlayer-1); i++) {
-            String name1 = players.get(i).getNickname;
+            String name1 = players.get(i).getNickname();
             for(int j = i+1; j<numPlayer; j++){
-                String name2 = players.get(j).getNickname;
+                String name2 = players.get(j).getNickname();
                 String name = name1 + " and " + name2 + " Private Chat";
                 chatPrivate[i] = new Chat(name, 2);
             }
