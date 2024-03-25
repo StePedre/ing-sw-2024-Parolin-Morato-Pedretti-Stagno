@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Model;
+import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
 public abstract class Card {
     private int id;
