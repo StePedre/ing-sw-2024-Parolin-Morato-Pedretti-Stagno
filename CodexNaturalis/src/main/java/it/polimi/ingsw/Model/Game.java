@@ -9,10 +9,10 @@ public class Game {
     private int numPlayer;
     private Chat chat;
     private Chat[] chatPrivate;
-    private ObjCard[] commonObj;
+    private ObjectiveCard[] commonObj;
     private Player firstPlayer;
     // constructor
-    public Game(ArrayList<Player> players, int numPlayer, Deck[] decks, ObjCard[] commonObj, Player firstPlayer){
+    public Game(ArrayList<Player> players, int numPlayer, Deck[] decks, ObjectiveCard[] commonObj, Player firstPlayer){
         this.players = players;
         this.numPlayer = numPlayer;
         this.decks = decks;

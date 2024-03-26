@@ -1,15 +1,15 @@
 package it.polimi.ingsw.Model.ScoreRules;
 
 import it.polimi.ingsw.Model.PlayerGround;
-import it.polimi.ingsw.Model.Color;
+import it.polimi.ingsw.Model.Resource;
 
 public class CompositionRule implements ScoreRule {
 
     private final int[] offSets;
-    private final Color[] colors;
+    private final Resource[] colors;
     private final int numberOfPointsPerComposition;
 
-    public CompositionRule(int[] offSets, Color[] colors, int numberOfPointsPerComposition){
+    public CompositionRule(int[] offSets, Resource[] colors, int numberOfPointsPerComposition){
         this.offSets = offSets;
         this.colors = colors;
         this.numberOfPointsPerComposition = numberOfPointsPerComposition;

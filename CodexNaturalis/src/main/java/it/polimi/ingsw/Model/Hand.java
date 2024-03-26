@@ -2,14 +2,14 @@ package it.polimi.ingsw.Model;
 
 public class Hand {
     private Card cards[];
-    private ObjCard secretObj;
+    private ObjectiveCard secretObj;
     // used as max size of array of cards in hand
     private static final int maxNumberOfCards = 3;
 
     // constructor with no parameters
     public Hand() {
         this.cards = new Card[maxNumberOfCards];
-        this.secretObj = new ObjCard;
+        this.secretObj = new ObjectiveCard;
     }
 
     // constructor with cards
@@ -20,11 +20,11 @@ public class Hand {
         for (int i = 0; i < maxNumberOfCards; i++) {
             this.cards[i] = cards[i];
         }
-        this.secretObj = new ObjCard;
+        this.secretObj = new ObjectiveCard;
     }
 
     // setter
-    public void setSecretObj(ObjCard secretObj) {
+    public void setSecretObj(ObjectiveCard secretObj) {
         this.secretObj = secretObj;
     }
 
@@ -33,7 +33,7 @@ public class Hand {
         return this.cards[position];
     }
 
-    public ObjCard getObjCard() {
+    public ObjectiveCard getObjCard() {
         return this.secretObj;
     }
 
@@ -46,7 +46,7 @@ public class Hand {
 
     // choose the secret objective card between two different cards
     // used only once for each player at the beginning of the game
-    public void selectObj(ObjCard objective) {
+    public void selectObj(ObjectiveCard objective) {
 
     }
 

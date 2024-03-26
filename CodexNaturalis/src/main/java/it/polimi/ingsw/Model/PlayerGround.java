@@ -20,7 +20,7 @@ public class PlayerGround {
         cardPosition = new HashMap<>();
         ground = new Card[82][82];
 
-        availablePositions = new Set<>();
+        availablePositions = new HashSet<>();
         initializePosition();
 
         totalResources = new HashMap<>();
