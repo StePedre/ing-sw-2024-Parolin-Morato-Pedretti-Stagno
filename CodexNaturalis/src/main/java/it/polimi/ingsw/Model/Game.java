@@ -9,12 +9,15 @@ public class Game {
     private int numPlayer;
     private Chat chat;
     private Chat[] chatPrivate;
-    private ObjCard commonObj[];
+    private ObjCard[] commonObj;
     private Player firstPlayer;
     // constructor
-    public Game(ArrayList<Player> players, int numPlayer) {
+    public Game(ArrayList<Player> players, int numPlayer, Deck[] decks, ObjCard[] commonObj, Player firstPlayer){
         this.players = players;
         this.numPlayer = numPlayer;
+        this.decks = decks;
+        this.commonObj = commonObj;
+        this.firstPlayer = firstPlayer;
     }
     public void start(){
         // createGlobalChat();
