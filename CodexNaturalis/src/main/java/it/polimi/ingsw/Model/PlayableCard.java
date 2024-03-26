@@ -30,4 +30,9 @@ public class PlayableCard extends Card{
     public ArrayList<Resource> getRequirements() {
         return requirements;
     }
+
+    public PlayableCard clone(){
+        PlayableCard card = new PlayableCard(this.getId(),this.getRule(),this.getCorners(),this.getBackCorners(),this.points,this.requirements,this.backResource);
+        return card;
+    }
 }

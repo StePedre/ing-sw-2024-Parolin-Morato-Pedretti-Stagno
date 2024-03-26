@@ -37,4 +37,7 @@ public abstract class Card {
     public void flipCard(){
         isFlipped=!isFlipped;
     }
+    public boolean equals(Card card){
+        return this.id==card.id;
+    }
 }
