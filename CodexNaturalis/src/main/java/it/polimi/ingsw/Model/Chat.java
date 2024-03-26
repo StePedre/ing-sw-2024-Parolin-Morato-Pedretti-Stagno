@@ -18,11 +18,11 @@ public class Chat extends UnicastRemoteObject implements ChatInterface{
         return this.Name;
 
     }
-    public void setPlayer(ChatInterface c) throws RemoteException, Exception {
+    public void setPlayer(ChatInterface c) throws RemoteException, FullChatException {
         if (i < PlayersNo) {
             playersList[i] = c;
             i++;
-        } else throw new Exception("Chat is full");
+        } else throw new FullChatException("Chat is full");
     }
     public ChatInterface getPlayer(int i) throws RemoteException{
         return playersList[i];

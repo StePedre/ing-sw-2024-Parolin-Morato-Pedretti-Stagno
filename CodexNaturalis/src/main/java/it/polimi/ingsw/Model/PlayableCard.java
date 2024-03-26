@@ -1,4 +1,6 @@
 package it.polimi.ingsw.Model;
+import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
+
 import java.util.ArrayList;
 
 
@@ -7,12 +9,12 @@ public class PlayableCard extends Card{
     private ArrayList<Resource> requirements;
     private int points;
     private Resource backResource;
-    public PlayableCard(int id, ScoreRule rule, Corner[] corners, Corner[] backCorners,Color color,int point,ArrayList<Resource> req, Resource backResource) {
+    public PlayableCard(int id, ScoreRule rule, Corner[] corners, Corner[] backCorners, Color color, int point, ArrayList<Resource> req, Resource backResource) {
         super(id, rule, corners, backCorners);
         this.color=color;
         this.points=point;
         this.requirements=req;
-        this.backResource=backResource
+        this.backResource=backResource;
     }
 
     public Color getColor() {
