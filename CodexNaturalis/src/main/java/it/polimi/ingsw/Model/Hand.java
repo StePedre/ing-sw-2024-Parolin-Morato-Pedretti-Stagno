@@ -4,7 +4,7 @@ public class Hand {
     private Card cards[];
     private ObjCard secretObj;
     // used as max size of array of cards in hand
-    private static final maxNumberOfCards = 3;
+    private static final int maxNumberOfCards = 3;
 
     // constructor with no parameters
     public Hand() {
