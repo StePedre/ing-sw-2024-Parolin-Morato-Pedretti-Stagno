@@ -7,12 +7,15 @@ public abstract class Card {
     private boolean isFlipped;
     private Corner[] corners;
     private Corner[] backCorners;
-    public Card(int id, ScoreRule rule, Corner[] corners, Corner[] backCorners){
+
+    private Resource color;
+    public Card(int id, ScoreRule rule, Corner[] corners, Corner[] backCorners, Resource color){
         this.id=id;
         this.rule=rule;
         this.isFlipped=false;
         this.corners=corners;
         this.backCorners=backCorners;
+        this.color = color;
     }
 
     public int getId() {
@@ -33,6 +36,10 @@ public abstract class Card {
 
     public ScoreRule getRule() {
         return rule;
+    }
+
+    public Resource getColor(){
+        return color;
     }
     public void flipCard(){
         isFlipped=!isFlipped;
