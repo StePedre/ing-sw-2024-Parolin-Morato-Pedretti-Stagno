@@ -16,7 +16,10 @@ public class Chat extends UnicastRemoteObject implements ChatInterface{
     }
     public String getName() throws RemoteException {
         return this.Name;
+    }
 
+    public int getPlayersNo() throws RemoteException {
+        return PlayersNo;
     }
     public void setPlayer(ChatInterface c) throws RemoteException, FullChatException {
         if (i < PlayersNo) {
@@ -30,6 +33,7 @@ public class Chat extends UnicastRemoteObject implements ChatInterface{
     public ChatInterface[] getPlayersList() throws RemoteException{
         return playersList;
     }
+
     public void send(String msg) throws RemoteException{
         System.out.println(msg);
     }

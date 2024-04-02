@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model;
 
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class Player {
@@ -64,16 +65,16 @@ public class Player {
     }
 
     // send a message to the public chat
-    public void sendMsg(){
+    public void sendMsg() throws RemoteException {
         String messageToSend;
         messageToSend = getMessage();
-        game.getChat().send();
+        game.getChat().send(messageToSend);
     }
 
     // send a message to a specified player using the private chat
-    public void sendMsg(Player player) {
+    public void sendMsg(Player player) throws RemoteException {
         String messageToSend;
         messageToSend = getMessage();
-        game.getChat(player).send();
+        game.getPrivateChat(player).send(messageToSend);
     }
 }

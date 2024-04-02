@@ -9,6 +9,7 @@ public interface ChatInterface extends Remote {
     public void setPlayer(ChatInterface c)throws RemoteException,FullChatException; //controllare eccezioni
     public ChatInterface getPlayer(int i) throws RemoteException;
     public ChatInterface[] getPlayersList() throws RemoteException;
+    public int getPlayersNo() throws RemoteException;
 
     // show previous method
 }
