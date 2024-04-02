@@ -1,14 +1,16 @@
 package it.polimi.ingsw.Model;
 
+import java.util.Scanner;
+
 public class Player {
     private String nickname;
     private Hand hand;
     private PlayerGround playerGround;
     private Game game;
+    private static final int maxLengthMsg = 255;
     // maximum length of the message -- 255 is still a temporary value
-    private static final maxLengthMsg = 255;
+    private String message;
     // string which will contain the message the player want to send in chat
-    private string message[maxLengthMsg];
 
     // constructor of player with name (which is the nickname)
     // it doesn't make sense to create a player without his nickname
@@ -17,7 +19,7 @@ public class Player {
         this.nickname = name;
         this.hand = new Hand();
         this.playerGround = new PlayerGround();
-        this.game = new Game();
+        this.game = null;
     }
 
     // setter
@@ -50,15 +52,28 @@ public class Player {
         return this.game;
     }
 
+    // use the standard input (keyboard) to get the message to send in chat
+    // if the message is too long only the admissible chars will be sent (message will be cut)
+    public String getMessage() {
+        Scanner sc = new Scanner(System.in);
+        message = sc.next();
+        if (message.length() > maxLengthMsg) {
+            message = message.substring(0, maxLengthMsg);
+        }
+        return message;
+    }
+
     // send a message to the public chat
     public void sendMsg(){
-
-
+        String messageToSend;
+        messageToSend = getMessage();
+        game.getChat().send();
     }
 
     // send a message to a specified player using the private chat
     public void sendMsg(Player player) {
-
-
+        String messageToSend;
+        messageToSend = getMessage();
+        game.getChat(player).send();
     }
 }

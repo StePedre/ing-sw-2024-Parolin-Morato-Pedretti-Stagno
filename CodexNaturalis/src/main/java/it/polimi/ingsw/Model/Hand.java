@@ -3,8 +3,8 @@ package it.polimi.ingsw.Model;
 public class Hand {
     private Card cards[];
     private ObjectiveCard secretObj;
-    // used as max size of array of cards in hand
     private static final int maxNumberOfCards = 3;
+    // used as max size of array of cards in hand
 
     // constructor with no parameters
     public Hand() {
@@ -47,13 +47,13 @@ public class Hand {
     // choose the secret objective card between two different cards
     // used only once for each player at the beginning of the game
     public void selectObj(ObjectiveCard objective) {
-
+        this.secretObj = objective;
     }
 
     // returns true if, after a card is being placed, the player decides to draw from a deck
     // (don't care at this point if the player will draw from the resources deck or the gold one)
     // returns false if, after a card is being placed, the player decides to pick a card between the four already revealed next to the decks
-    // (don't care at this point if the player will pick a resourse or a gold car)
+    // (don't care at this point if the player will pick a resource or a gold car)
     public boolean drawCard(Deck deck) {
 
     }
