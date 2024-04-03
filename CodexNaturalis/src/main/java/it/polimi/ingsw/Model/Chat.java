@@ -4,15 +4,15 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
 public class Chat extends UnicastRemoteObject implements ChatInterface{
-    private String Name;                   //cosa va private?
+    private String Name;
     private int PlayersNo;
-    private ChatInterface[] playersList;
+    private Player[] playersList;
     private int i = 0;
 
     public Chat(String Name, int PlayersNo) throws RemoteException{
         this.Name = Name;
         this.PlayersNo = PlayersNo;
-        this.playersList = new ChatInterface[PlayersNo];
+        this.playersList = new Player[PlayersNo];
     }
     public String getName() throws RemoteException {
         return this.Name;
@@ -21,22 +21,23 @@ public class Chat extends UnicastRemoteObject implements ChatInterface{
     public int getPlayersNo() throws RemoteException {
         return PlayersNo;
     }
-    public void setPlayer(ChatInterface c) throws RemoteException, FullChatException {
+    public void setPlayer(Player p) throws RemoteException, FullChatException {
         if (i < PlayersNo) {
-            playersList[i] = c;
+            playersList[i] = p;
             i++;
         } else throw new FullChatException("Chat is full");
     }
-    public ChatInterface getPlayer(int i) throws RemoteException{
+    public Player getPlayer(int i) throws RemoteException{
         return playersList[i];
     }
-    public ChatInterface[] getPlayersList() throws RemoteException{
+    public Player[] getPlayersList() throws RemoteException{
         return playersList;
     }
 
     public void send(String msg) throws RemoteException{
         System.out.println(msg);
     }
+
     public void showPrevious() throws RemoteException{
         // mostra i messaggi -> hashset?
     }

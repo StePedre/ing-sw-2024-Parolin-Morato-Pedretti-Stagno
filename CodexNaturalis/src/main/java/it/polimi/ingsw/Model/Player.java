@@ -72,9 +72,9 @@ public class Player {
     }
 
     // send a message to a specified player using the private chat
-    public void sendMsg(Player player) throws RemoteException {
+    public void sendMsg(Player player) throws RemoteException, NotExistingChatException {
         String messageToSend;
         messageToSend = getMessage();
-        game.getPrivateChat(player).send(messageToSend);
+        game.getPrivateChat(this, player).send(messageToSend);
     }
 }
