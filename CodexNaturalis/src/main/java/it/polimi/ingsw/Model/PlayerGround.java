@@ -82,7 +82,7 @@ public class PlayerGround {
             throw new InvalidPositionException("Invalid position");
         }
         if(!starterCard.getFlip()){
-            //TO DO
+            updateMultipleResources(starterCard.getBackRes());
         }
         addCard(starterCard, position);
 
@@ -93,7 +93,22 @@ public class PlayerGround {
     }
 
     private boolean checkRequirements(PlayableCard card){
-        //TO DO
+        if(card.getRequirements() == null){
+            return true;
+        }
+        // If requirements are not null, iterates through the requirements of the card
+        // and compare the value to that of the resource inside totalResources
+        for (Map.Entry<Resource, Integer> resource : card.getRequirements().entrySet()) {
+            Resource key = resource.getKey();
+            Integer value = resource.getValue();
+
+            if (totalResources.containsKey(key)) {
+                Integer value2 = totalResources.get(key);
+                if (value > value2) {
+                    return false;
+                }
+            }
+    }
         return true;
     }
 
@@ -148,6 +163,12 @@ public class PlayerGround {
             totalResources.put(resource, value);
         }
 
+    }
+
+    private void updateMultipleResources(ArrayList<Resource> resources){
+        resources.forEach(r ->{
+            updateSingleResource(1,r);
+        });
     }
     // Used for adding available positions to availablePositions and unavailable positions to unavailablePositions
     private void updatePositionsAvailability(Card card, Position placePosition) {

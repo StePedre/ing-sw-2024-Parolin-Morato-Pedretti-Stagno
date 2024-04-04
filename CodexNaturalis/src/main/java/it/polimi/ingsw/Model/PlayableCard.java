@@ -2,17 +2,18 @@ package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class PlayableCard extends Card{
-    private ArrayList<Resource> requirements;
+    private HashMap<Resource, Integer> requirements;
 
-    public PlayableCard(int id, ScoreRule rule, Corner[] corners, Corner[] backCorners, ArrayList<Resource> req, Resource color) {
+    public PlayableCard(int id, ScoreRule rule, Corner[] corners, Corner[] backCorners, HashMap<Resource, Integer> req, Resource color) {
         super(id, rule, corners, backCorners, color);
         this.requirements=req;
     }
 
-    public ArrayList<Resource> getRequirements() {
+    public HashMap<Resource, Integer> getRequirements() {
         return requirements;
     }
 
