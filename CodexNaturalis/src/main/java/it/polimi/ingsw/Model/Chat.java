@@ -42,3 +42,6 @@ public class Chat extends UnicastRemoteObject implements ChatInterface{
         // mostra i messaggi -> hashset?
     }
 }
+/**
+ *
+ */

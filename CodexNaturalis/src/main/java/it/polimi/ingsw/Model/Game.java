@@ -11,7 +11,6 @@ public class Game {
     private Chat[] privChatList;
     private ObjectiveCard[] commonObj;
     private Player firstPlayer;
-    private int i;
     private ArrayList<String> multiWinners;
     // constructor
     public Game(ArrayList<Player> players, int numPlayer, Deck[] decks, ObjectiveCard[] commonObj, Player firstPlayer){
@@ -22,20 +21,9 @@ public class Game {
         this.firstPlayer = firstPlayer;
     }
     public void start() throws RemoteException {
-        settingPhase();
         createGlobalChat();
         createPrivateChats();
     }
-    public void settingPhase(){
-        for(int i = 0; i<3; i++){
-            // decks[i] = from file
-            // decks[i].setCards() = from file
-        }
-        numPlayers = players.size();
-        firstPlayer = players.getFirst();
-        // create decks (da file), cards (da file), first player, objcard, etc ....
-    }
-    // il motivo (fine deck, raggiunto 20 punti) lo gestisce il controller
     public void finish(){
         int max = players.getFirst().getPlayerGround().getPlayerScore();
         String winnerName = players.getFirst().getNickname();
@@ -80,9 +68,10 @@ public class Game {
         return privChatList;
     }
     public Chat getPrivateChat(Player player1, Player player2) throws RemoteException, NotExistingChatException {
-        for(int j = 0; j<privChatList.length; j++){
-            if(privChatList[j].getPlayer(0) == player1 && privChatList[j].getPlayer(1) == player2) {
-                return privChatList[j];
+        int i = 0;
+        for (Chat value : privChatList) {
+            if (value.getPlayer(0) == player1 && value.getPlayer(1) == player2) {
+                return value;
             }
         }
             throw new NotExistingChatException("Error: chat do not exist");
@@ -99,8 +88,6 @@ public class Game {
         int PlayersNo = this.numPlayers;
         chat = new Chat(name, PlayersNo);
     }
-    // quelle singole forse meglio crearle solo quando c'è richiesta di mex
-    // qui per ogni player nell'array creo una chat per ogni player successivo nell'array (così non ho doppioni)
     public void createPrivateChats() throws RemoteException{
         for (int i = 0; i < (numPlayers-1); i++) {
             String name1 = players.get(i).getNickname();
