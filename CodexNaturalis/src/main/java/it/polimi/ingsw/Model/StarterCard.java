@@ -4,8 +4,8 @@ import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 import java.util.ArrayList;
 public class StarterCard extends Card{
     private ArrayList<Resource> backRes;
-    public StarterCard(int id, ScoreRule rule, Corner[] corners, Corner[] backCorners, ArrayList<Resource> backRes) {
-        super(id, rule, corners, backCorners);
+    public StarterCard(int id, ScoreRule rule, Corner[] corners, Corner[] backCorners, ArrayList<Resource> backRes,Resource color) {
+        super(id, rule, corners, backCorners,color);
         this.backRes=backRes;
     }
 
@@ -13,7 +13,8 @@ public class StarterCard extends Card{
         return backRes;
     }
     public StarterCard clone(){
-        StarterCard card = new StarterCard(this.getId(),this.getRule(),this.getCorners(),this.getBackCorners(),this.backRes);
-        return card;
+        return new StarterCard(this.getId(),this.getRule(),this.getCorners(),this.getBackCorners(),this.backRes,this.getColor());
     }
+
+
 }
