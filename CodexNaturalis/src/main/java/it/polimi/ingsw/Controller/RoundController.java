@@ -11,13 +11,16 @@ public class RoundController {
 
     RoundController(Player[] players, int numPlayers) {
         this.players = Arrays.copyOf(players,numPlayers);
-        round = rand.nextInt(numPlayers);
     }
     public Player nextRound(){
         if(round== players.length-1)
             round=0;
         else
             round++;
+        return players[round];
+    }
+    public Player setFirstPlayer(){
+        round=rand.nextInt(players.length);
         return players[round];
     }
 
