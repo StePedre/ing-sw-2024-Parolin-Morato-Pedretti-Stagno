@@ -1,26 +1,28 @@
 package it.polimi.ingsw.Model;
 
 public class Hand {
-    private Card cards[];
+    private Card[] cards;
     private ObjectiveCard secretObj;
     private static final int maxNumberOfCards = 3;
     // used as max size of array of cards in hand
 
     // constructor with no parameters
+    // secretObj is initialized with the default values
     public Hand() {
         this.cards = new Card[maxNumberOfCards];
-        this.secretObj = new ObjectiveCard;
+        this.secretObj = new ObjectiveCard(0, null);
     }
 
     // constructor with cards
     // cycle for is used in order to prevent a mutable hand from the outside
-    // (it creates a new array of Card and it copies the values of the array passed as a parameter)
-    public Hand(Card cards[]) {
+    // (it creates a new array of Card, and it copies the values of the array passed as a parameter)
+    // secretObj is initialized with the default values
+    public Hand(Card[] cards) {
         this.cards = new Card[maxNumberOfCards];
         for (int i = 0; i < maxNumberOfCards; i++) {
             this.cards[i] = cards[i];
         }
-        this.secretObj = new ObjectiveCard;
+        this.secretObj = new ObjectiveCard(0, null);
     }
 
     // setter
@@ -37,11 +39,19 @@ public class Hand {
         return this.secretObj;
     }
 
-    // choose which card is going to be played
-    // this card will be removed from the hand
-    // hand will be a temporary array of two elements
+    // given it is possible to draw from a deck (the check is made by the controller), the card passed by
+    // parameter is the card that needs to be added to the current Hand, which will be an array of 2
+    // elements
+    // First cycle find the position i of the card previously played (cards[i] is null)
+    // Then the new card is added to the position i
+    // This will guarantee a Hand with the correct number of cards
     public void chooseCard(Card card) {
-
+        int nullIndex = 0;
+        for (int i = 0; i < maxNumberOfCards; i++) {
+            if (this.cards[i] == null)
+                nullIndex = i;
+        }
+        cards[nullIndex] = card;
     }
 
     // choose the secret objective card between two different cards
@@ -50,11 +60,15 @@ public class Hand {
         this.secretObj = objective;
     }
 
-    // returns true if, after a card is being placed, the player decides to draw from a deck
-    // (don't care at this point if the player will draw from the resources deck or the gold one)
-    // returns false if, after a card is being placed, the player decides to pick a card between the four already revealed next to the decks
-    // (don't care at this point if the player will pick a resource or a gold car)
+    // returns true if it is possible to draw from the deck passed by parameter
+    // check if that's not empty with a boolean
     public boolean drawCard(Deck deck) {
-
+        boolean canDraw;
+        if (deck.getNumberOfCards() > 0)
+            canDraw = true;
+        else {
+            canDraw = false;
+        }
+        return canDraw;
     }
 }

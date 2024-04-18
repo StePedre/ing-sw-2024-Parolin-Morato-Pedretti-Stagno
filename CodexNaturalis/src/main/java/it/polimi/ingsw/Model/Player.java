@@ -57,7 +57,7 @@ public class Player {
     // if the message is too long only the admissible chars will be sent (message will be cut)
     public String getMessage() {
         Scanner sc = new Scanner(System.in);
-        message = sc.next();
+        message = sc.nextLine();
         if (message.length() > maxLengthMsg) {
             message = message.substring(0, maxLengthMsg);
         }

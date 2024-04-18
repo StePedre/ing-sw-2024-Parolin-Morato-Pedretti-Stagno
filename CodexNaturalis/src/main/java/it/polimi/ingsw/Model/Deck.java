@@ -13,6 +13,10 @@ public class Deck{
         this.cards = cards;
     }
 
+    public int getNumberOfCards() {
+        return this.numberOfCards;
+    }
+
     public void shuffle() {
         Collections.shuffle(cards);
     }
