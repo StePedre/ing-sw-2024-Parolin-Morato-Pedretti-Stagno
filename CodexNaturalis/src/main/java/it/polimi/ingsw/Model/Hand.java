@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model;
 
+import java.util.Arrays;
+
 public class Hand {
     private Card[] cards;
     private ObjectiveCard secretObj;
@@ -19,9 +21,7 @@ public class Hand {
     // secretObj is initialized with the default values
     public Hand(Card[] cards) {
         this.cards = new Card[maxNumberOfCards];
-        for (int i = 0; i < maxNumberOfCards; i++) {
-            this.cards[i] = cards[i];
-        }
+        this.cards= Arrays.copyOf(cards,maxNumberOfCards);
         this.secretObj = new ObjectiveCard(0, null);
     }
 
@@ -63,12 +63,6 @@ public class Hand {
     // returns true if it is possible to draw from the deck passed by parameter
     // check if that's not empty with a boolean
     public boolean drawCard(Deck deck) {
-        boolean canDraw;
-        if (deck.getNumberOfCards() > 0)
-            canDraw = true;
-        else {
-            canDraw = false;
-        }
-        return canDraw;
+        return deck.getNumberOfCards() > 0;
     }
 }
