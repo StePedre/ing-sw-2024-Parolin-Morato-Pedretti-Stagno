@@ -4,7 +4,10 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 
 /**
- * class description
+ * The Player class implements a player attending a game session.
+ * It contains: player's nickname, hand of cards, player ground where played cards are placed, and the instance of the
+ * game. It also provides string which will contain a message (of maximum length 255 charachters) the player may want
+ * to send in a chat.
  */
 
 public class Player {
@@ -13,11 +16,15 @@ public class Player {
     private PlayerGround playerGround;
     private Game game;
     private static final int maxLengthMsg = 255;
-    // maximum length of the message -- 255 is still a temporary value
+    // still a temporary value
     private String message;
-    // string which will contain the message the player want to send in chat
 
-    // constructor of player with name (which is the nickname)
+    /**
+     * Class constructor with nickname as a parameter.
+     * It initializes also the hand, the player ground and the game instance as empty.
+     *
+     * @param name is the nickname of the new player
+     */
     // it doesn't make sense to create a player without his nickname
     // need to add the constructor without parameters (?)
     public Player(String name) {
@@ -27,38 +34,75 @@ public class Player {
         this.game = null;
     }
 
-    // setter
+    /**
+     * The method sets the hand of the player passed as a parameter.
+     *
+     * @param hand to be set for the player
+     */
     public void setHand(Hand hand) {
         this.hand = hand;
     }
 
+    /**
+     * The method sets the player ground of the player passed as a parameter.
+     *
+     * @param playerGround to be set for the player.
+     */
     public void setPlayerGround(PlayerGround playerGround) {
         this.playerGround = playerGround;
     }
 
+    /**
+     * The method sets the instance of the game passed as a parameter.
+     *
+     * @param game to be set for the player.
+     */
     public void setGame(Game game) {
         this.game = game;
     }
 
-    // getter
+    /**
+     * The method gets the nickname of the player.
+     *
+     * @return player's nickname as a string.
+     */
     public String getNickname() {
         return this.nickname;
     }
 
+    /**
+     * The method gets the hand of the player.
+     *
+     * @return player's Hand.
+     */
     public Hand getHand() {
         return this.hand;
     }
 
+    /**
+     * The method gets the player ground of the player.
+     *
+     * @return player's PlayerGround.
+     */
     public PlayerGround getPlayerGround() {
         return this.playerGround;
     }
 
+    /**
+     * The method gets the game in which the player is participating.
+     *
+     * @return instance of the Game the player is attending.
+     */
     public Game getGame() {
         return this.game;
     }
 
-    // use the standard input (keyboard) to get the message to send in chat
-    // if the message is too long only the admissible chars will be sent (message will be cut)
+    /**
+     * The method gets the message a player is willing to send. It uses the standard input (keyboard) to get the message
+     * to send in a chat. If the message is too long only the admissible chars will be sent (message will be cut).
+     *
+     * @return a message, as a string, to be sent.
+     */
     public String getMessage() {
         Scanner sc = new Scanner(System.in);
         message = sc.nextLine();
@@ -68,14 +112,25 @@ public class Player {
         return message;
     }
 
-    // send a message to the public chat
+    /**
+     * The method sends a message to the global chat, where every player can read it. The global chat can be obtained
+     * from the game instance.
+     *
+     * @exception RemoteException because class Chat extends UnicastRemoteObject.
+     */
     public void sendMsg() throws RemoteException {
         String messageToSend;
         messageToSend = getMessage();
         game.getChat().send(messageToSend);
     }
 
-    // send a message to a specified player using the private chat
+    /**
+     * The method sends a message to a private chat, specifying the addressee as a parameter.
+     * The private chat is obtained by the game instance (see proper method).
+     *
+     * @param player is the addressee of the message, the other participant in the private chat.
+     * @exception RemoteException because class Chat extends UnicastRemoteObject.
+     */
     public void sendMsg(Player player) throws RemoteException, NotExistingChatException {
         String messageToSend;
         messageToSend = getMessage();
