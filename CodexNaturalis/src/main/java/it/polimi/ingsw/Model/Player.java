@@ -3,6 +3,10 @@ package it.polimi.ingsw.Model;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+/**
+ * class description
+ */
+
 public class Player {
     private String nickname;
     private Hand hand;

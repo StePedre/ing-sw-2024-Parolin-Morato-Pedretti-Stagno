@@ -3,6 +3,10 @@ import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * class description
+ */
+
 public class PlayerGround {
     private int playerScore;
     private Map<Position, Card> cardPosition;
