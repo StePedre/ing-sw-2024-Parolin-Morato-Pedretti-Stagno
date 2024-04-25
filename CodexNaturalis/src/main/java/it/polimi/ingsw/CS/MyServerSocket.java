@@ -5,11 +5,19 @@ import java.net.Socket;
 
 
 public class MyServerSocket {
-    public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(59090); //trovare porta su cui lavorare
-        Socket connection = serverSocket.accept();
+    private ServerSocket serverSocket = null;
+    private Socket connection = null;
+    public MyServerSocket(int port) throws IOException {
+        serverSocket = new ServerSocket(port); //trovare porta su cui lavorare e aggiungere try-catch
+    }
+    public void runServer() throws IOException {
+        while(true) { //forse modificabile comn flag
+            connection = serverSocket.accept();
+            //inserire funzione creazione thread
+        }
+    }
 
-
+    public void close() throws IOException {
         connection.close();
         serverSocket.close();
     }
