@@ -13,10 +13,21 @@ public class MyServerSocket {
     public void runServer() throws IOException {
         while(true) { //forse modificabile comn flag
             connection = serverSocket.accept();
-            //inserire funzione creazione thread
+            newConnection client = new newConnection(connection);
+            Thread t = new Thread (client);
+            t.start();
         }
     }
-
+    private class newConnection implements Runnable{
+        private Socket client= null;
+        public newConnection(Socket connection) {
+            client = connection;
+        }
+        @Override
+        public void run() {
+            //funzioni del client
+        }
+    }
     public void close() throws IOException {
         connection.close();
         serverSocket.close();
