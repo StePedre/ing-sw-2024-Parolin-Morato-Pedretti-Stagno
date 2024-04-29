@@ -131,17 +131,17 @@ public class CLI {
     }
 
     public String toStringCorner(Card card){
-        StringBuilder z = new StringBuilder("Front corners:\n");
+        String z = "Front corners:\n";
         Corner[] cornersF = card.getCorners();
         Corner[] cornersB = card.getBackCorners();
         for(int i = 0; i<4; i++){
-           z.append("- ").append(cornersF[i].getPos()).append(" ").append(cornersF[i].getCornerRes().name().toLowerCase()).append(" ").append(cornersF[i].getAvailability()).append("\n");
+           z = z.concat("- ").concat(cornersF[i].getPos()).concat(" ").concat(cornersF[i].getCornerRes().name().toLowerCase()).concat(" ").concat(Boolean.toString(cornersF[i].getAvailability())).concat("\n");
         }
-        z.append("Back corners:\n");
+        z = z.concat("Back corners:\n");
         for(int i = 0; i<4; i++){
-            z.append("- ").append(cornersB[i].getPos()).append(" ").append(cornersB[i].getCornerRes().name().toLowerCase()).append(" ").append(cornersB[i].getAvailability()).append("\n");
+            z = z.concat("- ").concat(cornersB[i].getPos()).concat(" ").concat(cornersB[i].getCornerRes().name().toLowerCase()).concat(" ").concat(Boolean.toString(cornersB[i].getAvailability())).concat("\n");
         }
-        return z.toString();
+        return z;
     }
 
     public void showCard(Card card){
