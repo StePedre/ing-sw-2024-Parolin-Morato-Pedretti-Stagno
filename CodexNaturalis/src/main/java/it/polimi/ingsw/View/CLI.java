@@ -22,6 +22,14 @@ public class CLI {
         System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n");
     }
 
+    public void showStarterCard(StarterCard startcard){
+        System.out.println("Your first card it's this:\n");
+        showCard(startcard);
+        // flipped or not?
+        // updategame
+        // show ground (only first)
+    }
+
     public void notYourTurn(){
         System.out.println("\nIt's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n\n");
         Scanner scanner = new Scanner(System.in);
@@ -228,7 +236,7 @@ public class CLI {
         return choice;
     }
     public void updateGame(Game game){ //ogni volta che c'è un place o draw
-        // ????
+        //
     }
 
 }
