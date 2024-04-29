@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.ScoreRules.NSymbolsRule;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 import it.polimi.ingsw.Controller.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
@@ -61,11 +62,12 @@ public class CLI {
             }
             case 4 -> {
                 // play card
+                updateGame(game);
             }
             default -> throw new IllegalStateException("Unexpected value: " + choice);
         }
 
-        System.out.println("You placed one card. Now it's time to draw. What do you want to do? Select the number corresponding to your choice:\n1- Show hand\n2- Show decks\n3- Draw card\n\n");
+        System.out.println("You placed one card. Now it's time to draw. What do you want to do? Select the number corresponding to your choice:\n1- Show hand\n2- Show decks and draw a card\n\n");
         int choice2 = 0;
         do {
             choice2 = scanner.nextInt();
@@ -76,10 +78,24 @@ public class CLI {
                 showHand();
             }
             case 2 -> {
-                showDecks(); // to do
-            }
-            case 3 -> {
-                // draw card
+                int drawChoice = chooseFromDecks(game);
+                Deck deck1 = game.getDecks()[0];
+                Deck deck2 = game.getDecks()[1];
+                if(drawChoice >= 0 && drawChoice <3){
+                    deck1.drawCard(drawChoice);
+                    if(drawChoice == 2){
+                        System.out.println("You drew this card:\n");
+                        showCard(deck1.getCards().get(2));
+                    }
+                }
+                else{
+                    deck2.drawCard(drawChoice);
+                    if(drawChoice == 5){
+                        System.out.println("You drew this card:\n");
+                        showCard(deck1.getCards().get(5));
+                    }
+                }
+                updateGame(game); // to do
             }
         }
     }
@@ -155,11 +171,44 @@ public class CLI {
         // stampa available corners
     }
 
-    public void showDecks(){
-        
+    public int chooseFromDecks(Game game){
+        Deck[] decks = game.getDecks();
+        String deck1name = decks[0].getKindOfDeck();
+        String deck2name = decks[1].getKindOfDeck();
+        ArrayList<Card> deck1 = decks[0].getCards();
+        ArrayList<Card> deck2 = decks[1].getCards();
+
+        Card deck1card1 = deck1.getFirst();
+        Card deck1card2 = deck1.get(1);
+        Card deck1card3 = deck2.get(2);
+        Card deck2card1 = deck2.getFirst();
+        Card deck2card2 = deck2.get(1);
+        Card deck2card3 = deck2.get(2);
+
+        System.out.println("Here you are the game decks." +
+                "\nThe first and the second card of each deck are facing up. You can choose one of them or pick the top of the remaining deck (face down)\n" +
+                        "First card of the standard deck (0 to choose):\n");
+
+        showCard(deck1card1);
+        System.out.println("\nSecond card of the standard deck (1 to choose):\n");
+        showCard(deck1card2);
+        System.out.println("\nAlternatively, you can input 2 to choose the hidden card at the top of the standard deck.\n");
+        System.out.println("First card of the golden deck (3 to choose):\n");
+        showCard(deck2card1);
+        System.out.println("\nSecond card of the golden deck (4 to choose):\n");
+        showCard(deck2card2);
+        System.out.println("\nAlternatively, you can input 5 to choose the hidden card at the top of the standard deck.\n");
+        System.out.println("Which card do you choose? Input the number corresponding to your choice:\n");
+        Scanner scanner = new Scanner(System.in);
+        int choice = -1;
+        do{
+            choice = scanner.nextInt();
+            scanner.nextLine();
+        } while(!(choice >=0 && choice<6));
+        return choice;
     }
     public void updateGame(Game game){ //ogni volta che c'è un place o draw
-
+        // ????
     }
 
 }
