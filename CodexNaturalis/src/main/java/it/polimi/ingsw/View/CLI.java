@@ -6,10 +6,7 @@ import it.polimi.ingsw.Model.ScoreRules.NSymbolsRule;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 import it.polimi.ingsw.Controller.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class CLI {
 
@@ -167,8 +164,31 @@ public class CLI {
         System.out.println("Color: " + card.getColor() + ", rule: " + y + ", " + z + "\n");
     }
     public void showGround(){
-        // stampa matrice
-        // stampa available corners
+        Card[][] matrix = player.getPlayerGround().getGround();    // scrittura di una matrice 0 e 1 con 1 dove c'è una carta
+        int[][] matrixToPrint = new int[84][84];
+        for (int i = 0; i < 84; i++) {
+            for (int j = 0; j < 84; j++) {
+                if(matrix[i][j]==null){
+                    matrixToPrint[i][j] = 0;
+                }
+                else {
+                    matrixToPrint[i][j] = 1;
+                }
+            }
+        }
+        //stampa della matrice
+        System.out.println("Your play ground looks like this (1 = there is a card, 0 = there isn't):\n");
+        for (int i = 0; i < 84; i++) {
+            for (int j = 0; j < 84; j++) {
+                System.out.print(matrixToPrint[i][j] + " ");
+            }
+            System.out.println();
+        }
+        // stampa available positions
+        System.out.println("This is the list of positions where it is possible to place a card:\n");
+        for (Position pos: player.getPlayerGround().getAvailablePositions()) {
+            System.out.println("(" + pos.getX()+", " + pos.getY() + ") ");
+        }
     }
 
     public int chooseFromDecks(Game game){
