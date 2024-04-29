@@ -5,22 +5,27 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class RoundController {
-    Player[] players;
-    int round;
-    Random rand = new Random();
+    private static Player[] players = null;
+    private static int round = -1;
+    private Random rand = new Random();
 
     RoundController(Player[] players, int numPlayers) {
-        this.players = Arrays.copyOf(players,numPlayers);
+        if(this.players==null) {
+            this.players = Arrays.copyOf(players, numPlayers);
+        }
     }
-    public Player nextRound(){
+    public void nextRound(){
         if(round== players.length-1)
             round=0;
         else
             round++;
-        return players[round];
     }
-    public Player setFirstPlayer(){
-        round=rand.nextInt(players.length);
+    public void setFirstPlayer(){
+        if(round==-1) {
+            round = rand.nextInt(players.length);
+        }
+    }
+    public Player getCurrentPlayer(){
         return players[round];
     }
 
