@@ -10,7 +10,7 @@ package it.polimi.ingsw.Model;
  */
 
     public class Corner{
-        private String pos;//forse mettere corner
+        private String pos;
         private Resource cornerRes;
         private boolean isAvailable;
 

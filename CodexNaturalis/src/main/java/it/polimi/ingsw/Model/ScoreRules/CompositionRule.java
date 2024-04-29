@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CompositionRule implements ScoreRule {
 
+    private final String name = "CR";
     private final Position[] offSets;
     private final Resource[] colors;
     private final int numberOfPointsPerComposition;
@@ -33,6 +34,53 @@ public class CompositionRule implements ScoreRule {
         this.offSets = offSets;
         this.colors = colors;
         this.numberOfPointsPerComposition = numberOfPointsPerComposition;
+    }
+
+    /**
+     * This method returns the name (initials) of the rule.
+     *
+     * @return class name (in short).
+     */
+    public String getName(){
+        return this.name;
+    }
+
+    /**
+     * This method returns the coordinates of the second and third card of the composition.
+     *
+     * @return array of 4 coordinates, 2 per card.
+     */
+    public int[] getOffsets(){
+        int[] offsets = new int[4];
+        int i = 0;
+        for(Position pos: offSets){
+            offsets[i] = pos.getX();
+            offsets[i+1] = pos.getY();
+            i = i+2;
+        }
+        return offsets;
+    }
+
+    /**
+     * This method returns the coordinates of the second and third card of the composition.
+     *
+     * @return array of 4 coordinates, 2 per card.
+     */
+    public String getColors(){
+        String colors = null;
+        for(Resource color: colors){
+            colors = colors + ", " + color.name();
+        }
+    }
+
+
+    /**
+     * This method returns the points given for each composition placed on the ground.
+     *
+     * @return card points.
+     */
+    public int getPoints() {
+        return this.numberOfPointsPerComposition;
     }
 
     /**

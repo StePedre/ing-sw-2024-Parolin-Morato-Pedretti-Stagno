@@ -10,6 +10,7 @@ import it.polimi.ingsw.Model.Resource;
  */
 public class NSymbolsRule implements ScoreRule {
 
+    private final String name = "NSR";
     private final Resource symbol;
     private final int numberOfResources;
     private final int numberOfPointsPerResources;
@@ -25,6 +26,33 @@ public class NSymbolsRule implements ScoreRule {
         this.symbol = symbol;
         this.numberOfResources = numberOfResources;
         this.numberOfPointsPerResources = numberOfPointsPerResources;
+    }
+
+    /**
+     * This method returns the name (initials) of the rule.
+     *
+     * @return class name (in short).
+     */
+    public String getName(){
+        return this.name;
+    }
+
+    /**
+     * This method returns the required symbol.
+     *
+     * @return rule symbol.
+     */
+    public Resource getSymbol(){
+        return this.symbol;
+    }
+
+    /**
+     * This method returns the points given when rule is respected.
+     *
+     * @return card points.
+     */
+    public int getPoints() {
+        return this.numberOfPointsPerResources;
     }
 
     /**

@@ -8,6 +8,7 @@ import it.polimi.ingsw.Model.PlayerGround;
  */
 public class FlatRule implements ScoreRule {
 
+    private final String name = "FR";
     private final int flatPoints;
 
     /**
@@ -18,6 +19,25 @@ public class FlatRule implements ScoreRule {
     public FlatRule(int flatPoints){
         this.flatPoints = flatPoints;
     }
+
+    /**
+     * This method returns the name (initials) of the rule.
+     *
+     * @return class name (in short).
+     */
+    public String getName(){
+        return this.name;
+    }
+
+    /**
+     * This method returns the points always given by the card when placed.
+     *
+     * @return card points.
+     */
+    public int getPoints() {
+        return this.flatPoints;
+    }
+
 
     /**
      * This method only returns the number of points that are always given by placing the card on the ground.

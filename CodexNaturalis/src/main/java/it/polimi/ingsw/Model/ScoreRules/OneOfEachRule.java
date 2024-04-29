@@ -10,6 +10,26 @@ import it.polimi.ingsw.Model.Resource;
  */
 public class OneOfEachRule implements ScoreRule {
 
+    private final String name = "OER";
+
+    /**
+     * This method returns the name (initials) of the rule.
+     *
+     * @return class name (in short).
+     */
+    public String getName(){
+        return this.name;
+    }
+
+    /**
+     * This method returns the points always given when the rule is respected.
+     *
+     * @return card points.
+     */
+    public int getPoints() {
+        return 3;
+    }
+
     /**
      * This method finds the minimal number between the total amount of plume appearances, potion appearances and
      * scroll appearances. This gives the number of sets where all three are visible and it's finally multiplied by 3.

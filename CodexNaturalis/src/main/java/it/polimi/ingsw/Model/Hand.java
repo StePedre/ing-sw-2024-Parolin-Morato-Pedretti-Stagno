@@ -46,6 +46,15 @@ public class Hand {
     }
 
     /**
+     * The method gets all the cards from the hand
+     *
+     * @return the cards in player's hand.
+     */
+    public Card[] getCards() {
+        return this.cards;
+    }
+
+    /**
      * The method gets the secret objective card, which is unique for each hand.
      *
      * @return the secret ObjectiveCard

@@ -8,7 +8,7 @@ package it.polimi.ingsw.Model;
  */
 
 public enum Resource {
-    PLUME("gold"),POTION("gold"),SCROLL("gold"),FOX("blue"),MUSHROOM("red"),LEAF("green"),BUG("violet");
+    PLUME("gold"),POTION("gold"),SCROLL("gold"),FOX("blue"),MUSHROOM("red"),LEAF("green"),BUG("violet"), BLANK("blank"), NOTVISIBLE("null");
     private String color;
 
     /**

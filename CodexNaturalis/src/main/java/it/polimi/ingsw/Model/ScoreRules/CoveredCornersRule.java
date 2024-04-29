@@ -11,6 +11,26 @@ import it.polimi.ingsw.Model.Resource;
  */
 public class CoveredCornersRule implements ScoreRule {
 
+    private final String name = "CCR";
+
+    /**
+     * This method returns the name (initials) of the rule.
+     *
+     * @return class name (in short).
+     */
+    public String getName(){
+        return this.name;
+    }
+
+    /**
+     * This method returns the points given for each covered corner of the card.
+     *
+     * @return card points.
+     */
+    public int getPoints() {
+        return 2;
+    }
+
     /**
      * This method only multiplies the number of covered corners of the card by 2 (this is always the number of points).
      * To find out how many covered corners are there, a method from class PlayerGround is called.

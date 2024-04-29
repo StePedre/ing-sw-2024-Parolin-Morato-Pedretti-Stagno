@@ -9,4 +9,8 @@ import it.polimi.ingsw.Model.PlayerGround;
  */
 public interface ScoreRule {
     int calculatePoints(PlayerGround gameBoard);
+
+    String getName();
+
+    int getPoints();
 }
