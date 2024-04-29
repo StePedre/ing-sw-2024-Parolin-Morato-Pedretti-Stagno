@@ -1,4 +1,7 @@
 package it.polimi.ingsw.CS;
+import it.polimi.ingsw.Controller.InitGameController;
+import it.polimi.ingsw.Controller.RoundController;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,6 +24,12 @@ public class MyServerSocket {
             //reader e writer
             oos= new ObjectOutputStream(connection.getOutputStream());
             ois = new ObjectInputStream(connection.getInputStream());
+            //raggiunto numero gioactori
+            if(numPlayer==expPlayer) {
+                oos.writeChars("reached max numbers of player\n");
+                //lanciare eccezione numero giocatori
+                break;
+            }
             //chiedere nickname
             oos.writeChars("Insert your nickname :\n");
             String nickname=(String) ois.readObject();
@@ -31,6 +40,7 @@ public class MyServerSocket {
             Thread t = new Thread (client);
             t.start();
             numPlayer++;
+            notifyAll();
         }
     }
     private void firstPlayer() throws IOException {
@@ -44,6 +54,8 @@ public class MyServerSocket {
         connection.close();
         serverSocket.close();
     }
+
+
     private class newConnection implements Runnable{
         private Socket client= null;
         private String nickname = null;
@@ -58,6 +70,37 @@ public class MyServerSocket {
         @Override
         public void run() {
             //funzioni sul client
+            try {
+                while (numPlayer != expPlayer) {
+                    wait();
+                }
+            }//togliere quando tolto commento
+                //recuperare game
+                /*InitGameController c = new InitGameController();
+                out.writeObject(c.getGame()); //inviare istanza game
+                RoundController rc = new RoundController(c.getGame().getPlayers(),expPlayer);creare round controller
+                rc.setFirstPlayer()
+                String currTurn = rc.getCurrentPlayer().getNickname();
+                while(end){
+                    while(currTurn!=this.nickname){
+                        currTurn=rc.getCurrentPlayer();
+                    }
+                    out.writeObject(c.getGame());
+                    //azioni di gioco
+                    rc.nextRound()//fine turno
+                }
+
+
+
+            }
+            catch (IOException e){
+                //gestione ecc
+            }*/
+            catch(InterruptedException e){
+                //gestione ecc
+            }
+
+
         }
     }
 }
