@@ -67,10 +67,11 @@ public class CompositionRule implements ScoreRule {
      * @return array of 4 coordinates, 2 per card.
      */
     public String getColors(){
-        String colors = null;
+        String compositionColors = "";
         for(Resource color: colors){
-            colors = colors + ", " + color.name();
+            compositionColors = compositionColors.concat(", ").concat(color.name());
         }
+        return compositionColors;
     }
 
 
