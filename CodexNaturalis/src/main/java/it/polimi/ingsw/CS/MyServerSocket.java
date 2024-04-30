@@ -36,7 +36,7 @@ public class MyServerSocket {
             //verificare primo player
             firstPlayer();
             //craere connessione parallela
-            newConnection client = new newConnection(connection,nickname);
+            ServerHandlerSocket client = new ServerHandlerSocket(connection,nickname,expPlayer,numPlayer);
             Thread t = new Thread (client);
             t.start();
             numPlayer++;
@@ -53,54 +53,5 @@ public class MyServerSocket {
     public void close() throws IOException {
         connection.close();
         serverSocket.close();
-    }
-
-
-    private class newConnection implements Runnable{
-        private Socket client= null;
-        private String nickname = null;
-        ObjectOutputStream out = null;
-        ObjectInputStream in = null;
-        public newConnection(Socket connection,String nickname) throws IOException {
-            client = connection;
-            this.nickname = nickname;
-            out = new ObjectOutputStream(connection.getOutputStream());
-            in = new ObjectInputStream(connection.getInputStream());
-        }
-        @Override
-        public void run() {
-            //funzioni sul client
-            try {
-                while (numPlayer != expPlayer) {
-                    wait();
-                }
-            }//togliere quando tolto commento
-                //recuperare game
-                /*InitGameController c = new InitGameController();
-                out.writeObject(c.getGame()); //inviare istanza game
-                RoundController rc = new RoundController(c.getGame().getPlayers(),expPlayer);creare round controller
-                rc.setFirstPlayer()
-                String currTurn = rc.getCurrentPlayer().getNickname();
-                while(end){
-                    while(currTurn!=this.nickname){
-                        currTurn=rc.getCurrentPlayer();
-                    }
-                    out.writeObject(c.getGame());
-                    //azioni di gioco
-                    rc.nextRound()//fine turno
-                }
-
-
-
-            }
-            catch (IOException e){
-                //gestione ecc
-            }*/
-            catch(InterruptedException e){
-                //gestione ecc
-            }
-
-
-        }
     }
 }
