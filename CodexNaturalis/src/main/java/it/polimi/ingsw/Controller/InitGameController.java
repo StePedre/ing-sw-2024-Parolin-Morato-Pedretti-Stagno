@@ -23,9 +23,10 @@ public class InitGameController {
     private CLI cliPlayer3;
     private CLI cliPlayer4;
 
-    public void InitializeGame (Game game) {
+    public InitGameController(Game game){
         this.game=game;
-
+    }
+    public void InitializeGame () {
         firstPlayer = setFirstPlayer(game.getPlayers(), game.getNumPlayer());
         // select first player
 

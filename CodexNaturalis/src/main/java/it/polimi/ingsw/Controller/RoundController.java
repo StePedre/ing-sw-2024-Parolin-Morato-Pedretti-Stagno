@@ -1,24 +1,26 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Model.Player;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 public class RoundController {
-    private static Player[] players = null;
+    private static ArrayList<Player> players = null;
     private static int round = -1;
     private Random rand = new Random();
 
-    public RoundController(Player[] players, int numPlayers) {
+    public RoundController(ArrayList<Player> players) {
         synchronized (players) {
             if (this.players == null) {
-                this.players = Arrays.copyOf(players, numPlayers);
+                this.players = players;
             }
         }
     }
     public void nextRound(){
         synchronized (players) {
-            if (round == players.length - 1)
+            if (round == players.size() - 1)
                 round = 0;
             else
                 round++;
@@ -27,12 +29,12 @@ public class RoundController {
     public void setFirstPlayer(){
         synchronized (players) {
             if (round == -1) {
-                round = rand.nextInt(players.length);
+                round = rand.nextInt(players.size());
             }
         }
     }
     public Player getCurrentPlayer(){
-        return players[round];
+        return players.get(round);
     }
 
 }
