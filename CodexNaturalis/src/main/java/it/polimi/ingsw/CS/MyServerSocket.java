@@ -1,10 +1,12 @@
 package it.polimi.ingsw.CS;
 import it.polimi.ingsw.Controller.InitGameController;
 import it.polimi.ingsw.Controller.RoundController;
+import it.polimi.ingsw.Model.Game;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 
 //pensare a come gestire socket+RMI
 public class MyServerSocket {
@@ -14,18 +16,19 @@ public class MyServerSocket {
     ObjectInputStream ois = null;
     //condividere exp e num con RMI
     private int expPlayer=0;
-    private int numPlayer=0;
-    public MyServerSocket(int port) throws IOException {
-        serverSocket = new ServerSocket(port); //trovare porta su cui lavorare e aggiungere try-catch
+    Game game=null;
+    public MyServerSocket(int port,Game game) throws IOException {
+        serverSocket = new ServerSocket(port);
+        this.game=game;//trovare porta su cui lavorare e aggiungere try-catch
     }
     public void runServer() throws IOException, ClassNotFoundException {
-        while(numPlayer==0 || numPlayer<expPlayer) { //finchè ho 0 giocatori o ho meno giocatori di quelli attesi, come sincronizzo con RMI??
+         do{ //finchè ho 0 giocatori o ho meno giocatori di quelli attesi, come sincronizzo con RMI??
             connection = serverSocket.accept();
             //reader e writer
             oos= new ObjectOutputStream(connection.getOutputStream());
             ois = new ObjectInputStream(connection.getInputStream());
             //raggiunto numero gioactori
-            if(numPlayer==expPlayer) {
+            if(game.getNumPlayer()==expPlayer) {
                 oos.writeChars("reached max numbers of player\n");
                 //lanciare eccezione numero giocatori
                 break;
@@ -36,15 +39,14 @@ public class MyServerSocket {
             //verificare primo player
             firstPlayer();
             //craere connessione parallela
-            ServerHandlerSocket client = new ServerHandlerSocket(connection,nickname,expPlayer,numPlayer);
+            ServerHandlerSocket client = new ServerHandlerSocket(connection,nickname,expPlayer,game.getNumPlayer());
             Thread t = new Thread (client);
             t.start();
-            numPlayer++;
             notifyAll();
-        }
+        }while(game.getNumPlayer()==0 || game.getNumPlayer()<expPlayer);
     }
     private void firstPlayer() throws IOException {
-        if(numPlayer == 0) {
+        if(game.getNumPlayer() == 0) {
             //chiedere num exp player
             oos.writeChars("You are the first player, how many others do you want to play with?");
             expPlayer = ois.readInt();

@@ -18,7 +18,6 @@ public class Game {
     private Chat chat;
     private Chat[] privChatList;
     private ObjectiveCard[] commonObj;
-    private Player firstPlayer;
     private ArrayList<String> multiWinners = new ArrayList<>();
 
     /**
@@ -28,14 +27,16 @@ public class Game {
      * @param numPlayer the total number of players in the game.
      * @param decks decks used in the game (must be 2).
      * @param commonObj is the set of common objective cards.
-     * @param firstPlayer the player who connected first.
      */
-    public Game(ArrayList<Player> players, int numPlayer, Deck[] decks, ObjectiveCard[] commonObj, Player firstPlayer){
+    public Game(ArrayList<Player> players, int numPlayer, Deck[] decks, ObjectiveCard[] commonObj){
         this.players = players;
         this.numPlayers = numPlayer;
         this.decks = decks;
         this.commonObj = commonObj;
-        this.firstPlayer = firstPlayer;
+    }
+    public Game(){
+        players = new ArrayList<>();
+        numPlayers = 0;
     }
 
     /**
@@ -110,14 +111,6 @@ public class Game {
         return commonObj;
     }
 
-    /**
-     * The method gets the player identified as the first.
-     *
-     * @return first Player.
-     */
-    public Player getFirstPlayer() {
-        return firstPlayer;
-    }
 
     /**
      * The method initializes the game by calling other methods to create the global chat and the private ones.
@@ -192,4 +185,15 @@ public class Game {
             }
         }
     }
+    public void addPlayer(Player player){
+        players.add(player);
+        numPlayers++;
+    }
+    public void setDecks(Deck[] decks){
+        this.decks=decks;
+    }
+    public void setCommonObj(ObjectiveCard[] commonObj){
+        this.commonObj=commonObj;
+    }
+
 }
