@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model;
 
+import it.polimi.ingsw.View.CLI;
+
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
@@ -15,6 +17,7 @@ public class Player {
     private Hand hand;
     private PlayerGround playerGround;
     private Game game;
+    private CLI cli;
     private static final int maxLengthMsg = 255;
     // still a temporary value
     private String message;
@@ -77,6 +80,15 @@ public class Player {
      */
     public Hand getHand() {
         return this.hand;
+    }
+
+    /**
+     * The method gets the CLI the player interacts with.
+     *
+     * @return player's Context Line Interface.
+     */
+    public CLI getCLI() {
+        return this.cli;
     }
 
     /**
