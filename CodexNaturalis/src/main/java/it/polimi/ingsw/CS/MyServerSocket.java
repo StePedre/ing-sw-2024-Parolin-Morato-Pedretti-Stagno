@@ -15,7 +15,6 @@ public class MyServerSocket {
     ObjectOutputStream oos = null;
     ObjectInputStream ois = null;
     //condividere exp e num con RMI
-    private int expPlayer=0;
     Game game=null;
     public MyServerSocket(int port,Game game) throws IOException {
         serverSocket = new ServerSocket(port);
@@ -28,7 +27,7 @@ public class MyServerSocket {
             oos= new ObjectOutputStream(connection.getOutputStream());
             ois = new ObjectInputStream(connection.getInputStream());
             //raggiunto numero gioactori
-            if(game.getNumPlayer()==expPlayer) {
+            if(game.getNumPlayer() == game.getExpPlayers()) {
                 oos.writeChars("reached max numbers of player\n");
                 //lanciare eccezione numero giocatori
                 break;
@@ -39,17 +38,17 @@ public class MyServerSocket {
             //verificare primo player
             firstPlayer();
             //craere connessione parallela
-            ServerHandlerSocket client = new ServerHandlerSocket(connection,nickname,expPlayer,game.getNumPlayer());
+            ServerHandlerSocket client = new ServerHandlerSocket(connection,nickname,game);
             Thread t = new Thread (client);
             t.start();
             notifyAll();
-        }while(game.getNumPlayer()==0 || game.getNumPlayer()<expPlayer);
+        }while(game.getNumPlayer()==0 || game.getNumPlayer()< game.getExpPlayers());
     }
     private void firstPlayer() throws IOException {
-        if(game.getNumPlayer() == 0) {
+        if(game.isFirst()) {
             //chiedere num exp player
             oos.writeChars("You are the first player, how many others do you want to play with?");
-            expPlayer = ois.readInt();
+            game.setExpPlayers(ois.readInt());
         }
     }
     public void close() throws IOException {

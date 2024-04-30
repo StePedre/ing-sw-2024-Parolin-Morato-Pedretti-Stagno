@@ -14,27 +14,28 @@ import java.util.ArrayList;
 public class Game {
     private ArrayList<Player> players;
     private Deck[] decks;
-    private int numPlayers;
     private Chat chat;
     private Chat[] privChatList;
     private ObjectiveCard[] commonObj;
     private ArrayList<String> multiWinners = new ArrayList<>();
+    private int expPlayers = -1;
+    private int numPlayers;
 
     /**
      * Class constructor.
      *
-     * @param players is the list of Players attending the game.
-     * @param numPlayer the total number of players in the game.
-     * @param decks decks used in the game (must be 2).
+     * @param players   is the list of Players attending the game.
+     * @param decks     decks used in the game (must be 2).
      * @param commonObj is the set of common objective cards.
      */
-    public Game(ArrayList<Player> players, int numPlayer, Deck[] decks, ObjectiveCard[] commonObj){
+    public Game(ArrayList<Player> players, Deck[] decks, ObjectiveCard[] commonObj) {
         this.players = players;
-        this.numPlayers = numPlayer;
+        this.numPlayers = players.size();
         this.decks = decks;
         this.commonObj = commonObj;
     }
-    public Game(){
+
+    public Game() {
         players = new ArrayList<>();
         numPlayers = 0;
     }
@@ -89,8 +90,8 @@ public class Game {
      * the two participants' nickname.
      *
      * @return the requested private Chat.
-     * @exception RemoteException because Chat class extends UnicastRemoteObject.
-     * @exception NotExistingChatException because requested chat may not exist.
+     * @throws RemoteException          because Chat class extends UnicastRemoteObject.
+     * @throws NotExistingChatException because requested chat may not exist.
      */
     public Chat getPrivateChat(Player player1, Player player2) throws RemoteException, NotExistingChatException {
         int i = 0;
@@ -107,7 +108,7 @@ public class Game {
      *
      * @return ObjectiveCards array.
      */
-     public ObjectiveCard[] getCommonObj() {
+    public ObjectiveCard[] getCommonObj() {
         return commonObj;
     }
 
@@ -115,7 +116,7 @@ public class Game {
     /**
      * The method initializes the game by calling other methods to create the global chat and the private ones.
      *
-     * @exception  RemoteException because Chat class extends UnicastRemoteObject.
+     * @throws RemoteException because Chat class extends UnicastRemoteObject.
      */
     public void start() throws RemoteException {
         createGlobalChat();
@@ -128,27 +129,25 @@ public class Game {
      * score is the winner and a message is printed to show it. In case of more than one player with the same maximum
      * score, there is a draw, and they are all considered winners.
      */
-    public void finish(){
+    public void finish() {
         int max = players.getFirst().getPlayerGround().getPlayerScore();
         String winnerName = players.getFirst().getNickname();
         int curr;
         int k = 0;
-        for(int j = 1; j<numPlayers; j++){
+        for (int j = 1; j < numPlayers; j++) {
             curr = players.get(j).getPlayerGround().getPlayerScore();
             if (curr > max) {
                 max = curr;
                 winnerName = players.get(j).getNickname();
-            }
-            else if (curr == max) {
+            } else if (curr == max) {
                 multiWinners.add(players.get(j).getNickname());
             }
         }
         if (!multiWinners.isEmpty()) {
             System.out.println(winnerName + " wins the game!");
-        }
-        else {
+        } else {
             System.out.println("It's a draw: ");
-            while(!multiWinners.isEmpty()){
+            while (!multiWinners.isEmpty()) {
                 System.out.println(multiWinners.getLast() + " ");
                 multiWinners.removeLast();
             }
@@ -160,7 +159,7 @@ public class Game {
      * The method creates a new global chat through the Chat constructor: the number of players in the chat is the same
      * as the game one.
      *
-     * @exception  RemoteException because Chat class extends UnicastRemoteObject.
+     * @throws RemoteException because Chat class extends UnicastRemoteObject.
      */
     public void createGlobalChat() throws RemoteException {
         String name = "Global Chat";
@@ -173,27 +172,44 @@ public class Game {
      * For each player, a private chat is created with all the others player, one at a time, skipping the creation
      * when the two players are already paired.
      *
-     * @exception  RemoteException because Chat class extends UnicastRemoteObject.
+     * @throws RemoteException because Chat class extends UnicastRemoteObject.
      */
-    public void createPrivateChats() throws RemoteException{
-        for (int i = 0; i < (numPlayers-1); i++) {
+    public void createPrivateChats() throws RemoteException {
+        for (int i = 0; i < (numPlayers - 1); i++) {
             String name1 = players.get(i).getNickname();
-            for(int j = i+1; j<numPlayers; j++){
+            for (int j = i + 1; j < numPlayers; j++) {
                 String name2 = players.get(j).getNickname();
                 String name = name1 + " and " + name2 + " Private Chat";
                 privChatList[i] = new Chat(name, 2);
             }
         }
     }
-    public void addPlayer(Player player){
+
+    public void addPlayer(Player player) {
         players.add(player);
         numPlayers++;
     }
-    public void setDecks(Deck[] decks){
-        this.decks=decks;
-    }
-    public void setCommonObj(ObjectiveCard[] commonObj){
-        this.commonObj=commonObj;
+
+    public void setDecks(Deck[] decks) {
+        this.decks = decks;
     }
 
+    public void setCommonObj(ObjectiveCard[] commonObj) {
+        this.commonObj = commonObj;
+    }
+
+    public int getExpPlayers() {
+        return expPlayers;
+    }
+
+    public void setExpPlayers(int n) {
+        expPlayers = n;
+    }
+
+    public boolean isFirst() {
+        synchronized (players) {
+            return (numPlayers == 0);
+        }
+
+    }
 }

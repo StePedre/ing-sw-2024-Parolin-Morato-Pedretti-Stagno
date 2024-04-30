@@ -1,5 +1,7 @@
 package it.polimi.ingsw.CS;
 
+import it.polimi.ingsw.Model.*;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,23 +10,20 @@ import java.net.Socket;
 public class ServerHandlerSocket implements Runnable {
     private Socket client= null;
     private String nickname = null;
-    ObjectOutputStream out = null;
-    ObjectInputStream in = null;
-    int expPlayer = -1;
-    int numPlayer = -1;
-    public ServerHandlerSocket(Socket connection,String nickname,int expPlayer,int numPlayer) throws IOException {
+    private ObjectOutputStream out = null;
+    private ObjectInputStream in = null;
+    private Game game = null;
+    public ServerHandlerSocket(Socket connection,String nickname,Game game) throws IOException {
         client = connection;
         this.nickname = nickname;
         out = new ObjectOutputStream(connection.getOutputStream());
         in = new ObjectInputStream(connection.getInputStream());
-        this.expPlayer = expPlayer;
-        this.numPlayer = numPlayer;
     }
     @Override
     public void run() {
         //funzioni sul client
         try {
-            while (numPlayer != expPlayer) {
+            while (game.getNumPlayer() != game.getExpPlayers()) {
                 wait();
             }
         }//togliere quando tolto commento
