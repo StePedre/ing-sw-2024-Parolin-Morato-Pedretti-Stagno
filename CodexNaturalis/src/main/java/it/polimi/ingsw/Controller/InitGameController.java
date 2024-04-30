@@ -1,40 +1,51 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Model.*;
+import it.polimi.ingsw.View.CLI;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 // This controller does the following:
 // - Initializes the board, decks and hands of each player (BOARD AND HAND DONE!)
 // - Sets the first player to play (DONE!)
-// - Places the starting card on the board (TO DO)
+// - Places the starting card on the board (DONE!)
 // - Sets the secret objective for each player (DONE!)
 public class InitGameController {
+    ArrayList<Player> players;
+    int numberOfPlayers;
+    Player firstPlayer;
+    Deck[] decks;
+    // decks are created in the parsing controller
+    ObjectiveCard[] secretObjectives;
+    ObjectiveCard[] commonObjectives;
+    StarterCard[] startingCards;
+    static Game game;
+    CLI cliPlayer1;
+    CLI cliPlayer2;
+    CLI cliPlayer3;
+    CLI cliPlayer4;
 
-    public void InitGame () {
-        ArrayList<Player> players;
-        int numberOfPlayers;
-        Player firstPlayer;
-        Deck[] decks;
-        // decks are created in the parsing controller
-        ObjectiveCard[] secretObjectives;
-        ObjectiveCard[] commonObjectives;
-
+    public void InitializeGame () {
         numberOfPlayers = players.size();
 
         firstPlayer = setFirstPlayer(players, numberOfPlayers);
         // select first player
 
-        Game game = new Game(players, numberOfPlayers, decks, commonObjectives, firstPlayer);
-        // create the game
+        //condizione gioco non ancora creato: TO DO
+        if (game != null) {
+            game = new Game(players, numberOfPlayers, decks, commonObjectives, firstPlayer);
+            // create the game
+        }
+        else {
+            // error
+        }
 
         game.getDecks()[0].shuffle();
         game.getDecks()[1].shuffle();
         // shuffle R and G decks and reveal two cards
 
-
+        placeStartingCard(game, startingCards);
         // place initial card
 
         game.getDecks()[2].shuffle();
@@ -54,6 +65,7 @@ public class InitGameController {
         return firstPlayer;
     }
 
+    // selects the secret objective for each player
     private void selectSecretObj (Game game, ObjectiveCard[] secretObjectives) {
         ObjectiveCard chosenSecretObj;
         for (int i = 0; i < game.getPlayers().size(); i++) {
@@ -61,6 +73,29 @@ public class InitGameController {
             // receives selected card
             // chosenSecretObj = secretObjectives[0] or secretObjectives[1]
             game.getPlayers().get(i).getHand().setSecretObj(chosenSecretObj);
+        }
+    }
+
+    // place the starting card for each player on their player ground
+    private void placeStartingCard (Game game, StarterCard[] startingCards) {
+        ArrayList<Player> players = game.getPlayers();
+        StarterCard startingCard;
+        Position startingPosition = new Position(42,42);
+        int randomIndex;
+
+        for ( int i = 0; i < players.size(); i++) {
+            CLI pl
+            Random rand = new Random();
+            randomIndex = rand.nextInt(startingCards.length);
+            startingCard = startingCards[randomIndex];
+
+            // remove starer card from their deck
+            try {
+                players.get(i).getPlayerGround().placeCard(startingCard, startingPosition);
+                players.get(i).getCLI().showStarerCard (startingCard);
+            } catch (InvalidPositionException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
