@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ServerHandlerSocket implements Runnable {
+public class ServerHandlerSocket implements ServerHandlerInterface {
     private Socket client= null;
     private String nickname = null;
     private ObjectOutputStream out = null;
