@@ -12,34 +12,22 @@ import java.util.Random;
 // - Places the starting card on the board (DONE!)
 // - Sets the secret objective for each player (DONE!)
 public class InitGameController {
-    ArrayList<Player> players;
-    int numberOfPlayers;
-    Player firstPlayer;
-    Deck[] decks;
+    private Game game = null;
+    private Player firstPlayer;
     // decks are created in the parsing controller
-    ObjectiveCard[] secretObjectives;
-    ObjectiveCard[] commonObjectives;
-    StarterCard[] startingCards;
-    static Game game;
-    CLI cliPlayer1;
-    CLI cliPlayer2;
-    CLI cliPlayer3;
-    CLI cliPlayer4;
+    private ObjectiveCard[] secretObjectives;
+    private ObjectiveCard[] commonObjectives;
+    private StarterCard[] startingCards;
+    private CLI cliPlayer1;
+    private CLI cliPlayer2;
+    private CLI cliPlayer3;
+    private CLI cliPlayer4;
 
-    public void InitializeGame () {
-        numberOfPlayers = players.size();
+    public void InitializeGame (Game game) {
+        this.game=game;
 
-        firstPlayer = setFirstPlayer(players, numberOfPlayers);
+        firstPlayer = setFirstPlayer(game.getPlayers(), game.getNumPlayer());
         // select first player
-
-        //condizione gioco non ancora creato: TO DO
-        if (game != null) {
-            game = new Game(players, numberOfPlayers, decks, commonObjectives, firstPlayer);
-            // create the game
-        }
-        else {
-            // error
-        }
 
         game.getDecks()[0].shuffle();
         game.getDecks()[1].shuffle();
