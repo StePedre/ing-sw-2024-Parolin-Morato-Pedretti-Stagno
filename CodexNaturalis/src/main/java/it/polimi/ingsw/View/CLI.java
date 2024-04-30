@@ -37,8 +37,24 @@ public class CLI {
         do {
             choice = scanner.nextInt();
             scanner.nextLine();
-        } while(!(choice>0 && choice<5));
-        // if ... ogni opzione (copia da sotto)
+        } while(!(choice>0 && choice<4));
+        switch (choice) {
+            case 1 -> {
+                showGround();
+            }
+            case 2 -> {
+                showHand();
+            }
+            case 3 -> {
+                System.out.println("Which card do you want to see? Insert coordinates (x first):\n");
+                int coordX = scanner.nextInt();
+                scanner.nextLine();
+                int coordY = scanner.nextInt();
+                scanner.nextLine();
+                Card cardToShow = player.getPlayerGround().getGround()[coordX][coordY]; // prende carta (x,y) dal ground del player
+                showCard(cardToShow);      //sistemare show dei corner, solo quelli che servono -> al limite due metodi
+            }
+        }
     }
 
     public void yourTurn(){
@@ -87,19 +103,23 @@ public class CLI {
                 Deck deck1 = game.getDecks()[0];
                 Deck deck2 = game.getDecks()[1];
                 if(drawChoice >= 0 && drawChoice <3){
-                    deck1.drawCard(drawChoice);
+                   // deck1.drawCard(drawChoice); chiama il controller
+                    // chiama controller con parametro drawchoice
                     if(drawChoice == 2){
                         System.out.println("You drew this card:\n");
                         showCard(deck1.getCards().get(2));
+
                     }
                 }
                 else{
-                    deck2.drawCard(drawChoice);
+                   // deck2.drawCard(drawChoice);
+                    // chiama controller con parametro drawchoice
                     if(drawChoice == 5){
                         System.out.println("You drew this card:\n");
-                        showCard(deck1.getCards().get(5));
+                        showCard(deck2.getCards().get(5));
                     }
                 }
+
                 updateGame(game); // to do
             }
         }
