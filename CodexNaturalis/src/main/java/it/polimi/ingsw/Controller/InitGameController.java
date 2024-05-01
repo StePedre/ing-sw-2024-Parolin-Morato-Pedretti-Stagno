@@ -73,15 +73,15 @@ public class InitGameController {
         int randomIndex;
 
         for ( int i = 0; i < players.size(); i++) {
-            CLI pl
             Random rand = new Random();
             randomIndex = rand.nextInt(startingCards.length);
             startingCard = startingCards[randomIndex];
 
+            // add ability to choose the side of starter card
             // remove starer card from their deck
             try {
                 players.get(i).getPlayerGround().placeCard(startingCard, startingPosition);
-                players.get(i).getCLI().showStarerCard (startingCard);
+                players.get(i).getCLI().showStarterCard (startingCard);
             } catch (InvalidPositionException e) {
                 throw new RuntimeException(e);
             }
