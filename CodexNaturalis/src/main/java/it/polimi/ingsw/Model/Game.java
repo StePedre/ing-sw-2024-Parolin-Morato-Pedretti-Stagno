@@ -133,23 +133,32 @@ public class Game {
         int max = players.getFirst().getPlayerGround().getPlayerScore();
         String winnerName = players.getFirst().getNickname();
         int curr;
-        int k = 0;
+        int flag = 0;
         for (int j = 1; j < numPlayers; j++) {
             curr = players.get(j).getPlayerGround().getPlayerScore();
             if (curr > max) {
                 max = curr;
                 winnerName = players.get(j).getNickname();
-            } else if (curr == max) {
+                flag = 1;
+            } else if (curr == max && !(players.get(j).getNickname().equals(winnerName))){
+                multiWinners.add(winnerName);
                 multiWinners.add(players.get(j).getNickname());
+                flag = 2;
             }
         }
-        if (!multiWinners.isEmpty()) {
+        if (flag==1) {
             System.out.println(winnerName + " wins the game!");
-        } else {
+        } else if (flag==2) {  // pari punti vince chi ha realizzato più carte obiettivo
+
+
+
+            // to do
+
+
+            // se ancora pareggio:
             System.out.println("It's a draw: ");
-            while (!multiWinners.isEmpty()) {
-                System.out.println(multiWinners.getLast() + " ");
-                multiWinners.removeLast();
+            for(String name : multiWinners) {
+                System.out.println(name + " ");
             }
             System.out.println("win the game!");
         }
@@ -186,8 +195,10 @@ public class Game {
     }
 
     public void addPlayer(Player player) {
-        players.add(player);
-        numPlayers++;
+        if(numPlayers<4){
+            players.add(player);
+            numPlayers++;
+        }
     }
 
     public void setDecks(Deck[] decks) {

@@ -68,6 +68,9 @@ public class PlayerGround {
         return playerScore;
     }
 
+    public void setPlayerScore(int i) { this.playerScore=i;
+    }
+
     /**
      * The method gets the map between each position and its card (if present).
      *

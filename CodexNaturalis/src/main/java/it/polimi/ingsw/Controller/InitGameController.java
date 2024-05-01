@@ -61,7 +61,7 @@ public class InitGameController {
             // wait for decision made by the player through the GUI...
             // receives selected card
             // chosenSecretObj = secretObjectives[0] or secretObjectives[1]
-            game.getPlayers().get(i).getHand().setSecretObj(chosenSecretObj);
+           // game.getPlayers().get(i).getHand().setSecretObj(chosenSecretObj);
         }
     }
 
@@ -81,7 +81,7 @@ public class InitGameController {
             // remove starer card from their deck
             try {
                 players.get(i).getPlayerGround().placeCard(startingCard, startingPosition);
-                players.get(i).getCLI().showStarterCard (startingCard);
+          //      players.get(i).getCLI().showStarterCard (startingCard);
             } catch (InvalidPositionException e) {
                 throw new RuntimeException(e);
             }
