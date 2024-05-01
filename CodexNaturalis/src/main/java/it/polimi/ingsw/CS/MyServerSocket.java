@@ -2,6 +2,7 @@ package it.polimi.ingsw.CS;
 import it.polimi.ingsw.Controller.InitGameController;
 import it.polimi.ingsw.Controller.RoundController;
 import it.polimi.ingsw.Model.Game;
+import it.polimi.ingsw.Model.Player;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -42,7 +43,7 @@ public class MyServerSocket {
             Thread t = new Thread (client);
             t.start();
             notifyAll();
-        }while(game.getNumPlayer()==0 || game.getNumPlayer()< game.getExpPlayers());
+        }while(game.getNumPlayer()< game.getExpPlayers());
     }
     private void firstPlayer() throws IOException {
         if(game.isFirst()) {
