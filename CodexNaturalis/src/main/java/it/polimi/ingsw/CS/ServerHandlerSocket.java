@@ -15,25 +15,35 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     private Game game = null;
     private Player player;
     private RoundController rc = null;
-    public ServerHandlerSocket(Socket connection,String nickname,Game game) throws IOException {
-        client = connection;
-        out = new ObjectOutputStream(connection.getOutputStream());
-        in = new ObjectInputStream(connection.getInputStream());
+    private InitGameController controller = null;
+    public ServerHandlerSocket(ObjectOutputStream oos,ObjectInputStream ois,String nickname,Game game,InitGameController controller) throws IOException {
+        out = oos;
+        in = ois;
         this.game=game;
         this.player = new Player(nickname);
         game.addPlayer(player);
+        this.controller=controller;
     }
     @Override
-    public void run() {
+    public void run() {//prima qualcuno inizializza il gioco
         //funzioni sul client
         try {
+            out.writeObject("You're in the game");
             while (game.getNumPlayer() != game.getExpPlayers()) {
-                wait();
+                //wait();
             }
-            InitGameController c = new InitGameController(game);
-            out.writeObject(game); //inviare istanza game
+            sendData(); //inviare istanza game
             rc = new RoundController(game.getPlayers());//creare round controller
             rc.setFirstPlayer();
+            //started card
+            PlayerGroundController pgc = new PlayerGroundController(player.getPlayerGround());// momentaneo
+            StarterCard st = pgc.pickCard(game);
+            out.writeObject(st);
+            if(in.readBoolean()){
+                st.flipCard();
+            }
+            pgc.setFirtCard(st);
+            sendData();
             while(true){//fino a fine gioco
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
                    wait();
@@ -50,6 +60,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 drawCard();
                 rc.nextRound();//fine turno
                 notifyAll();
+                sendData();
             }
         }
         catch (IOException e){
@@ -59,6 +70,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             //gestione ecc
         }
         catch (ClassNotFoundException e) {
+            //gestione ecc
+        } catch (InvalidPositionException e) {
             //gestione ecc
         }
 
@@ -79,8 +92,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     }
     public void sendData() throws IOException, ClassNotFoundException {
         out.writeObject(game);//invio game aggiornato
-        out.writeObject(player.getHand());//invio mano aggiornata, forse non serve
-        out.writeObject(player.getPlayerGround());//invio Playerground aggiornato
+        out.writeObject(player);//invio Playerground e mano aggiornati
     }
     public void drawCard(){
         try {

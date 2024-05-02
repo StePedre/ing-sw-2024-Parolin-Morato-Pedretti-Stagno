@@ -61,7 +61,7 @@ public class InitGameController {
             // wait for decision made by the player through the GUI...
             // receives selected card
             // chosenSecretObj = secretObjectives[0] or secretObjectives[1]
-            game.getPlayers().get(i).getHand().setSecretObj(chosenSecretObj);
+           // game.getPlayers().get(i).getHand().setSecretObj(chosenSecretObj);
         }
     }
 

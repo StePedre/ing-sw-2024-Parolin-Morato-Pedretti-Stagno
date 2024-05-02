@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Each instance of Game class is a game session. Objects of class Game must have: a list of players and their number,
@@ -20,6 +21,20 @@ public class Game {
     private ArrayList<String> multiWinners = new ArrayList<>();
     private int expPlayers = -1;
     private int numPlayers;
+    private ArrayList<StarterCard> starterCards;
+
+    public StarterCard getOneStarterCard() {
+        synchronized (starterCards) {
+            Random rand = new Random();
+            return starterCards.remove(rand.nextInt());
+        }
+    }
+
+    public void setStarterCards(ArrayList<StarterCard> starterCards) {
+        synchronized (starterCards) {
+            this.starterCards = starterCards;
+        }
+    }
 
     /**
      * Class constructor.
@@ -210,6 +225,5 @@ public class Game {
         synchronized (players) {
             return (numPlayers == 0);
         }
-
     }
 }
