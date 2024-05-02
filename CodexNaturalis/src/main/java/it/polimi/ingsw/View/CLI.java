@@ -7,8 +7,22 @@ import java.util.*;
 public class CLI {
     public CLI(){}
 
+
     public void Welcome(Player player) {
         System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n");
+    }
+    public void winnersPrint(ArrayList<Player> winners){   //winners è il valore di ritorno di game.finish che mi viene passato dal controller
+        System.out.println("The game is over!");
+        if(winners.size()==1){
+            System.out.println("The winner is: " + winners.getFirst().getNickname());
+        }
+        else{
+            System.out.println("It's a draw! The winners are:\n");
+            for(Player p: winners){
+                System.out.println(p.getNickname()+"\n");
+            }
+        }
+
     }
 
     public boolean showStarterCard(StarterCard startcard){

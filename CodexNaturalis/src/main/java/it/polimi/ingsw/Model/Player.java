@@ -17,6 +17,7 @@ public class Player {
     private Hand hand;
     private PlayerGround playerGround;
     private Game game;
+    private int reachedObjNo;
     private CLI cli;
     private static final int maxLengthMsg = 255;
     // still a temporary value
@@ -122,6 +123,15 @@ public class Player {
             message = message.substring(0, maxLengthMsg);
         }
         return message;
+    }
+
+    /**
+     * The method gets the number of objectives (out of 3) that a player has reached. One is secret and two are common.
+     *
+     * @return the number of reached objectives.
+     */
+    public int getReachedObjNo(){
+        return reachedObjNo;
     }
 
     /**

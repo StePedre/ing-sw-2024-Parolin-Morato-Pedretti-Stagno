@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -18,20 +19,21 @@ public class Game {
     private Chat chat;
     private Chat[] privChatList;
     private ObjectiveCard[] commonObj;
-    private ArrayList<String> multiWinners = new ArrayList<>();
+    private ArrayList<Player> multiWinners = new ArrayList<>();
     private int expPlayers = -1;
     private int numPlayers;
+    private final Object synStarter = new Object(),synPlayer = new Object();
     private ArrayList<StarterCard> starterCards;
 
     public StarterCard getOneStarterCard() {
-        synchronized (starterCards) {
+        synchronized (synStarter) {
             Random rand = new Random();
             return starterCards.remove(rand.nextInt());
         }
     }
 
     public void setStarterCards(ArrayList<StarterCard> starterCards) {
-        synchronized (starterCards) {
+        synchronized (synStarter) {
             this.starterCards = starterCards;
         }
     }
@@ -61,7 +63,9 @@ public class Game {
      * @return the list of players.
      */
     public ArrayList<Player> getPlayers() {
-        return players;
+        synchronized (synPlayer) {
+            return players;
+        }
     }
 
     /**
@@ -79,7 +83,9 @@ public class Game {
      * @return the number of participant in the game.
      */
     public int getNumPlayer() {
-        return numPlayers;
+        synchronized (synPlayer) {
+            return numPlayers;
+        }
     }
 
     /**
@@ -144,39 +150,76 @@ public class Game {
      * score is the winner and a message is printed to show it. In case of more than one player with the same maximum
      * score, there is a draw, and they are all considered winners.
      */
-    public void finish() {
+    /*public ArrayList<Player> finish() {
         int max = players.getFirst().getPlayerGround().getPlayerScore();
-        String winnerName = players.getFirst().getNickname();
+        Player winner = players.getFirst();
         int curr;
-        int flag = 0;
+        int flag = 1;
         for (int j = 1; j < numPlayers; j++) {
             curr = players.get(j).getPlayerGround().getPlayerScore();
             if (curr > max) {
                 max = curr;
-                winnerName = players.get(j).getNickname();
+                winner = players.get(j);
+                if(!(multiWinners.isEmpty())){
+                    multiWinners.clear();
+                }
+                multiWinners.add(winner);
                 flag = 1;
-            } else if (curr == max && !(players.get(j).getNickname().equals(winnerName))){
-                multiWinners.add(winnerName);
-                multiWinners.add(players.get(j).getNickname());
+            } else if (curr == max && !(players.get(j).getNickname().equals(winner.getNickname()))){
+                multiWinners.add(players.get(j));
                 flag = 2;
             }
         }
         if (flag==1) {
-            System.out.println(winnerName + " wins the game!");
-        } else if (flag==2) {  // pari punti vince chi ha realizzato più carte obiettivo
+            return multiWinners;
 
-
-
-            // to do
-
-
-            // se ancora pareggio:
-            System.out.println("It's a draw: ");
-            for(String name : multiWinners) {
-                System.out.println(name + " ");
+        } else {  // pari punti vince chi ha realizzato più carte obiettivo
+            int maxObjNo = multiWinners.getFirst().getReachedObjNo();
+            ArrayList<Player> multiWinners2 = new ArrayList<>();
+            for(Player obj: multiWinners){
+                if(obj.getReachedObjNo()>maxObjNo){
+                    maxObjNo = obj.getReachedObjNo();
+                    winner = obj;
+                    if(!(multiWinners2.isEmpty())){
+                        multiWinners2.clear();
+                    }
+                    multiWinners2.add(winner);
+                } else if (obj.getReachedObjNo() == maxObjNo) {
+                    multiWinners2.add(obj);
+                }
             }
-            System.out.println("win the game!");
+            return multiWinners2;
         }
+    }*/
+
+    public ArrayList<Player>  finish(){
+        int[] scores = new int[numPlayers];
+        int i = 0;
+        for(Player p : players){
+            scores[i] = p.getPlayerGround().getPlayerScore();
+            i++;
+        }
+        Arrays.sort(scores);
+        for(Player p  : players){
+            if(p.getPlayerGround().getPlayerScore()==scores[i]){
+                multiWinners.add(p);
+            }
+        }
+        if(multiWinners.size()>1){
+            int[] ObjNo = new int[multiWinners.size()];
+            i=0;
+            for(Player p : multiWinners){
+                ObjNo[i] = p.getReachedObjNo();
+                i++;
+            }
+            Arrays.sort(ObjNo);
+            for(Player p: multiWinners){
+                if(p.getReachedObjNo()<ObjNo[i]){
+                    multiWinners.remove(p);
+                }
+            }
+        }
+        return multiWinners;
     }
 
     /**
@@ -209,31 +252,65 @@ public class Game {
         }
     }
 
+    /**
+     * The method adds a player to the game and increments the total number of players. This can only happen
+     * until the total number of players is 4.
+     *
+     * @param player is the player to add.
+     */
     public void addPlayer(Player player) {
-        if(numPlayers<4){
-            players.add(player);
-            numPlayers++;
+        synchronized (synPlayer) {
+            if (numPlayers < 4) {
+                players.add(player);
+                numPlayers++;
+            }
         }
     }
 
+    /**
+     * The method sets the decks of the game.
+     *
+     * @param decks is the array of decks that will be used in the game.
+     */
     public void setDecks(Deck[] decks) {
         this.decks = decks;
     }
 
+    /**
+     * The method sets the common objectives shared by all players. There are two of them, gathered in an array of
+     * Objective Card.
+     *
+     * @param commonObj is the array of two common objectives.
+     */
     public void setCommonObj(ObjectiveCard[] commonObj) {
         this.commonObj = commonObj;
     }
 
+    /**
+     * The method gets the expected number of players.
+     *
+     * @return the number of expected players.
+     */
     public int getExpPlayers() {
         return expPlayers;
     }
 
+    /**
+     * The method sets the number of expected players in the game.
+     *
+     * @param n is the number of expected players.
+     */
     public void setExpPlayers(int n) {
         expPlayers = n;
     }
 
+    /**
+     * The method checks if the number of player is zero (in other words, if a player is the first to enter the game).
+     *
+     * @return true if there are no other players, false otherwise.
+     */
     public boolean isFirst() {
-        synchronized (players) {
+        synchronized (synPlayer) {
             return (numPlayers == 0);
         }
     }
