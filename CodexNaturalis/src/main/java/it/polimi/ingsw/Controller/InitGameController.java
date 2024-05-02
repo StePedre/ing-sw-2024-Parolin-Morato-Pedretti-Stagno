@@ -81,7 +81,7 @@ public class InitGameController {
             // remove starer card from their deck
             try {
                 players.get(i).getPlayerGround().placeCard(startingCard, startingPosition);
-                players.get(i).getCLI().showStarterCard (startingCard);
+          //      players.get(i).getCLI().showStarterCard (startingCard);
             } catch (InvalidPositionException e) {
                 throw new RuntimeException(e);
             }
