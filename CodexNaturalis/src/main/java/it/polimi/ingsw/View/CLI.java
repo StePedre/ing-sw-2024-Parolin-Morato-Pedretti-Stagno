@@ -2,29 +2,16 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
 import it.polimi.ingsw.Model.ScoreRules.NSymbolsRule;
-import java.io.*;
 import java.util.*;
 
 public class CLI {
+    public CLI(){}
 
-    private Player player;
-    private Game game;
-    private ObjectInputStream ois;
-    private ObjectOutputStream oos;
-
-    public CLI(Player player, Game game, InputStream input, OutputStream output) throws IOException {
-        this.player = player;
-        this.game = game;
-        this.ois = new ObjectInputStream(input);
-        this.oos = new ObjectOutputStream(output);
-
-    }
-
-    public void Welcome() {
+    public void Welcome(Player player) {
         System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n");
     }
 
-    public void showStarterCard(StarterCard startcard) throws IOException, ClassNotFoundException {
+    public boolean showStarterCard(StarterCard startcard){
         System.out.println("Your first card it's this:\n");
         showCard(startcard);
         System.out.println(toStringBackCorners(startcard));
@@ -39,9 +26,7 @@ public class CLI {
             }
             scanner.nextLine();
         } while(!(choice == 0 || choice == 1));
-        oos.writeBoolean(flag);
-        update(); // ground updated with first card
-        showGround();
+        return flag;
     }
 
     public int chooseObjective(ObjectiveCard obj1, ObjectiveCard obj2){
@@ -54,8 +39,8 @@ public class CLI {
         } while(!(choice==1 || choice == 2));
         return choice;
     }
- // aggiungere un while che lo fa andare finchè non è il proprio turno
-    public void notYourTurn(){
+ // aggiungere un while (nel client) che lo fa andare finchè non è il proprio turno
+    public void notYourTurn(Game game, Player  player){
         System.out.println("\nIt's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground (and common objectives)\n2- Show hand\n3- Show card on ground\n\n");
         Scanner scanner = new Scanner(System.in);
         int choice;
@@ -65,9 +50,9 @@ public class CLI {
         } while(!(choice>0 && choice<4));
         switch (choice) {
             case 1 ->
-                showGround();
+                showGround(game, player);
             case 2 ->
-                showHand();
+                showHand(player);
             case 3 -> {
                 System.out.println("Which card do you want to see? Insert coordinates (x first):\n");
                 int coordX = scanner.nextInt();
@@ -86,20 +71,24 @@ public class CLI {
             }
         }
     }
-    public void yourTurn() throws IOException, ClassNotFoundException {
+
+    public boolean yourTurnPlay(Game game, Player player){
         System.out.println("\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n 4- Play card\n\n");
+        int choice;
         Scanner scanner = new Scanner(System.in);
-        int choice = 0;
-        while(choice!=4) {
             do {
                 choice = scanner.nextInt();
                 scanner.nextLine();
             } while (!(choice > 0 && choice < 5));
             switch (choice) {
-                case 1 ->
-                    showGround();
-                case 2 ->
-                    showHand();
+                case 1 -> {
+                    showGround(game, player);
+                    return false;
+                }
+                case 2 -> {
+                    showHand(player);
+                    return false;
+                }
                 case 3 -> {
                     System.out.println("Which card do you want to see? Insert coordinates (x first):\n");
                     int coordX = scanner.nextInt();
@@ -114,71 +103,81 @@ public class CLI {
                         PlayableCard CardToShow = (PlayableCard) cardToShow;
                         showCard(CardToShow);
                     }
+                    return false;
                 }
                 case 4 -> {
-                    System.out.println("Where do you want to place the card? Insert coordinates between 0 and 83 (X first):\n");
-                    int coordX = -1;
-                    int coordY = -1;
-                    while(!(coordY>=0 && coordY<84 && coordX>=0 && coordX <84)){
-                        coordX = scanner.nextInt();
-                        scanner.nextLine();
-                        coordY = scanner.nextInt();
-                        scanner.nextLine();
-                    }
-                    System.out.println("Which card do you want to play? 1, 2 or 3? This is your hand:\n");
-                    showHand();
-                    Card cardToPlay = null;
-                    int card = 0;
-                    while(card!=1 && card!=2 && card!=3) {
-                        card = scanner.nextInt();
-                        scanner.nextLine();
-                        if (card == 1) {
-                            cardToPlay = player.getHand().getCard(0);
-                        } else if (card == 2) {
-                            cardToPlay = player.getHand().getCard(1);
-                        } else if (card == 3) {
-                            cardToPlay = player.getHand().getCard(2);
-                        } else {
-                            System.out.println("Invalid choice. Choose between 1, 2 and 3:\n");
-                        }
-                    }
-                    System.out.println("Flipped (input 1) or not (input 0)?\n");
-                    int flip = -1;
-                    while(flip!=1 && flip!=0) {
-                        flip = scanner.nextInt();
-                        scanner.nextLine();
-                            System.out.println("Invalid choice. Choose between 1, 2 and 3:\n");
-                    }
-                    if (flip ==1) {
-                        cardToPlay.flipCard();
-                    }
-                    oos.writeObject(cardToPlay);
-                    oos.writeObject(new Position(coordX, coordY));
-                    update();
-                    showGround();
-
+                    return true;
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + choice);
             }
-        }
-        // draw section
-        System.out.println("You placed one card. Now it's time to draw. What do you want to do? Select the number corresponding to your choice:\n1- Show hand\n2- Show decks and draw a card\n\n");
-        int choice2;
-        do {
-            choice2 = scanner.nextInt();
+    }
+                    //client inputs coordinates where to place the card
+    public Position inputCoordinates(){
+        System.out.println("Where do you want to place the card? Insert coordinates between 0 and 83 (X first):\n");
+        int coordX = -1;
+        int coordY = -1;
+        Scanner scanner = new Scanner(System.in);
+        while(!(coordY>=0 && coordY<84 && coordX>=0 && coordX <84)){
+            coordX = scanner.nextInt();
             scanner.nextLine();
-        } while(!(choice2>0 && choice2<3));
-        switch ((choice2)){
-            case 1 ->
-                showHand();
-            case 2 -> {
-                Card drawChoice = chooseFromDecks(game);
-                oos.writeObject(drawChoice);
-                update();
+            coordY = scanner.nextInt();
+            scanner.nextLine();
+        }
+        return (new Position(coordX, coordY));
+    }
+                                    //client chooses which card (and if flipped) to place in the coordinates given before
+    public PlayableCard inputCardToPlace(Player player){
+        System.out.println("Which card do you want to play? 1, 2 or 3? This is your hand:\n");
+        showHand(player);
+        PlayableCard cardToPlay = null;
+        int card = 0;
+        Scanner scanner = new Scanner(System.in);
+        while(card!=1 && card!=2 && card!=3) {
+            card = scanner.nextInt();
+            scanner.nextLine();
+            if (card == 1) {
+                cardToPlay = (PlayableCard) player.getHand().getCard(0);
+            } else if (card == 2) {
+                cardToPlay = (PlayableCard) player.getHand().getCard(1);
+            } else if (card == 3) {
+                cardToPlay = (PlayableCard) player.getHand().getCard(2);
+            } else {
+                System.out.println("Invalid choice. Choose between 1, 2 and 3:\n");
             }
         }
+        System.out.println("Flipped (input 1) or not (input 0)?\n");
+        int flip = -1;
+        while(flip!=1 && flip!=0) {
+            flip = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("Invalid choice. Choose between 1, 2 and 3:\n");
+        }
+        if (flip ==1) {
+            cardToPlay.flipCard();
+        }
+        return cardToPlay;
     }
-    public void showHand(){
+
+        // draw section
+    public PlayableCard yourTurnDraw(Game game, Player player){
+        System.out.println("You placed one card. Now it's time to draw. What do you want to do? Select the number corresponding to your choice:\n1- Show hand\n2- Show decks and draw a card\n\n");
+        int choice2 = 0;
+        Scanner scanner = new Scanner(System.in);
+        while(choice2!=2) {
+            do {
+                choice2 = scanner.nextInt();
+                scanner.nextLine();
+            } while (!(choice2 > 0 && choice2 < 3));
+            switch ((choice2)) {
+                case 1 -> showHand(player);
+                case 2 -> {
+                }
+            }
+        }
+        return chooseFromDecks(game);
+    }
+
+    public void showHand(Player player){
        Hand hand = player.getHand();
        ObjectiveCard secretObj = hand.getObjCard();
 
@@ -310,7 +309,7 @@ public class CLI {
         System.out.println("Color: " + card.getColor() + ", rule: " + y + "\n" + z + "\n");
     }
 
-    public void showGround(){
+    public void showGround(Game game, Player player){
         ObjectiveCard[] commonObjs = game.getCommonObj();
         System.out.println("\nThese are your common objectives:\n");
         for(ObjectiveCard obj: commonObjs){
@@ -343,7 +342,7 @@ public class CLI {
         }
     }
 
-    public Card chooseFromDecks(Game game){
+    public PlayableCard chooseFromDecks(Game game){
         Deck[] decks = game.getDecks();
         String deck1name = decks[0].getKindOfDeck();
         String deck2name = decks[1].getKindOfDeck();
@@ -392,10 +391,6 @@ public class CLI {
             case 5->
                 chosen = deck2card3;
         }
-        return chosen;
-    }
-    public void update() throws IOException, ClassNotFoundException {
-        game = (Game) ois.readObject();
-        player = (Player) ois.readObject();
+        return (PlayableCard) chosen;
     }
 }
