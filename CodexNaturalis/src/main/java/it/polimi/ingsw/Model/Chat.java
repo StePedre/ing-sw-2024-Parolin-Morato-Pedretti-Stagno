@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ import java.util.Arrays;
  * showing all previous messages.
  */
 
-public class Chat extends UnicastRemoteObject implements ChatInterface{
+public class Chat extends UnicastRemoteObject implements ChatInterface, Serializable {
     private String Name;
     private int PlayersNo;
     private Player[] playersList;

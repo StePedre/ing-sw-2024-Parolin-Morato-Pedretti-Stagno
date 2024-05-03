@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serializable;
+
 /**
  * The class Corner is related to the class Card, as every Card object owns
  * two arrays of four corners each: front and back corners.
@@ -9,7 +11,7 @@ package it.polimi.ingsw.Model;
  * The methods of this class include the setting of the availability status.
  */
 
-    public class Corner{
+    public class Corner implements Serializable {
         private String pos;
         private Resource cornerRes;
         private boolean isAvailable;

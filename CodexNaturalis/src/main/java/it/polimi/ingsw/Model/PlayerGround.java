@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
+
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * covered corners (which means a new Card cannot be attached there).
  */
 
-public class PlayerGround {
+public class PlayerGround implements Serializable {
     private int playerScore;
     private Map<Position, Card> cardPosition;
     private Card[][] ground;

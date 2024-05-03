@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +12,7 @@ import java.util.HashMap;
  * they are of type Resource.
  * One method is added in this extending class: the clone method.
  */
-public class PlayableCard extends Card{
+public class PlayableCard extends Card implements Serializable {
     private HashMap<Resource, Integer> requirements;
 
     /**

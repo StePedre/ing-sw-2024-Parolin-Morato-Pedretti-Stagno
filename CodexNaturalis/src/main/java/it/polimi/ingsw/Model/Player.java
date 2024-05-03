@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model;
 
 import it.polimi.ingsw.View.CLI;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ import java.util.Scanner;
  * to send in a chat.
  */
 
-public class Player {
+public class Player implements Serializable {
     private String nickname;
     private Hand hand;
     private PlayerGround playerGround;

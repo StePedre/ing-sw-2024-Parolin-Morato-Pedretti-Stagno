@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Arrays;
  * PlayerGround and checking if it's possible to draw a card from a deck (the deck is not empty).
  */
 
-public class Hand {
+public class Hand implements Serializable {
     private Card[] cards;
     private ObjectiveCard secretObj;
     private static final int maxNumberOfCards = 3;

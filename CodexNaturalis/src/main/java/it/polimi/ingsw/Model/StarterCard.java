@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * has one or more back Resource(s).
  * One method is added in this extending class: the clone method.
  */
-public class StarterCard extends Card{
+public class StarterCard extends Card implements Serializable {
     private ArrayList<Resource> backRes;
 
     /**

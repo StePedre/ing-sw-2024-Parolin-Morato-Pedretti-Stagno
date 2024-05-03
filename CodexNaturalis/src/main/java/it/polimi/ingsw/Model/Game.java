@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +14,7 @@ import java.util.Random;
  * one winner.
  */
 
-public class Game {
+public class Game implements Serializable {
     private ArrayList<Player> players;
     private Deck[] decks;
     private Chat chat;

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serializable;
+
 /**
  * The Resource enumeration specifies the only seven types of resources possible.
  * Each resource is associated with a color: three of them (plume, potion, scroll)
@@ -7,7 +9,7 @@ package it.polimi.ingsw.Model;
  * green, bug matches violet.
  */
 
-public enum Resource {
+public enum Resource implements Serializable {
     PLUME("gold"),POTION("gold"),SCROLL("gold"),FOX("blue"),MUSHROOM("red"),LEAF("green"),BUG("violet"), BLANK("blank"), NOTVISIBLE("null");
     private String color;
 

@@ -2,6 +2,8 @@ package it.polimi.ingsw.Model;
 
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
+import java.io.Serializable;
+
 /**
  * ObjectiveCard class only has two attributes and their get methods:
  * numeric identifier and scoring rule from package ScoreRule.
@@ -9,7 +11,7 @@ import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
  * both in their usage and in their features.
  */
 
-public class ObjectiveCard {
+public class ObjectiveCard implements Serializable {
 
         private final int id;
         private final ScoreRule rule;

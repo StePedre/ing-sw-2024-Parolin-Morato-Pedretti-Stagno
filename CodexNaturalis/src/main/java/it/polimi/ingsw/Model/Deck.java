@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Model;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -9,7 +10,7 @@ import java.util.Collections;
  * and one to draw a card.
  */
 
-public class Deck{
+public class Deck implements Serializable {
     private int numberOfCards;
     private final String kindOfDeck;
     private ArrayList<Card> cards;

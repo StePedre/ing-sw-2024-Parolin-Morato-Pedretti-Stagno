@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serializable;
+
 /**
  * Class Position is used in every PlayerGround to identify the position of each card.
  * It consists in two numeric coordinates x and y, so it is provided of get and set
@@ -7,7 +9,7 @@ package it.polimi.ingsw.Model;
  * if another object of the same class has the same exact position, so they are equivalent.
  */
 
-public class Position {
+public class Position implements Serializable {
 
         private int x;
         private int y;

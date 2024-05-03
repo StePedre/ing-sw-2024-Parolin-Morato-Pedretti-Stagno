@@ -1,12 +1,14 @@
 package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
+import java.io.Serializable;
+
 /**
  * The Card class is an abstraction that has two specifications: PlayableCard and StarterCard.
  * Each object of class Card has: numeric id, scoring rule, main resource, four front corners
  * and four back corners. It can be positioned with the front visible, or flipped.
  */
-public abstract class Card {
+public abstract class Card implements Serializable {
     private int id;
     private ScoreRule rule;
     private Resource color;
