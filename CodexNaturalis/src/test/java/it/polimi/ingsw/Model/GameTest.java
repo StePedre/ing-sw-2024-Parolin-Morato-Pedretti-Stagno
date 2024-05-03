@@ -62,6 +62,30 @@ class GameTest {
     }
 
     @Test
-    void isFirst() {
+    void isFirstFalse() {   //2 players added -> there is already a first player -> false
+        Game game = new Game(playerss, decks, comObj);
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        boolean flag = game.isFirst();
+        assertFalse(flag);
+    }
+
+    @Test
+    void isFirstTrue() {   //no players added -> there is no first player -> true
+        Game game = new Game(playerss, decks, comObj);
+        boolean flag = game.isFirst();
+        assertTrue(flag);
+    }
+
+    @Test
+    void addPlayer(){  //should stop at 4 players, therefore should print p4.nickname
+        Player p5 = new Player("Andrea");
+        Game game = new Game(playerss, decks, comObj);
+        game.addPlayer(p1);
+        game.addPlayer(p2);
+        game.addPlayer(p3);
+        game.addPlayer(p4);
+        game.addPlayer(p5);
+        System.out.println(playerss.getLast().getNickname());
     }
 }
