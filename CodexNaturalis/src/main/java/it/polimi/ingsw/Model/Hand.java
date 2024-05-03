@@ -80,7 +80,7 @@ public class Hand implements Serializable {
      * @return true if it's possible to draw from the deck passed as a parameter (so it's not empty), false otherwise.
      */
     public boolean drawCard(Deck deck) {
-        return deck.getNumberOfCards() > 0;
+        return !deck.getCards().isEmpty();
     }
 
     /**
