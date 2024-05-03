@@ -23,19 +23,11 @@ public class Game implements Serializable {
     private ArrayList<Player> multiWinners = new ArrayList<>();
     private int expPlayers = -1;
     private int numPlayers;
+    private ArrayList<ObjectiveCard> otherObjs = null;
 
     private ArrayList<StarterCard> starterCards;
 
-    public StarterCard getOneStarterCard() {
-        synchronized (starterCards) {
-            Random rand = new Random();
-            return starterCards.remove(rand.nextInt());
-        }
-    }
 
-    public void setStarterCards(ArrayList<StarterCard> starterCards) {
-            this.starterCards = starterCards;
-    }
 
     /**
      * Class constructor.
@@ -327,6 +319,26 @@ public class Game implements Serializable {
     public boolean isFirst() {
         synchronized (players) {
             return (numPlayers == 0);
+        }
+    }
+    public StarterCard getOneStarterCard() {
+        synchronized (starterCards) {
+            Random rand = new Random();
+            return starterCards.remove(rand.nextInt());
+        }
+    }
+
+    public void setStarterCards(ArrayList<StarterCard> starterCards) {
+        this.starterCards = starterCards;
+    }
+    public void setOtherObjs(ArrayList<ObjectiveCard> objs){
+        this.otherObjs = objs;
+    }
+    public ObjectiveCard[] pickPlayerObj(){
+        synchronized (otherObjs) {
+            Random rand = new Random();
+            ObjectiveCard[] objs = {otherObjs.remove(rand.nextInt(otherObjs.size())), otherObjs.remove(rand.nextInt(otherObjs.size()))};
+            return objs;
         }
     }
 }

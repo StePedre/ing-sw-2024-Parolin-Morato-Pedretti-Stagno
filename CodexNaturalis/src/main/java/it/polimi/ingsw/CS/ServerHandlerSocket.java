@@ -25,7 +25,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         this.controller=controller;
     }
     @Override
-    public void run() {//prima qualcuno inizializza il gioco
+    public void run() {
         //funzioni sul client
         try {
             out.writeObject("You're in the game");
@@ -36,14 +36,18 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             sendData(); //inviare istanza game
             rc = new RoundController(game.getPlayers());//creare round controller
             rc.setFirstPlayer();
+            PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());// momentaneo
+            //select secret obj
+            ObjectiveCard[] obj = pc.pickObjCard(game);
+            out.writeObject(obj);
+            pc.setObjSecret((ObjectiveCard) in.readObject());
             //started card
-            PlayerGroundController pgc = new PlayerGroundController(player.getPlayerGround());// momentaneo
-            StarterCard st = pgc.pickCard(game);
+            StarterCard st = pc.pickCard(game);
             out.writeObject(st);
             if(in.readBoolean()){
                 st.flipCard();
             }
-            pgc.setFirtCard(st);
+            pc.setFirtCard(st);
             sendData();
             while(true){//fino a fine gioco
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
