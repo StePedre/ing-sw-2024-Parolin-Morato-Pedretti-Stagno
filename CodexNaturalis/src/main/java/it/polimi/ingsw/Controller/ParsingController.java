@@ -15,11 +15,47 @@ import java.util.Objects;
 
 
 public class ParsingController {
-    ArrayList<PlayableCard> playableCards;
-    ArrayList<StarterCard> starterCards;
-    ArrayList<ObjectiveCard> objectiveCards;
+    public Deck createResDeck () throws IOException, ParseException {
+        Deck resDeck;
+        int numberOfCards = 40;
+        String typeOfDeck = "Resource";
+        ArrayList<Card> playableCards = parsingPlayableCards();
+        ArrayList<Card> resCards = new ArrayList<>();
 
-    public ArrayList<PlayableCard> parsingPlayableCards() throws IOException, ParseException {
+        for (Card pc : playableCards) {
+            if (pc.getId() > 0 && pc.getId() < 41)
+                resCards.add(pc);
+        }
+
+        resDeck = new Deck(numberOfCards, typeOfDeck, resCards);
+        return resDeck;
+    }
+
+    public Deck createGoldDeck () throws IOException, ParseException {
+        Deck goldDeck;
+        int numberOfCards = 40;
+        String typeOfDeck = "Gold";
+        ArrayList<Card> playableCards = parsingPlayableCards();
+        ArrayList<Card> goldCards = new ArrayList<>();
+
+        for (Card pc : playableCards) {
+            if (pc.getId() > 40 && pc.getId() < 81)
+                goldCards.add(pc);
+        }
+
+        goldDeck = new Deck(numberOfCards, typeOfDeck, goldCards);
+        return goldDeck;
+    }
+
+    public ArrayList<StarterCard> createStarterCardsArray () throws IOException, ParseException {
+        return parsingStarterCards();
+    }
+
+    public ArrayList<ObjectiveCard> createObjectiveCardsArray () throws IOException, ParseException {
+        return parsingObjectiveCards();
+    }
+
+    private ArrayList<Card> parsingPlayableCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
         FileReader fileReader = new FileReader("CodexNaturalis/src/main/java/Resources/carte.json");
@@ -30,6 +66,7 @@ public class ParsingController {
         JSONArray playableCard = (JSONArray) cards.get("playablecards");
 
         id = 1;
+        ArrayList<Card> playableCards = new ArrayList<>();
         for (Object o : playableCard) {
             JSONObject playableCardObj = (JSONObject) o;
 
@@ -128,47 +165,114 @@ public class ParsingController {
             }
 
             JSONArray ruleArray = (JSONArray) playableCardObj.get("rule");
-            ScoreRule rule = null;
-
-            for (Object r : ruleArray) {
-                JSONObject ruleObj = (JSONObject) r;
-
-                String typeRule = (String) ruleObj.get("type");
-                if (Objects.equals(typeRule, "FlatRule")) {
-                    int pointsFlatRule = (int) ruleObj.get("points");
-                    rule = new FlatRule(pointsFlatRule);
-                }
-                if (Objects.equals(typeRule, "NSymbolsRule")) {
-                    String resTypeString = (String) ruleObj.get("restype");
-                    Resource resTypeRes = assignResource(resTypeString);
-                    int resNum = (int) ruleObj.get("resnum");
-                    int pointsNSymbolsRule = (int) ruleObj.get("points");
-                    rule = new NSymbolsRule(resTypeRes, resNum, pointsNSymbolsRule);
-                }
-
-            }
+            ScoreRule rule = getScoreRule(ruleArray);
 
             Card card = new PlayableCard(id, rule, frontCorners, backCorners, colorCard, requirements);
+            playableCards.add(card);
             id ++;
         }
 
         return playableCards;
-
     }
 
-    public ArrayList<StarterCard> parsingStarterCards() {
+    private ArrayList<StarterCard> parsingStarterCards() throws IOException, ParseException {
+        int id;
+        JSONParser jsonParser = new JSONParser();
+        FileReader fileReader = new FileReader("CodexNaturalis/src/main/java/Resources/carte.json");
+        Object obj = jsonParser.parse(fileReader);
+        JSONObject jsonObject = (JSONObject) obj;
+        JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
+        JSONObject cards = (JSONObject) gameCards.get("cards");
+        JSONArray starterCard = (JSONArray) cards.get("startercards");
+
+        id = 81;
+        ArrayList<StarterCard> starterCards = new ArrayList<>();
+        for (Object o : starterCard) {
+            JSONObject starterCardObj = (JSONObject) o;
+
+            // get the resources and create every front corner
+            String TLFString = (String) starterCardObj.get("TLFcorner");
+            Resource TLFRes = assignResource(TLFString);
+            Corner TLFCorner = new Corner("top left front", TLFRes, true);
+            String TRFString = (String) starterCardObj.get("TRFcorner");
+            Resource TRFRes = assignResource(TRFString);
+            Corner TRFCorner = new Corner("top right front", TRFRes, true);
+            String BLFString = (String) starterCardObj.get("BLFcorner");
+            Resource BLFRes = assignResource(BLFString);
+            Corner BLFCorner = new Corner("bottom left front", BLFRes, true);
+            String BRFString = (String) starterCardObj.get("BRFcorner");
+            Resource BRFRes = assignResource(BRFString);
+            Corner BRFCorner = new Corner("bottom right front", BRFRes, true);
+
+            // create the array of front corners
+            Corner[] frontCorners = {TLFCorner, TRFCorner, BLFCorner, BRFCorner};
+
+            // set the availability of every corner that does not exist to false
+            for (Corner c : frontCorners) {
+                if (c.getCornerRes() == Resource.NOTVISIBLE)
+                    c.setAvailable(false);
+            }
+
+            // get the resources and create every back corner
+            String TLBString = (String) starterCardObj.get("TLBcorner");
+            Resource TLBRes = assignResource(TLBString);
+            Corner TLBCorner = new Corner("top left back", TLBRes, true);
+            String TRBString = (String) starterCardObj.get("TRBcorner");
+            Resource TRBRes = assignResource(TRBString);
+            Corner TRBCorner = new Corner("top right back", TRBRes, true);
+            String BLBString = (String) starterCardObj.get("BLBcorner");
+            Resource BLBRes = assignResource(BLBString);
+            Corner BLBCorner = new Corner("bottom left back", BLBRes, true);
+            String BRBString = (String) starterCardObj.get("BRBcorner");
+            Resource BRBRes = assignResource(BRBString);
+            Corner BRBCorner = new Corner("bottom right back", BRBRes, true);
+
+            // create the array of back corners
+            Corner[] backCorners = {TLBCorner, TRBCorner, BLBCorner, BRBCorner};
+
+            // set the availability of every corner that does not exist to false
+            for (Corner c : backCorners) {
+                if (c.getCornerRes() == Resource.NOTVISIBLE)
+                    c.setAvailable(false);
+            }
+
+            JSONArray backResArray = (JSONArray) starterCardObj.get("backres");
+            ArrayList<Resource> backRes = getBackRes(backResArray);
+
+            StarterCard card = new StarterCard(id, null, frontCorners, backCorners, Resource.BLANK, backRes);
+            starterCards.add(card);
+            id ++;
+        }
 
         return starterCards;
-
     }
-    public ArrayList<ObjectiveCard> parsingObjectiveCards() {
+
+    private ArrayList<ObjectiveCard> parsingObjectiveCards() throws IOException, ParseException {
+        int id;
+        JSONParser jsonParser = new JSONParser();
+        FileReader fileReader = new FileReader("CodexNaturalis/src/main/java/Resources/carte.json");
+        Object obj = jsonParser.parse(fileReader);
+        JSONObject jsonObject = (JSONObject) obj;
+        JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
+        JSONArray objectiveCardsArray = (JSONArray) gameCards.get("objectivecards");
+
+        id = 87;
+        ArrayList<ObjectiveCard> objectiveCards = new ArrayList<>();
+        for (Object o : objectiveCardsArray) {
+            JSONObject objectiveCardObj = (JSONObject) o;
+            JSONArray ruleArray = (JSONArray) objectiveCardObj.get("rule");
+            ScoreRule rule = getScoreRule(ruleArray);
+
+            ObjectiveCard card = new ObjectiveCard(id, rule);
+            objectiveCards.add(card);
+            id ++;
+        }
 
         return objectiveCards;
-
     }
 
     private HashMap<Resource, Integer> initHashMap () {
-        HashMap<Resource, Integer> map = new HashMap<Resource, Integer>();
+        HashMap<Resource, Integer> map = new HashMap<>();
         map.put(Resource.BUG, 0);
         map.put(Resource.FOX, 0);
         map.put(Resource.MUSHROOM, 0);
@@ -256,7 +360,7 @@ public class ParsingController {
 
             // CompositionRule
             if (Objects.equals(typeRule, "CompositionRule")) {
-                Position[] offset;
+                int points = (int) ruleObj.get("points");
 
                 String color1String = (String) ruleObj.get("color1");
                 Resource color1Res = mapResourceToColor(color1String);
@@ -267,6 +371,17 @@ public class ParsingController {
 
                 Resource[] colors = {color1Res, color2Res, color3Res};
 
+                int offsetx2 = (int) ruleObj.get("offsetx2");
+                int offsety2 = (int) ruleObj.get("offsety2");
+                int offsetx3 = (int) ruleObj.get("offsetx3");
+                int offsety3 = (int) ruleObj.get("offsety3");
+
+                Position offset1 = new Position(offsetx2, offsety2);
+                Position offset2 = new Position(offsetx3, offsety3);
+
+                Position[] offset = {offset1, offset2};
+
+                rule = new CompositionRule(offset, colors, points);
             }
 
             // OneOfEachRule
@@ -276,5 +391,39 @@ public class ParsingController {
 
         }
         return rule;
+    }
+
+    private ArrayList<Resource> getBackRes (JSONArray backResArray) {
+        ArrayList<Resource> backRes = new ArrayList<>();
+
+        for (Object b : backResArray) {
+            JSONObject backResObj = (JSONObject) b;
+
+            String res1String = (String) backResObj.get("res1");
+            Resource res1;
+            if (Objects.equals(res1String, "none"))
+                res1 = Resource.BLANK;
+            else
+                res1 = assignResource(res1String);
+            backRes.add(res1);
+
+            String res2String = (String) backResObj.get("res2");
+            Resource res2;
+            if (Objects.equals(res2String, "none"))
+                res2 = Resource.BLANK;
+            else
+                res2 = assignResource(res2String);
+            backRes.add(res2);
+
+            String res3String = (String) backResObj.get("res3");
+            Resource res3;
+            if (Objects.equals(res3String, "none"))
+                res3 = Resource.BLANK;
+            else
+                res3 = assignResource(res3String);
+            backRes.add(res3);
+        }
+
+        return backRes;
     }
 }

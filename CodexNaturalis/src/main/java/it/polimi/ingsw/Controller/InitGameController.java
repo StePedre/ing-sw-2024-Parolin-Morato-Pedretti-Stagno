@@ -18,40 +18,23 @@ public class InitGameController {
     private ObjectiveCard[] secretObjectives;
     private ObjectiveCard[] commonObjectives;
     private StarterCard[] startingCards;
-    private CLI cliPlayer1;
-    private CLI cliPlayer2;
-    private CLI cliPlayer3;
-    private CLI cliPlayer4;
 
     public InitGameController(Game game){
         this.game=game;
     }
     public void InitializeGame () {
-        firstPlayer = setFirstPlayer(game.getPlayers(), game.getNumPlayer());
-        // select first player
-
         game.getDecks()[0].shuffle();
         game.getDecks()[1].shuffle();
         // shuffle R and G decks and reveal two cards
 
-        placeStartingCard(game, startingCards);
-        // place initial card
-
         game.getDecks()[2].shuffle();
         // shuffle O decks and reveal two cards
-
-        selectSecretObj(game, secretObjectives);
-        // select secret objective
-
-        populateHand(game);
-        // create hand for each player
     }
 
-    private Player setFirstPlayer (ArrayList<Player> players, int numberOfPlayers) {
+    private Player setFirstPlayer (ArrayList<Player> players) {
         Random rand = new Random();
-        int indexFirstPlayer = rand.nextInt(numberOfPlayers);
-        Player firstPlayer = players.get(indexFirstPlayer);
-        return firstPlayer;
+        int indexFirstPlayer = rand.nextInt(players.size());
+        return players.get(indexFirstPlayer);
     }
 
     // selects the secret objective for each player
