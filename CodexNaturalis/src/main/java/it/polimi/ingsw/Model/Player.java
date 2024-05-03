@@ -140,6 +140,17 @@ public class Player {
      *
      * @exception RemoteException because class Chat extends UnicastRemoteObject.
      */
+
+    public void setReachedObjNo(int num){
+        this.reachedObjNo = num;
+    }
+
+    /**
+     * The method sends a message to the global chat, where every player can read it. The global chat can be obtained
+     * from the game instance.
+     *
+     * @exception RemoteException because class Chat extends UnicastRemoteObject.
+     */
     public void sendMsg() throws RemoteException {
         String messageToSend;
         messageToSend = getMessage();

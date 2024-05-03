@@ -203,11 +203,13 @@ public class Game {
 
     public ArrayList<Player>  finish(){
         int[] scores = new int[numPlayers];
+        ArrayList<Player> multi2 = new ArrayList<>();
         int i = 0;
         for(Player p : players){
             scores[i] = p.getPlayerGround().getPlayerScore();
             i++;
         }
+        i--;
         Arrays.sort(scores);
         for(Player p  : players){
             if(p.getPlayerGround().getPlayerScore()==scores[i]){
@@ -221,14 +223,15 @@ public class Game {
                 ObjNo[i] = p.getReachedObjNo();
                 i++;
             }
+            i--;
             Arrays.sort(ObjNo);
             for(Player p: multiWinners){
-                if(p.getReachedObjNo()<ObjNo[i]){
-                    multiWinners.remove(p);
+                if(p.getReachedObjNo()==ObjNo[i]){
+                    multi2.add(p);
                 }
             }
         }
-        return multiWinners;
+        return multi2;
     }
 
     /**

@@ -13,6 +13,10 @@ class GameTest {
     Player p2 = new Player("Gabbo");
     Player p3 = new Player("Stefano");
     Player p4 = new Player("Matteo");
+    PlayerGround pg1 = new PlayerGround();
+    PlayerGround pg2 = new PlayerGround();
+    PlayerGround pg3 = new PlayerGround();
+    PlayerGround pg4 = new PlayerGround();
     ArrayList<Player> playerss = new ArrayList<>();
     Deck[] decks = new Deck[2];
     ObjectiveCard[] comObj= new ObjectiveCard[2];
@@ -32,7 +36,29 @@ class GameTest {
     }
 
     @Test
-    void finish() {
+    void finish() { // tests if finish() method works based on winners name (they must match the given scores)
+        p1.setPlayerGround(pg1);
+        p2.setPlayerGround(pg2);
+        p3.setPlayerGround(pg3);
+        p4.setPlayerGround(pg4);
+        p1.setReachedObjNo(3);
+        p2.setReachedObjNo(1);
+        p3.setReachedObjNo(2);    //Note: to try every possible case, change scores and reached objectives (they all work)
+        p4.setReachedObjNo(3);
+        p1.getPlayerGround().setPlayerScore(23);
+        p2.getPlayerGround().setPlayerScore(23);
+        p3.getPlayerGround().setPlayerScore(23);
+        p4.getPlayerGround().setPlayerScore(23);
+        playerss.add(p1);
+        playerss.add(p2);
+        playerss.add(p3);
+        playerss.add(p4);
+
+        Game game =  new Game(playerss, decks, comObj);
+        ArrayList<Player> winners = game.finish();
+        for(Player p: winners){
+            System.out.println(p.getNickname());
+        }
     }
 
     @Test
