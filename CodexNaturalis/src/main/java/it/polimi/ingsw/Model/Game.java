@@ -17,7 +17,7 @@ public class Game {
     private ArrayList<Player> players;
     private Deck[] decks;
     private Chat chat;
-    private Chat[] privChatList;
+    private Chat[] privChatList = new Chat[6];
     private ObjectiveCard[] commonObj;
     private ArrayList<Player> multiWinners = new ArrayList<>();
     private int expPlayers = -1;
@@ -116,12 +116,21 @@ public class Game {
      */
     public Chat getPrivateChat(Player player1, Player player2) throws RemoteException, NotExistingChatException {
         int i = 0;
+        Chat toReturn = null;
         for (Chat value : privChatList) {
-            if (value.getPlayer(0) == player1 && value.getPlayer(1) == player2) {
-                return value;
+            if(value==null){
+                break;
+            } else if ((value.getPlayer(0) == player1 && value.getPlayer(1) == player2) || (value.getPlayer(1) == player1 && value.getPlayer(0) == player2)) {
+                toReturn = value;
+                break;
             }
         }
-        throw new NotExistingChatException("Error: chat do not exist");
+        if(toReturn!=null){
+            return toReturn;
+        }
+        else{
+            throw new NotExistingChatException("Error: chat do not exist");
+        }
     }
 
     /**
@@ -242,12 +251,16 @@ public class Game {
      * @throws RemoteException because Chat class extends UnicastRemoteObject.
      */
     public void createPrivateChats() throws RemoteException {
+        int k = 0;
         for (int i = 0; i < (numPlayers - 1); i++) {
             String name1 = players.get(i).getNickname();
             for (int j = i + 1; j < numPlayers; j++) {
                 String name2 = players.get(j).getNickname();
                 String name = name1 + " and " + name2 + " Private Chat";
-                privChatList[i] = new Chat(name, 2);
+                privChatList[k] = new Chat(name, 2);
+                privChatList[k].getPlayersList()[0] = players.get(i);
+                privChatList[k].getPlayersList()[1] = players.get(j);
+                k++;
             }
         }
     }
