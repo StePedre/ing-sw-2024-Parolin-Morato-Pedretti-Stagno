@@ -16,27 +16,25 @@ public class MyServerSocket {
     private ObjectOutputStream oos = null;
     private ObjectInputStream ois = null;
     private InitGameController controller;
-    //condividere exp e num con RMI
     Game game=null;
     public MyServerSocket(int port,Game game, InitGameController c) throws IOException {
         serverSocket = new ServerSocket(port);
-        this.game=game;//trovare porta su cui lavorare e aggiungere try-catch
+        this.game=game;
         this.controller=c;
     }
     public void runServer() throws IOException, ClassNotFoundException {
          do{
-             if(game.getNumPlayer() == game.getExpPlayers()) {
-             oos.writeObject("reached max numbers of player\n");
-             //lanciare eccezione numero giocatori
-             break;
-             } //finchè ho 0 giocatori o ho meno giocatori di quelli attesi, come sincronizzo con RMI??
             System.out.println("Waiting for player\n");
             connection = serverSocket.accept();
-            //reader e writer
+             //reader e writer
             oos= new ObjectOutputStream(connection.getOutputStream());
             ois = new ObjectInputStream(connection.getInputStream());
             //raggiunto numero gioactori
-
+             if(game.getNumPlayer() == game.getExpPlayers()) {
+                 oos.writeBoolean(false);
+                 break;
+             }
+             oos.writeBoolean(true);
             //chiedere nickname
             oos.writeObject("Insert your nickname :\n");
             String nickname=(String) ois.readObject();
@@ -46,7 +44,7 @@ public class MyServerSocket {
             ServerHandlerSocket client = new ServerHandlerSocket(oos,ois,nickname,game,controller);
             Thread t = new Thread (client);
             t.start();
-            //notifyAll();
+            //game.notifyAll();
         }while(game.getNumPlayer()< game.getExpPlayers());
     }
     private void firstPlayer() throws IOException, ClassNotFoundException {

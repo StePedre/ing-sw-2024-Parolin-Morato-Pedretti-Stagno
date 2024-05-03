@@ -30,8 +30,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         try {
             out.writeObject("You're in the game");
             while (game.getNumPlayer() != game.getExpPlayers()) {
-                //wait();
+                //game.wait();
             }
+
             sendData(); //inviare istanza game
             rc = new RoundController(game.getPlayers());//creare round controller
             rc.setFirstPlayer();

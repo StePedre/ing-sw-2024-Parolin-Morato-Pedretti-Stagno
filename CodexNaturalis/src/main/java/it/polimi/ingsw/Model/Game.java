@@ -23,20 +23,18 @@ public class Game implements Serializable {
     private ArrayList<Player> multiWinners = new ArrayList<>();
     private int expPlayers = -1;
     private int numPlayers;
-    private final Object synStarter = new Object(),synPlayer = new Object();
+
     private ArrayList<StarterCard> starterCards;
 
     public StarterCard getOneStarterCard() {
-        synchronized (synStarter) {
+        synchronized (starterCards) {
             Random rand = new Random();
             return starterCards.remove(rand.nextInt());
         }
     }
 
     public void setStarterCards(ArrayList<StarterCard> starterCards) {
-        synchronized (synStarter) {
             this.starterCards = starterCards;
-        }
     }
 
     /**
@@ -64,7 +62,7 @@ public class Game implements Serializable {
      * @return the list of players.
      */
     public ArrayList<Player> getPlayers() {
-        synchronized (synPlayer) {
+        synchronized (players) {
             return players;
         }
     }
@@ -84,7 +82,7 @@ public class Game implements Serializable {
      * @return the number of participant in the game.
      */
     public int getNumPlayer() {
-        synchronized (synPlayer) {
+        synchronized (players) {
             return numPlayers;
         }
     }
@@ -276,7 +274,7 @@ public class Game implements Serializable {
      * @param player is the player to add.
      */
     public void addPlayer(Player player) {
-        synchronized (synPlayer) {
+        synchronized (players) {
             if (numPlayers < 4) {
                 players.add(player);
                 numPlayers++;
@@ -327,7 +325,7 @@ public class Game implements Serializable {
      * @return true if there are no other players, false otherwise.
      */
     public boolean isFirst() {
-        synchronized (synPlayer) {
+        synchronized (players) {
             return (numPlayers == 0);
         }
     }
