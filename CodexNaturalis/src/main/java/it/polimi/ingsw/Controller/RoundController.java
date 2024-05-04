@@ -9,17 +9,18 @@ import java.util.Random;
 public class RoundController {
     private static ArrayList<Player> players = null;
     private static int round = -1;
-    private Random rand = new Random();
+    private final Random rand = new Random();
+    private static final Object lock= new Object();
 
     public RoundController(ArrayList<Player> players) {
-        synchronized (players) {
+        synchronized (lock) {
             if (this.players == null) {
                 this.players = players;
             }
         }
     }
     public void nextRound(){
-        synchronized (players) {
+        synchronized (lock) {
             if (round == players.size() - 1)
                 round = 0;
             else
@@ -27,7 +28,7 @@ public class RoundController {
         }
     }
     public void setFirstPlayer(){
-        synchronized (players) {
+        synchronized (lock) {
             if (round == -1) {
                 round = rand.nextInt(players.size());
             }
