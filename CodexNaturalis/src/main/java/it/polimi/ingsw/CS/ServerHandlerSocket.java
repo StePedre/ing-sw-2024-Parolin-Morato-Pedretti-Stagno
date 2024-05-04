@@ -28,11 +28,10 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     public void run() {
         //funzioni sul client
         try {
-            out.writeObject("You're in the game");
+            out.writeObject(player);
             while (game.getNumPlayer() != game.getExpPlayers()) {
                 //game.wait();
             }
-
             sendData(); //inviare istanza game
             rc = new RoundController(game.getPlayers());//creare round controller
             rc.setFirstPlayer();
@@ -40,7 +39,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             //select secret obj
             ObjectiveCard[] obj = pc.pickObjCard(game);
             out.writeObject(obj);
-            pc.setObjSecret((ObjectiveCard) in.readObject());
+            pc.setObjSecret(obj[((int)in.readObject())-1]);
             //started card
             StarterCard st = pc.pickCard(game);
             out.writeObject(st);
@@ -51,7 +50,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             sendData();
             while(true){//fino a fine gioco
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
-                   wait();
+                   //wait();
                 }
                 //invio componenti gioco aggiornate
                 sendData();
@@ -69,9 +68,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             }
         }
         catch (IOException e){
-            //gestione ecc
-        }
-        catch(InterruptedException e){
             //gestione ecc
         }
         catch (ClassNotFoundException e) {

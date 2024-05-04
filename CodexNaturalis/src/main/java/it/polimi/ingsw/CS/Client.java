@@ -5,7 +5,7 @@ import java.net.ConnectException;
 
 public class Client {
     public static void main(String[] args) {
-        try{
+        try{//chiedere Gui/Tui e tipo di connesione
             MyClientSocket myClientSocket = new MyClientSocket(59090,"127.0.0.1");
             myClientSocket.runClient();
         }

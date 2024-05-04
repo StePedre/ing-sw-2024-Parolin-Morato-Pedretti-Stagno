@@ -36,7 +36,6 @@ public class MyServerSocket {
              }
              oos.writeBoolean(true);
             //chiedere nickname
-            oos.writeObject("Insert your nickname :\n");
             String nickname=(String) ois.readObject();
             //verificare primo player
             firstPlayer();
@@ -51,7 +50,6 @@ public class MyServerSocket {
         if(game.isFirst()) {
             //chiedere num exp player
             oos.writeBoolean(true);
-            oos.writeObject("You are the first player, how many others do you want to play with?");
             int n =(int) ois.readObject();
             game.setExpPlayers(n);
         }

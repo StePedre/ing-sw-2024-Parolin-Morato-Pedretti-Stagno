@@ -35,7 +35,7 @@ public class TUI {
      * @return desired number of players.
      */
     public int askPlayersNo(){
-        System.out.println("Insert how many players you'd like, please: ");
+        System.out.println("You're the first player, insert how many players you'd like, please: ");
         Scanner scanner = new Scanner(System.in);
         return scanner.nextInt();
     }
@@ -46,7 +46,7 @@ public class TUI {
      * @param player gets the message.
      */
     public void Welcome(Player player) {
-        System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n");
+        System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n"+"Please wait for others player");
     }
 
     /**

@@ -10,7 +10,7 @@ public class MyClientSocket {
     private Socket socket= null;
     private ObjectInputStream in = null;
     private ObjectOutputStream out = null;
-    private Scanner scan = new Scanner(System.in);
+    private final Scanner scan = new Scanner(System.in);
     Player player = null;
     Game game = null;
     TUI tui =  null;
@@ -24,17 +24,7 @@ public class MyClientSocket {
             throw new ConnectException();
         }
         System.out.println("Client connected");
-        String s = (String )in.readObject();
-        System.out.println(s);
-        out.writeObject(scan.nextLine());
-        if(in.readBoolean()){//se primo player, aggiungere sta roba alla classe TUI
-            s = (String) in.readObject();
-            System.out.println(s);
-            int n = scan.nextInt();
-            out.writeObject(n);
-        }
-        s= (String) in.readObject();
-        System.out.println(s);
+
         if(true) {//decisione se usare TUI o GUI
             useTUI();
         }
@@ -43,10 +33,18 @@ public class MyClientSocket {
         }
     }
     public void useTUI() throws IOException, ClassNotFoundException {
-        tui = new TUI();
-        game = (Game) in.readObject();
+        tui= new TUI();
+        out.writeObject(tui.insertNickname());
+        if(in.readBoolean()){
+            out.writeObject(tui.askPlayersNo());
+        }
         player = (Player) in.readObject();
         tui.Welcome(player);
+        game = (Game) in.readObject();
+        player = (Player) in.readObject();
+        ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
+        out.writeObject(tui.chooseObjective(objs[0],objs[1]));
+        out.writeBoolean(tui.showStarterCard((StarterCard) in.readObject()));
     }
     public void useGUI(){}
 

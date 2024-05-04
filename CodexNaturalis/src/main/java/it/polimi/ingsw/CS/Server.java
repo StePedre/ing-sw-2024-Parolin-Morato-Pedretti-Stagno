@@ -3,6 +3,7 @@ package it.polimi.ingsw.CS;
 import it.polimi.ingsw.Controller.InitGameController;
 import it.polimi.ingsw.Controller.ParsingController;
 import it.polimi.ingsw.Model.*;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,15 +31,21 @@ public class Server {
             throw new RuntimeException(e);
         }
     }
-    public static void parse(Game game){
+    public static void parse(Game game) {
         ParsingController pc = new ParsingController();
-        game.setStarterCards(pc.parsingStarterCards());
-        //altro parsing, chiedi a stefano
-        ArrayList<ObjectiveCard> list = pc.parsingObjectiveCards();
-        Random rand = new Random();
-        ObjectiveCard[] objs = {list.remove(rand.nextInt(list.size())),list.remove(rand.nextInt(list.size()))};
-        game.setCommonObj(objs);
-        game.setOtherObjs(list);
-        //parsing deck
+        try {
+            game.setStarterCards(pc.createStarterCardsArray());
+            ArrayList<ObjectiveCard> list = pc.createObjectiveCardsArray();
+            //altro parsing, chiedi a stefano
+            Random rand = new Random();
+            ObjectiveCard[] objs = {list.remove(rand.nextInt(list.size())),list.remove(rand.nextInt(list.size()))};
+            game.setCommonObj(objs);
+            game.setOtherObjs(list);
+            //parsing deck
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
