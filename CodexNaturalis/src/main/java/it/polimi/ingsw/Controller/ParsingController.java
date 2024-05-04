@@ -58,7 +58,7 @@ public class ParsingController {
     private ArrayList<Card> parsingPlayableCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
-        FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
+        FileReader fileReader = new FileReader("CodexNaturalis/src/main/java/it/polimi/ingsw/Resources/carte.json");
         Object obj = jsonParser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) obj;
         JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
@@ -178,7 +178,7 @@ public class ParsingController {
     private ArrayList<StarterCard> parsingStarterCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
-        FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
+        FileReader fileReader = new FileReader("CodexNaturalis/src/main/java/it/polimi/ingsw/Resources/carte.json");
         Object obj = jsonParser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) obj;
         JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
@@ -250,7 +250,7 @@ public class ParsingController {
     private ArrayList<ObjectiveCard> parsingObjectiveCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
-        FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
+        FileReader fileReader = new FileReader("CodexNaturalis/src/main/java/it/polimi/ingsw/Resources/carte.json");
         Object obj = jsonParser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) obj;
         JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
@@ -341,7 +341,7 @@ public class ParsingController {
 
             // FlatRule
             if (Objects.equals(typeRule, "FlatRule")) {
-                int pointsFlatRule = (int) ruleObj.get("points");
+                int pointsFlatRule = Integer.parseInt((String) ruleObj.get("points"));
                 rule = new FlatRule(pointsFlatRule);
             }
 
@@ -349,8 +349,8 @@ public class ParsingController {
             if (Objects.equals(typeRule, "NSymbolsRule")) {
                 String resTypeString = (String) ruleObj.get("restype");
                 Resource resTypeRes = assignResource(resTypeString);
-                int resNum = (int) ruleObj.get("resnum");
-                int pointsNSymbolsRule = (int) ruleObj.get("points");
+                int resNum = Integer.parseInt((String) ruleObj.get("resnum"));
+                int pointsNSymbolsRule = Integer.parseInt((String) ruleObj.get("points"));
                 rule = new NSymbolsRule(resTypeRes, resNum, pointsNSymbolsRule);
             }
 
@@ -360,7 +360,7 @@ public class ParsingController {
 
             // CompositionRule
             if (Objects.equals(typeRule, "CompositionRule")) {
-                int points = (int) ruleObj.get("points");
+                int points = Integer.parseInt((String) ruleObj.get("points"));
 
                 String color1String = (String) ruleObj.get("color1");
                 Resource color1Res = mapResourceToColor(color1String);
@@ -371,10 +371,10 @@ public class ParsingController {
 
                 Resource[] colors = {color1Res, color2Res, color3Res};
 
-                int offsetx2 = (int) ruleObj.get("offsetx2");
-                int offsety2 = (int) ruleObj.get("offsety2");
-                int offsetx3 = (int) ruleObj.get("offsetx3");
-                int offsety3 = (int) ruleObj.get("offsety3");
+                int offsetx2 = Integer.parseInt((String)  ruleObj.get("offsetx2"));
+                int offsety2 = Integer.parseInt((String) ruleObj.get("offsety2"));
+                int offsetx3 = Integer.parseInt((String) ruleObj.get("offsetx3"));
+                int offsety3 = Integer.parseInt((String) ruleObj.get("offsety3"));
 
                 Position offset1 = new Position(offsetx2, offsety2);
                 Position offset2 = new Position(offsetx3, offsety3);
