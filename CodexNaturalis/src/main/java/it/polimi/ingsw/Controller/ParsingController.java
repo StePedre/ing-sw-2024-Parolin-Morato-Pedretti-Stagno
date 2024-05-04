@@ -58,7 +58,7 @@ public class ParsingController {
     private ArrayList<Card> parsingPlayableCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
-        FileReader fileReader = new FileReader("CodexNaturalis/src/main/java/it/polimi/ingsw/Resources/carte.json");
+        FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
         Object obj = jsonParser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) obj;
         JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
@@ -178,7 +178,7 @@ public class ParsingController {
     private ArrayList<StarterCard> parsingStarterCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
-        FileReader fileReader = new FileReader("CodexNaturalis/src/main/java/it/polimi/ingsw/Resources/carte.json");
+        FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
         Object obj = jsonParser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) obj;
         JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
@@ -250,7 +250,7 @@ public class ParsingController {
     private ArrayList<ObjectiveCard> parsingObjectiveCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
-        FileReader fileReader = new FileReader("CodexNaturalis/src/main/java/it/polimi/ingsw/Resources/carte.json");
+        FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
         Object obj = jsonParser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) obj;
         JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
