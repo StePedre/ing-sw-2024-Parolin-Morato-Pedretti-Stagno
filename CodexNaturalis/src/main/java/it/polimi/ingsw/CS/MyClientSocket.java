@@ -14,10 +14,12 @@ public class MyClientSocket {
     Player player = null;
     Game game = null;
     TUI tui =  null;
-    public MyClientSocket(int port, String host) throws IOException {
+    boolean inter;
+    public MyClientSocket(int port, String host,boolean inter) throws IOException {
         socket = new Socket(host, port);
         in = new ObjectInputStream(socket.getInputStream());
         out = new ObjectOutputStream(socket.getOutputStream());
+        this.inter = inter;
     }
     public void runClient() throws IOException, ClassNotFoundException {// per test println
         if(!in.readBoolean()){
@@ -25,7 +27,7 @@ public class MyClientSocket {
         }
         System.out.println("Client connected");
 
-        if(true) {//decisione se usare TUI o GUI
+        if(inter) {//decisione se usare TUI o GUI
             useTUI();
         }
         else{
@@ -40,15 +42,42 @@ public class MyClientSocket {
         }
         player = (Player) in.readObject();
         tui.Welcome(player);
-        game = (Game) in.readObject();
-        player = (Player) in.readObject();
+        updateData();
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         out.writeBoolean(tui.showStarterCard((StarterCard) in.readObject()));
+        updateData();
+        Thread t = new Thread(()->{while(true) {
+                                        tui.notYourTurn(game, player);
+                                    }
+                                });
+        //aspettare turno
+        while(true){
+            if(in.readBoolean()){
+                if(t.isAlive()){
+                    t.interrupt();
+                }
+                updateData();
+                while(!tui.yourTurnPlay(game,player)){//quando vero ha deciso cosa giocare
+                }
+                out.writeObject(tui.inputCardToPlace(player));
+                out.writeObject(tui.inputCoordinates());
+                out.writeObject(tui.yourTurnDraw(game,player));
+                updateData();
+            }
+            else{
+                t.start();// modificabile mettendo fuori dal ciclo e a fine turno
+            }
+        }
+
     }
     public void useGUI(){}
 
     public void close() throws IOException {
         socket.close();
+    }
+    public void updateData() throws IOException, ClassNotFoundException {
+        game = (Game) in.readObject();
+        player = (Player) in.readObject();
     }
 }

@@ -2,15 +2,46 @@ package it.polimi.ingsw.CS;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
         try{//chiedere Gui/Tui e tipo di connesione
-            MyClientSocket myClientSocket = new MyClientSocket(59090,"127.0.0.1");
-            myClientSocket.runClient();
+            System.out.println("Do you want to use a GUI or a TUI?");
+            Scanner s = new Scanner(System.in);
+            String choice;
+            boolean inter = false,flag = false;
+            do {
+                choice = s.nextLine();
+                if (choice.equalsIgnoreCase("TUI")) {
+                    inter = true;
+                    flag=true;
+                } else if(choice.equalsIgnoreCase("GUI")){
+                    inter = false;
+                    flag=true;
+                }
+                else{
+                    System.out.println("Please, choose between GUI and TUI");
+                }
+            }while(!flag);
+            flag=false;
+            System.out.println("Do you want to use a Socket or a RMI connection?");
+            do {
+                choice = s.nextLine();
+                if (choice.equalsIgnoreCase("RMI")) {
+                    //RMI
+                    flag=true;
+                } else if(choice.equalsIgnoreCase("socket")){
+                    MyClientSocket myClientSocket = new MyClientSocket(59090, "127.0.0.1",inter);
+                    myClientSocket.runClient();
+                    flag=true;
+                }else{
+                    System.out.println("Please, choose between Socket and RMI");
+                }
+            }while(!flag);
         }
         catch (ConnectException e){
-            System.out.println("Numero di giocatori massimo raggiunto o nessun server attivo");
+            System.out.println("Max number of player reached or no server listening");
         }
         catch(IOException e){
             e.printStackTrace();

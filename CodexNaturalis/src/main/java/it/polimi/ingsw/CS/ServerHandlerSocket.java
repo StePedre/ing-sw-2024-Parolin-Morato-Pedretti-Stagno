@@ -48,10 +48,14 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             }
             pc.setFirtCard(st);
             sendData();
-            while(true){//fino a fine gioco
+            if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
+                out.writeBoolean(false);
+            }
+            while(true){//fino a fine gioco, gestire primo turno
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
-                   //wait();
+                   //wait();.
                 }
+                out.writeBoolean(true);
                 //invio componenti gioco aggiornate
                 sendData();
                 //attendo di ricevere carta da giocare
@@ -63,8 +67,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 //pescaggio carta
                 drawCard();
                 rc.nextRound();//fine turno
-                notifyAll();
+                //notifyAll();
                 sendData();
+                out.writeBoolean(false);
             }
         }
         catch (IOException e){
@@ -95,12 +100,40 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         out.writeObject(game);//invio game aggiornato
         out.writeObject(player);//invio Playerground e mano aggiornati
     }
-    public void drawCard(){
+    public void drawCard(){// 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
         try {
-            Deck deck = (Deck) in.readObject();
-            int i = in.readInt();
+            //Deck deck = (Deck) in.readObject();
+            int i =(int) in.readObject();
+            Deck deck = null;
+            int card = switch (i) {
+                case 0 -> {
+                    deck = game.getDecks()[0];
+                    yield 0;
+                }
+                case 1 -> {
+                    deck = game.getDecks()[0];
+                    yield 1;
+                }
+                case 2 -> {
+                    deck = game.getDecks()[0];
+                    yield 2;
+                }
+                case 3 -> {
+                    deck = game.getDecks()[1];
+                    yield 0;
+                }
+                case 4 -> {
+                    deck = game.getDecks()[1];
+                    yield 1;
+                }
+                case 5 -> {
+                    deck = game.getDecks()[1];
+                    yield 2;
+                }
+                default -> -1;
+            };
             if(player.getHand().drawCard(deck)){//sostituire con controller
-                player.getHand().chooseCard(deck.drawCard(i));
+                player.getHand().chooseCard(deck.drawCard(card));
             }
         } catch (IOException e) {
             //gestire ecc
