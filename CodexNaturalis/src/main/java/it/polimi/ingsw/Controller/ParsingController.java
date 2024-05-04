@@ -13,8 +13,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-
+/**
+ * ParsingController class implements the controller in charge of managing parsing from json file to java objects.
+ * The json file contains all the cards from Codex Naturalis and all their features. Methods are documented below.
+ */
 public class ParsingController {
+
+    /**
+     * The method builds the deck of resource cards, which are the first 40 cards presented in json file.
+     * Object from class Deck is, in fact, filled with 40 PlayableCard objects.
+     *
+     * @return deck of resource cards.
+     */
     public Deck createResDeck () throws IOException, ParseException {
         Deck resDeck;
         int numberOfCards = 40;
@@ -31,6 +41,13 @@ public class ParsingController {
         return resDeck;
     }
 
+    /**
+     * The method builds the deck of golden cards, which are the cards from 41 to 80 presented in json file.
+     * Object from class Deck is, in fact, filled with 40 PlayableCard objects, that are extracted from the list of
+     * Playable Cards returned by parsingPlayableCards() method. See such method for information.
+     *
+     * @return deck of golden cards.
+     */
     public Deck createGoldDeck () throws IOException, ParseException {
         Deck goldDeck;
         int numberOfCards = 40;
@@ -46,15 +63,38 @@ public class ParsingController {
         goldDeck = new Deck(numberOfCards, typeOfDeck, goldCards);
         return goldDeck;
     }
-
+    /**
+     * See method parsingStarterCards() for further details.
+     *
+     * @exception IOException is thrown where there is a problem with input or output.
+     * @exception ParseException is thrown where there is a problem in parsing.
+     * @return return value of parsingStarterCards.
+     */
     public ArrayList<StarterCard> createStarterCardsArray () throws IOException, ParseException {
         return parsingStarterCards();
     }
 
+    /**
+     * See method parsingObjectiveCards() for further details.
+     *
+     * @exception IOException is thrown where there is a problem with input or output.
+     * @exception ParseException is thrown where there is a problem in parsing.
+     * @return return value of parsingObjectiveCards.
+     */
     public ArrayList<ObjectiveCard> createObjectiveCardsArray () throws IOException, ParseException {
         return parsingObjectiveCards();
     }
 
+    /**
+     * The method converts information found in a json file into attributes of java objects of PlayableCard class.
+     * Based on the json result, it sets card color, it creates two arrays of corners (front and back) and sets their
+     * resource and availability, and it sets the requirements of each card. Resource cards (from 1 to 40 in json) have
+     * no requirements, whereas Golden Cards (from 41 to 80) may have up to 5 requirements.
+     *
+     * @exception IOException is thrown where there is a problem with input or output.
+     * @exception ParseException is thrown where there is a problem in parsing.
+     * @return full list of Playable Cards.
+     */
     private ArrayList<Card> parsingPlayableCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
@@ -175,6 +215,16 @@ public class ParsingController {
         return playableCards;
     }
 
+    /**
+     * The method converts information found in a json file into attributes of java objects of StarterCard class.
+     * Based on the json result, it creates two arrays of corners (front and back) and sets their resource and availability,
+     * and it sets the back resources (visible in the center of the starter cards only) through the method getBackRes().
+     * Starter cards don't have a unique color, so they are all set as blank.
+     *
+     * @exception IOException is thrown where there is a problem with input or output.
+     * @exception ParseException is thrown where there is a problem in parsing.
+     * @return full list of Starter Cards.
+     */
     private ArrayList<StarterCard> parsingStarterCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
@@ -247,6 +297,14 @@ public class ParsingController {
         return starterCards;
     }
 
+    /**
+     * The method converts information found in a json file into attributes of java objects of ObjectiveCard class.
+     * Based on the json result, through the method getScoreRule, it sets the ScoreRule that fully describes the objective.
+     *
+     * @exception IOException is thrown where there is a problem with input or output.
+     * @exception ParseException is thrown where there is a problem in parsing.
+     * @return full list of Objective Cards.
+     */
     private ArrayList<ObjectiveCard> parsingObjectiveCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
@@ -271,6 +329,13 @@ public class ParsingController {
         return objectiveCards;
     }
 
+    /**
+     * The method initializes a hash map used for storing cards' requirements: the key is of Resource type and the value
+     * is an integer. Since there are no requirements in cards from Resource deck, their map stays initialized to 0 for
+     * each key.
+     *
+     * @return initialized hash map.
+     */
     private HashMap<Resource, Integer> initHashMap () {
         HashMap<Resource, Integer> map = new HashMap<>();
         map.put(Resource.BUG, 0);
@@ -280,7 +345,14 @@ public class ParsingController {
         return map;
     }
 
-    // map json string to the correct resource
+    /**
+     * The method maps (converts) a specific json word into its corresponding and same-meaning Resource enumeration type.
+     * There are 9 possible cases.
+     *
+     *
+     * @param resString is the word got from json file.
+     * @return the assigned resource to the json word passed as a parameter.
+     */
     private Resource assignResource (String resString) {
         return switch (resString) {
             case "plume" -> Resource.PLUME;
@@ -296,6 +368,14 @@ public class ParsingController {
         };
     }
 
+    /**
+     * The method maps (converts) a specific json word (representing a color) into a specific Resource enumeration type.
+     * There are 4 possible cases.
+     *
+     *
+     * @param color is the word got from json file.
+     * @return the assigned resource to the json color word passed as a parameter.
+     */
     private Resource mapResourceToColor (String color) {
         return switch (color) {
             case "red" -> Resource.MUSHROOM;
@@ -306,6 +386,15 @@ public class ParsingController {
         };
     }
 
+    /**
+     * The method adds a requirement (of a specific Resource) to the map that stores all the requirements for a card.
+     * Since there are four types possible of each requirement (and there are up to five requirements) this method
+     * increments by one only the type passed as a parameter.
+     *
+     *
+     * @param map stores the requirements (initialized to 0 in parsingPlayableCards()).
+     * @param res is the resource to be added to the requirements.
+     */
     private void addRequirements (HashMap<Resource, Integer> map, Resource res) {
         int countMushroom, countBug, countFox, countLeaf;
         countMushroom = map.get(Resource.MUSHROOM);
@@ -331,6 +420,16 @@ public class ParsingController {
         }
     }
 
+    /**
+     * The method converts information found in a json file into attributes of a specific ScoreRule. The type of rule
+     * is the first parameter findable in the section "rule" of a json card. On the base of its type, a rule may have
+     * different types of other relevant information.
+     *
+     *
+     * @param ruleArray is an ordered sequence of values coming from a json file (in this case, all the information
+     *                  coming from the rule section of a card).
+     * @return object of class ScoreRule obtained from json information.
+     */
     private ScoreRule getScoreRule(JSONArray ruleArray) {
         ScoreRule rule = null;
 
@@ -393,6 +492,16 @@ public class ParsingController {
         return rule;
     }
 
+    /**
+     * The method uses information found in a json file to set the resources displayed on the back of a starter card.
+     * There may be up to three resources. For each one of them, if not present, it's marked as blank.
+     * If present, the method assignResource() converts json word into java Resource enumeration.
+     *
+     *
+     * @param backResArray is an ordered sequence of values coming from a json file (in this case, all the information
+     *                     coming from the back resource section of a card).
+     * @return list of Resource objects obtained from json information.
+     */
     private ArrayList<Resource> getBackRes (JSONArray backResArray) {
         ArrayList<Resource> backRes = new ArrayList<>();
 

@@ -275,13 +275,13 @@ public class TUI {
      * The method implements the second part of a player's turn: the drawing section. The player can see the hand how
      * many times he/she wants. When they finally choose to draw (input 2) the method chooseFromDecks() is invoked.
      * See such method for further details.
-     * The return value of chooseFromDecks(), which is a Playable Card, it's the drawn card.
+     * The return value of chooseFromDecks(), which is an integer, it's the number corresponding to the drawn card.
      *
      * @param game is the instance of the game that is being played.
      * @param player is the instance of the player who's playing.
-     * @return Playable Card drawn from Resource deck or Golden deck.
+     * @return numeric choice corresponding to Playable Card drawn from Resource deck or Golden deck.
      */
-    public PlayableCard yourTurnDraw(Game game, Player player){
+    public int yourTurnDraw(Game game, Player player){
         System.out.println("You placed one card. Now it's time to draw. What do you want to do? Select the number corresponding to your choice:\n1- Show hand\n2- Show decks and draw a card\n\n");
         int choice2 = 0;
         Scanner scanner = new Scanner(System.in);
@@ -533,9 +533,15 @@ public class TUI {
      * down (which is the top of the remaining deck).
      *
      * @param game is the instance of the game that is being played.
-     * @return Playable Card drawn from Resource deck or Golden deck, corresponding to client's numeric choice.
+     * @return numeric choice corresponding to Playable Card drawn from Resource deck or Golden deck:
+     * - 0 is one out of two cards from Resource deck that are on the ground and facing up
+     * - 1 is the other card from Resource deck which is on the ground, facing up
+     * - 2 is the first face down card at the top of Resource deck
+     * - 3 same as 0 but from Golden deck
+     * - 4 same as 1 but from Golden deck
+     * - 5 same as 2 but from Golden deck
      */
-    public PlayableCard chooseFromDecks(Game game){
+    public int chooseFromDecks(Game game){
         Deck[] decks = game.getDecks();
         String deck1name = decks[0].getKindOfDeck();
         String deck2name = decks[1].getKindOfDeck();
@@ -544,10 +550,8 @@ public class TUI {
 
         Card deck1card1 = deck1.getFirst();
         Card deck1card2 = deck1.get(1);
-        Card deck1card3 = deck1.get(2);
         Card deck2card1 = deck2.getFirst();
         Card deck2card2 = deck2.get(1);
-        Card deck2card3 = deck2.get(2);
 
         System.out.println("Here you are the game decks." +
                 "\nThe first and the second card of each deck are facing up. You can choose one of them or pick the top of the remaining deck (face down)\n" +
@@ -565,25 +569,42 @@ public class TUI {
         System.out.println("Which card do you choose? Input the number corresponding to your choice:\n");
         Scanner scanner = new Scanner(System.in);
         int choice;
-        Card chosen = null;
         do{
             choice = scanner.nextInt();
             scanner.nextLine();
         } while(!(choice >=0 && choice<6));
-        switch (choice){
-            case 0 ->
-                chosen = deck1card1;
-            case 1 ->
-                chosen = deck1card2;
-            case 2->
-                chosen = deck1card3;
-            case 3 ->
-                chosen = deck2card1;
-            case 4 ->
-                chosen = deck2card2;
-            case 5->
-                chosen = deck2card3;
-        }
-        return (PlayableCard) chosen;
+        return choice;
+    }
+
+    // methods equivalent to yourturndraw + choosefromdeck
+    public int yourTurnDraw2(Game game, Player player){
+        System.out.println("You placed one card. Now it's time to draw." +
+                "These are the card facing up from " + game.getDecks()[0].getKindOfDeck() +":");
+        showCard((PlayableCard) game.getDecks()[0].getCards().getFirst());
+        showCard((PlayableCard) game.getDecks()[0].getCards().get(1));
+        System.out.println("And these are the cards facing up from " + game.getDecks()[1].getKindOfDeck()+":");
+        showCard((PlayableCard) game.getDecks()[1].getCards().getFirst());
+        showCard((PlayableCard) game.getDecks()[1].getCards().get(1));
+        System.out.println("Otherwise you can draw from the top of one deck, where the card are facing down. " +
+                "Which deck do you want to draw a card from? 0 for " + game.getDecks()[0].getKindOfDeck() +
+                ", 1 for " + game.getDecks()[1].getKindOfDeck());
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        do{
+            choice = scanner.nextInt();
+            scanner.nextLine();
+        } while(!(choice >=0 && choice<2));
+        return choice;
+    }
+    public int drawnCard(Deck deck){
+        System.out.println("You chose "+deck.getKindOfDeck()+". Which card do you want to draw? 0 for first card facing up, " +
+                "1 for second card facing up, 2 for card at the top of the facing down deck.");
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        do{
+            choice = scanner.nextInt();
+            scanner.nextLine();
+        } while(!(choice >=0 && choice<=2));
+        return choice;
     }
 }
