@@ -71,10 +71,12 @@ public class TUI {
     }
 
     /**
-     * The method shows
+     * The method shows to a player its starting card, which is random, through the method showCard and
+     * toStringBackCorners (see such methods). The method also asks the player if they want to place the starter card
+     * flipped or not, and returns the boolean value of the answer.
      *
      * @param startcard is the player's StarterCard randomly chosen by the controller.
-     * @return
+     * @return true if the player wants to place the starter card face down, false otherwise.
      */
     public boolean showStarterCard(StarterCard startcard){
         System.out.println("Your first card it's this:\n");
@@ -94,6 +96,15 @@ public class TUI {
         return flag;
     }
 
+    /**
+     * The method shows to a player two possible secret objectives through the method toStringRule, since an Objective
+     * Card is fully described only by its ScoreRule. See such method.
+     * The player chooses between those two.
+     *
+     * @param obj1 is the first out of two secret objective proposed to the player.
+     * @param obj2 is the second proposed secret objective.
+     * @return the number corresponding to the player's choice (1 for the first objective, 2 for the second).
+     */
     public int chooseObjective(ObjectiveCard obj1, ObjectiveCard obj2){
         int choice;
         System.out.println("Choose between two secret objectives:\n1- " + toStringRule(obj1) + "\n2- " + toStringRule(obj2));
@@ -104,9 +115,23 @@ public class TUI {
         } while(!(choice==1 || choice == 2));
         return choice;
     }
+
+
  // aggiungere un while (nel client) che lo fa andare finchè non è il proprio turno
+
+    /**
+     * The method allows a player (who is waiting for others to finish their turns) to check and see their hands,
+     * their playground, which contains the secret objective, and every card on the ground. This can happen through
+     * a menu with numeric options. Other methods are invoked to:
+     * - see player's hand: showHand();
+     * - see playground: showGround(game, player);
+     * - see a card on the ground: showCard(card).
+     *
+     * @param game is the instance of the game that is being played.
+     * @param player is the instance of the player who's waiting.
+     */
     public void notYourTurn(Game game, Player  player){
-        System.out.println("\nIt's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground (and common objectives)\n2- Show hand\n3- Show card on ground\n\n");
+        System.out.println("\nYou have to wait other players.\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground (and common objectives)\n2- Show hand\n3- Show card on ground\n\n");
         Scanner scanner = new Scanner(System.in);
         int choice;
         do {
@@ -137,8 +162,17 @@ public class TUI {
         }
     }
 
+    /**
+     * The method implements the first part of a player's turn. As in notYourTurn, this method allows to check multiple
+     * times the hand, the playground, which contains the secret objective, and every card on the ground.
+     * When the choice is 4, which is "play card", there are no more choices available: the method ends and it should
+     * be followed by invocation of inputCoordinates() and inputCardToPlace();
+     *
+     * @param game is the instance of the game that is being played.
+     * @param player is the instance of the player whose turn it is.
+     */
     public boolean yourTurnPlay(Game game, Player player){
-        System.out.println("\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n 4- Play card\n\n");
+        System.out.println("It's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n 4- Play card\n\n");
         int choice;
         Scanner scanner = new Scanner(System.in);
             do {
@@ -176,7 +210,13 @@ public class TUI {
                 default -> throw new IllegalStateException("Unexpected value: " + choice);
             }
     }
-                    //client inputs coordinates where to place the card
+
+    /**
+     * The method asks the player where to place the card. The client needs to input coordinates x and y to identify
+     * a specific position on the play ground, seen as a matrix.
+     *
+     * @return desired position where to place the card.
+     */
     public Position inputCoordinates(){
         System.out.println("Where do you want to place the card? Insert coordinates between 0 and 83 (X first):\n");
         int coordX = -1;
@@ -190,7 +230,15 @@ public class TUI {
         }
         return (new Position(coordX, coordY));
     }
-                                    //client chooses which card (and if flipped) to place in the coordinates given before
+
+    /**
+     * The method asks the player which of the three cards in their hand they want to play, and show them the hand.
+     * The player inputs 1, 2 or 3 and then must choose between placing it flipped (1) or not (0). If it's 1, the Card
+     * objected gets flipped. The Playable Card object corresponding to the choice is returned to the server.
+     *
+     * @param player is the instance of the player who's playing.
+     * @return the Playable Card to be placed, which is chosen from the player's hand.
+     */
     public PlayableCard inputCardToPlace(Player player){
         System.out.println("Which card do you want to play? 1, 2 or 3? This is your hand:\n");
         showHand(player);
@@ -223,7 +271,16 @@ public class TUI {
         return cardToPlay;
     }
 
-        // draw section
+    /**
+     * The method implements the second part of a player's turn: the drawing section. The player can see the hand how
+     * many times he/she wants. When they finally choose to draw (input 2) the method chooseFromDecks() is invoked.
+     * See such method for further details.
+     * The return value of chooseFromDecks(), which is a Playable Card, it's the drawn card.
+     *
+     * @param game is the instance of the game that is being played.
+     * @param player is the instance of the player who's playing.
+     * @return Playable Card drawn from Resource deck or Golden deck.
+     */
     public PlayableCard yourTurnDraw(Game game, Player player){
         System.out.println("You placed one card. Now it's time to draw. What do you want to do? Select the number corresponding to your choice:\n1- Show hand\n2- Show decks and draw a card\n\n");
         int choice2 = 0;
@@ -242,6 +299,12 @@ public class TUI {
         return chooseFromDecks(game);
     }
 
+    /**
+     * The method shows each playable card of the hand (there are three of them) plus the secret objective. It also
+     * prints a legend with the acronym of each ScoreRule.
+     *
+     * @param player is the instance of the player who's waiting or playing.
+     */
     public void showHand(Player player){
        Hand hand = player.getHand();
        ObjectiveCard secretObj = hand.getObjCard();
@@ -267,7 +330,16 @@ public class TUI {
                 """);
     }
 
-    public String toStringRule(Card card){  // stampa la rule di una carta giocabile
+    /**
+     * The method gets all the information about the scoring rule of a Card object. There is a complementary method
+     * called in the same way that only accepts ObjectiveCard objects. See such method.
+     * From the type of rule, the method is able to know how many and which other parameters are related to the rule.
+     * All the information is gathered into a single string.
+     *
+     * @param card is (typically) a playable card.
+     * @return a single string describing the scoring rule of the card passed as a parameter.
+     */
+    public String toStringRule(Card card){
         String y = null;
         if(card.getRule().getName().equals("FR")){
             int p = card.getRule().getPoints();
@@ -293,6 +365,13 @@ public class TUI {
         }
         return y;
     }
+
+    /**
+     * The function of this method has been described in the homonym one that accepts Card objects as parameter.
+     *
+     * @param card is an Objective Card.
+     * @return a single string describing the scoring rule of the objective card passed as a parameter.
+     */
     public String toStringRule(ObjectiveCard card){  // stampa la rule di una carta obiettivo
         String y = null;
         if(card.getRule().getName().equals("FR")){
@@ -321,6 +400,13 @@ public class TUI {
     }
 
 
+    /**
+     * The method gets all the information (position, resource, availability) about each of the four corners
+     * on the front of the card. The information is gathered in a single string.
+     *
+     * @param card is the Card object whose front corners need to be displayed.
+     * @return a single string describing all the four corners of the card passed as a parameter.
+     */
     public String toStringFrontCorners(Card card) {
         String z = "Front corners:\n";
         Corner[] cornersF = card.getCorners();
@@ -329,6 +415,14 @@ public class TUI {
         }
         return z;
     }
+
+    /**
+     * The method gets all the information (position, resource, availability) about each of the four corners
+     * on the back of the card. The information is gathered in a single string.
+     *
+     * @param card is the Card object whose back corners need to be displayed.
+     * @return a single string describing all the four back corners of the card passed as a parameter.
+     */
     public String toStringBackCorners(Card card){
         Corner[] cornersB = card.getBackCorners();
         String z = "Back corners:\n";
@@ -338,6 +432,12 @@ public class TUI {
             return z;
     }
 
+    /**
+     * The method gather in a single string the information about the requirements to play a card passed as parameter.
+     *
+     * @param card is the PlayableCard object whose requirements are being examined.
+     * @return a single string describing how many occurrences are required of each type of resource.
+     */
     public String toStringReq(PlayableCard card){
         String w  = "Requirements: ";
         HashMap<Resource, Integer> reqMap = card.getRequirements();
@@ -349,6 +449,13 @@ public class TUI {
         return w;
     }
 
+    /**
+     * The method shows the card (of class PlayableCard) passed as a parameter. To do that, the method invokes other
+     * methods to convert card's features into strings: toStringRule, toStringCorners, toStringBackCorners, toStringReq.
+     * The combination of their results is printed to describe the whole card.
+     *
+     * @param card is the Playable Card to be displayed.
+     */
     public void showCard(PlayableCard card){
         String y,z,w;
         y = toStringRule(card);
@@ -362,6 +469,12 @@ public class TUI {
         System.out.println("Color: " + card.getColor() + ", rule: " + y + "\n" + z + "\n" + w + "\n");
     }
 
+    /**
+     * The function of this method has been described in the homonym one that accepts StarterCard objects as parameter.
+     * The only difference is that starter cards don't have any requirements.
+     *
+     * @param card is the StarterCard to be displayed.
+     */
     public void showCard(StarterCard card){
         String y,z;
         y = toStringRule(card);
@@ -374,6 +487,13 @@ public class TUI {
         System.out.println("Color: " + card.getColor() + ", rule: " + y + "\n" + z + "\n");
     }
 
+    /**
+     * The method builds and shows the player's ground as a matrix of 1 and 0: 1 if there is a card in the position
+     * identified by matrix coordinates, 0 otherwise. The method also shows the list of the current available positions.
+     *
+     * @param game is the instance of the game that is being played.
+     * @param player is the instance of the player whose ground needs to be displayed.
+     */
     public void showGround(Game game, Player player){
         ObjectiveCard[] commonObjs = game.getCommonObj();
         System.out.println("\nThese are your common objectives:\n");
@@ -407,6 +527,14 @@ public class TUI {
         }
     }
 
+    /**
+     * The method implements the choice from decks when it's time to draw a card. There are 6 possibilities, since
+     * there are two decks (Resource deck and Golden deck) and both of them have two cards face up and one card face
+     * down (which is the top of the remaining deck).
+     *
+     * @param game is the instance of the game that is being played.
+     * @return Playable Card drawn from Resource deck or Golden deck, corresponding to client's numeric choice.
+     */
     public PlayableCard chooseFromDecks(Game game){
         Deck[] decks = game.getDecks();
         String deck1name = decks[0].getKindOfDeck();
