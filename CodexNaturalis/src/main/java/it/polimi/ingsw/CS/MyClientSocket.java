@@ -13,7 +13,7 @@ public class MyClientSocket {
     private Scanner scan = new Scanner(System.in);
     Player player = null;
     Game game = null;
-    CLI cli =  null;
+    TUI tui =  null;
     public MyClientSocket(int port, String host) throws IOException {
         socket = new Socket(host, port);
         in = new ObjectInputStream(socket.getInputStream());
@@ -27,7 +27,7 @@ public class MyClientSocket {
         String s = (String )in.readObject();
         System.out.println(s);
         out.writeObject(scan.nextLine());
-        if(in.readBoolean()){//se primo player, aggiungere sta roba alla classe CLI
+        if(in.readBoolean()){//se primo player, aggiungere sta roba alla classe TUI
             s = (String) in.readObject();
             System.out.println(s);
             int n = scan.nextInt();
@@ -43,10 +43,10 @@ public class MyClientSocket {
         }
     }
     public void useTUI() throws IOException, ClassNotFoundException {
-        cli= new CLI();
+        tui = new TUI();
         game = (Game) in.readObject();
         player = (Player) in.readObject();
-        cli.Welcome(player);
+        tui.Welcome(player);
     }
     public void useGUI(){}
 

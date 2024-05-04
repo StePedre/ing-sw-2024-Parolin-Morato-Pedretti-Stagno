@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Model.*;
-import it.polimi.ingsw.View.CLI;
 
 import java.util.ArrayList;
 import java.util.Random;

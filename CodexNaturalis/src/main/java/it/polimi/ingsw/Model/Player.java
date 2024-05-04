@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Model;
 
-import it.polimi.ingsw.View.CLI;
+import it.polimi.ingsw.View.TUI;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -19,7 +19,7 @@ public class Player implements Serializable {
     private PlayerGround playerGround;
     private Game game;
     private int reachedObjNo;
-    private CLI cli;
+    private TUI TUI;
     private static final int maxLengthMsg = 255;
     // still a temporary value
     private String message;
@@ -85,12 +85,12 @@ public class Player implements Serializable {
     }
 
     /**
-     * The method gets the CLI the player interacts with.
+     * The method gets the TUI the player interacts with.
      *
      * @return player's Context Line Interface.
      */
-    public CLI getCLI() {
-        return this.cli;
+    public TUI getCLI() {
+        return this.TUI;
     }
 
     /**

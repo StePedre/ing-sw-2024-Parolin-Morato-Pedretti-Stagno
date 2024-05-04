@@ -4,14 +4,59 @@ import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
 import it.polimi.ingsw.Model.ScoreRules.NSymbolsRule;
 import java.util.*;
 
-public class CLI {
-    public CLI(){}
+/**
+ * Each object of TUI class (Text-based User Interface) is associated with one Player object.
+ * The class implements input and output methods to support players' decisions during the game.
+ * Interactions are made through standard output (print on screen) and standard input (keyboard).
+ * Methods from TUI class are invoked by clients both in RMI and socket implementation.
+ */
+public class TUI {
 
+    /**
+     * Constructor of the class with no parameters.
+     */
+    public TUI(){}
 
+    /**
+     * The method asks for the client's nickname and returns it as a string.
+     *
+     * @return input nickname.
+     */
+    public String insertNickname(){
+        System.out.println("Insert your nickname, please: ");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
+
+    /**
+     * The method asks for the number of players that will be in the game. It should only be invoked
+     * when the client is the first player joining the game.
+     *
+     * @return desired number of players.
+     */
+    public int askPlayersNo(){
+        System.out.println("Insert how many players you'd like, please: ");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextInt();
+    }
+
+    /**
+     * The method prints a welcome message to the player passed as a parameter.
+     *
+     * @param player gets the message.
+     */
     public void Welcome(Player player) {
         System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n");
     }
-    public void winnersPrint(ArrayList<Player> winners){   //winners è il valore di ritorno di game.finish che mi viene passato dal controller
+
+    /**
+     * When the game is over, this method prints the name(s) of the winner(s).
+     * To better understand the possibility of multiple winners, see Game.finish().
+     *
+     * @param winners is passed by the controller, which gets it from invoking game.finish().
+     *                It is the list of game winners. It may be only one.
+     */
+    public void winnersPrint(ArrayList<Player> winners){
         System.out.println("The game is over!");
         if(winners.size()==1){
             System.out.println("The winner is: " + winners.getFirst().getNickname());
@@ -25,6 +70,12 @@ public class CLI {
 
     }
 
+    /**
+     * The method shows
+     *
+     * @param startcard is the player's StarterCard randomly chosen by the controller.
+     * @return
+     */
     public boolean showStarterCard(StarterCard startcard){
         System.out.println("Your first card it's this:\n");
         showCard(startcard);
