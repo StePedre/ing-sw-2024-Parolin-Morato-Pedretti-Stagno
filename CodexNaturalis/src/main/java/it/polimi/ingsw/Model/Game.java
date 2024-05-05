@@ -24,7 +24,7 @@ public class Game implements Serializable {
     private int expPlayers = -1;
     private int numPlayers;
     private ArrayList<ObjectiveCard> otherObjs = null;
-
+    private boolean isOver = false;
     private ArrayList<StarterCard> starterCards;
 
 
@@ -144,6 +144,8 @@ public class Game implements Serializable {
         createPrivateChats();
     }
 
+
+
     /**
      * The method is invoked when the game is finished. The final routine consists of checking each player's score:
      * whenever one's score is higher than the previous one, it is set as the maximum. The player with the maximum
@@ -192,7 +194,8 @@ public class Game implements Serializable {
         }
     }*/
 
-    public ArrayList<Player>  finish(){
+    public void finish(){
+        isOver = true;
         int[] scores = new int[numPlayers];
         ArrayList<Player> multi2 = new ArrayList<>();
         int i = 0;
@@ -221,8 +224,8 @@ public class Game implements Serializable {
                     multi2.add(p);
                 }
             }
+            multiWinners = multi2;
         }
-        return multi2;
     }
 
     /**
@@ -340,5 +343,11 @@ public class Game implements Serializable {
             ObjectiveCard[] objs = {otherObjs.remove(rand.nextInt(otherObjs.size())), otherObjs.remove(rand.nextInt(otherObjs.size()))};
             return objs;
         }
+    }
+    public boolean isOver() {
+        return isOver;
+    }
+    public ArrayList<Player> getMultiWinners() {
+        return multiWinners;
     }
 }
