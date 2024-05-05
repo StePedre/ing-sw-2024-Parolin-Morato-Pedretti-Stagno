@@ -4,6 +4,8 @@ import java.net.ConnectException;
 import java.net.Socket;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.View.*;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MyClientSocket {
@@ -62,14 +64,17 @@ public class MyClientSocket {
                 }
                 out.writeObject(tui.inputCardToPlace(player));
                 out.writeObject(tui.inputCoordinates());
+                //aspetta riscontro vittoria
                 out.writeObject(tui.yourTurnDraw(game,player));
+                //aspetta riscontro vittoria
                 updateData();
             }
             else{
                 t.start();// modificabile mettendo fuori dal ciclo e a fine turno
+                //aspetta riscontro vittoria
             }
         }
-
+        //tui.winnersPrint((ArrayList<Player>) in.readObject());
     }
     public void useGUI(){}
 

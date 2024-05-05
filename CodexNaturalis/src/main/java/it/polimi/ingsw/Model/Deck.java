@@ -34,7 +34,7 @@ public class Deck implements Serializable {
      * @return number of cards.
      */
     public int getNumberOfCards() {
-        return this.numberOfCards;
+        return this.cards.size();
     }
 
     /**

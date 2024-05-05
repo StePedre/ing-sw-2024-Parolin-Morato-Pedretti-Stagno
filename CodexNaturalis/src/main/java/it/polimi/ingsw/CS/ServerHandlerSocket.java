@@ -48,12 +48,19 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             }
             pc.setFirtCard(st);
             sendData();
-            if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
+            if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){//primo turno
                 out.writeBoolean(false);
             }
-            while(true){//fino a fine gioco, gestire primo turno
+            while(!game.isOver()){//fino a fine gioco, gestire primo turno
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
-                   //wait();.
+                   //wait();
+                    if(game.isOver()){
+                        break;
+                    }
+                }
+                if(game.isOver()){
+                    over();
+                    break;
                 }
                 out.writeBoolean(true);
                 //invio componenti gioco aggiornate
@@ -62,10 +69,23 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 playCard();
                 //controllo se vittoria
                 if(player.getPlayerGround().getPlayerScore()>=20){
-                    //gestire vittroia, magari eccezione??
+                    //fine gioco
+                    game.finish();
+                    over();
+                }
+                else{
+                    //non vinto
                 }
                 //pescaggio carta
                 drawCard();
+                if(game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0){//controllo numeri carte deck
+                    //fine gioco
+                    game.finish();
+                    over();
+                }
+                else{
+                    //non vinto
+                }
                 rc.nextRound();//fine turno
                 //notifyAll();
                 sendData();
@@ -140,5 +160,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         } catch (ClassNotFoundException e) {
             //gestire ecc
         }
+    }
+    public void over() throws IOException {
+        out.writeObject(game.getMultiWinners());
     }
 }

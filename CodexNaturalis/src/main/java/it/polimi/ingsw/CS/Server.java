@@ -42,6 +42,8 @@ public class Server {
             game.setCommonObj(objs);
             game.setOtherObjs(list);
             //parsing deck
+            Deck[] decks = {pc.createResDeck(),pc.createGoldDeck()};
+            game.setDecks(decks);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ParseException e) {
