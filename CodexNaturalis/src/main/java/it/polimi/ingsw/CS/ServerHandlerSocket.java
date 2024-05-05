@@ -58,11 +58,15 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                         break;
                     }
                 }
+                out.writeBoolean(true);//è il tuo turno
                 if(game.isOver()){
+                    out.writeBoolean(true);
                     over();
                     break;
                 }
-                out.writeBoolean(true);
+                else{
+                    out.writeBoolean(false);
+                }
                 //invio componenti gioco aggiornate
                 sendData();
                 //attendo di ricevere carta da giocare
@@ -70,26 +74,30 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 //controllo se vittoria
                 if(player.getPlayerGround().getPlayerScore()>=20){
                     //fine gioco
+                    out.writeBoolean(true);
                     game.finish();
                     over();
                 }
                 else{
+                    out.writeBoolean(false);
                     //non vinto
                 }
                 //pescaggio carta
                 drawCard();
                 if(game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0){//controllo numeri carte deck
                     //fine gioco
+                    out.writeBoolean(true);
                     game.finish();
                     over();
                 }
                 else{
+                    out.writeBoolean(false);
                     //non vinto
                 }
                 rc.nextRound();//fine turno
                 //notifyAll();
                 sendData();
-                out.writeBoolean(false);
+                out.writeBoolean(false);//non è più il suo turno
             }
         }
         catch (IOException e){

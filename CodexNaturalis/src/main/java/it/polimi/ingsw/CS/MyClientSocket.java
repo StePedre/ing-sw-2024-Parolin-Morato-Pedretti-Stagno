@@ -59,14 +59,23 @@ public class MyClientSocket {
                 if(t.isAlive()){
                     t.interrupt();
                 }
+                if(in.readBoolean()){//finito gioco per vittoria altrui
+                    break;
+                }
                 updateData();
                 while(!tui.yourTurnPlay(game,player)){//quando vero ha deciso cosa giocare
                 }
                 out.writeObject(tui.inputCardToPlace(player));
                 out.writeObject(tui.inputCoordinates());
                 //aspetta riscontro vittoria
+                if(in.readBoolean()){
+                    break;
+                }
                 out.writeObject(tui.yourTurnDraw(game,player));
                 //aspetta riscontro vittoria
+                if(in.readBoolean()){
+                    break;
+                }
                 updateData();
             }
             else{
@@ -74,7 +83,7 @@ public class MyClientSocket {
                 //aspetta riscontro vittoria
             }
         }
-        //tui.winnersPrint((ArrayList<Player>) in.readObject());
+        tui.winnersPrint((ArrayList<Player>) in.readObject());
     }
     public void useGUI(){}
 
