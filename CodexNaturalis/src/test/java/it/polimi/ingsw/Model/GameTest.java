@@ -45,19 +45,22 @@ class GameTest {
         p2.setReachedObjNo(1);
         p3.setReachedObjNo(2);    //Note: to try every possible case, change scores and reached objectives (they all work)
         p4.setReachedObjNo(3);
-        p1.getPlayerGround().setPlayerScore(23);
-        p2.getPlayerGround().setPlayerScore(23);
-        p3.getPlayerGround().setPlayerScore(23);
-        p4.getPlayerGround().setPlayerScore(23);
+        p1.getPlayerGround().setPlayerScore(22);
+        p2.getPlayerGround().setPlayerScore(22);
+        p3.getPlayerGround().setPlayerScore(13);
+        p4.getPlayerGround().setPlayerScore(22);
         playerss.add(p1);
         playerss.add(p2);
         playerss.add(p3);
         playerss.add(p4);
 
         Game game =  new Game(playerss, decks, comObj);
-        ArrayList<Player> winners = game.finish();
-        for(Player p: winners){
-            System.out.println(p.getNickname());
+        game.finish();
+        if(game.isOver()){
+            ArrayList<Player> winners = game.getMultiWinners();
+            for(Player p: winners){
+                System.out.println(p.getNickname());
+            }
         }
     }
 
