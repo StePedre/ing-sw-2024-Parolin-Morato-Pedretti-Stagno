@@ -44,7 +44,6 @@ public class MyServerSocket {
             ServerHandlerSocket client = new ServerHandlerSocket(oos,ois,nickname,room.getGame(),room.getRoundController());
             Thread t = new Thread (client);
             t.start();
-            //game.notifyAll();
         }while(true);
     }
     private void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza

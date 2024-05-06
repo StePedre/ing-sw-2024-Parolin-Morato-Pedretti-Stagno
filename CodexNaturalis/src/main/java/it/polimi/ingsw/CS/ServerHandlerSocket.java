@@ -29,7 +29,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         try {
             out.writeObject(player);
             while (game.getNumPlayer() != game.getExpPlayers()) {
-                //game.wait();
+
             }
             rc.setplayers(game.getPlayers());
             sendData(); //inviare istanza game
@@ -47,14 +47,13 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             }
             pc.setFirtCard(st);
             //popola la mano
-
+            pc.populateHand(game,player);
             sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){//primo turno
                 out.writeObject(false);
             }
             while(!game.isOver()){//fino a fine gioco, gestire primo turno
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
-                   //wait();
                     if(game.isOver()){
                         break;
                     }
@@ -96,7 +95,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                     //non vinto
                 }
                 rc.nextRound();//fine turno
-                //notifyAll();
                 sendData();
                 out.writeObject(false);//non è più il suo turno
             }

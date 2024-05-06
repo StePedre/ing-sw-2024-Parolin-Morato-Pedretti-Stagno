@@ -45,7 +45,6 @@ public class Room implements Serializable {
         try {
             game.setStarterCards(pc.createStarterCardsArray());
             ArrayList<ObjectiveCard> list = pc.createObjectiveCardsArray();
-            //altro parsing, chiedi a stefano
             Random rand = new Random();
             ObjectiveCard[] objs = {list.remove(rand.nextInt(list.size())),list.remove(rand.nextInt(list.size()))};
             game.setCommonObj(objs);
