@@ -1,8 +1,5 @@
 package it.polimi.ingsw.CS;
-import it.polimi.ingsw.Controller.InitGameController;
-import it.polimi.ingsw.Controller.RoundController;
-import it.polimi.ingsw.Model.Game;
-import it.polimi.ingsw.Model.Player;
+import it.polimi.ingsw.Controller.RoomController;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -15,43 +12,48 @@ public class MyServerSocket {
     private Socket connection = null;
     private ObjectOutputStream oos = null;
     private ObjectInputStream ois = null;
-    private InitGameController controller;
-    Game game=null;
-    public MyServerSocket(int port,Game game, InitGameController c) throws IOException {
+    private RoomController rooms = null;
+    public MyServerSocket(int port,RoomController rooms) throws IOException {
         serverSocket = new ServerSocket(port);
-        this.game=game;
-        this.controller=c;
+        this.rooms = rooms;
     }
     public void runServer() throws IOException, ClassNotFoundException {
          do{
             System.out.println("Waiting for player\n");
             connection = serverSocket.accept();
              //reader e writer
-            oos= new ObjectOutputStream(connection.getOutputStream());
+            oos = new ObjectOutputStream(connection.getOutputStream());
             ois = new ObjectInputStream(connection.getInputStream());
-            //raggiunto numero gioactori
-             if(game.getNumPlayer() == game.getExpPlayers()) {
-                 oos.writeBoolean(false);
-                 break;
-             }
              oos.writeBoolean(true);
             //chiedere nickname
+             oos.writeObject(rooms.getRooms());
+             Room room;
+             oos.writeObject("Vuoi creare una stanza?");
+             if((boolean)ois.readObject()){
+                 oos.writeObject("scegli nome stanza");
+                 room = new Room((String) ois.readObject());
+                 rooms.addRoom(room);
+             }
+             else{
+                 oos.writeObject("Scegli stanza");
+                 room = rooms.getRoom((String) ois.readObject());
+             }
             String nickname=(String) ois.readObject();
             //verificare primo player
-            firstPlayer();
+            firstPlayer(room);
             //craere connessione parallela
-            ServerHandlerSocket client = new ServerHandlerSocket(oos,ois,nickname,game,controller);
+            ServerHandlerSocket client = new ServerHandlerSocket(oos,ois,nickname,room.getGame(),room.getRoundController());
             Thread t = new Thread (client);
             t.start();
             //game.notifyAll();
-        }while(game.getNumPlayer()< game.getExpPlayers());
+        }while(true);
     }
-    private void firstPlayer() throws IOException, ClassNotFoundException {
-        if(game.isFirst()) {
+    private void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza
+        if(room.getGame().isFirst()) {
             //chiedere num exp player
-            oos.writeBoolean(true);
+            oos.writeObject(true);
             int n =(int) ois.readObject();
-            game.setExpPlayers(n);
+            room.getGame().setExpPlayers(n);
         }
         else{
             oos.writeBoolean(false);

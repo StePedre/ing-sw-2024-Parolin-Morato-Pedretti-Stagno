@@ -13,10 +13,17 @@ import java.util.Random;
  * for another invocation (if existing) to finish.
  */
 public class RoundController {
-    private static ArrayList<Player> players = null;
-    private static int round = -1;
+    private ArrayList<Player> players = null;
+    private int round = -1;
     private final Random rand = new Random();
-    private static final Object lock= new Object();
+    private final Object lock= new Object();
+
+    public RoundController() {
+
+    }
+    public void setplayers(ArrayList<Player> players) {
+        this.players = players;
+    }
 
     public RoundController(ArrayList<Player> players) {
         synchronized (lock) {

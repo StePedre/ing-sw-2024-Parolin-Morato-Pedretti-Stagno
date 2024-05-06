@@ -15,14 +15,13 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     private Game game = null;
     private Player player;
     private RoundController rc = null;
-    private InitGameController controller = null;
-    public ServerHandlerSocket(ObjectOutputStream oos,ObjectInputStream ois,String nickname,Game game,InitGameController controller) throws IOException {
+    public ServerHandlerSocket(ObjectOutputStream oos,ObjectInputStream ois,String nickname,Game game,RoundController rc) throws IOException {
         out = oos;
         in = ois;
         this.game=game;
         this.player = new Player(nickname);
         game.addPlayer(player);
-        this.controller=controller;
+        this.rc = rc;
     }
     @Override
     public void run() {
@@ -32,8 +31,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             while (game.getNumPlayer() != game.getExpPlayers()) {
                 //game.wait();
             }
+            rc.setplayers(game.getPlayers());
             sendData(); //inviare istanza game
-            rc = new RoundController(game.getPlayers());//creare round controller
             rc.setFirstPlayer();
             PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());// momentaneo
             //select secret obj
@@ -43,13 +42,15 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             //started card
             StarterCard st = pc.pickCard(game);
             out.writeObject(st);
-            if(in.readBoolean()){
+            if((boolean)in.readObject()){
                 st.flipCard();
             }
             pc.setFirtCard(st);
+            //popola la mano
+
             sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){//primo turno
-                out.writeBoolean(false);
+                out.writeObject(false);
             }
             while(!game.isOver()){//fino a fine gioco, gestire primo turno
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
@@ -58,14 +59,14 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                         break;
                     }
                 }
-                out.writeBoolean(true);//è il tuo turno
+                out.writeObject(true);//è il tuo turno
                 if(game.isOver()){
-                    out.writeBoolean(true);
+                    out.writeObject(true);
                     over();
                     break;
                 }
                 else{
-                    out.writeBoolean(false);
+                    out.writeObject(false);
                 }
                 //invio componenti gioco aggiornate
                 sendData();
@@ -74,30 +75,30 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 //controllo se vittoria
                 if(player.getPlayerGround().getPlayerScore()>=20){
                     //fine gioco
-                    out.writeBoolean(true);
+                    out.writeObject(true);
                     game.finish();
                     over();
                 }
                 else{
-                    out.writeBoolean(false);
+                    out.writeObject(false);
                     //non vinto
                 }
                 //pescaggio carta
                 drawCard();
                 if(game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0){//controllo numeri carte deck
                     //fine gioco
-                    out.writeBoolean(true);
+                    out.writeObject(true);
                     game.finish();
                     over();
                 }
                 else{
-                    out.writeBoolean(false);
+                    out.writeObject(false);
                     //non vinto
                 }
                 rc.nextRound();//fine turno
                 //notifyAll();
                 sendData();
-                out.writeBoolean(false);//non è più il suo turno
+                out.writeObject(false);//non è più il suo turno
             }
         }
         catch (IOException e){

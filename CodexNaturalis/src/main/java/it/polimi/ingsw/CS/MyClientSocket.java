@@ -38,16 +38,26 @@ public class MyClientSocket {
     }
     public void useTUI() throws IOException, ClassNotFoundException {
         tui= new TUI();
+        // mostra stanze
+        ArrayList<Room> roomSockets = (ArrayList<Room>) in.readObject();
+        for(Room room : roomSockets){
+            System.out.println(room.getName());
+        }
+        /*out.writeObject(/*risulotato tui); // se vero craere stanza, falso joinare
+        out.writeObject(/*nome stranza);*/
+        testStanze();
+        //ciclo nome stanza esistente
         out.writeObject(tui.insertNickname());
-        if(in.readBoolean()){
-            out.writeObject(tui.askPlayersNo());
+        if((boolean)in.readObject()){
+            int i = tui.askPlayersNo();
+            out.writeObject(i);
         }
         player = (Player) in.readObject();
         tui.Welcome(player);
         updateData();
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
-        out.writeBoolean(tui.showStarterCard((StarterCard) in.readObject()));
+        out.writeObject(tui.showStarterCard((StarterCard) in.readObject()));
         updateData();
         Thread t = new Thread(()->{while(true) {
                                         tui.notYourTurn(game, player);
@@ -55,11 +65,11 @@ public class MyClientSocket {
                                 });
         //aspettare turno
         while(true){
-            if(in.readBoolean()){
+            if((boolean)in.readObject()){
                 if(t.isAlive()){
                     t.interrupt();
                 }
-                if(in.readBoolean()){//finito gioco per vittoria altrui
+                if((boolean)in.readObject()){//finito gioco per vittoria altrui
                     break;
                 }
                 updateData();
@@ -68,12 +78,12 @@ public class MyClientSocket {
                 out.writeObject(tui.inputCardToPlace(player));
                 out.writeObject(tui.inputCoordinates());
                 //aspetta riscontro vittoria
-                if(in.readBoolean()){
+                if((boolean)in.readObject()){
                     break;
                 }
                 out.writeObject(tui.yourTurnDraw(game,player));
                 //aspetta riscontro vittoria
-                if(in.readBoolean()){
+                if((boolean) in.readObject()){
                     break;
                 }
                 updateData();
@@ -93,5 +103,23 @@ public class MyClientSocket {
     public void updateData() throws IOException, ClassNotFoundException {
         game = (Game) in.readObject();
         player = (Player) in.readObject();
+    }
+    public void testStanze() throws IOException, ClassNotFoundException {
+        Scanner s = new Scanner(System.in);
+        //System.out.println("Vuoi creare una stanza?");
+        System.out.println((String) in.readObject());
+        if(s.nextLine().equalsIgnoreCase("si")){
+            out.writeObject(true);
+            System.out.println((String) in.readObject());
+            String st = s.nextLine();
+            out.writeObject(st);
+        }
+        else{
+            out.writeObject(false);// se vero craere stanza, falso joinare
+            System.out.println((String)in.readObject());
+            String st = s.nextLine();
+            out.writeObject(st);
+        }
+
     }
 }
