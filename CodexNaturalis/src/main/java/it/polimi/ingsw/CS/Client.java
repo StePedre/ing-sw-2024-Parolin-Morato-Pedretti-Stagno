@@ -28,7 +28,8 @@ public class Client {
             do {
                 choice = s.nextLine();
                 if (choice.equalsIgnoreCase("RMI")) {
-                    //RMI
+                    ClientRMIInterface myClientRMI = new MyClientRMI("rmi://localhost/ServerRMI",inter);
+                    myClientRMI.runClient();
                     flag=true;
                 } else if(choice.equalsIgnoreCase("socket")){
                     MyClientSocket myClientSocket = new MyClientSocket(59090, "127.0.0.1",inter);

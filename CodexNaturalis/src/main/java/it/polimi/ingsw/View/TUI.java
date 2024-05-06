@@ -640,4 +640,8 @@ public class TUI {
             return s.nextLine();
         }
     }
+
+    public void playerJoined(Player player){
+        System.out.println("Player " + player.getNickname() + " has joined the room");
+    }
 }

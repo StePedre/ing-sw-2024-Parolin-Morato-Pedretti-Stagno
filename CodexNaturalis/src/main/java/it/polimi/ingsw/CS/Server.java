@@ -12,12 +12,25 @@ public class Server {
         //c.InitializeGame();
         try {
             MyServerSocket ss = new MyServerSocket(59090, rooms);
-            ss.runServer();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            Thread t = new Thread(() -> {
+                try {
+                    ss.runServer();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            t.start();
+        } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+        try {
+            ServerRMIInterface serverRMI = new MyServerRMI(1099, rooms);
+            serverRMI.runServer();
+        } catch (Exception e) {
+            System.err.println("Server RMI exception: " + e.toString());
+            e.printStackTrace();
         }
     }
 

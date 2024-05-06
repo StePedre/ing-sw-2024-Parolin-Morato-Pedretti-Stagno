@@ -4,10 +4,10 @@ import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.Player;
 
-
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RoomController {
+public class RoomController implements Serializable {
     ArrayList<Room> rooms;
     public RoomController() {
         this.rooms = new ArrayList<Room>();
