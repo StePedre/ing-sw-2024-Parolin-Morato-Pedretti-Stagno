@@ -6,13 +6,13 @@ import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.View.*;
 
 import java.util.ArrayList;
-import java.util.Scanner;
+
 
 public class MyClientSocket {
-    private Socket socket= null;
-    private ObjectInputStream in = null;
-    private ObjectOutputStream out = null;
-    private final Scanner scan = new Scanner(System.in);
+    @SuppressWarnings("FieldCanBeLocal")
+    private final Socket socket;
+    private final ObjectInputStream in;
+    private final ObjectOutputStream out;
     Player player = null;
     Game game = null;
     TUI tui =  null;
@@ -38,6 +38,8 @@ public class MyClientSocket {
     }
     public void useTUI() throws IOException, ClassNotFoundException {
         tui= new TUI();
+        //chiede nickname
+        out.writeObject(tui.insertNickname());
         // mostra stanze
         ArrayList<Room> room = (ArrayList<Room>) in.readObject();
         tui.showRoom(room);
@@ -52,7 +54,6 @@ public class MyClientSocket {
             out.writeObject(tui.getRoomName(false));
         }
         //ciclo nome stanza esistente
-        out.writeObject(tui.insertNickname());
         if((boolean)in.readObject()){
             int i = tui.askPlayersNo();
             out.writeObject(i);
@@ -78,7 +79,8 @@ public class MyClientSocket {
                     break;
                 }
                 updateData();
-                while(!tui.yourTurnPlay(game,player)){//quando vero ha deciso cosa giocare
+                while(!tui.yourTurnPlay(game,player)){
+                    doNothing();//quando vero ha deciso cosa giocare
                 }
                 out.writeObject(tui.inputCardToPlace(player));
                 out.writeObject(tui.inputCoordinates());
@@ -99,6 +101,7 @@ public class MyClientSocket {
             }
         }
         tui.winnersPrint((ArrayList<Player>) in.readObject());
+        close();
     }
     public void useGUI(){}
 
@@ -108,5 +111,8 @@ public class MyClientSocket {
     public void updateData() throws IOException, ClassNotFoundException {
         game = (Game) in.readObject();
         player = (Player) in.readObject();
+    }
+    public void doNothing(){
+
     }
 }

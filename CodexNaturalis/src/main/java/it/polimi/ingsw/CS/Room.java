@@ -14,8 +14,8 @@ import java.util.Random;
 
 public class Room implements Serializable {
     private final String nameRoom;
-    private Game game = null;
-    private RoundController roundController = null;
+    private final Game game;
+    private final RoundController roundController;
     public Room(String nameRoom) {
         this.nameRoom = nameRoom;
         game = new Game();

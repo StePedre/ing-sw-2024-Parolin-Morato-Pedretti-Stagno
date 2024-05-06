@@ -6,16 +6,15 @@ import it.polimi.ingsw.Model.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
+
 
 public class ServerHandlerSocket implements ServerHandlerInterface {
-    private Socket client= null;
-    private ObjectOutputStream out = null;
-    private ObjectInputStream in = null;
-    private Game game = null;
-    private Player player;
-    private RoundController rc = null;
-    public ServerHandlerSocket(ObjectOutputStream oos,ObjectInputStream ois,String nickname,Game game,RoundController rc) throws IOException {
+    private final ObjectOutputStream out;
+    private final ObjectInputStream in;
+    private final Game game;
+    private final Player player;
+    private final RoundController rc;
+    public ServerHandlerSocket(ObjectOutputStream oos,ObjectInputStream ois,String nickname,Game game,RoundController rc) {
         out = oos;
         in = ois;
         this.game=game;
@@ -131,7 +130,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         try {
             //Deck deck = (Deck) in.readObject();
             int i =(int) in.readObject();
-            Deck deck = null;
+            Deck deck;
             int card = switch (i) {
                 case 0 -> {
                     deck = game.getDecks()[0];
@@ -157,7 +156,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                     deck = game.getDecks()[1];
                     yield 2;
                 }
-                default -> -1;
+                default -> throw new Exception();
             };
             if(player.getHand().drawCard(deck)){//sostituire con controller
                 player.getHand().chooseCard(deck.drawCard(card));
@@ -166,6 +165,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             //gestire ecc
         } catch (ClassNotFoundException e) {
             //gestire ecc
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
     public void over() throws IOException {

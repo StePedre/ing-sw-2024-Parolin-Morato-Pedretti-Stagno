@@ -17,7 +17,6 @@ public class Client {
                     inter = true;
                     flag=true;
                 } else if(choice.equalsIgnoreCase("GUI")){
-                    inter = false;
                     flag=true;
                 }
                 else{
