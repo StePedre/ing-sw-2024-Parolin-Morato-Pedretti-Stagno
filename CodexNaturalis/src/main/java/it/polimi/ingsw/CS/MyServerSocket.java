@@ -24,64 +24,10 @@ public class MyServerSocket {
              //reader e writer
             oos = new ObjectOutputStream(connection.getOutputStream());
             ois = new ObjectInputStream(connection.getInputStream());
-             oos.writeBoolean(true);
-            //invio stanze
-             oos.writeObject(rooms.getRooms());
-             Room room;
-             boolean b;
-             do { // controllo non esistano stanze con lo stesso nome
-                 if ((boolean) ois.readObject()) {
-                     room = new Room((String) ois.readObject());
-                     //controllo nome stanza
-                     if (rooms.alredyExist(room.getName())) {
-                         oos.writeObject(true);
-                         b= true;
-                     } else {
-                         oos.writeObject(false);
-                         b= false;
-                         rooms.addRoom(room);
-                     }
-                 } else {
-                     room = rooms.getRoom((String) ois.readObject());
-                     if (rooms.alredyExist(room.getName())) {
-                         b=true;
-                         oos.writeObject(true);
-                     } else {
-                         b=false;
-                         oos.writeObject(false);
-                     }
-                 }
-             }while (b);
-             //chiedere nickname
-             String nickname;
-             do { // cicla finchè il nickname non è unico per la stanza
-                 nickname = (String) ois.readObject();
-                 if(rooms.alredyInGame(room.getGame(),nickname)){
-                    oos.writeObject(false);
-                    b=false;
-                 }
-                 else{
-                     oos.writeObject(true);
-                     b=true;
-                 }
-             }while(b);
-            //verificare primo player
-            firstPlayer(room);
             //craere connessione parallela
-            ServerHandlerSocket client = new ServerHandlerSocket(oos,ois,nickname,room.getGame(),room.getRoundController(),connection);
+            ServerHandlerSocket client = new ServerHandlerSocket(oos,ois,rooms,connection);
             Thread t = new Thread (client);
             t.start();
-        }
-    }
-    private void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza
-        if(room.getGame().isFirst()) {
-            //chiedere num exp player
-            oos.writeObject(true);
-            int n =(int) ois.readObject();
-            room.getGame().setExpPlayers(n);
-        }
-        else{
-            oos.writeBoolean(false);
         }
     }
 }

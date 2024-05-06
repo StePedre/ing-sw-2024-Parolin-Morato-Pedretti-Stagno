@@ -12,23 +12,22 @@ import java.net.Socket;
 public class ServerHandlerSocket implements ServerHandlerInterface {
     private final ObjectOutputStream out;
     private final ObjectInputStream in;
-    private final Game game;
-    private final Player player;
-    private final RoundController rc;
+    private Game game;
+    private final RoomController rooms;
+    private Player player;
+    private RoundController rc;
     private final Socket socket;
-    public ServerHandlerSocket(ObjectOutputStream oos, ObjectInputStream ois, String nickname, Game game, RoundController rc, Socket socket) {
+    public ServerHandlerSocket(ObjectOutputStream oos, ObjectInputStream ois, RoomController rooms, Socket socket) {
         out = oos;
         in = ois;
-        this.game=game;
-        this.player = new Player(nickname);
-        game.addPlayer(player);
-        this.rc = rc;
+        this.rooms=rooms;
         this.socket = socket;
     }
     @Override
     public void run() {
         //funzioni sul client
         try {
+            start();
             out.writeObject(player);
             while (game.getNumPlayer() != game.getExpPlayers()) {
                 doNothing();
@@ -178,5 +177,61 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     }
     public void doNothing(){
 
+    }
+    public void start() throws IOException, ClassNotFoundException {
+        out.writeBoolean(true);
+        //invio stanze
+        out.writeObject(rooms.getRooms());
+        Room room;
+        boolean b;
+        do { // controllo non esistano stanze con lo stesso nome
+            if ((boolean) in.readObject()) {
+                room = new Room((String) in.readObject());
+                //controllo nome stanza
+                if (rooms.alredyExist(room.getName())) {
+                    out.writeObject(true);
+                    b= true;
+                } else {
+                    out.writeObject(false);
+                    b= false;
+                    rooms.addRoom(room);
+                }
+            } else {
+                room = rooms.getRoom((String) in.readObject());
+                b = false;
+                out.writeObject(false);
+            }
+        }while (b);
+        //chiedere nickname
+        String nickname;
+        do { // cicla finchè il nickname non è unico per la stanza
+            nickname = (String) in.readObject();
+            if(rooms.alredyInGame(room.getGame(),nickname)){// true trovato nome uguale
+                out.writeObject(true);
+                b=true;
+            }
+            else{
+                out.writeObject(false);
+                b=false;
+            }
+        }while(b);
+        //verificare primo player
+        firstPlayer(room);
+        //istanziare primo player
+        this.player = new Player(nickname);
+        game=room.getGame();
+        rc = room.getRoundController();
+        game.addPlayer(player);
+    }
+    private void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza
+        if(room.getGame().isFirst()) {
+            //chiedere num exp player
+            out.writeObject(true);
+            int n =(int) in.readObject();
+            room.getGame().setExpPlayers(n);
+        }
+        else{
+            out.writeObject(false);
+        }
     }
 }
