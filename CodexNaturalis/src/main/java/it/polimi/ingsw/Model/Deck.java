@@ -29,7 +29,7 @@ public class Deck implements Serializable {
     }
 
     /**
-     * The method gets the total number of cards in the deck.
+     * The method gets the total number of cards currently in the deck.
      *
      * @return number of cards.
      */

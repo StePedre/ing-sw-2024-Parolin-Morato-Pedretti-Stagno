@@ -119,6 +119,7 @@ public class PlayerGround implements Serializable {
      *
      * @param starterCard is the first card to be attached on the ground.
      * @param position is the desired position where to place the card.
+     * @exception InvalidPositionException arises when the desired position does not belong to available positions set.
      */
     public void placeCard(StarterCard starterCard, Position position) throws InvalidPositionException{
         if (!availablePositions.contains(position)) {
@@ -140,6 +141,7 @@ public class PlayerGround implements Serializable {
      *
      * @param playableCard is the card to be attached on the ground.
      * @param position is the desired position where to place the card.
+     * @exception MissingResourcesException arises when trying to place a card without fulfilling its requirements.
      */
     public void placeCard(PlayableCard playableCard, Position position) throws MissingResourcesException, InvalidPositionException {
         if (!checkRequirements(playableCard)) {

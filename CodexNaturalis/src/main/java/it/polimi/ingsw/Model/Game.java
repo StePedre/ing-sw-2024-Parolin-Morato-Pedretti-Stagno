@@ -144,56 +144,12 @@ public class Game implements Serializable {
         createPrivateChats();
     }
 
-
-
     /**
      * The method is invoked when the game is finished. The final routine consists of checking each player's score:
      * whenever one's score is higher than the previous one, it is set as the maximum. The player with the maximum
      * score is the winner and a message is printed to show it. In case of more than one player with the same maximum
      * score, there is a draw, and they are all considered winners.
      */
-    /*public ArrayList<Player> finish() {
-        int max = players.getFirst().getPlayerGround().getPlayerScore();
-        Player winner = players.getFirst();
-        int curr;
-        int flag = 1;
-        for (int j = 1; j < numPlayers; j++) {
-            curr = players.get(j).getPlayerGround().getPlayerScore();
-            if (curr > max) {
-                max = curr;
-                winner = players.get(j);
-                if(!(multiWinners.isEmpty())){
-                    multiWinners.clear();
-                }
-                multiWinners.add(winner);
-                flag = 1;
-            } else if (curr == max && !(players.get(j).getNickname().equals(winner.getNickname()))){
-                multiWinners.add(players.get(j));
-                flag = 2;
-            }
-        }
-        if (flag==1) {
-            return multiWinners;
-
-        } else {  // pari punti vince chi ha realizzato più carte obiettivo
-            int maxObjNo = multiWinners.getFirst().getReachedObjNo();
-            ArrayList<Player> multiWinners2 = new ArrayList<>();
-            for(Player obj: multiWinners){
-                if(obj.getReachedObjNo()>maxObjNo){
-                    maxObjNo = obj.getReachedObjNo();
-                    winner = obj;
-                    if(!(multiWinners2.isEmpty())){
-                        multiWinners2.clear();
-                    }
-                    multiWinners2.add(winner);
-                } else if (obj.getReachedObjNo() == maxObjNo) {
-                    multiWinners2.add(obj);
-                }
-            }
-            return multiWinners2;
-        }
-    }*/
-
     public void finish(){
         isOver = true;
         int[] scores = new int[numPlayers];
@@ -331,12 +287,30 @@ public class Game implements Serializable {
         }
     }
 
+    /**
+     * The method sets the list of starter cards used in the game
+     *
+     * @param starterCards is the list to set.
+     */
     public void setStarterCards(ArrayList<StarterCard> starterCards) {
         this.starterCards = starterCards;
     }
+
+    /**
+     * The method sets Objective Cards that have not been already set as common objectives.
+     *
+     * @objs are the Objective cart to set.
+     */
     public void setOtherObjs(ArrayList<ObjectiveCard> objs){
         this.otherObjs = objs;
     }
+
+    /**
+     * The method randomly removes two Objective Cards from the list "otherObj" (where there are not common objectives) and
+     * creates an array. When this method is invoked, a player will choose one secret objective among this array elements.
+     *
+     * @return array of 2 Objective Cards.
+     */
     public ObjectiveCard[] pickPlayerObj(){
         synchronized (otherObjs) {
             Random rand = new Random();
@@ -344,9 +318,23 @@ public class Game implements Serializable {
             return objs;
         }
     }
+
+    /**
+     * The method gets the boolean value of attribute isOver, which is initialized as false and should be set to true
+     * whenever the game is over, e.g. one player reaches 20 points.
+     *
+     * @return true if the game is over, false otherwise.
+     */
     public boolean isOver() {
         return isOver;
     }
+
+    /**
+     * The method gets the list of winners, which may be of size 1 in case of a single winner, but may also be of size
+     * greater than 1 (see finish() method for conditions).
+     *
+     * @return list of Player objects representing player(s) who win(s) the game.
+     */
     public ArrayList<Player> getMultiWinners() {
         return multiWinners;
     }

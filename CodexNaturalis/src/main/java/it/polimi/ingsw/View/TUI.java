@@ -165,11 +165,12 @@ public class TUI {
     /**
      * The method implements the first part of a player's turn. As in notYourTurn, this method allows to check multiple
      * times the hand, the playground, which contains the secret objective, and every card on the ground.
-     * When the choice is 4, which is "play card", there are no more choices available: the method ends and it should
+     * When the choice is 4, which is "play card", there are no more choices available: the method ends, and it should
      * be followed by invocation of inputCoordinates() and inputCardToPlace();
      *
      * @param game is the instance of the game that is being played.
      * @param player is the instance of the player whose turn it is.
+     * @exception IllegalStateException arises when an input error occurs.
      */
     public boolean yourTurnPlay(Game game, Player player){
         System.out.println("It's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n 4- Play card\n\n");
