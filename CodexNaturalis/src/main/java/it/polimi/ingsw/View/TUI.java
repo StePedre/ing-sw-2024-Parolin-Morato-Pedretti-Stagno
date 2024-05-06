@@ -3,8 +3,6 @@ import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
 import it.polimi.ingsw.Model.ScoreRules.NSymbolsRule;
-
-import java.sql.SQLOutput;
 import java.util.*;
 
 /**

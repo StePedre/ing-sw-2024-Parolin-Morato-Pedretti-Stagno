@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 
 public class ServerHandlerSocket implements ServerHandlerInterface {
@@ -14,13 +15,15 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     private final Game game;
     private final Player player;
     private final RoundController rc;
-    public ServerHandlerSocket(ObjectOutputStream oos,ObjectInputStream ois,String nickname,Game game,RoundController rc) {
+    private final Socket socket;
+    public ServerHandlerSocket(ObjectOutputStream oos, ObjectInputStream ois, String nickname, Game game, RoundController rc, Socket socket) {
         out = oos;
         in = ois;
         this.game=game;
         this.player = new Player(nickname);
         game.addPlayer(player);
         this.rc = rc;
+        this.socket = socket;
     }
     @Override
     public void run() {
@@ -97,6 +100,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 sendData();
                 out.writeObject(false);//non è più il suo turno
             }
+            socket.close();
         }
         catch (IOException e){
             //gestione ecc

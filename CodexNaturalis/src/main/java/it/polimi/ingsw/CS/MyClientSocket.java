@@ -38,21 +38,23 @@ public class MyClientSocket {
     }
     public void useTUI() throws IOException, ClassNotFoundException {
         tui= new TUI();
-        //chiede nickname
-        out.writeObject(tui.insertNickname());
+
         // mostra stanze
         ArrayList<Room> room = (ArrayList<Room>) in.readObject();
         tui.showRoom(room);
-        /*out.writeObject(/*risulotato tui); // se vero craere stanza, falso joinare
-        out.writeObject(/*nome stranza);*/
-        //testStanze();
-        if(tui.chooseRoom()){
-            out.writeObject(true);
-            out.writeObject(tui.getRoomName(true));
-        }else{
-            out.writeObject(false);
-            out.writeObject(tui.getRoomName(false));
-        }
+        do {
+            if (tui.chooseRoom()) { //create
+                out.writeObject(true);
+                out.writeObject(tui.getRoomName(true));
+            } else { //join
+                out.writeObject(false);
+                out.writeObject(tui.getRoomName(false));
+            }
+        }while((boolean)in.readObject());
+        //chiede nickname
+        do {
+            out.writeObject(tui.insertNickname());
+        }while((boolean) in.readObject());
         //ciclo nome stanza esistente
         if((boolean)in.readObject()){
             int i = tui.askPlayersNo();
