@@ -39,13 +39,18 @@ public class MyClientSocket {
     public void useTUI() throws IOException, ClassNotFoundException {
         tui= new TUI();
         // mostra stanze
-        ArrayList<Room> roomSockets = (ArrayList<Room>) in.readObject();
-        for(Room room : roomSockets){
-            System.out.println(room.getName());
-        }
+        ArrayList<Room> room = (ArrayList<Room>) in.readObject();
+        tui.showRoom(room);
         /*out.writeObject(/*risulotato tui); // se vero craere stanza, falso joinare
         out.writeObject(/*nome stranza);*/
-        testStanze();
+        //testStanze();
+        if(tui.chooseRoom()){
+            out.writeObject(true);
+            out.writeObject(tui.getRoomName(true));
+        }else{
+            out.writeObject(false);
+            out.writeObject(tui.getRoomName(false));
+        }
         //ciclo nome stanza esistente
         out.writeObject(tui.insertNickname());
         if((boolean)in.readObject()){
@@ -103,23 +108,5 @@ public class MyClientSocket {
     public void updateData() throws IOException, ClassNotFoundException {
         game = (Game) in.readObject();
         player = (Player) in.readObject();
-    }
-    public void testStanze() throws IOException, ClassNotFoundException {
-        Scanner s = new Scanner(System.in);
-        //System.out.println("Vuoi creare una stanza?");
-        System.out.println((String) in.readObject());
-        if(s.nextLine().equalsIgnoreCase("si")){
-            out.writeObject(true);
-            System.out.println((String) in.readObject());
-            String st = s.nextLine();
-            out.writeObject(st);
-        }
-        else{
-            out.writeObject(false);// se vero craere stanza, falso joinare
-            System.out.println((String)in.readObject());
-            String st = s.nextLine();
-            out.writeObject(st);
-        }
-
     }
 }

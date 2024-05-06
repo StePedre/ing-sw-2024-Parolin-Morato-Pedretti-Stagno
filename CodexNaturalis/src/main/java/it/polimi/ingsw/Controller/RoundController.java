@@ -2,6 +2,7 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Model.Player;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -12,43 +13,33 @@ import java.util.Random;
  * has not started yet. Almost every method is synchronized, which means each thread calling the method needs to wait
  * for another invocation (if existing) to finish.
  */
-public class RoundController {
+public class RoundController implements Serializable {
     private ArrayList<Player> players = null;
     private int round = -1;
     private final Random rand = new Random();
-    private final Object lock= new Object();
 
     public RoundController() {
 
     }
-    public void setplayers(ArrayList<Player> players) {
-        this.players = players;
-    }
-
-    public RoundController(ArrayList<Player> players) {
-        synchronized (lock) {
-            if (this.players == null) {
-                this.players = players;
-            }
+    public synchronized void setplayers(ArrayList<Player> players) {
+        if (players == null) {
+            this.players = players;
         }
     }
-    public void nextRound(){
-        synchronized (lock) {
+
+    public synchronized void nextRound(){
             if (round == players.size() - 1)
                 round = 0;
             else
                 round++;
-        }
     }
 
-    public void setFirstPlayer(){
-        synchronized (lock) {
-            if (round == -1) {
-                round = rand.nextInt(players.size());
-            }
+    public synchronized void setFirstPlayer(){
+        if (round == -1) {
+            round = rand.nextInt(players.size());
         }
     }
-    public Player getCurrentPlayer(){
+    public synchronized Player getCurrentPlayer(){
         return players.get(round);
     }
 

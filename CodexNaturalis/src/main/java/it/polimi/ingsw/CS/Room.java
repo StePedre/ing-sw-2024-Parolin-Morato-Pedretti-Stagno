@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Room implements Serializable {
-    private String nameRoom;
+    private final String nameRoom;
     private Game game = null;
     private RoundController roundController = null;
     public Room(String nameRoom) {

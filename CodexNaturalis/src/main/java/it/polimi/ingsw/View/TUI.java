@@ -1,7 +1,10 @@
 package it.polimi.ingsw.View;
+import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
 import it.polimi.ingsw.Model.ScoreRules.NSymbolsRule;
+
+import java.sql.SQLOutput;
 import java.util.*;
 
 /**
@@ -607,5 +610,36 @@ public class TUI {
             scanner.nextLine();
         } while(!(choice >=0 && choice<=2));
         return choice;
+    }
+    public void showRoom(ArrayList<Room> rooms){
+        String s ="These are the available room to play:";
+        if(rooms.size()==0){
+            s+="no one";
+        }
+        else{
+            for(Room r: rooms){
+                s+=r.getName()+"\n";
+            }
+        }
+        System.out.println(s);
+    }
+    public boolean chooseRoom(){
+        System.out.println("Do you want to create a room: 1 or to join one : other");
+        Scanner s = new Scanner(System.in);
+        int n = s.nextInt();
+        s.nextLine();
+        return (n==1) ? true : false;
+    }
+    public String getRoomName(boolean b){
+        Scanner s = new Scanner(System.in);
+        if(b){
+            System.out.println("What is the name of the new room?");
+            String st = s.nextLine();
+            return st;
+        }
+        else{
+            System.out.println("Which room?");
+            return s.nextLine();
+        }
     }
 }

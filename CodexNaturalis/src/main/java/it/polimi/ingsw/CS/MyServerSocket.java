@@ -4,6 +4,7 @@ import it.polimi.ingsw.Controller.RoomController;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 
 //pensare a come gestire socket+RMI
@@ -25,19 +26,17 @@ public class MyServerSocket {
             oos = new ObjectOutputStream(connection.getOutputStream());
             ois = new ObjectInputStream(connection.getInputStream());
              oos.writeBoolean(true);
-            //chiedere nickname
+            //invio stanze
              oos.writeObject(rooms.getRooms());
              Room room;
-             oos.writeObject("Vuoi creare una stanza?");
              if((boolean)ois.readObject()){
-                 oos.writeObject("scegli nome stanza");
                  room = new Room((String) ois.readObject());
                  rooms.addRoom(room);
              }
              else{
-                 oos.writeObject("Scegli stanza");
                  room = rooms.getRoom((String) ois.readObject());
              }
+             //chiedere nickname
             String nickname=(String) ois.readObject();
             //verificare primo player
             firstPlayer(room);
