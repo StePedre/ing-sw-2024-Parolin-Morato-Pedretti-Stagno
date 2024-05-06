@@ -498,7 +498,7 @@ public class TUI {
      */
     public void showGround(Game game, Player player){
         ObjectiveCard[] commonObjs = game.getCommonObj();
-        System.out.println("\nThese are your common objectives:\n");
+        System.out.println("\nThese are all players' common objectives:\n");
         for(ObjectiveCard obj: commonObjs){
             System.out.println(toStringRule(obj));
         }
@@ -621,12 +621,12 @@ public class TUI {
         }
         System.out.println(s);
     }
-    public boolean chooseRoom(){// modifiicare
+    public boolean chooseRoom(){
         System.out.println("Do you want to create a room: 1 or to join one : other");
         Scanner s = new Scanner(System.in);
         int n = s.nextInt();
         s.nextLine();
-        return (n==1);
+        return (n==1) ? true : false;
     }
     public String getRoomName(boolean b){
         Scanner s = new Scanner(System.in);
