@@ -29,7 +29,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         try {
             out.writeObject(player);
             while (game.getNumPlayer() != game.getExpPlayers()) {
-
+                doNothing();
             }
             rc.setplayers(game.getPlayers());
             sendData(); //inviare istanza game
@@ -170,5 +170,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     }
     public void over() throws IOException {
         out.writeObject(game.getMultiWinners());
+    }
+    public void doNothing(){
+
     }
 }
