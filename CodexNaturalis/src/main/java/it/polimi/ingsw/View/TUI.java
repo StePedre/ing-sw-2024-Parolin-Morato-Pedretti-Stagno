@@ -621,12 +621,12 @@ public class TUI {
         }
         System.out.println(s);
     }
-    public boolean chooseRoom(){
+    public boolean chooseRoom(){// modifiicare
         System.out.println("Do you want to create a room: 1 or to join one : other");
         Scanner s = new Scanner(System.in);
         int n = s.nextInt();
         s.nextLine();
-        return (n==1) ? true : false;
+        return (n==1);
     }
     public String getRoomName(boolean b){
         Scanner s = new Scanner(System.in);
