@@ -24,7 +24,7 @@ public class MyClientSocket {
         this.inter = inter;
     }
     public void runClient() throws IOException, ClassNotFoundException {// per test println
-        if(!in.readBoolean()){
+        if(!(boolean)in.readObject()){
             throw new ConnectException();
         }
         System.out.println("Client connected");
@@ -66,9 +66,9 @@ public class MyClientSocket {
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         out.writeObject(tui.showStarterCard((StarterCard) in.readObject()));
-        //si ferma qui6
         updateData();
-        Thread t = new Thread(()->{while(true) {
+        tui.showGround(game,player);
+        /*Thread t = new Thread(()->{while(true) {
                                         tui.notYourTurn(game, player);
                                     }
                                 });
@@ -104,7 +104,7 @@ public class MyClientSocket {
             }
         }
         tui.winnersPrint((ArrayList<Player>) in.readObject());
-        close();
+        close();*/
     }
     public void useGUI(){}
 
@@ -112,8 +112,10 @@ public class MyClientSocket {
         socket.close();
     }
     public void updateData() throws IOException, ClassNotFoundException {
-        game = (Game) in.readObject();
-        player = (Player) in.readObject();
+        Game game2 = (Game) in.readObject();
+        Player player2 = (Player) in.readObject();
+        game = game2;
+        player = player2;
     }
     public void doNothing(){
 

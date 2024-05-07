@@ -126,7 +126,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         }
     }
     public void sendData() throws IOException, ClassNotFoundException {
+        out.flush();
         out.writeObject(game);//invio game aggiornato
+        out.flush();
         out.writeObject(player);//invio Playerground e mano aggiornati
     }
     public void drawCard(){// 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
@@ -179,7 +181,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
 
     }
     public void start() throws IOException, ClassNotFoundException {
-        out.writeBoolean(true);
+        out.writeObject(true);
         //invio stanze
         out.writeObject(rooms.getRooms());
         Room room;
@@ -219,7 +221,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         firstPlayer(room);
         //istanziare primo player
         this.player = new Player(nickname);
-        game=room.getGame();
+        game = room.getGame();
         rc = room.getRoundController();
         game.addPlayer(player);
     }
