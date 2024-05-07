@@ -63,7 +63,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             server.addRoom(roomJoined);
             server.setPlayerNumber(tui.askPlayersNo(), roomJoined);
         }else{
-            roomJoined = controlRoom( false, true);
+            roomJoined = controlRoom2( false, true);
         }
             String nickname = controlNickname(true);
             player = server.addNewPlayer(nickname, roomJoined);
@@ -75,7 +75,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     }
 
     private void listenToPlayers() {
-        Thread t = new Thread(() -> {
             try {
                 ArrayList<Player> oldPlayers = getPlayers();
                 while (waitingForPlayers) {
@@ -104,8 +103,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             } catch (RemoteException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        });
-        t.start();
     }
 
     private void startEarlyGame() throws RemoteException, InvalidPositionException {
@@ -151,21 +148,28 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     private String controlNickname(boolean choice) throws RemoteException {
         String nickname = tui.insertNickname(choice);
         if(server.getRooms().alredyInGame(server.getRooms().getRoom(roomJoined).getGame(),nickname)){
-            controlNickname(false);
+            return controlNickname(false);
         }else{
             return nickname;
         }
-        return null;
     }
 
     private String controlRoom(boolean choice, boolean choice2) throws RemoteException{
         String roomName = tui.getRoomName(choice, choice2);
         if(server.getRooms().alredyExist(roomName)){
-            controlRoom(choice, false);
+            return controlRoom(choice, false);
         } else {
             return roomName;
         }
-        return null;
+    }
+    private String controlRoom2(boolean choice, boolean choice2) throws RemoteException{
+        String roomName = tui.getRoomName(choice, choice2);
+        if(server.getRooms().alredyExist(roomName)){
+            return roomName;
+        } else {
+            return controlRoom(choice, false);
+
+        }
     }
 
     private void drawCardFromDeck(int position){

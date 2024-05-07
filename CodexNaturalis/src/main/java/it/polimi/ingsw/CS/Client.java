@@ -1,5 +1,8 @@
 package it.polimi.ingsw.CS;
 
+import it.polimi.ingsw.Model.InvalidPositionException;
+import it.polimi.ingsw.Model.MissingResourcesException;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.Scanner;
@@ -48,6 +51,10 @@ public class Client {
         }
         catch(ClassNotFoundException e){
             //aggiugni ecc
+        } catch (MissingResourcesException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidPositionException e) {
+            throw new RuntimeException(e);
         }
     }
 }
