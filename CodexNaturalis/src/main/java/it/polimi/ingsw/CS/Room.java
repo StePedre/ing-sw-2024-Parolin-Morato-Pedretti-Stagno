@@ -31,13 +31,13 @@ public class Room implements Serializable {
         this.nameRoom = nameRoom;
         game = new Game();
         roundController = new RoundController();
-        /*parse(game);
+        parse(game);
         //creare deck
         Deck[] decks = new Deck[2];
         game.setDecks(decks);
         //seleziononare carta obj comune
         ObjectiveCard[] obj = new ObjectiveCard[2];
-        game.setCommonObj(obj);*/
+        game.setCommonObj(obj);
     }
 
     /**
