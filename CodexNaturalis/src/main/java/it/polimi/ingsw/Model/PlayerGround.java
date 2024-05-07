@@ -122,7 +122,7 @@ public class PlayerGround implements Serializable {
      * @exception InvalidPositionException arises when the desired position does not belong to available positions set.
      */
     public void placeCard(StarterCard starterCard, Position position) throws InvalidPositionException{
-        if (!availablePositions.contains(position)) {
+        if (!checkPosition(position, availablePositions)) {
             throw new InvalidPositionException("Invalid position");
         }
         if(!starterCard.getFlip()){
@@ -147,7 +147,7 @@ public class PlayerGround implements Serializable {
         if (!checkRequirements(playableCard)) {
             throw new MissingResourcesException("Required resources are missing");
         }
-        if (!availablePositions.contains(position)) {
+        if (!checkPosition(position,availablePositions)) {
             throw new InvalidPositionException("Invalid position");
         }
         // Adds the back resource if the playableCard is flipped
@@ -300,7 +300,7 @@ public class PlayerGround implements Serializable {
                 int newY = placePosition.getY() + calculateOffset(j);
                 Position newPosition = new Position(newX, newY);
                 // checks if the ground is free in that position and if is not unavailable
-                if (ground[newX][newY] == null && !unavailablePositions.contains(newPosition)) {
+                if (ground[newX][newY] == null && !checkPosition(newPosition, unavailablePositions)) {
                     // calculates the index of the corresponding covering corner and checks its availability
                     int cornerPosition = j + 2 * i;
                     if (card.getCorners()[cornerPosition].getAvailability()) {
@@ -377,18 +377,18 @@ public class PlayerGround implements Serializable {
         positions.forEach(p -> {
             // Checks if the current position has a card with a color equal to the first color of the composition and
             // Checks if the current position is already inside takenPositions
-            if (ground[p.getX()][p.getY()].getColor() == colors[0] && !takenPositions.contains(p)) {
+            if (ground[p.getX()][p.getY()].getColor() == colors[0] && !checkPosition(p, takenPositions)) {
                 // Calculates the nex position thanks to the offsets of the composition
                 int secondX = p.getX() + offSets[1].getX();
                 int secondY = p.getY() + offSets[1].getY();
                 Position secondPosition = new Position(secondX, secondY);
                 // Checks if the second position has a card with a color equal to the second color of the composition and
                 // Checks if the second position is already inside takenPositions
-                if (ground[secondX][secondY].getColor() == colors[1] && !takenPositions.contains(secondPosition)) {
+                if (ground[secondX][secondY].getColor() == colors[1] && !checkPosition(secondPosition, takenPositions)) {
                     int thirdX = p.getX() + offSets[2].getX();
                     int thirdY = p.getY() + offSets[2].getY();
                     Position thirdPosition = new Position(thirdX, thirdY);
-                    if (ground[thirdX][thirdY].getColor() == colors[2] && !takenPositions.contains(thirdPosition)) {
+                    if (ground[thirdX][thirdY].getColor() == colors[2] && !checkPosition(thirdPosition, takenPositions)) {
                         // Composition found; increments the atomicInteger and saves the 3 positions found into takenPositions
                         count.set(count.getAndIncrement());
                         takenPositions.add(p);
@@ -412,5 +412,13 @@ public class PlayerGround implements Serializable {
         return value == 0 ? -1 : 1;
     }
 
+    private boolean checkPosition(Position position, Set<Position> positions){
+        for(Position p : positions){
+            if(p.getX() == position.getX() && p.getY() == position.getY()){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

@@ -283,7 +283,7 @@ public class Game implements Serializable {
     public StarterCard getOneStarterCard() {
         synchronized (starterCards) {
             Random rand = new Random();
-            return starterCards.remove(rand.nextInt(6));
+            return starterCards.remove(rand.nextInt(starterCards.size()));
         }
     }
 

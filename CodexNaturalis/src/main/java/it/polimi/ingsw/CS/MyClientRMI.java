@@ -70,6 +70,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             tui.Welcome(player);
             waitingForPlayers = true;
             listenToPlayers();
+            System.out.println("All players have joined, lets start the game!");
             startEarlyGame();
             startNormalGame();
     }
