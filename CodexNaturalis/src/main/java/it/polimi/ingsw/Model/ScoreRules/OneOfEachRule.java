@@ -10,7 +10,7 @@ import it.polimi.ingsw.Model.Resource;
  * potion and scroll). It gives three points for each said set.
  */
 public class OneOfEachRule implements ScoreRule, Serializable {
-
+    private static final long serialVersionUID = 17L;
     private final String name = "OER";
 
     /**

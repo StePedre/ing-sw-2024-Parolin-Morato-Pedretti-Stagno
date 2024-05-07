@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 public class CompositionRule implements ScoreRule, Serializable {
-
+    private static final long serialVersionUID = 13L;
     private final String name = "CR";
     private final Position[] offSets;
     private final Resource[] colors;

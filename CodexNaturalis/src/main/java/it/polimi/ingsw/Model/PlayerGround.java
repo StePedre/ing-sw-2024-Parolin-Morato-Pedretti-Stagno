@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 public class PlayerGround implements Serializable {
+    private static final long serialVersionUID = 2L;
     private int playerScore;
     private Map<Position, Card> cardPosition;
     private Card[][] ground;

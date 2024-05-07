@@ -11,6 +11,7 @@ import java.util.Collections;
  */
 
 public class Deck implements Serializable {
+    private static final long serialVersionUID = 10L;
     private int numberOfCards;
     private final String kindOfDeck;
     private ArrayList<Card> cards;

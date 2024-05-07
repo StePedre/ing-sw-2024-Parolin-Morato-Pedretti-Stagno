@@ -2,6 +2,7 @@ package it.polimi.ingsw.CS;
 
 import it.polimi.ingsw.Controller.*;
 import it.polimi.ingsw.Model.*;
+import it.polimi.ingsw.View.TUI;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -36,6 +37,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             //sendData(); //inviare istanza game
             rc.setFirstPlayer();
             PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());// momentaneo
+            //popola la mano
+            pc.populateHand(game,player);
             //select secret obj
             ObjectiveCard[] obj = pc.pickObjCard(game);
             out.writeObject(obj);
@@ -47,8 +50,11 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 st.flipCard();
             }
             pc.setFirstCard(st);
-            //popola la mano
-            //pc.populateHand(game,player);
+
+
+            TUI tui = new TUI();
+            tui.showHand(player);
+            out.writeObject(player);
             sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){//primo turno
                 out.writeObject(false);

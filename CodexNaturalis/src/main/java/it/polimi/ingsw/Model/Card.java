@@ -9,6 +9,7 @@ import java.io.Serializable;
  * and four back corners. It can be positioned with the front visible, or flipped.
  */
 public abstract class Card implements Serializable {
+    private static final long serialVersionUID = 12L;
     private int id;
     private ScoreRule rule;
     private Resource color;

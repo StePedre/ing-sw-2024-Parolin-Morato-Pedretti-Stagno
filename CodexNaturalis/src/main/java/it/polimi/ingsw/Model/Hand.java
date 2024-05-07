@@ -12,6 +12,7 @@ import java.util.Arrays;
  */
 
 public class Hand implements Serializable {
+    private static final long serialVersionUID = 8L;
     private Card[] cards;
     private ObjectiveCard secretObj;
     private static final int maxNumberOfCards = 3;
@@ -31,8 +32,7 @@ public class Hand implements Serializable {
      * @param cards is an array of cards that must be in the hand of the player.
      */
     public Hand(Card[] cards) {
-        this.cards = new Card[maxNumberOfCards];
-        this.cards= Arrays.copyOf(cards,maxNumberOfCards);
+        this.cards= cards;
         this.secretObj = new ObjectiveCard(0, null);
     }
 
@@ -108,5 +108,8 @@ public class Hand implements Serializable {
      */
     public void selectObj(ObjectiveCard objective) {
         this.secretObj = objective;
+    }
+    public void addHand(Card[] cards){
+        this.cards=cards;
     }
 }

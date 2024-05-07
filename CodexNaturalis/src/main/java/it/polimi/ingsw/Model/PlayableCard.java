@@ -13,6 +13,7 @@ import java.util.HashMap;
  * One method is added in this extending class: the clone method.
  */
 public class PlayableCard extends Card implements Serializable {
+    private static final long serialVersionUID = 6L;
     private HashMap<Resource, Integer> requirements;
 
     /**

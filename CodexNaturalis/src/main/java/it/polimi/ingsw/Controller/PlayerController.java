@@ -21,9 +21,11 @@ public class PlayerController {
     public ObjectiveCard[] pickObjCard(Game game){
         return game.pickPlayerObj();
     }
+
     public void setObjSecret(ObjectiveCard obj){
         hand.setSecretObj(obj);
     }
+
     public void populateHand (Game game,Player player) {
         Deck deckResource;
         Deck deckGold;
@@ -45,7 +47,7 @@ public class PlayerController {
         cards[2] = deckGold.drawCard(indexRandCard3);
         // cards in positions 0 and 1 are resources
         // card in position 2 is gold
-        Hand hand = new Hand(cards);
+        hand.addHand(cards);
         player.setHand(hand);
     }
 }

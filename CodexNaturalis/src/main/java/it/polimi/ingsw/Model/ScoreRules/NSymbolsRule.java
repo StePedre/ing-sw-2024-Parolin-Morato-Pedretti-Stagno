@@ -11,7 +11,7 @@ import java.io.Serializable;
  * as well as the number of times the same resource needs to appear and, of course, the resource itself.
  */
 public class NSymbolsRule implements ScoreRule, Serializable {
-
+    private static final long serialVersionUID = 16L;
     private final String name = "NSR";
     private final Resource symbol;
     private final int numberOfResources;

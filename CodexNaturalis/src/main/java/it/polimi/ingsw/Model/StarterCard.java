@@ -11,6 +11,7 @@ import java.util.ArrayList;
  * One method is added in this extending class: the clone method.
  */
 public class StarterCard extends Card implements Serializable {
+    private static final long serialVersionUID = 5L;
     private ArrayList<Resource> backRes;
 
     /**

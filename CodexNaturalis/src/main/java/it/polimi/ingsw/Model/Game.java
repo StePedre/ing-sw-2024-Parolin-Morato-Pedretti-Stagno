@@ -15,6 +15,7 @@ import java.util.Random;
  */
 
 public class Game implements Serializable {
+    private static final long serialVersionUID = 9L;
     private ArrayList<Player> players;
     private Deck[] decks;
     private Chat chat;
