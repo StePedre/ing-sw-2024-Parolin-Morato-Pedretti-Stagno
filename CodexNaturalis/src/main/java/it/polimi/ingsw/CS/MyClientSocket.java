@@ -111,10 +111,8 @@ public class MyClientSocket {
         socket.close();
     }
     public void updateData() throws IOException, ClassNotFoundException {
-        Game game2 = (Game) in.readObject();
-        Player player2 = (Player) in.readObject();
-        game = game2;
-        player = player2;
+        game = (Game) in.readObject();
+        player = (Player) in.readObject();
     }
     public void doNothing(){
 
