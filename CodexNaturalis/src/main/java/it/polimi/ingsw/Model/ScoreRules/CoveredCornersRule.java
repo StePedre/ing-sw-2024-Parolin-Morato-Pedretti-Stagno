@@ -5,11 +5,13 @@ import it.polimi.ingsw.Model.PlayerGround;
 import it.polimi.ingsw.Model.Position;
 import it.polimi.ingsw.Model.Resource;
 
+import java.io.Serializable;
+
 /**
  * Class CoveredCornersRule deals with calculating points from a specific type of PlayableCard when it gets placed.
  * This type of rule is applied when the card gives points for each corner that is covered by other cards.
  */
-public class CoveredCornersRule implements ScoreRule {
+public class CoveredCornersRule implements ScoreRule, Serializable {
 
     private final String name = "CCR";
 

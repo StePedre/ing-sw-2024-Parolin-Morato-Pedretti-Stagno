@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Model.ScoreRules;
+import java.io.Serializable;
 import java.util.HashMap;
 import it.polimi.ingsw.Model.PlayerGround;
 import it.polimi.ingsw.Model.Resource;
@@ -8,7 +9,7 @@ import it.polimi.ingsw.Model.Resource;
  * This type of rule is applied when the objective is to have a set (or more than one set) of three resources (plume,
  * potion and scroll). It gives three points for each said set.
  */
-public class OneOfEachRule implements ScoreRule {
+public class OneOfEachRule implements ScoreRule, Serializable {
 
     private final String name = "OER";
 

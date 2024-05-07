@@ -3,12 +3,14 @@ package it.polimi.ingsw.Model.ScoreRules;
 import it.polimi.ingsw.Model.PlayerGround;
 import it.polimi.ingsw.Model.Resource;
 
+import java.io.Serializable;
+
 /**
  * Class NSymbolsRule is used to calculate points given by the presence on the player's ground of a specific resource.
  * This can be required both by an ObjectiveCard or by a PlayableCard. The number of points for each resource may vary,
  * as well as the number of times the same resource needs to appear and, of course, the resource itself.
  */
-public class NSymbolsRule implements ScoreRule {
+public class NSymbolsRule implements ScoreRule, Serializable {
 
     private final String name = "NSR";
     private final Resource symbol;

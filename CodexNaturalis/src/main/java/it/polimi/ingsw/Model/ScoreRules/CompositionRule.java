@@ -4,6 +4,7 @@ import it.polimi.ingsw.Model.PlayerGround;
 import it.polimi.ingsw.Model.Position;
 import it.polimi.ingsw.Model.Resource;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * There is a number of points per composition, which means there may be more than one composition.
  */
 
-public class CompositionRule implements ScoreRule {
+public class CompositionRule implements ScoreRule, Serializable {
 
     private final String name = "CR";
     private final Position[] offSets;

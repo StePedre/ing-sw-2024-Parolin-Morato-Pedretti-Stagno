@@ -2,11 +2,13 @@ package it.polimi.ingsw.Model.ScoreRules;
 
 import it.polimi.ingsw.Model.PlayerGround;
 
+import java.io.Serializable;
+
 /**
  * Class FlatRule is used to calculate the points from a PlayableCard that always gives the same amount of points
  * when it's placed on the ground. It may be 0.
  */
-public class FlatRule implements ScoreRule {
+public class FlatRule implements ScoreRule, Serializable {
 
     private final String name = "FR";
     private final int flatPoints;
