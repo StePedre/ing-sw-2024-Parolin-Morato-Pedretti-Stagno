@@ -18,8 +18,8 @@ public class Game implements Serializable {
     private static final long serialVersionUID = 9L;
     private ArrayList<Player> players;
     private Deck[] decks;
-    private Chat chat;
-    private Chat[] privChatList = new Chat[6];
+    //private Chat chat;
+    //private Chat[] privChatList = new Chat[6];
     private ObjectiveCard[] commonObj;
     private ArrayList<Player> multiWinners = new ArrayList<>();
     private int expPlayers = -1;
@@ -85,18 +85,18 @@ public class Game implements Serializable {
      *
      * @return the global Chat.
      */
-    public Chat getChat() {
+    /*public Chat getChat() {
         return chat;
-    }
+    }*/
 
     /**
      * The method gets the full list of private chats, where each one of them is between two players.
      *
      * @return the private Chats list.
      */
-    public Chat[] getPrivChatList() {
+    /*public Chat[] getPrivChatList() {
         return privChatList;
-    }
+    }*/
 
     /**
      * The method gets a specific private chat from the list of all chat between two players, checking each time
@@ -106,7 +106,7 @@ public class Game implements Serializable {
      * @throws RemoteException          because Chat class extends UnicastRemoteObject.
      * @throws NotExistingChatException because requested chat may not exist.
      */
-    public Chat getPrivateChat(Player player1, Player player2) throws RemoteException, NotExistingChatException {
+    /*public Chat getPrivateChat(Player player1, Player player2) throws RemoteException, NotExistingChatException {
         int i = 0;
         Chat toReturn = null;
         for (Chat value : privChatList) {
@@ -123,7 +123,7 @@ public class Game implements Serializable {
         else{
             throw new NotExistingChatException("Error: chat do not exist");
         }
-    }
+    }*/
 
     /**
      * The method gets the array of common objective cards.
@@ -140,10 +140,10 @@ public class Game implements Serializable {
      *
      * @throws RemoteException because Chat class extends UnicastRemoteObject.
      */
-    public void start() throws RemoteException {
+    /*public void start() throws RemoteException {
         createGlobalChat();
         createPrivateChats();
-    }
+    }*/
 
     /**
      * The method is invoked when the game is finished. The final routine consists of checking each player's score:
@@ -191,11 +191,11 @@ public class Game implements Serializable {
      *
      * @throws RemoteException because Chat class extends UnicastRemoteObject.
      */
-    public void createGlobalChat() throws RemoteException {
+    /*public void createGlobalChat() throws RemoteException {
         String name = "Global Chat";
         int PlayersNo = this.numPlayers;
         chat = new Chat(name, PlayersNo);
-    }
+    }*/
 
     /**
      * The method creates an array of new private chats through the Chat constructor: each chat has two participants.
@@ -204,7 +204,7 @@ public class Game implements Serializable {
      *
      * @throws RemoteException because Chat class extends UnicastRemoteObject.
      */
-    public void createPrivateChats() throws RemoteException {
+    /*public void createPrivateChats() throws RemoteException {
         int k = 0;
         for (int i = 0; i < (numPlayers - 1); i++) {
             String name1 = players.get(i).getNickname();
@@ -217,7 +217,7 @@ public class Game implements Serializable {
                 k++;
             }
         }
-    }
+    }*/
 
     /**
      * The method adds a player to the game and increments the total number of players. This can only happen

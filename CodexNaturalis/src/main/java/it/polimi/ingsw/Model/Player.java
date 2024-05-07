@@ -20,7 +20,6 @@ public class Player implements Serializable {
     private PlayerGround playerGround;
     private Game game;
     private int reachedObjNo;
-    private TUI TUI;
     private static final int maxLengthMsg = 255;
     // still a temporary value
     private String message;
@@ -38,6 +37,12 @@ public class Player implements Serializable {
         this.hand = new Hand();
         this.playerGround = new PlayerGround();
         this.game = null;
+    }
+    public Player(String name,PlayerGround pg, Hand hand, int reachedObjNo){
+        this.playerGround=pg;
+        this.nickname=name;
+        this.hand=hand;
+        this.reachedObjNo=reachedObjNo;
     }
 
     /**
@@ -85,14 +90,6 @@ public class Player implements Serializable {
         return this.hand;
     }
 
-    /**
-     * The method gets the TUI the player interacts with.
-     *
-     * @return player's Context Line Interface.
-     */
-    public TUI getCLI() {
-        return this.TUI;
-    }
 
     /**
      * The method gets the player ground of the player.
@@ -153,11 +150,11 @@ public class Player implements Serializable {
      *
      * @exception RemoteException because class Chat extends UnicastRemoteObject.
      */
-    public void sendMsg() throws RemoteException {
+    /*public void sendMsg() throws RemoteException {
         String messageToSend;
         messageToSend = getMessage();
         game.getChat().send(messageToSend);
-    }
+    }*/
 
     /**
      * The method sends a message to a private chat, specifying the addressee as a parameter.
@@ -166,9 +163,9 @@ public class Player implements Serializable {
      * @param player is the addressee of the message, the other participant in the private chat.
      * @exception RemoteException because class Chat extends UnicastRemoteObject.
      */
-    public void sendMsg(Player player) throws RemoteException, NotExistingChatException {
+    /*public void sendMsg(Player player) throws RemoteException, NotExistingChatException {
         String messageToSend;
         messageToSend = getMessage();
         game.getPrivateChat(this, player).send(messageToSend);
-    }
+    }*/
 }

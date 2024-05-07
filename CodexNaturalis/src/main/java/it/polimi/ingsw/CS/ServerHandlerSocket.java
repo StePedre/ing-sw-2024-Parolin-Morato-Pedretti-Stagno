@@ -50,12 +50,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 st.flipCard();
             }
             pc.setFirstCard(st);
-
-
-            TUI tui = new TUI();
-            tui.showHand(player);
-            out.writeObject(player);
-            sendData();
+            sendPlayer();
+            sendData();//qui i dati sono corretti, quando li invio il client non li riceve
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){//primo turno
                 out.writeObject(false);
             }
@@ -241,5 +237,17 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         else{
             out.writeObject(false);
         }
+    }
+    public void sendPlayer() throws IOException {
+        out.writeObject(player.getNickname());
+        PlayerGround pg = player.getPlayerGround();
+        out.writeObject(pg);
+        out.writeObject(player.getHand());
+        out.writeObject(player.getReachedObjNo());
+    }
+    public void sendGame() throws IOException {
+        out.writeObject(game.getDecks());
+        out.writeObject(game.getPlayers());
+        out.writeObject(game.getCommonObj());
     }
 }

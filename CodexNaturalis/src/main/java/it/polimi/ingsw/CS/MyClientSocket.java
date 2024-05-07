@@ -65,7 +65,7 @@ public class MyClientSocket {
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         out.writeObject(tui.showStarterCard((StarterCard) in.readObject()));
-        player = (Player) in.readObject();
+        readPlayer();
         tui.showHand(player);
         updateData();
         tui.showGround(game,player);
@@ -118,5 +118,12 @@ public class MyClientSocket {
     }
     public void doNothing(){
 
+    }
+    public void readPlayer() throws IOException, ClassNotFoundException {
+        String s =(String) in.readObject();
+        PlayerGround pg = (PlayerGround) in.readObject();
+        Hand hand = (Hand)in.readObject();
+        int n = (int)in.readObject();
+        player= new Player(s,pg,hand,n);
     }
 }
