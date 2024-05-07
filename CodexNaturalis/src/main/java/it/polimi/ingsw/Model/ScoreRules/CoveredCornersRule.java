@@ -12,7 +12,7 @@ import java.io.Serializable;
  * This type of rule is applied when the card gives points for each corner that is covered by other cards.
  */
 public class CoveredCornersRule implements ScoreRule, Serializable {
-
+    private static final long serialVersionUID = 14L;
     private final String name = "CCR";
 
     /**

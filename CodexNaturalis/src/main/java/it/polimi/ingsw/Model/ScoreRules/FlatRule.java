@@ -9,7 +9,7 @@ import java.io.Serializable;
  * when it's placed on the ground. It may be 0.
  */
 public class FlatRule implements ScoreRule, Serializable {
-
+    private static final long serialVersionUID = 15L;
     private final String name = "FR";
     private final int flatPoints;
 

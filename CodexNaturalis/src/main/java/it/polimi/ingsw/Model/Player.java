@@ -14,6 +14,7 @@ import java.util.Scanner;
  */
 
 public class Player implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String nickname;
     private Hand hand;
     private PlayerGround playerGround;

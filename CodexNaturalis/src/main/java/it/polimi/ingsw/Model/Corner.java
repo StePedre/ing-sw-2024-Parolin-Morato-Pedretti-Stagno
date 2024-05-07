@@ -12,6 +12,7 @@ import java.io.Serializable;
  */
 
     public class Corner implements Serializable {
+    private static final long serialVersionUID = 11L;
         private String pos;
         private Resource cornerRes;
         private boolean isAvailable;
