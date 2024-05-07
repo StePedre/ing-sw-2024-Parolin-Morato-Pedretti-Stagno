@@ -102,12 +102,12 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             socket.close();
         }
         catch (IOException e){
-            //gestione ecc
+            e.printStackTrace();
         }
         catch (ClassNotFoundException e) {
-            //gestione ecc
+            e.printStackTrace();
         } catch (InvalidPositionException e) {
-            //gestione ecc
+            e.printStackTrace();
         }
 
 
@@ -119,10 +119,10 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             player.getPlayerGround().placeCard(card, pos); // modificare con apposito controller
         }
         catch (MissingResourcesException e){
-            //gestione ecc
+            e.printStackTrace();
         }
         catch (InvalidPositionException e){
-            //gestione ecc
+            e.printStackTrace();
         }
     }
     public void sendData() throws IOException, ClassNotFoundException {
@@ -165,9 +165,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 player.getHand().chooseCard(deck.drawCard(card));
             }
         } catch (IOException e) {
-            //gestire ecc
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            //gestire ecc
+            e.printStackTrace();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

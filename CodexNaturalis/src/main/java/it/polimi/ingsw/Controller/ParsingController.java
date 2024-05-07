@@ -364,7 +364,7 @@ public class ParsingController {
             case "bug" -> Resource.BUG;
             case "blank" -> Resource.BLANK;
             case "notavail" -> Resource.NOTVISIBLE;
-            case null, default -> null;
+            case null, default -> Resource.NOTVISIBLE;
         };
     }
 
