@@ -37,9 +37,9 @@ public class PlayerController {
         Random rand = new Random();
         Card[] cards = new Card[3];
 
-        indexRandCard1 = rand.nextInt(deckResource.getNumberOfCards()) + 2;
-        indexRandCard2 = rand.nextInt(deckResource.getNumberOfCards()) + 2;
-        indexRandCard3 = rand.nextInt(deckGold.getNumberOfCards()) + 2;
+        indexRandCard1 = rand.nextInt(deckResource.getNumberOfCards() - 2) + 2;
+        indexRandCard2 = rand.nextInt(deckResource.getNumberOfCards() - 2) + 2;
+        indexRandCard3 = rand.nextInt(deckGold.getNumberOfCards() - 2) + 2;
         // +2 avoids the selection of cards that are revealed on the ground
         cards[0] = deckResource.drawCard(indexRandCard1);
         cards[1] = deckResource.drawCard(indexRandCard2);
