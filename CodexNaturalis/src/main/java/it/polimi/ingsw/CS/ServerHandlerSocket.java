@@ -48,7 +48,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             }
             pc.setFirstCard(st);
             //popola la mano
-            pc.populateHand(game,player);
+            //pc.populateHand(game,player);
             sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){//primo turno
                 out.writeObject(false);

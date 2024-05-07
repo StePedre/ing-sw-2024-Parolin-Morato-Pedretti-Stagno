@@ -62,13 +62,12 @@ public class MyClientSocket {
         }
         player = (Player) in.readObject();
         tui.Welcome(player);
-        //updateData();
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         out.writeObject(tui.showStarterCard((StarterCard) in.readObject()));
         updateData();
         tui.showGround(game,player);
-        /*Thread t = new Thread(()->{while(true) {
+        Thread t = new Thread(()->{while(true) {
                                         tui.notYourTurn(game, player);
                                     }
                                 });
@@ -104,7 +103,7 @@ public class MyClientSocket {
             }
         }
         tui.winnersPrint((ArrayList<Player>) in.readObject());
-        close();*/
+        close();
     }
     public void useGUI(){}
 
