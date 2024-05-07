@@ -62,10 +62,11 @@ public class MyClientSocket {
         }
         player = (Player) in.readObject();
         tui.Welcome(player);
-        updateData();
+        //updateData();
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         out.writeObject(tui.showStarterCard((StarterCard) in.readObject()));
+
         updateData();
         Thread t = new Thread(()->{while(true) {
                                         tui.notYourTurn(game, player);

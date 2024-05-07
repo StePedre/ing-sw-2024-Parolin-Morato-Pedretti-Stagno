@@ -289,7 +289,7 @@ public class ParsingController {
             JSONArray backResArray = (JSONArray) starterCardObj.get("backres");
             ArrayList<Resource> backRes = getBackRes(backResArray);
 
-            StarterCard card = new StarterCard(id, null, frontCorners, backCorners, Resource.BLANK, backRes);
+            StarterCard card = new StarterCard(id, new FlatRule(0), frontCorners, backCorners, Resource.BLANK, backRes);
             starterCards.add(card);
             id ++;
         }

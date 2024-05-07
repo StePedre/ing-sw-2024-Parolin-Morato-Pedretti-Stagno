@@ -30,10 +30,10 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             start();
             out.writeObject(player);
             while (game.getNumPlayer() != game.getExpPlayers()) {
-                doNothing();
+
             }
             rc.setplayers(game.getPlayers());
-            sendData(); //inviare istanza game
+            //sendData(); //inviare istanza game
             rc.setFirstPlayer();
             PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());// momentaneo
             //select secret obj

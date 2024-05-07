@@ -647,7 +647,6 @@ public class TUI {
             }else{
                 System.out.println("Please enter the name of a room that exist");
             }
-
         }
         return s.nextLine();
     }

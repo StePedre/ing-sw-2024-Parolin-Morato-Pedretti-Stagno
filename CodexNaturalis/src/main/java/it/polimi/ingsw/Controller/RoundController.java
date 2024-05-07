@@ -14,16 +14,16 @@ import java.util.Random;
  * for another invocation (if existing) to finish.
  */
 public class RoundController implements Serializable {
-    private ArrayList<Player> players = null;
+    private ArrayList<Player> players = new ArrayList<Player>();
     private int round = -1;
     private final Random rand = new Random();
 
     public RoundController() {
 
     }
-    public synchronized void setplayers(ArrayList<Player> players) {
-        if (players == null) {
-            this.players = players;
+    public synchronized void setplayers(ArrayList<Player> player) {
+        if (players.isEmpty()) {
+            this.players = player;
         }
     }
 
