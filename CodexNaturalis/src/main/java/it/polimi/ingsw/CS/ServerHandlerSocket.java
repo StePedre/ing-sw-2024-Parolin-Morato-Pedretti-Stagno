@@ -46,7 +46,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             if((boolean)in.readObject()){
                 st.flipCard();
             }
-            pc.setFirtCard(st);
+            pc.setFirstCard(st);
             //popola la mano
             pc.populateHand(game,player);
             sendData();

@@ -23,8 +23,12 @@ public class TUI {
      *
      * @return input nickname.
      */
-    public String insertNickname(){
-        System.out.println("Insert your nickname, please: ");
+    public String insertNickname(boolean choice){
+        if(choice) {
+            System.out.println("Insert your nickname, please: ");
+        }else{
+            System.out.println("Insert a valid nickname, please: ");
+        }
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
@@ -611,8 +615,8 @@ public class TUI {
     }
     public void showRoom(ArrayList<Room> rooms){
         String s ="These are the available room to play:";
-        if(rooms.size()==0){
-            s+="no one";
+        if(rooms.isEmpty()){
+            s+=" no room available";
         }
         else{
             for(Room r: rooms){
@@ -626,19 +630,26 @@ public class TUI {
         Scanner s = new Scanner(System.in);
         int n = s.nextInt();
         s.nextLine();
-        return (n==1) ? true : false;
+        return n == 1;
     }
-    public String getRoomName(boolean b){
+    public String getRoomName(boolean b, boolean choice){
         Scanner s = new Scanner(System.in);
         if(b){
-            System.out.println("What is the name of the new room?");
-            String st = s.nextLine();
-            return st;
+            if(choice) {
+                System.out.println("What is the name of the new room?");
+            }else{
+                System.out.println("Please, enter a name that is not already taken");
+            }
         }
         else{
-            System.out.println("Which room?");
-            return s.nextLine();
+            if(choice){
+                System.out.println("Which room?");
+            }else{
+                System.out.println("Please enter the name of a room that exist");
+            }
+
         }
+        return s.nextLine();
     }
 
     public void playerJoined(Player player){

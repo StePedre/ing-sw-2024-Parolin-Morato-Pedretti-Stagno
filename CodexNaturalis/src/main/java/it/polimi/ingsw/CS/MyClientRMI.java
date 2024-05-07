@@ -1,9 +1,11 @@
 package it.polimi.ingsw.CS;
 
-import it.polimi.ingsw.Model.Game;
-import it.polimi.ingsw.Model.Player;
+import it.polimi.ingsw.Controller.PlayerController;
+import it.polimi.ingsw.Controller.RoundController;
+import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.View.TUI;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -17,6 +19,8 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     Player player;
     Game game = null;
     TUI tui =  null;
+
+    PlayerController playerController;
 
     String roomJoined;
     ServerRMIInterface server;
@@ -40,7 +44,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     public void setPlayer(Player player) throws RemoteException{
         this.player = player;
     }
-    public void runClient() throws RemoteException {
+    public void runClient() throws RemoteException, InvalidPositionException, MissingResourcesException {
         System.out.println("Client connected");
 
         if(inter) {//decisione se usare TUI o GUI
@@ -51,21 +55,23 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
-    private void useTUI() throws RemoteException {
+    private void useTUI() throws RemoteException, InvalidPositionException, MissingResourcesException {
         tui = new TUI();
-        String nickname = tui.insertNickname();
         tui.showRoom(server.showRooms());
         if(tui.chooseRoom()){
-            roomJoined = tui.getRoomName(true);
+            roomJoined = controlRoom(true, true);
             server.addRoom(roomJoined);
             server.setPlayerNumber(tui.askPlayersNo(), roomJoined);
         }else{
-            roomJoined = tui.getRoomName(false);
+            roomJoined = controlRoom( false, true);
         }
+            String nickname = controlNickname(true);
             player = server.addNewPlayer(nickname, roomJoined);
             tui.Welcome(player);
             waitingForPlayers = true;
             listenToPlayers();
+            startEarlyGame();
+            startNormalGame();
     }
 
     private void listenToPlayers() {
@@ -91,6 +97,8 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
 
                     oldPlayers = new ArrayList<>(currentPlayers);
 
+                    if(currentPlayers.size() == server.getRooms().getRoom(roomJoined).getGame().getExpPlayers())
+                        waitingForPlayers = false;
                     Thread.sleep(1000);
                 }
             } catch (RemoteException | InterruptedException e) {
@@ -99,6 +107,109 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         });
         t.start();
     }
+
+    private void startEarlyGame() throws RemoteException, InvalidPositionException {
+        playerController = new PlayerController(player.getPlayerGround(),player.getHand());
+        //select secret obj
+        game = server.getRooms().getRoom(roomJoined).getGame();
+        ObjectiveCard[] obj = playerController.pickObjCard(game);
+        playerController.setObjSecret(obj[tui.chooseObjective(obj[0],obj[1])-1]);
+        StarterCard st = playerController.pickCard(game);
+        if(tui.showStarterCard(st)){
+            st.flipCard();
+        }
+        playerController.setFirstCard(st);
+        playerController.populateHand(game,player);
+    }
+
+    private void startNormalGame() throws RemoteException, MissingResourcesException, InvalidPositionException {
+
+        RoundController roundController = server.getRooms().getRoom(roomJoined).getRoundController();
+        while(!game.isOver()) {//fino a fine gioco, gestire primo turno
+            while (!(player.getNickname().equals(roundController.getCurrentPlayer().getNickname()))) {
+                if (game.isOver()) {
+                    break;
+                }else{
+                    tui.notYourTurn(game, player);
+                }
+            }
+            while((player.getNickname().equals(roundController.getCurrentPlayer().getNickname()))) {
+                if (game.isOver()) {
+                    break;
+                }else{
+                    if(tui.yourTurnPlay(game, player)){
+                        player.getPlayerGround().placeCard(tui.inputCardToPlace(player), tui.inputCoordinates());
+                        drawCardFromDeck(tui.yourTurnDraw(game, player));
+                    }
+                }
+            }
+
+        }
+        tui.winnersPrint(game.getMultiWinners());
+    }
+
+    private String controlNickname(boolean choice) throws RemoteException {
+        String nickname = tui.insertNickname(choice);
+        if(server.getRooms().alredyInGame(server.getRooms().getRoom(roomJoined).getGame(),nickname)){
+            controlNickname(false);
+        }else{
+            return nickname;
+        }
+        return null;
+    }
+
+    private String controlRoom(boolean choice, boolean choice2) throws RemoteException{
+        String roomName = tui.getRoomName(choice, choice2);
+        if(server.getRooms().alredyExist(roomName)){
+            controlRoom(choice, false);
+        } else {
+            return roomName;
+        }
+        return null;
+    }
+
+    private void drawCardFromDeck(int position){
+        // 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
+            try {
+                //Deck deck = (Deck) in.readObject();
+                Deck deck;
+                int card = switch (position) {
+                    case 0 -> {
+                        deck = game.getDecks()[0];
+                        yield 0;
+                    }
+                    case 1 -> {
+                        deck = game.getDecks()[0];
+                        yield 1;
+                    }
+                    case 2 -> {
+                        deck = game.getDecks()[0];
+                        yield 2;
+                    }
+                    case 3 -> {
+                        deck = game.getDecks()[1];
+                        yield 0;
+                    }
+                    case 4 -> {
+                        deck = game.getDecks()[1];
+                        yield 1;
+                    }
+                    case 5 -> {
+                        deck = game.getDecks()[1];
+                        yield 2;
+                    }
+                    default -> throw new Exception();
+                };
+                if(player.getHand().drawCard(deck)){//sostituire con controller
+                    player.getHand().chooseCard(deck.drawCard(card));
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                //gestire ecc
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 
     private ArrayList<Player> getPlayers() throws RemoteException {
         return server.getRooms().getRoom(roomJoined).getGame().getPlayers();

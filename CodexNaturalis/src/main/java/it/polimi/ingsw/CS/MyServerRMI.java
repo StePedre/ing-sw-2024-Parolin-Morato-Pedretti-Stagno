@@ -1,6 +1,7 @@
 package it.polimi.ingsw.CS;
 
 import it.polimi.ingsw.Controller.RoomController;
+import it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.Player;
 
 import java.rmi.RemoteException;

@@ -45,15 +45,15 @@ public class MyClientSocket {
         do {
             if (tui.chooseRoom()) { //create
                 out.writeObject(true);
-                out.writeObject(tui.getRoomName(true));
+                out.writeObject(tui.getRoomName(true, true));
             } else { //join
                 out.writeObject(false);
-                out.writeObject(tui.getRoomName(false));
+                out.writeObject(tui.getRoomName(false, true));
             }
         }while((boolean)in.readObject());
         //chiede nickname
         do {
-            out.writeObject(tui.insertNickname());
+            out.writeObject(tui.insertNickname(true));
         }while((boolean) in.readObject());
         //ciclo nome stanza esistente
         if((boolean)in.readObject()){
