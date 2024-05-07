@@ -308,14 +308,14 @@ public class PlayerGround implements Serializable {
                     } else {
                         // if the corner is not available, the newPosition becomes unavailable
                         unavailablePositions.add(newPosition);
-                        availablePositions.remove(newPosition);
+                        availablePositions.remove(getExactPosition(newPosition, availablePositions));
                     }
                 }
 
             }
         }
         // Removes the current position from the availablePositions
-        availablePositions.remove(placePosition);
+        availablePositions.remove(getExactPosition(placePosition, availablePositions));
         lastPositionPlaced = placePosition;
     }
 
@@ -419,6 +419,16 @@ public class PlayerGround implements Serializable {
             }
         }
         return false;
+    }
+
+    private Position getExactPosition(Position position, Set<Position> positions){
+        for(Position p : positions){
+            if(position.getX() == p.getX() && position.getY() == p.getY()){
+                return p;
+            }
+
+        }
+        return position;
     }
 
 }
