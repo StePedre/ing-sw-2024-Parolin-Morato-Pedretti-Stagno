@@ -1,8 +1,6 @@
 package it.polimi.ingsw.CS;
 
-import it.polimi.ingsw.Controller.InitGameController;
 import it.polimi.ingsw.Controller.RoomController;
-import it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.Player;
 
 import java.rmi.RemoteException;
@@ -13,7 +11,6 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
 
 
     RoomController rooms;
-    InitGameController gameController;
 
     public MyServerRMI(int port, RoomController room) throws RemoteException {
         this.rooms = room;
