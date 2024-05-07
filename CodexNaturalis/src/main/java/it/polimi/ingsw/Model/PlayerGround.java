@@ -101,6 +101,10 @@ public class PlayerGround implements Serializable {
         return availablePositions;
     }
 
+    public Set<Position> getUnavailablePositions() {
+        return unavailablePositions;
+    }
+
     /**
      * The method gets the map between each resource and its amount, which can be zero.
      *

@@ -95,7 +95,7 @@ public class ParsingController {
      * @exception ParseException is thrown where there is a problem in parsing.
      * @return full list of Playable Cards.
      */
-    private ArrayList<Card> parsingPlayableCards() throws IOException, ParseException {
+    public ArrayList<Card> parsingPlayableCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
         FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
