@@ -50,7 +50,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 st.flipCard();
             }
             pc.setFirstCard(st);
-            sendPlayer();
+            //sendPlayer();
             sendData();//qui i dati sono corretti, quando li invio il client non li riceve
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){//primo turno
                 out.writeObject(false);
@@ -128,9 +128,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         }
     }
     public void sendData() throws IOException, ClassNotFoundException {
-        out.flush();
+        out.reset();
         out.writeObject(game);//invio game aggiornato
-        out.flush();
         out.writeObject(player);//invio Playerground e mano aggiornati
     }
     public void drawCard(){// 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
