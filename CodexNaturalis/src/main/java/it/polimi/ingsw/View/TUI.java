@@ -551,8 +551,8 @@ public class TUI {
         Deck[] decks = game.getDecks();
         String deck1name = decks[0].getKindOfDeck();
         String deck2name = decks[1].getKindOfDeck();
-        ArrayList<Card> deck1 = decks[0].getCards();
-        ArrayList<Card> deck2 = decks[1].getCards();
+        ArrayList<PlayableCard> deck1 = decks[0].getCards();
+        ArrayList<PlayableCard> deck2 = decks[1].getCards();
 
         Card deck1card1 = deck1.getFirst();
         Card deck1card2 = deck1.get(1);

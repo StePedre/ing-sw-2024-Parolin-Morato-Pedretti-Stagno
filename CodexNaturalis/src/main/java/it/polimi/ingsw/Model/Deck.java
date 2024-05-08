@@ -14,7 +14,7 @@ public class Deck implements Serializable {
     private static final long serialVersionUID = 10L;
     private int numberOfCards;
     private final String kindOfDeck;
-    private ArrayList<Card> cards;
+    private ArrayList<PlayableCard> cards;
 
     /**
      * Class constructor.
@@ -23,7 +23,7 @@ public class Deck implements Serializable {
      * @param kindOfDeck is the type of deck.
      * @param cards is the full list of cards the deck is made of.
      */
-    public Deck(int numberOfCards, String kindOfDeck, ArrayList<Card> cards) {
+    public Deck(int numberOfCards, String kindOfDeck, ArrayList<PlayableCard> cards) {
         this.numberOfCards = numberOfCards;
         this.kindOfDeck = kindOfDeck;
         this.cards = cards;
@@ -54,7 +54,7 @@ public class Deck implements Serializable {
      *
      * @return list of object of class Card.
      */
-    public ArrayList<Card> getCards() {
+    public ArrayList<PlayableCard> getCards() {
         return cards;
     }
 
@@ -76,7 +76,7 @@ public class Deck implements Serializable {
      * @exception IndexOutOfBoundsException if the chosen card is identified with
      * a negative number or a number bigger than current deck's size.
      */
-    public Card drawCard(int position) {
+    public PlayableCard drawCard(int position) {
         if (position >= 0 && position < cards.size()) {
             return cards.remove(position);
         } else {

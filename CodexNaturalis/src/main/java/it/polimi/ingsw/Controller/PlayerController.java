@@ -36,7 +36,7 @@ public class PlayerController {
         deckGold = game.getDecks()[1];
 
         Random rand = new Random();
-        Card[] cards = new Card[3];
+        PlayableCard[] cards = new PlayableCard[3];
 
         indexRandCard1 = rand.nextInt(deckResource.getNumberOfCards() - 2) + 2;
         indexRandCard2 = rand.nextInt(deckResource.getNumberOfCards() - 2) + 2;

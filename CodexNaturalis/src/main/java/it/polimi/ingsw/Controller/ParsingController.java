@@ -18,6 +18,7 @@ import java.util.Objects;
  * The json file contains all the cards from Codex Naturalis and all their features. Methods are documented below.
  */
 public class ParsingController {
+    private final String filePath = "src/main/java/it/polimi/ingsw/Resources/carte.json";
 
     /**
      * The method builds the deck of resource cards, which are the first 40 cards presented in json file.
@@ -29,10 +30,9 @@ public class ParsingController {
         Deck resDeck;
         int numberOfCards = 40;
         String typeOfDeck = "Resource";
-        ArrayList<Card> playableCards = parsingPlayableCards();
-        ArrayList<Card> resCards = new ArrayList<>();
-
-        for (Card pc : playableCards) {
+        ArrayList<PlayableCard> playableCards = parsingPlayableCards();
+        ArrayList<PlayableCard> resCards = new ArrayList<>();
+        for (PlayableCard pc : playableCards) {
             if (pc.getId() > 0 && pc.getId() < 41)
                 resCards.add(pc);
         }
@@ -52,10 +52,10 @@ public class ParsingController {
         Deck goldDeck;
         int numberOfCards = 40;
         String typeOfDeck = "Gold";
-        ArrayList<Card> playableCards = parsingPlayableCards();
-        ArrayList<Card> goldCards = new ArrayList<>();
+        ArrayList<PlayableCard> playableCards = parsingPlayableCards();
+        ArrayList<PlayableCard> goldCards = new ArrayList<>();
 
-        for (Card pc : playableCards) {
+        for (PlayableCard pc : playableCards) {
             if (pc.getId() > 40 && pc.getId() < 81)
                 goldCards.add(pc);
         }
@@ -95,10 +95,10 @@ public class ParsingController {
      * @exception ParseException is thrown where there is a problem in parsing.
      * @return full list of Playable Cards.
      */
-    public ArrayList<Card> parsingPlayableCards() throws IOException, ParseException {
+    public ArrayList<PlayableCard> parsingPlayableCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
-        FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
+        FileReader fileReader = new FileReader(filePath);
         Object obj = jsonParser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) obj;
         JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
@@ -106,7 +106,7 @@ public class ParsingController {
         JSONArray playableCard = (JSONArray) cards.get("playablecards");
 
         id = 1;
-        ArrayList<Card> playableCards = new ArrayList<>();
+        ArrayList<PlayableCard> playableCards = new ArrayList<>();
         for (Object o : playableCard) {
             JSONObject playableCardObj = (JSONObject) o;
 
@@ -207,7 +207,7 @@ public class ParsingController {
             JSONArray ruleArray = (JSONArray) playableCardObj.get("rule");
             ScoreRule rule = getScoreRule(ruleArray);
 
-            Card card = new PlayableCard(id, rule, frontCorners, backCorners, colorCard, requirements);
+            PlayableCard card = new PlayableCard(id, rule, frontCorners, backCorners, colorCard, requirements);
             playableCards.add(card);
             id ++;
         }
@@ -228,7 +228,7 @@ public class ParsingController {
     private ArrayList<StarterCard> parsingStarterCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
-        FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
+        FileReader fileReader = new FileReader(filePath);
         Object obj = jsonParser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) obj;
         JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");
@@ -308,7 +308,7 @@ public class ParsingController {
     private ArrayList<ObjectiveCard> parsingObjectiveCards() throws IOException, ParseException {
         int id;
         JSONParser jsonParser = new JSONParser();
-        FileReader fileReader = new FileReader("src/main/java/it/polimi/ingsw/Resources/carte.json");
+        FileReader fileReader = new FileReader(filePath);
         Object obj = jsonParser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) obj;
         JSONObject gameCards = (JSONObject) jsonObject.get("gamecards");

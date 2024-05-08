@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class Hand implements Serializable {
     private static final long serialVersionUID = 8L;
-    private Card[] cards;
+    private PlayableCard[] cards;
     private ObjectiveCard secretObj;
     private static final int maxNumberOfCards = 3;
 
@@ -21,7 +21,7 @@ public class Hand implements Serializable {
      * The array of cards is initialized with the maximum number (3) and secretObj with the default values.
      */
     public Hand() {
-        this.cards = new Card[maxNumberOfCards];
+        this.cards = new PlayableCard[maxNumberOfCards];
         this.secretObj = new ObjectiveCard(0, null);
     }
 
@@ -31,7 +31,7 @@ public class Hand implements Serializable {
      *
      * @param cards is an array of cards that must be in the hand of the player.
      */
-    public Hand(Card[] cards) {
+    public Hand(PlayableCard[] cards) {
         this.cards= cards;
         this.secretObj = new ObjectiveCard(0, null);
     }
@@ -42,7 +42,7 @@ public class Hand implements Serializable {
      * @param position is the position of the requested card.
      * @return the Card at the specified position.
      */
-    public Card getCard(int position) {
+    public PlayableCard getCard(int position) {
         return this.cards[position];
     }
 
@@ -51,7 +51,7 @@ public class Hand implements Serializable {
      *
      * @return the cards in player's hand.
      */
-    public Card[] getCards() {
+    public PlayableCard[] getCards() {
         return this.cards;
     }
 
@@ -91,7 +91,7 @@ public class Hand implements Serializable {
      *
      * @param card needs to be added to the hand.
      */
-    public void chooseCard(Card card) {
+    public void chooseCard(PlayableCard card) {
         int nullIndex = 0;
         for (int i = 0; i < maxNumberOfCards; i++) {
             if (this.cards[i] == null)
@@ -109,7 +109,7 @@ public class Hand implements Serializable {
     public void selectObj(ObjectiveCard objective) {
         this.secretObj = objective;
     }
-    public void addHand(Card[] cards){
+    public void addHand(PlayableCard[] cards){
         this.cards=cards;
     }
 }
