@@ -19,6 +19,16 @@ public class Player implements Serializable {
     private Hand hand;
     private PlayerGround playerGround;
     private Game game;
+
+    public Player(String nickname, Hand hand, PlayerGround playerGround, Game game, int reachedObjNo, String message) {
+        this.nickname = nickname;
+        this.hand = hand;
+        this.playerGround = playerGround;
+        this.game = game;
+        this.reachedObjNo = reachedObjNo;
+        this.message = message;
+    }
+
     private int reachedObjNo;
     private static final int maxLengthMsg = 255;
     // still a temporary value

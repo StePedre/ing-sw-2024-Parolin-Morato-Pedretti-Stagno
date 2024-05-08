@@ -58,8 +58,14 @@ public abstract class Card implements Serializable {
      *
      * @return all front corners
      */
-    public Corner[] getCorners() {
-        return corners;
+    public Corner[] getCorners() { return corners; }
+
+    public Corner[] getShowedCorners() {
+        if(isFlipped){
+            return backCorners;
+        } else {
+            return corners;
+        }
     }
 
     /**

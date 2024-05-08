@@ -1,0 +1,390 @@
+package it.polimi.ingsw.View;
+
+import it.polimi.ingsw.Controller.ParsingController;
+import it.polimi.ingsw.Model.*;
+import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
+import it.polimi.ingsw.Model.ScoreRules.NSymbolsRule;
+import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
+import java.util.*;
+
+import static it.polimi.ingsw.Model.Resource.*;
+
+public class AdvancedTUI_temp {
+
+    public static void printGround(PlayerGround playerGround){
+        Card[][] ground = playerGround.getGround();
+        Set<Position> availablePosition = playerGround.getAvailablePositions();
+
+        int maxX = availablePosition.stream()
+                .mapToInt(Position::getX)
+                .max()
+                .orElse(0);
+
+        int maxY = availablePosition.stream()
+                .mapToInt(Position::getY)
+                .max()
+                .orElse(0);
+
+        int minX = availablePosition.stream()
+                .mapToInt(Position::getX)
+                .min()
+                .orElse(0);
+
+        int minY = availablePosition.stream()
+                .mapToInt(Position::getY)
+                .min()
+                .orElse(0);
+
+        int lengthX = maxX - minX;
+        int lengthY = maxY - minY;
+
+        StringBuilder topBorder = new StringBuilder();
+        StringBuilder contentLine1 =  new StringBuilder();
+        StringBuilder contentLine2 =  new StringBuilder();
+        StringBuilder contentLine3 =  new StringBuilder();
+        StringBuilder contentLine4 =  new StringBuilder();
+
+        maxY--;
+        for(int i = lengthY; i >0; i--,maxY--){
+            for(int j = 0; j <lengthX ; j++, minX++ ){
+                contentLine1.append(getGridLine1(ground[minX][maxY]));
+                contentLine1.append(getGridLine2(ground[minX][maxY]));
+                contentLine1.append(getGridLine3(ground[minX][maxY]));
+                contentLine1.append(getGridLine4(ground[minX][maxY]));
+            }
+            System.out.println(contentLine1);
+            System.out.println(contentLine2);
+            System.out.println(contentLine3);
+            System.out.println(contentLine4);
+
+        }
+
+    }
+    public static void printDeck(Deck deck){
+        StringBuilder topBorder = new StringBuilder();
+        StringBuilder contentLine1 =  new StringBuilder();
+        StringBuilder contentLine2 =  new StringBuilder();
+        StringBuilder contentLine3 =  new StringBuilder();
+        StringBuilder buttonBorder =  new StringBuilder();
+
+        String ANSI_RESET = "\u001B[0m";
+
+        ArrayList<PlayableCard> cards = deck.getCards();
+        cards.getFirst().flipCard();
+
+        for(int i = 0; i <= 2; i++){
+            topBorder.append(" ").append(cornerColor(cards.get(i).getShowedCorners()[1])).append(cardColor(cards.get(i))).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[3])).append(" ");
+            contentLine1.append(cardColor(cards.get(i))).append(" ▌").append(cardContent(cards.get(i))).append(cardColor(cards.get(i))).append("▌ ");
+            contentLine2.append(cardColor(cards.get(i))).append(" ▌").append(cardResource(cards.get(i))).append(cardColor(cards.get(i))).append("▌ ");
+            contentLine3.append(cardColor(cards.get(i))).append(" ▌").append(cardRequirements(cards.get(i))).append(cardColor(cards.get(i))).append("▌ ");
+            buttonBorder.append(" ").append(cornerColor(cards.get(i).getShowedCorners()[0])).append(cardColor(cards.get(i))).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[2])).append(" ");
+        }
+
+        System.out.println(topBorder);
+        System.out.println(contentLine1);
+        System.out.println(contentLine2);
+        System.out.println(contentLine3);
+        System.out.println(buttonBorder);
+
+    }
+    public static void printObjectives(ObjectiveCard[] objectiveCards){
+        StringBuilder topBorder = new StringBuilder();
+        StringBuilder contentLine1 =  new StringBuilder();
+        StringBuilder contentLine2 =  new StringBuilder();
+        StringBuilder contentLine3 =  new StringBuilder();
+        StringBuilder buttonBorder =  new StringBuilder();
+
+        for(int i = 0; i<2; i++) {
+            topBorder.append("  ").append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀");
+            contentLine1.append("\u001B[33m").append(" ▌").append(firstLineObjective(objectiveCards[i])).append("\u001B[33m").append("▌ ");
+            contentLine2.append("\u001B[33m").append(" ▌").append(secondLineObjective(objectiveCards[i])).append("\u001B[33m").append("▌ ");
+            contentLine3.append("\u001B[33m").append(" ▌").append(thirdLineObjective(objectiveCards[i])).append("\u001B[33m").append("▌ ");
+            buttonBorder.append("  ").append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
+
+        }
+
+        System.out.println("                        " + topBorder);
+        System.out.println("                        " + contentLine1);
+        System.out.println("                        " + contentLine2);
+        System.out.println("                        " + contentLine3);
+        System.out.println("                        " + buttonBorder);
+
+
+}
+    public static void printHand(Hand hand){
+
+        PlayableCard[] cards = hand.getCards();
+        ObjectiveCard objective = hand.getObjCard();
+
+        StringBuilder topBorder = new StringBuilder();
+        StringBuilder contentLine1 =  new StringBuilder();
+        StringBuilder contentLine2 =  new StringBuilder();
+        StringBuilder contentLine3 =  new StringBuilder();
+        StringBuilder buttonBorder =  new StringBuilder();
+
+        String ANSI_RESET = "\u001B[0m";
+
+
+        for(int i = 0; i<cards.length; i++){
+            topBorder.append(" ").append(cornerColor(cards[i].getShowedCorners()[1])).append(cardColor(cards[i])).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[3])).append(" ");
+            contentLine1.append(cardColor(cards[i])).append(" ▌").append(cardContent(cards[i])).append(cardColor(cards[i])).append("▌ ");
+            contentLine2.append(cardColor(cards[i])).append(" ▌").append(cardResource(cards[i])).append(cardColor(cards[i])).append("▌ ");
+            contentLine3.append(cardColor(cards[i])).append(" ▌").append(cardRequirements(cards[i])).append(cardColor(cards[i])).append("▌ ");
+            buttonBorder.append(" ").append(cornerColor(cards[i].getShowedCorners()[0])).append(cardColor(cards[i])).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[2])).append(" ");
+        }
+        //print Secret Objective
+        topBorder.append("  ").append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀");
+        contentLine1.append("\u001B[33m").append(" ▌").append(firstLineObjective(objective)).append("\u001B[33m").append("▌ ");
+        contentLine2.append("\u001B[33m").append(" ▌").append(secondLineObjective(objective)).append("\u001B[33m").append("▌ ");
+        contentLine3.append("\u001B[33m").append(" ▌").append(thirdLineObjective(objective)).append("\u001B[33m").append("▌ ");
+        buttonBorder.append("  ").append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
+        // Print the card
+        System.out.println(topBorder);
+        System.out.println(contentLine1);
+        System.out.println(contentLine2);
+        System.out.println(contentLine3);
+        System.out.println(buttonBorder);
+    }
+
+    private static String getGridLine1(Card card){
+        return null;
+    }
+    private static String getGridLine2(Card card){
+        return null;
+    }
+    private static String getGridLine3(Card card){
+        return null;
+    }
+    private static String getGridLine4(Card card){
+        return null;
+    }
+
+    private static String firstLineObjective(ObjectiveCard objectiveCard){
+        ScoreRule rule = objectiveCard.getRule();
+        switch (rule.getName()){
+            case "NSR", "OER" -> {
+                return "   " + rule.getPoints() + " Points each    ";
+            }
+            case "CR" -> {
+                CompositionRule compositionRule = (CompositionRule) rule;
+                int sumY = compositionRule.getOffsets()[1] + compositionRule.getOffsets()[3];
+                int sumX = compositionRule.getOffsets()[0] + compositionRule.getOffsets()[2];
+                Resource resource = compositionRule.getResources()[0];
+                Corner corner = new Corner("top", resource, true);
+                if( sumX == -3){
+                    return "       " + cornerColor(corner) + "\u001B[33m" + "  " + compositionRule.getPoints() + " points ";
+                }
+                else if( sumX == -1 || sumX == 1){
+                    return "    " + cornerColor(corner) + "\u001B[33m" + "     " + compositionRule.getPoints() + " points ";
+                }
+                else if( sumX == 3){
+                    return " " + cornerColor(corner) + "\u001B[33m" + "        "+ compositionRule.getPoints() + " points ";
+                }
+            }
+            case null, default -> {
+                return "                    ";
+            }
+        }
+        return "                    ";
+    }
+
+    private static String secondLineObjective(ObjectiveCard objectiveCard){
+        ScoreRule rule = objectiveCard.getRule();
+        switch (rule.getName()){
+            case "NSR" -> {
+                NSymbolsRule symbolsRule = (NSymbolsRule) rule;
+                Resource symbol = symbolsRule.getSymbol();
+                Corner corner = new Corner("top", symbol, true);
+                String resource = cornerColor(corner);
+                if(symbol == PLUME || symbol ==  SCROLL || symbol ==  POTION){
+                    return "       " + resource + " " + "\u200A" + "\u200A" + "\u200A" +"  " + resource + "       ";
+                }
+                return "      " + resource + "  " + resource + "  " + resource + "      ";
+            }
+            case "OER" -> {
+                return "\u001B[0m" + "     P   T   S      ";
+            }
+            case "CR" -> {
+                CompositionRule compositionRule = (CompositionRule) rule;
+                int sumY = compositionRule.getOffsets()[1] + compositionRule.getOffsets()[3];
+                int sumX = compositionRule.getOffsets()[0] + compositionRule.getOffsets()[2];
+                Resource resource = compositionRule.getResources()[1];
+                Corner corner = new Corner("top", resource, true);
+
+                    return "    " + cornerColor(corner) + "\u001B[33m" + "        per   ";
+            }
+            case null, default -> {
+                return "";
+            }
+        }
+    }
+
+    private static String thirdLineObjective(ObjectiveCard objectiveCard){
+        ScoreRule rule = objectiveCard.getRule();
+        switch (rule.getName()){
+            case "NSR", "OER" -> {
+                return "                    ";
+            }
+            case "CR" -> {
+                CompositionRule compositionRule = (CompositionRule) rule;
+                int sumY = compositionRule.getOffsets()[1] + compositionRule.getOffsets()[3];
+                int sumX = compositionRule.getOffsets()[0] + compositionRule.getOffsets()[2];
+                Resource resource = compositionRule.getResources()[2];
+                Corner corner = new Corner("top", resource, true);
+                if( sumX == -3 || sumX == -1){
+                    return " " + cornerColor(corner) + "\u001B[33m" + "           comp  ";
+                }
+                else if( sumX == 3 || sumX == 1){
+                    return "       " + cornerColor(corner) + "\u001B[33m" + "     comp  ";
+
+                }
+            }
+            case null, default -> {
+                return "                   ";
+            }
+        }
+        return "                   ";
+    }
+    private static String cardContent(Card card){
+        if(card.getFlip()) return "                    ";
+        switch (card.getRule().getName()){
+            case "FR" -> {
+                int points = card.getRule().getPoints();
+                if(points == 0){
+                    return "                    ";
+                }
+                return "     Points: "+ card.getRule().getPoints() +"      ";
+            }
+            case "CCR" -> {
+                return " Covered corners: "+ card.getRule().getPoints() +" ";
+            }
+
+            case "NSR" -> {
+                NSymbolsRule rule = (NSymbolsRule) card.getRule();
+                String resource = null;
+                switch(rule.getSymbol()){
+                    case SCROLL -> resource = "S";
+                    case PLUME ->  resource = "P";
+                    case POTION -> resource = "T";
+                }
+                return "  Points per "+ resource + ": " + rule.getPoints()+"   ";
+            }
+        }
+        return "                    ";
+    }
+
+    private static String cardRequirements(PlayableCard card){
+        HashMap<Resource, Integer> map = card.getRequirements();
+        StringBuilder result = new StringBuilder();
+        int times = 0;
+        if(card.getFlip()) return  "                    ";
+        if(map != null){
+            for (Map.Entry<Resource, Integer> entry : map.entrySet()) {
+                Resource resource = entry.getKey();
+                Corner corner = new Corner("top",resource,true);
+                Integer value = entry.getValue();
+                if(value != 0) {
+                    result.append(cornerColor(corner)).append(" : ").append(value).append("  ");
+                    times++;
+                }
+            }
+            if(times ==1){
+                return "       "+ result.toString() + "     " + "\u200A" + "\u200A" + "\u200A";
+            }
+            else if(times == 2){
+                return "   "+ result.toString() + "  " + "\u200A";
+            }
+        }
+        return "                    ";
+    }
+
+    private static String cardResource(Card card){
+        if(card.getFlip()){
+            Corner corner = new Corner("top", card.getColor(), true);
+            return "         " + cornerColor(corner) + "         " + "\u200A" + "\u200A" + "\u200A";
+        }
+        return "                    ";
+    }
+
+    private static String cardColor(Card card){
+        switch(card.getColor()){
+            case LEAF -> {
+                return "\u001B[32m";
+            }
+            case BUG -> {
+                return "\u001B[35m";
+            }
+            case FOX -> {
+                return "\u001B[34m";
+            }
+            case MUSHROOM -> {
+                return "\u001B[31m";
+            }
+            case null, default -> {
+                return "\u001B[33m";
+            }
+        }
+    }
+
+    private static String cornerColor(Corner corner){
+        if(corner.getAvailability()) {
+            switch (corner.getCornerRes()) {
+                case LEAF -> {
+                    return "\u001B[32m"+"◙" + "\u001B[0m";
+                }
+                case BUG -> {
+                    return "\u001B[35m"+"◙" + "\u001B[0m";
+                }
+                case FOX -> {
+                    return "\u001B[34m"+"◙" + "\u001B[0m";
+                }
+                case MUSHROOM -> {
+                    return "\u001B[31m"+"◙" + "\u001B[0m";
+                }
+                case PLUME -> {
+                    return "\u001B[0m"+"P" + "\u200A";
+                }
+                case POTION -> {
+                    return "\u001B[0m"+"T" + "\u200A";
+                }
+                case SCROLL -> {
+                    return "\u001B[0m"+"S" + "\u200A";
+                }
+                case null, default -> {
+                    return "\u001B[0m"+"◙" + "\u001B[0m";
+                }
+            }
+        }
+        return "\u001B[30m"+"◙"+ "\u001B[0m";
+    }
+
+    public static void main(String[] args) throws IOException, ParseException {
+
+        Random rand = new Random();
+        ParsingController pc = new ParsingController();
+        ArrayList<PlayableCard> cards = pc.parsingPlayableCards();
+        ArrayList<ObjectiveCard> objectiveCards = pc.createObjectiveCardsArray();
+        Deck resDeck = pc.createResDeck();
+        Deck goldDeck = pc.createGoldDeck();
+        PlayableCard[] handCards = new PlayableCard[3];
+        ObjectiveCard[] commonObj = new ObjectiveCard[2];
+        for(int i = 0; i < 3; i++){
+            handCards[i] = cards.get(rand.nextInt(cards.size()));
+        }
+        Hand hand = new Hand(handCards);
+        hand.setSecretObj(objectiveCards.get(rand.nextInt(objectiveCards.size())));
+        commonObj[0] = objectiveCards.get(rand.nextInt(objectiveCards.size()));
+        commonObj[1] = objectiveCards.get(rand.nextInt(objectiveCards.size()));
+        resDeck.shuffle();
+        goldDeck.shuffle();
+        printDeck(resDeck);
+        printDeck(goldDeck);
+        printObjectives(commonObj);
+        printHand(hand);
+
+
+    }
+}

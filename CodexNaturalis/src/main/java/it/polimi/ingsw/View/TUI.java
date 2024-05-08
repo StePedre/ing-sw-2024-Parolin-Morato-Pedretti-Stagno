@@ -27,7 +27,7 @@ public class TUI {
         if(choice) {
             System.out.println("Insert your nickname, please: ");
         }else{
-            System.out.println("Insert a valid nickname, please: ");
+            System.out.println("Insert a valid nickname , please: ");
         }
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();

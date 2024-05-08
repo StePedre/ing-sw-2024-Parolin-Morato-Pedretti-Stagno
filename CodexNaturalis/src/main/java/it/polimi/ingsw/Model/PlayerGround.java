@@ -24,6 +24,8 @@ public class PlayerGround implements Serializable {
     private HashMap<Resource, Integer> totalResources;
     private Position lastPositionPlaced;
 
+    private Card availabilityCard;
+
     // TO DO: the size of the ground should adjust based on the number of players (?)
 
     /**
@@ -43,6 +45,7 @@ public class PlayerGround implements Serializable {
 
         totalResources = new HashMap<>();
         initializeResources();
+        availabilityCard = new PlayableCard(-1,null,null,null,null,null);
     }
 
     /**
@@ -230,7 +233,7 @@ public class PlayerGround implements Serializable {
                 if (card != null) {
                     // Calculates the index of the corresponding corner that is covered if you place the card in the placePosition
                     int cornerPos = 3 - (j + 2 * i);
-                    Resource resourceToRemove = card.getCorners()[cornerPos].getCornerRes();
+                    Resource resourceToRemove = card.getShowedCorners()[cornerPos].getCornerRes();
                     updateSingleResource(-1,resourceToRemove);
                 }
 
@@ -245,12 +248,7 @@ public class PlayerGround implements Serializable {
      * @param card is the newly placed card and its corner resources must be added to the total resources count.
      */
     private void addCornersResources(Card card){
-        Corner[] corners;
-        if(card.getFlip()){
-            corners = card.getBackCorners();
-        }else{
-            corners = card.getCorners();
-        }
+        Corner[] corners = card.getShowedCorners();
         // Iterates through all the corners of the card
         for(int i = 0; i<4; i++){
             Resource resourceToAdd = corners[i].getCornerRes();
@@ -305,15 +303,17 @@ public class PlayerGround implements Serializable {
                 int newY = placePosition.getY() + calculateOffset(j);
                 Position newPosition = new Position(newX, newY);
                 // checks if the ground is free in that position and if is not unavailable
-                if (ground[newX][newY] == null && !checkPosition(newPosition, unavailablePositions)) {
+                if ((ground[newX][newY] == null || ground[newX][newY].getId() ==-1) && !checkPosition(newPosition, unavailablePositions)) {
                     // calculates the index of the corresponding covering corner and checks its availability
                     int cornerPosition = j + 2 * i;
-                    if (card.getCorners()[cornerPosition].getAvailability()) {
+                    if (card.getShowedCorners()[cornerPosition].getAvailability()) {
                         availablePositions.add(newPosition);
+                        ground[newX][newY] = availabilityCard;
                     } else {
                         // if the corner is not available, the newPosition becomes unavailable
                         unavailablePositions.add(newPosition);
                         availablePositions.remove(getExactPosition(newPosition, availablePositions));
+                        ground[newX][newY] = null;
                     }
                 }
 

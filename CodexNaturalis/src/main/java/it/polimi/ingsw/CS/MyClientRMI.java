@@ -20,6 +20,8 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     Game game = null;
     TUI tui =  null;
 
+    String nickname;
+
     PlayerController playerController;
 
     String roomJoined;
@@ -65,7 +67,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }else{
             roomJoined = controlRoom2( false, true);
         }
-            String nickname = controlNickname(true);
+            nickname = controlNickname(true);
             player = server.addNewPlayer(nickname, roomJoined);
             tui.Welcome(player);
             waitingForPlayers = true;
@@ -117,12 +119,15 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             st.flipCard();
         }
         playerController.setFirstCard(st);
+        System.out.println(player.getNickname());
         playerController.populateHand(game,player);
     }
 
     private void startNormalGame() throws RemoteException, MissingResourcesException, InvalidPositionException {
 
         RoundController roundController = server.getRooms().getRoom(roomJoined).getRoundController();
+        roundController.setplayers(game.getPlayers());
+        roundController.setFirstPlayer();
         while(!game.isOver()) {//fino a fine gioco, gestire primo turno
             while (!(player.getNickname().equals(roundController.getCurrentPlayer().getNickname()))) {
                 if (game.isOver()) {

@@ -70,4 +70,5 @@ import java.io.Serializable;
         }
 
 
+        public void setResource(Resource resource) {this.cornerRes = resource;}
     }

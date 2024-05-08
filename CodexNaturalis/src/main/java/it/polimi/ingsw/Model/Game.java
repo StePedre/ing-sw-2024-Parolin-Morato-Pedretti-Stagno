@@ -28,7 +28,17 @@ public class Game implements Serializable {
     private boolean isOver = false;
     private ArrayList<StarterCard> starterCards;
 
-
+    public Game(ArrayList<Player> players, Deck[] decks, ObjectiveCard[] commonObj, ArrayList<Player> multiWinners, int expPlayers, int numPlayers, ArrayList<ObjectiveCard> otherObjs, boolean isOver, ArrayList<StarterCard> starterCards) {
+        this.players = players;
+        this.decks = decks;
+        this.commonObj = commonObj;
+        this.multiWinners = multiWinners;
+        this.expPlayers = expPlayers;
+        this.numPlayers = numPlayers;
+        this.otherObjs = otherObjs;
+        this.isOver = isOver;
+        this.starterCards = starterCards;
+    }
 
     /**
      * Class constructor.
@@ -58,6 +68,12 @@ public class Game implements Serializable {
         synchronized (players) {
             return players;
         }
+    }
+    public Player getPlayer(String nickname){
+        for(Player p : players){
+            if(p.getNickname().equals(nickname));
+        }
+        return null;
     }
 
     /**
