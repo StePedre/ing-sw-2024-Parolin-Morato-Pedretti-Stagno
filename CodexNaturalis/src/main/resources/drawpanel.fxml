@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="drawAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.DrawController">
+   <children>
+      <Pane fx:id="paneDeckZone" layoutX="45.0" layoutY="85.0">
+         <children>
+            <ImageView fx:id="GoldFaceDown" fitHeight="100.0" fitWidth="150.0" layoutX="14.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+            <ImageView fx:id="ResFaceDown" fitHeight="100.0" fitWidth="150.0" layoutX="14.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+            <ImageView fx:id="GoldFaceUp1" fitHeight="100.0" fitWidth="150.0" layoutX="180.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+            <ImageView fx:id="GoldFaceUp2" fitHeight="100.0" fitWidth="150.0" layoutX="345.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+            <ImageView fx:id="ResFaceUp1" fitHeight="100.0" fitWidth="150.0" layoutX="180.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+            <ImageView fx:id="ResFaceUp2" fitHeight="100.0" fitWidth="150.0" layoutX="345.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+         </children>
+      </Pane>
+      <Button fx:id="buttonSubDraw" defaultButton="true" layoutX="274.0" layoutY="336.0" mnemonicParsing="false" text="Submit" textFill="WHITE">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Button>
+      <Label fx:id="labelDraw" alignment="CENTER" layoutX="45.0" layoutY="50.0" prefHeight="17.0" prefWidth="509.0" text="It's time to draw! Choose a card:" textAlignment="CENTER">
+         <font>
+            <Font name="Bookman Old Style" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelGold" alignment="CENTER" layoutX="-20.0" layoutY="126.0" prefHeight="16.0" prefWidth="98.0" rotate="-90.0" text="Gold Cards" textAlignment="CENTER">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelRes" layoutX="-17.0" layoutY="257.0" rotate="-90.0" text="Resource Cards">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
