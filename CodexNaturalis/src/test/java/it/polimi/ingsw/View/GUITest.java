@@ -12,7 +12,8 @@ class GUITest extends Application{
 
     @Test
     void ciccio(){
-        GUI gui = new GUI();
+        Stage stage = new Stage();
+        GUI gui = new GUI(stage);
         launch();
     }
 
