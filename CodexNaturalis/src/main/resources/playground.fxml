@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="stdAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GroundController" >
+   <children>
+      <Label fx:id="labelNick" alignment="CENTER" layoutX="20.0" layoutY="22.0" prefHeight="17.0" prefWidth="75.0" text="Nickname" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelPoints" alignment="CENTER" layoutX="20.0" layoutY="40.0" prefHeight="17.0" prefWidth="75.0" text="Points:" AnchorPane.topAnchor="40.0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelRes" alignment="CENTER" layoutX="304.33333333333337" layoutY="26.0" prefHeight="17.0" prefWidth="100.0" text="Total Resources:" AnchorPane.rightAnchor="195.66666666666663" AnchorPane.topAnchor="26.0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelSecret" alignment="CENTER" layoutX="20.0" layoutY="262.0" prefHeight="17.0" prefWidth="100.0" text="Secret objetcive:">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelCommon" alignment="CENTER" layoutX="456.0" layoutY="200.0" prefHeight="17.0" prefWidth="124.0" text="Common objectives:">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="mushroomNum" alignment="CENTER" layoutX="413.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="foxNum" alignment="CENTER" layoutX="488.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="potionNum" alignment="CENTER" layoutX="513.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="scrollNum" alignment="CENTER" layoutX="538.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="plumeNum" alignment="CENTER" layoutX="563.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="bugNum" alignment="CENTER" layoutX="438.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="leafNum" alignment="CENTER" layoutX="463.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
+         <font>
+            <Font name="Bookman Old Style" size="12.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
