@@ -18,22 +18,34 @@ public class MyClientSocket {
     TUI tui =  null;
     boolean inter;
     public MyClientSocket(int port, String host,boolean inter) throws IOException {
-        socket = new Socket(host, port);
-        in = new ObjectInputStream(socket.getInputStream());
-        out = new ObjectOutputStream(socket.getOutputStream());
-        this.inter = inter;
+        try {
+            socket = new Socket(host, port);
+            in = new ObjectInputStream(socket.getInputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+            this.inter = inter;
+        } catch (IOException e) {
+            close();
+            throw e;
+        }
     }
-    public void runClient() throws IOException, ClassNotFoundException {// per test println
-        if(!(boolean)in.readObject()){
-            throw new ConnectException();
-        }
-        System.out.println("Client connected");
+    public void runClient() throws IOException {// per test println
+        try {
+            if (!(boolean) in.readObject()) {
+                throw new ConnectException();
+            }
+            System.out.println("Client connected");
 
-        if(inter) {//decisione se usare TUI o GUI
-            useTUI();
-        }
-        else{
-            useGUI();
+            if (inter) {//decisione se usare TUI o GUI
+                useTUI();
+            } else {
+                useGUI();
+            }
+        }catch (IOException e) {
+            close();
+            throw e;
+        } catch (ClassNotFoundException e) {
+            close();
+            e.printStackTrace();
         }
     }
     public void useTUI() throws IOException, ClassNotFoundException {
@@ -75,6 +87,7 @@ public class MyClientSocket {
                                     }
                                 });
         //aspettare turno
+        out.reset();
         while(true){
             if((boolean)in.readObject()){
                 if(t.isAlive()){
@@ -89,6 +102,7 @@ public class MyClientSocket {
                 }
                 out.writeObject(tui.inputCardToPlace(player));
                 out.writeObject(tui.inputCoordinates());
+                out.reset();
                 //aspetta riscontro vittoria
                 if((boolean)in.readObject()){
                     break;

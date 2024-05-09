@@ -23,7 +23,6 @@ public class PlayerGround implements Serializable {
     private Set<Position> unavailablePositions;
     private HashMap<Resource, Integer> totalResources;
     private Position lastPositionPlaced;
-
     private Card availabilityCard;
 
     // TO DO: the size of the ground should adjust based on the number of players (?)

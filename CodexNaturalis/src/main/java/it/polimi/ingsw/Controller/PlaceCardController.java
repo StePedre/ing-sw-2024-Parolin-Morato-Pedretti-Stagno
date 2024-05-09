@@ -7,16 +7,16 @@ public class PlaceCardController {
     public PlaceCardController() {
 
     }
-    public void place(PlayableCard card,Player player,Position pos) {
+    public static void place(PlayableCard card,Player player,Position pos) throws InvalidPositionException, MissingResourcesException {
         PlayerGround ground = player.getPlayerGround();
         try{
             ground.placeCard(card,pos);
         }
         catch(InvalidPositionException e){
-            System.out.println("Invalid position");
+            throw e;
         }
         catch (MissingResourcesException e){
-            System.out.println("Missing Resource");
+            throw e;
         }
 
     }

@@ -49,12 +49,11 @@ public class Client {
         catch(IOException e){
             e.printStackTrace();
         }
-        catch(ClassNotFoundException e){
-            //aggiugni ecc
-        } catch (MissingResourcesException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidPositionException e) {
-            throw new RuntimeException(e);
+        catch (MissingResourcesException e) {
+            e.printStackTrace();
+        }
+        catch (InvalidPositionException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -16,14 +16,12 @@ public class Server {
                 try {
                     ss.runServer();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             });
             t.start();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         try {
             ServerRMIInterface serverRMI = new MyServerRMI(1099, rooms);

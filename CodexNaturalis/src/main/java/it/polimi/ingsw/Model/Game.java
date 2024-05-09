@@ -168,6 +168,24 @@ public class Game implements Serializable {
      * score, there is a draw, and they are all considered winners.
      */
     public void finish(){
+        int currPoint;
+        for(Player p : players){
+            currPoint = p.getPlayerGround().getPlayerScore();
+            p.getPlayerGround().raiseScore(commonObj[0].getRule());
+            if(currPoint<p.getPlayerGround().getPlayerScore()){
+                p.setReachedObjNo(p.getReachedObjNo()+1);
+                currPoint=p.getPlayerGround().getPlayerScore();
+            }
+            p.getPlayerGround().raiseScore(commonObj[1].getRule());
+            if(currPoint<p.getPlayerGround().getPlayerScore()){
+                p.setReachedObjNo(p.getReachedObjNo()+1);
+                currPoint=p.getPlayerGround().getPlayerScore();
+            }
+            p.getPlayerGround().raiseScore(p.getHand().getObjCard().getRule());
+            if(currPoint<p.getPlayerGround().getPlayerScore()){
+                p.setReachedObjNo(p.getReachedObjNo()+1);
+            }
+        }
         isOver = true;
         int[] scores = new int[numPlayers];
         ArrayList<Player> multi2 = new ArrayList<>();

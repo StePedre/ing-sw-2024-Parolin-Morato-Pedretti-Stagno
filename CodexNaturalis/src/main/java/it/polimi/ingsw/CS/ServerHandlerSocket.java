@@ -36,7 +36,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             rc.setplayers(game.getPlayers());
             //sendData(); //inviare istanza game
             rc.setFirstPlayer();
-            PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());// momentaneo
+            PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
             //popola la mano
             pc.populateHand(game,player);
             //select secret obj
@@ -104,11 +104,14 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             socket.close();
         }
         catch (IOException e){
+            //creare eccezione per chiudere socket sul MyServerSocket
             e.printStackTrace();
         }
         catch (ClassNotFoundException e) {
+            //creare eccezione per chiudere socket sul MyServerSocket
             e.printStackTrace();
         } catch (InvalidPositionException e) {
+            //creare eccezione per chiudere socket sul MyServerSocket
             e.printStackTrace();
         }
 
@@ -118,7 +121,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         try {
             PlayableCard card = (PlayableCard) in.readObject();
             Position pos = (Position) in.readObject();
-            player.getPlayerGround().placeCard(card, pos); // modificare con apposito controller
+            PlaceCardController.place(card,player,pos);
         }
         catch (MissingResourcesException e){
             e.printStackTrace();
