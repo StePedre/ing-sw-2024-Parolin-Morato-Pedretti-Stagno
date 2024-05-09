@@ -59,11 +59,13 @@ public class GUI {
         this.stage = stage;
     }
 
+    public void initializeScreen(Stage stage){
+        stage.setTitle("Codex Naturalis");
+        stage.setFullScreen(true);
+    }
     public void showLoadingScreen (Stage stage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/loadingScreen.fxml"));
-        stage.setTitle("Codex Naturalis");
         stage.setScene(new Scene(root, 350, 300));
-        stage.setFullScreen(true);
         stage.show();
     }
 
@@ -75,10 +77,16 @@ public class GUI {
         GroundController.addCommonObj(player.getGame().getCommonObj());
         GroundController.setScore(player.getPlayerGround().getPlayerScore());
         GroundController.setTotalResource(player.getPlayerGround().getTotalResources());
-        stage.setTitle("Codex Naturalis");
         stage.setScene(new Scene(root, 350, 300));
-        stage.setFullScreen(true);
         stage.show();
+    }
+
+    public int Draw(Stage stage, Player player, Game game) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/drawpanel.fxml"));
+        DrawController.addCards(game.getDecks());
+        stage.setScene(new Scene(root, 350, 300));
+        stage.show();
+        return DrawController.chooseCard();
     }
 
 /*
