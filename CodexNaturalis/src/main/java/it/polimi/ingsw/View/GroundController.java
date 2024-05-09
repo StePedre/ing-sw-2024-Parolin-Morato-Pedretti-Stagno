@@ -1,33 +1,73 @@
 package it.polimi.ingsw.View;
-import com.sun.javafx.scene.ImageViewHelper;
-import javafx.event.ActionEvent;
+import it.polimi.ingsw.Model.Hand;
+import it.polimi.ingsw.Model.ObjectiveCard;
+import it.polimi.ingsw.Model.Resource;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.image.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Font;
-import javafx.stage.Screen;
 
-import javax.swing.text.html.ImageView;
+import java.util.HashMap;
+
 
 public class GroundController {
         @FXML
         private AnchorPane stdAnchorPane;
         @FXML
-        private Label labelSecret, labelCommon, labelNick, labelPoints, labelRes;
+        private Label labelNick, labelPoints;
         @FXML
         private Label mushroomNum, bugNum, leafNum, foxNum, potionNum, scrollNum, plumeNum;
         @FXML
-        private ImageView handCardLeft, handCardCenter, handCardRight, secretObj, commonObj1, commonObj2;
+        private ImageView handCardLeft;
         @FXML
-        private ImageView mushroomRes, bugRes, leafRes, foxRes, potionRes, scrollRes, plumeRes;
-
+        private ImageView handCardCenter;
+        @FXML
+        private ImageView handCardRight;
+        @FXML
+        private ImageView secretObj;
+        @FXML
+        private static ImageView commonObj1;
+        @FXML
+        private static ImageView commonObj2;
         private final int height = 400;
         private final int width = 600;
 
-        public void initialize() {
+        public void addImages(Hand hand){
+            handCardLeft.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(hand.getCard(0).getId()) + ".png"));
+            handCardCenter.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(hand.getCard(1).getId()) + ".png"));
+            handCardRight.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(hand.getCard(2).getId()) + ".png"));
+        }
+
+        public void addSecretObj(ObjectiveCard secretObjective){
+            secretObj.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(secretObjective.getId()) + ".png"));
+        }
+        // questo potrebbe andare bene statico perchè tutti condividono gli stessi commonObj
+        public static void addCommonObj(ObjectiveCard[] commonObj){
+            commonObj1.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(commonObj[0].getId()) + ".png"));
+            commonObj2.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(commonObj[1].getId()) + ".png"));
+        }
+
+        public void setNickname(String name){
+                labelNick.setText(name);
+        }
+
+        public void setScore(int score){
+                labelPoints.setText("Score: " + String.valueOf(score));
+        }
+
+        public void setTotalResource(HashMap<Resource, Integer> map){
+                mushroomNum.setText(String.valueOf(map.get(Resource.MUSHROOM)));
+                bugNum.setText(String.valueOf(map.get(Resource.BUG)));
+                foxNum.setText(String.valueOf(map.get(Resource.FOX)));
+                leafNum.setText(String.valueOf(map.get(Resource.LEAF)));
+                potionNum.setText(String.valueOf(map.get(Resource.POTION)));
+                scrollNum.setText(String.valueOf(map.get(Resource.SCROLL)));
+                plumeNum.setText(String.valueOf(map.get(Resource.PLUME)));
+        }
+
+
+     /*   public void initialize() {
             Screen screen = Screen.getPrimary();
             double screenHeight = screen.getBounds().getHeight();
             double screenWidth = screen.getBounds().getWidth();
@@ -84,7 +124,7 @@ public class GroundController {
             Font originalFont = button.getFont();
             Font newFont = new Font(originalFont.getFamily(), size);
             button.setFont(newFont);
-        }
+        }*/
 
 
 }

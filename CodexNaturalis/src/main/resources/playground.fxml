@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="stdAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GroundController" >
-   <children>
+<AnchorPane fx:id="stdAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GroundController">
+      <ImageView fx:id="handCardLeft" fitHeight="69.0" fitWidth="75.0" layoutX="200.0" layoutY="336.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="150.0">
+      </ImageView>
+      <ImageView fx:id="handCardCenter" fitHeight="69.0" fitWidth="75.0" layoutX="244.0" layoutY="330.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="262.5" AnchorPane.rightAnchor="262.5">
+      </ImageView>
+      <ImageView fx:id="handCardRight" fitHeight="69.0" fitWidth="75.0" layoutX="342.0" layoutY="330.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="150.0">
+      </ImageView>
+      <ImageView fx:id="secretObj" fitHeight="69.0" fitWidth="75.0" layoutX="33.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="33.0">
+      </ImageView>
+      <ImageView fx:id="commonObj2" fitHeight="69.0" fitWidth="75.0" layoutX="481.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="70.0" AnchorPane.rightAnchor="44.0">
+      </ImageView>
+      <ImageView fx:id="commonObj1" fitHeight="69.0" fitWidth="75.0" layoutX="481.0" layoutY="218.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="218.0">
+      </ImageView>
       <Label fx:id="labelNick" alignment="CENTER" layoutX="20.0" layoutY="22.0" prefHeight="17.0" prefWidth="75.0" text="Nickname" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
          <font>
             <Font name="Bookman Old Style" size="12.0" />
@@ -33,6 +43,20 @@
             <Font name="Bookman Old Style" size="12.0" />
          </font>
       </Label>
+      <ImageView fx:id="mushroomRes" fitHeight="30.0" fitWidth="20.0" layoutX="412.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="170.0">
+      </ImageView>
+      <ImageView fx:id="bugRes" fitHeight="30.0" fitWidth="20.0" layoutX="436.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="145.0">
+      </ImageView>
+      <ImageView fx:id="leafRes" fitHeight="30.0" fitWidth="20.0" layoutX="461.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="120.0">
+      </ImageView>
+      <ImageView fx:id="foxRes" fitHeight="30.0" fitWidth="20.0" layoutX="487.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="95.0">
+      </ImageView>
+      <ImageView fx:id="scrollRes" fitHeight="30.0" fitWidth="20.0" layoutX="513.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="45.0">
+      </ImageView>
+      <ImageView fx:id="plumeRes" fitHeight="30.0" fitWidth="20.0" layoutX="538.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="20.0">
+      </ImageView>
+      <ImageView fx:id="potionRes" fitHeight="30.0" fitWidth="20.0" layoutX="564.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="70.0">
+      </ImageView>
       <Label fx:id="mushroomNum" alignment="CENTER" layoutX="413.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
          <font>
             <Font name="Bookman Old Style" size="12.0" />
@@ -68,5 +92,4 @@
             <Font name="Bookman Old Style" size="12.0" />
          </font>
       </Label>
-   </children>
 </AnchorPane>

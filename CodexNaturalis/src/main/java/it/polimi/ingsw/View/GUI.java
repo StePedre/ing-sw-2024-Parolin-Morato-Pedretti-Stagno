@@ -1,6 +1,9 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.Hand;
+import it.polimi.ingsw.Model.ObjectiveCard;
+import it.polimi.ingsw.Model.Player;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +19,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-
 import java.io.IOException;
 import java.util.Objects;
 
@@ -65,10 +67,18 @@ public class GUI {
         stage.show();
     }
 
-    public void loadHand(Hand hand){
-        HBox handZone = new HBox(37.5);  // distanza tra le carte
-       // handZone.setPadding(new Insets(20));
-       // handZone.getChildren().addAll(handCardleft, buttonL, handCardCenter, button2, handCardRight, button3);
+    public void loadPlayerGround(Stage stage, Player player, Game game) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/playground.fxml"));
+        GroundController.setNickname(player.getNickname());
+        GroundController.addImages(player.getHand());
+        GroundController.addSecretObj(player.getHand().getObjCard());
+        GroundController.addCommonObj(player.getGame().getCommonObj());
+        GroundController.setScore(player.getPlayerGround().getPlayerScore());
+        GroundController.setTotalResource(player.getPlayerGround().getTotalResources());
+        stage.setTitle("Codex Naturalis");
+        stage.setScene(new Scene(root, 350, 300));
+        stage.setFullScreen(true);
+        stage.show();
     }
 
 /*
