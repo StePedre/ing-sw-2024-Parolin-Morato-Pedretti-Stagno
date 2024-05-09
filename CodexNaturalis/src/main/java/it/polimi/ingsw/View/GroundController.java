@@ -43,7 +43,7 @@ public class GroundController {
             secretObj.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(secretObjective.getId()) + ".png"));
         }
         // questo potrebbe andare bene statico perchè tutti condividono gli stessi commonObj
-        public static void addCommonObj(ObjectiveCard[] commonObj){
+        public void addCommonObj(ObjectiveCard[] commonObj){
             commonObj1.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(commonObj[0].getId()) + ".png"));
             commonObj2.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(commonObj[1].getId()) + ".png"));
         }

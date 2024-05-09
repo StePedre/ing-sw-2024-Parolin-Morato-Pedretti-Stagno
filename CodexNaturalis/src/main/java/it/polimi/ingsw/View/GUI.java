@@ -71,22 +71,24 @@ public class GUI {
 
     public void loadPlayerGround(Stage stage, Player player, Game game) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/playground.fxml"));
-        GroundController.setNickname(player.getNickname());
-        GroundController.addImages(player.getHand());
-        GroundController.addSecretObj(player.getHand().getObjCard());
-        GroundController.addCommonObj(player.getGame().getCommonObj());
-        GroundController.setScore(player.getPlayerGround().getPlayerScore());
-        GroundController.setTotalResource(player.getPlayerGround().getTotalResources());
+        GroundController gc = new GroundController();
+        gc.setNickname(player.getNickname());
+        gc.addImages(player.getHand());
+        gc.addSecretObj(player.getHand().getObjCard());
+        gc.addCommonObj(player.getGame().getCommonObj());
+        gc.setScore(player.getPlayerGround().getPlayerScore());
+        gc.setTotalResource(player.getPlayerGround().getTotalResources());
         stage.setScene(new Scene(root, 350, 300));
         stage.show();
     }
 
     public int Draw(Stage stage, Player player, Game game) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/drawpanel.fxml"));
-        DrawController.addCards(game.getDecks());
+        DrawController dc = new DrawController();
+        dc.addCards(game.getDecks());
         stage.setScene(new Scene(root, 350, 300));
         stage.show();
-        return DrawController.chooseCard();
+        return dc.chooseCard();
     }
 
 /*
