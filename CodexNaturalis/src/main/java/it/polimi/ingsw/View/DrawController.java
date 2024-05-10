@@ -12,6 +12,7 @@ public class DrawController {
 
      @FXML
      private ImageView goldFaceDown, resFaceDown, goldFaceUp1, goldFaceUp2, resFaceUp1, resFaceUp2;
+    @FXML
     private Button buttonSubDraw;
     public void addCards(Deck[] decks) {
         buttonSubDraw.setDisable(true);

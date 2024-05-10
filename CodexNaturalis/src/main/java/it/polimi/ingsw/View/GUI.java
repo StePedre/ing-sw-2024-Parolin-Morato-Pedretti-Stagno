@@ -69,7 +69,7 @@ public class GUI {
         stage.show();
     }
 
-    public void loadPlayerGround(Stage stage, Player player, Game game) throws IOException {
+    public void loadPlayerGround(Stage stage, Player player) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/playground.fxml"));
         GroundController gc = new GroundController();
         gc.setNickname(player.getNickname());

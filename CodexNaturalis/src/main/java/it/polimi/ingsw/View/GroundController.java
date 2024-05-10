@@ -1,9 +1,9 @@
 package it.polimi.ingsw.View;
 import it.polimi.ingsw.Model.Hand;
 import it.polimi.ingsw.Model.ObjectiveCard;
+import it.polimi.ingsw.Model.PlayerGround;
 import it.polimi.ingsw.Model.Resource;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.*;
 import javafx.scene.layout.AnchorPane;
@@ -30,8 +30,6 @@ public class GroundController {
         private static ImageView commonObj1;
         @FXML
         private static ImageView commonObj2;
-        private final int height = 400;
-        private final int width = 600;
 
         public void addImages(Hand hand){
             handCardLeft.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(hand.getCard(0).getId()) + ".png"));
@@ -64,6 +62,10 @@ public class GroundController {
                 potionNum.setText(String.valueOf(map.get(Resource.POTION)));
                 scrollNum.setText(String.valueOf(map.get(Resource.SCROLL)));
                 plumeNum.setText(String.valueOf(map.get(Resource.PLUME)));
+        }
+
+        public void showGround(PlayerGround ground){
+                ground.getGround();
         }
 
 
