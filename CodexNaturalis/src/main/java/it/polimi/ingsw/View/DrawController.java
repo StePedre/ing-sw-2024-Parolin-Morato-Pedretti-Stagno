@@ -23,6 +23,7 @@ public class DrawController {
         goldFaceUp2.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[1].getCards().get(1).getId()));
         goldFaceDown.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[1].getCards().get(2).getId()));
     }
+    /*
     public int chooseCard(){
         int[] choice = new int[] { -1 };
         DropShadow dropShadow = new DropShadow();
@@ -65,5 +66,7 @@ public class DrawController {
         });
         return choice[0];
     }
+
+     */
 }
 

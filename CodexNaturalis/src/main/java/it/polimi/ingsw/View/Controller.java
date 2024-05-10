@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
@@ -30,6 +31,9 @@ public class Controller {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    private Screen screen = Screen.getPrimary();
+    private double screenHeight = screen.getBounds().getHeight();
+    private double screenWidth = screen.getBounds().getWidth();
     private final int height = 400;
     private final int width = 600;
 
@@ -72,7 +76,14 @@ public class Controller {
          */
     }
 
-
+    public void switchToLogin (Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/insertNick.fxml"));
+        scene = new Scene(root, screenWidth, screenHeight);
+        stage.setScene(scene);
+        stage.setMaximized(true);
+        //stage.setFullScreen(true);
+        stage.show();
+    }
 
     //insert nickname and return to server
 
