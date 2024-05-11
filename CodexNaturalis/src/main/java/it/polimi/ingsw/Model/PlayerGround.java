@@ -117,6 +117,10 @@ public class PlayerGround implements Serializable {
         return totalResources;
     }
 
+    public Position getLastPosition() {
+        return lastPositionPlaced;
+    }
+
     /**
      * The method place the starter card (which means no other playable card and no objective card) on the ground.
      * Firstly it checks if the desired position is in the set of available position: if not, it throws an exception.

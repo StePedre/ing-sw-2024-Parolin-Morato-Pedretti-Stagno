@@ -1,9 +1,6 @@
 package it.polimi.ingsw.View;
 
-import it.polimi.ingsw.Model.Game;
-import it.polimi.ingsw.Model.Hand;
-import it.polimi.ingsw.Model.ObjectiveCard;
-import it.polimi.ingsw.Model.Player;
+import it.polimi.ingsw.Model.*;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -115,9 +112,9 @@ public class GUI extends Application{
         stage.setScene(new Scene(root, 350, 300));
         stage.show();
     }
-/*
-    public void loadPlayerGround(Stage stage, Player player) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/playground.fxml"));
+
+    public void InitializePlayerGround(Stage stage, Player player, StarterCard startercard) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/playground.fxml")));
         GroundController gc = new GroundController();
         gc.setNickname(player.getNickname());
         gc.addImages(player.getHand());
@@ -125,6 +122,7 @@ public class GUI extends Application{
         gc.addCommonObj(player.getGame().getCommonObj());
         gc.setScore(player.getPlayerGround().getPlayerScore());
         gc.setTotalResource(player.getPlayerGround().getTotalResources());
+        gc.placeStarterCard(startercard);
         stage.setScene(new Scene(root, 350, 300));
         stage.show();
     }
@@ -138,7 +136,6 @@ public class GUI extends Application{
         return dc.chooseCard();
     }
 
- */
 
 /*
     public void switchToLogin (ActionEvent event) throws IOException {

@@ -1,17 +1,22 @@
 package it.polimi.ingsw.View;
-import it.polimi.ingsw.Model.Hand;
-import it.polimi.ingsw.Model.ObjectiveCard;
-import it.polimi.ingsw.Model.PlayerGround;
-import it.polimi.ingsw.Model.Resource;
+import it.polimi.ingsw.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 
 import java.util.HashMap;
+import java.util.Set;
 
 
 public class GroundController {
+
+        @FXML
+        private GridPane gridPaneGround;
+        @FXML
+        private ScrollPane scrollPaneGround;
         @FXML
         private AnchorPane stdAnchorPane;
         @FXML
@@ -30,6 +35,7 @@ public class GroundController {
         private static ImageView commonObj1;
         @FXML
         private static ImageView commonObj2;
+        private int converter = 39; // 42 - 3 (coord iniziali matrice e gridPane)
 
         public void addImages(Hand hand){
             handCardLeft.setImage(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(hand.getCard(0).getId()) + ".png"));
@@ -64,8 +70,32 @@ public class GroundController {
                 plumeNum.setText(String.valueOf(map.get(Resource.PLUME)));
         }
 
-        public void showGround(PlayerGround ground){
-                ground.getGround();
+       // prima scelta della carta da giocare con drag and drop (to do), si manda al server, si riceve matrice aggiornata e si proietta
+        public void placeCard(Card cardToPlace, Player player){
+                Card c;
+                ImageView ivVoid = new ImageView(new Image("immagine carta vuota")); // da cercare
+                Card[][] matrix = player.getPlayerGround().getGround();
+                for(int i = 0; i<84; i++){
+                        for(int j = 0; j<84; j++){
+                                c = matrix[i][j];
+                                if(c==cardToPlace){
+                                        ImageView iv = new ImageView(new Image("src/main/resources/CODEX_cards_gold_front/"+String.valueOf(c.getId()) + ".png"));
+                                        gridPaneGround.add(iv, i-converter, j-converter);
+                                        if(i-converter == 0 || j-converter==0 ){
+                                                gridPaneGround.addColumn(0);
+                                                gridPaneGround.addRow(0);
+                                                converter--;
+                                        }
+                                        if(i-converter == (gridPaneGround.getColumnCount()-1) || j-converter==(gridPaneGround.getRowCount()-1)){
+                                                gridPaneGround.addColumn(gridPaneGround.getColumnCount());
+                                                gridPaneGround.addRow(gridPaneGround.getRowCount());
+                                        }
+                                }
+                                if(c.getId()==-1){
+                                        gridPaneGround.add(ivVoid, i-converter, j-converter);
+                                }
+                        }
+                }
         }
 
 
