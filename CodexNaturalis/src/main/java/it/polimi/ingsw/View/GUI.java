@@ -122,7 +122,7 @@ public class GUI extends Application{
         gc.addCommonObj(player.getGame().getCommonObj());
         gc.setScore(player.getPlayerGround().getPlayerScore());
         gc.setTotalResource(player.getPlayerGround().getTotalResources());
-        gc.placeStarterCard(startercard);
+
         stage.setScene(new Scene(root, 350, 300));
         stage.show();
     }
