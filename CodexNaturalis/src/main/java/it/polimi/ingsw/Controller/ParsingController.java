@@ -129,7 +129,7 @@ public class ParsingController {
             Corner BRFCorner = new Corner("bottom right front", BRFRes, true);
 
             // create the array of front corners
-            Corner[] frontCorners = {TLFCorner, TRFCorner, BLFCorner, BRFCorner};
+            Corner[] frontCorners = {BLFCorner, TLFCorner, BRFCorner, TRFCorner};
 
             // set the availability of every corner that does not exist to false
             for (Corner c : frontCorners) {
@@ -152,7 +152,7 @@ public class ParsingController {
             Corner BRBCorner = new Corner("bottom right back", BRBRes, true);
 
             // create the array of back corners
-            Corner[] backCorners = {TLBCorner, TRBCorner, BLBCorner, BRBCorner};
+            Corner[] backCorners = {BLBCorner, TLBCorner, BRBCorner, TRBCorner};
 
             // set the availability of every corner that does not exist to false
             for (Corner c : backCorners) {
@@ -255,7 +255,7 @@ public class ParsingController {
             Corner BRFCorner = new Corner("bottom right front", BRFRes, true);
 
             // create the array of front corners
-            Corner[] frontCorners = {TLFCorner, TRFCorner, BLFCorner, BRFCorner};
+            Corner[] frontCorners = {BLFCorner, TLFCorner, BRFCorner,TRFCorner};
 
             // set the availability of every corner that does not exist to false
             for (Corner c : frontCorners) {
@@ -278,7 +278,7 @@ public class ParsingController {
             Corner BRBCorner = new Corner("bottom right back", BRBRes, true);
 
             // create the array of back corners
-            Corner[] backCorners = {TLBCorner, TRBCorner, BLBCorner, BRBCorner};
+            Corner[] backCorners = {BLBCorner, TLBCorner, BRBCorner, TRBCorner};
 
             // set the availability of every corner that does not exist to false
             for (Corner c : backCorners) {

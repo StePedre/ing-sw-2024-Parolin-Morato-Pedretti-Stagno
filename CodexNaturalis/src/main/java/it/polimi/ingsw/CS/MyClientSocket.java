@@ -46,9 +46,12 @@ public class MyClientSocket {
         } catch (ClassNotFoundException e) {
             close();
             e.printStackTrace();
+        } catch (InterruptedException e){
+            close();
+            e.printStackTrace();
         }
     }
-    public void useTUI() throws IOException, ClassNotFoundException {
+    public void useTUI() throws IOException, ClassNotFoundException, InterruptedException {
         tui= new TUI();
 
         // mostra stanze
@@ -68,9 +71,15 @@ public class MyClientSocket {
             out.writeObject(tui.insertNickname(true));
         }while((boolean) in.readObject());
         //ciclo nome stanza esistente
+        boolean NoOk = false;
         if((boolean)in.readObject()){
-            int i = tui.askPlayersNo();
-            out.writeObject(i);
+            do {
+                int i = tui.askPlayersNo();
+                if(i>=2 && i<=4) {
+                    out.writeObject(i);
+                    NoOk = true;
+                }
+            }while(!NoOk);
         }
         player = (Player) in.readObject();
         tui.Welcome(player);
@@ -91,18 +100,18 @@ public class MyClientSocket {
         while(true){
             if((boolean)in.readObject()){
                 if(t.isAlive()){
-                    t.interrupt();
+                    t.wait();
                 }
                 if((boolean)in.readObject()){//finito gioco per vittoria altrui
                     break;
                 }
                 updateData();
                 while(!tui.yourTurnPlay(game,player)){
-                    doNothing();//quando vero ha deciso cosa giocare
                 }
                 out.writeObject(tui.inputCardToPlace(player));
                 out.writeObject(tui.inputCoordinates());
                 out.reset();
+                player = (Player) in.readObject();
                 //aspetta riscontro vittoria
                 if((boolean)in.readObject()){
                     break;
@@ -113,10 +122,13 @@ public class MyClientSocket {
                     break;
                 }
                 updateData();
+                t.notifyAll();
             }
             else{
-                t.start();// modificabile mettendo fuori dal ciclo e a fine turno
-                //aspetta riscontro vittoria
+                if(!t.isAlive()) {
+                    t.start();// modificabile mettendo fuori dal ciclo e a fine turno
+                    //aspetta riscontro vittoria
+                }
             }
         }
         tui.winnersPrint((ArrayList<Player>) in.readObject());
@@ -130,15 +142,5 @@ public class MyClientSocket {
     public void updateData() throws IOException, ClassNotFoundException {
         game = (Game) in.readObject();
         player = (Player) in.readObject();
-    }
-    public void doNothing(){
-
-    }
-    public void readPlayer() throws IOException, ClassNotFoundException {
-        String s =(String) in.readObject();
-        PlayerGround pg = (PlayerGround) in.readObject();
-        Hand hand = (Hand)in.readObject();
-        int n = (int)in.readObject();
-        player= new Player(s,pg,hand,n);
     }
 }

@@ -112,4 +112,12 @@ public class Hand implements Serializable {
     public void addHand(PlayableCard[] cards){
         this.cards=cards;
     }
+    public void removeCard(PlayableCard card){
+        for(int i = 0; i<maxNumberOfCards;i++){
+            if(cards[i].getId()==card.getId()){
+                cards[i]=null;
+            }
+        }
+    }
+
 }

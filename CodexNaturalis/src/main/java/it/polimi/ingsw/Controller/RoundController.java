@@ -17,6 +17,8 @@ public class RoundController implements Serializable {
     private ArrayList<Player> players = new ArrayList<Player>();
     private int round = -1;
     private final Random rand = new Random();
+    private Player LastPlayer;
+    private boolean lastTurn = false;
 
     public RoundController() {
 
@@ -28,19 +30,29 @@ public class RoundController implements Serializable {
     }
 
     public synchronized void nextRound(){
+        if(!(lastTurn && LastPlayer.equals(players.get(round)))) {
             if (round == players.size() - 1)
                 round = 0;
             else
                 round++;
+        }
     }
 
     public synchronized void setFirstPlayer(){
         if (round == -1) {
             round = rand.nextInt(players.size());
+            if(round == 0){
+                LastPlayer = players.get(players.size() - 1);
+            }else{
+                LastPlayer = players.get(round - 1);
+            }
         }
     }
     public synchronized Player getCurrentPlayer(){
         return players.get(round);
+    }
+    public synchronized void setLastTurn(){
+        lastTurn = true;
     }
 
 }

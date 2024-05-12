@@ -80,6 +80,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                     out.writeObject(true);
                     game.finish();
                     over();
+                    rc.setLastTurn();
                 }
                 else{
                     out.writeObject(false);
@@ -92,6 +93,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                     out.writeObject(true);
                     game.finish();
                     over();
+                    rc.setLastTurn();
                 }
                 else{
                     out.writeObject(false);
@@ -100,6 +102,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 rc.nextRound();//fine turno
                 sendData();
                 out.writeObject(false);//non è più il suo turno
+                out.reset();
             }
             socket.close();
         }
@@ -122,6 +125,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             PlayableCard card = (PlayableCard) in.readObject();
             Position pos = (Position) in.readObject();
             PlaceCardController.place(card,player,pos);
+            PlaceCardController.removeFromHand(card,player);
+            out.writeObject(player);
+            out.reset();
         }
         catch (MissingResourcesException e){
             e.printStackTrace();
@@ -239,17 +245,5 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         else{
             out.writeObject(false);
         }
-    }
-    public void sendPlayer() throws IOException {
-        out.writeObject(player.getNickname());
-        PlayerGround pg = player.getPlayerGround();
-        out.writeObject(pg);
-        out.writeObject(player.getHand());
-        out.writeObject(player.getReachedObjNo());
-    }
-    public void sendGame() throws IOException {
-        out.writeObject(game.getDecks());
-        out.writeObject(game.getPlayers());
-        out.writeObject(game.getCommonObj());
     }
 }

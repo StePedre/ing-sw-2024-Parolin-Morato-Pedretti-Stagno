@@ -20,4 +20,8 @@ public class PlaceCardController {
         }
 
     }
+    public static void removeFromHand(PlayableCard card, Player player){
+        Hand hand = player.getHand();
+        hand.removeCard(card);
+    }
 }
