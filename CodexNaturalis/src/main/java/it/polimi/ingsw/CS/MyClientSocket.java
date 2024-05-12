@@ -91,17 +91,11 @@ public class MyClientSocket {
         updateData();
         tui.Welcome(player);
         tui.showGround(game,player);
-        Thread t = new Thread(()->{while(true) {
-                                        tui.notYourTurn(game, player);
-                                    }
-                                });
         //aspettare turno
         out.reset();
+        boolean b =  (boolean) in.readObject();
         while(true){
-            if((boolean)in.readObject()){
-                if(t.isAlive()){
-                    t.wait();
-                }
+            if(b){
                 if((boolean)in.readObject()){//finito gioco per vittoria altrui
                     break;
                 }
@@ -122,12 +116,13 @@ public class MyClientSocket {
                     break;
                 }
                 updateData();
-                t.notifyAll();
+                b=false;
             }
             else{
-                if(!t.isAlive()) {
-                    t.start();// modificabile mettendo fuori dal ciclo e a fine turno
-                    //aspetta riscontro vittoria
+                while(!b) {
+                    tui.notYourTurn(game,player);//aggiungere possibilità di aspettare e basta
+                    out.writeObject(true);
+                    b=(boolean)in.readObject();
                 }
             }
         }

@@ -51,15 +51,17 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             }
             pc.setFirstCard(st);
             //sendPlayer();
-            sendData();//qui i dati sono corretti, quando li invio il client non li riceve
+            sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){//primo turno
                 out.writeObject(false);
             }
             while(!game.isOver()){//fino a fine gioco, gestire primo turno
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
+                    in.readObject();
                     if(game.isOver()){
                         break;
                     }
+                    out.writeObject(false);
                 }
                 out.writeObject(true);//è il tuo turno
                 if(game.isOver()){
