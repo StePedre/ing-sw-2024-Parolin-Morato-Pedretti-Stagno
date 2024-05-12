@@ -1,24 +1,25 @@
 package it.polimi.ingsw.View;
 
-import it.polimi.ingsw.Model.*;
+import it.polimi.ingsw.Model.Game;
+import it.polimi.ingsw.Model.Player;
+import it.polimi.ingsw.Model.StarterCard;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.event.*;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +39,7 @@ public class GUI extends Application{
 //    }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException, InterruptedException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/loadingScene.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -60,14 +61,21 @@ public class GUI extends Application{
         stage.setTitle("Codex Naturalis");
         Scene scene = new Scene(root, screenWidth, screenHeight);
 
-        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                try {
-                    controller.switchToLogin(stage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        controller.animationLoadingBar();
+
+        controller.getLoadingBar().progressProperty().addListener((observable, oldValue, newValue) -> {
+            if (Objects.equals(newValue, 1.0)) {
+                controller.getLoadingLabel().setVisible(true);
+                scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(KeyEvent keyEvent) {
+                        try {
+                            controller.switchToLogin(stage);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
             }
         });
 
@@ -135,32 +143,6 @@ public class GUI extends Application{
         stage.show();
         return dc.chooseCard();
     }
-
-
-/*
-    public void switchToLogin (ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/insertNick.fxml"));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    String submitNick(ActionEvent event) {
-        System.out.println(nickTextField.getText());
-        return nickTextField.getText();
-    }
-
-    public int askPlayerNo(ActionEvent event) {
-        int num = 0;
-        do{
-            System.out.println("How many players do you want? Insert a number between 2 and 4.");
-            num = Integer.parseInt(textFieldPlayersNo.getText());
-        } while (!(num>=2 && num<=4));
-        return num;
-    }
-
- */
 
 
     public void adjustLayout (Node node, double screenHeight, double screenWidth, double nodeHeight, double nodeWidth) {

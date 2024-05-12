@@ -14,7 +14,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ProgressBar prefHeight="30.0" prefWidth="966.0" progress="0.0" />
+                  <ProgressBar fx:id="loadingBar" prefHeight="30.0" prefWidth="966.0" progress="0.0" style="-fx-accent: #4B0082;" />
                </children>
                <opaqueInsets>
                   <Insets />
@@ -22,7 +22,7 @@
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="462.0" text="Press any key to continue...">
+                  <Label fx:id="loadingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="462.0" text="Press any key to continue..." visible="false">
                      <font>
                         <Font name="Bookman Old Style" size="30.0" />
                      </font>

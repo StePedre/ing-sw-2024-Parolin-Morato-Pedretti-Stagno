@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
+   <children>
+      <VBox alignment="CENTER" layoutX="633.0" layoutY="284.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" text="Please, wait for others player to join">
+               <font>
+                  <Font name="Bookman Old Style" size="30.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" text="Match will start soon...">
+               <font>
+                  <Font name="Bookman Old Style" size="30.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </Label>
+            <ProgressBar fx:id="waitingBar" styleClass="indeterminate-progress-bar" prefHeight="28.0" prefWidth="302.0" style="-fx-accent: #4B0082;">
+               <VBox.margin>
+                  <Insets top="50.0" />
+               </VBox.margin>
+            </ProgressBar>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
