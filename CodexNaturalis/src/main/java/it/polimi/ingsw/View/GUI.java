@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -25,12 +26,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class GUI extends Application{
-    private static Stage stage;
+    private Stage stage;
     private Screen screen = Screen.getPrimary();
     private double screenHeight = screen.getBounds().getHeight();
     private double screenWidth = screen.getBounds().getWidth();
     private final int height = 400;
     private final int width = 600;
+
+    GroundController gc = new GroundController();
+
+    DrawController dc = new DrawController();
     @FXML
     private Label loadingLabel;
 
@@ -121,27 +126,40 @@ public class GUI extends Application{
         stage.show();
     }
 
-    public void InitializePlayerGround(Stage stage, Player player, StarterCard startercard) throws IOException {
+    public void InitializePlayerGround(Player player, StarterCard startercard) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/playground.fxml")));
-        GroundController gc = new GroundController();
         gc.setNickname(player.getNickname());
         gc.addImages(player.getHand());
         gc.addSecretObj(player.getHand().getObjCard());
         gc.addCommonObj(player.getGame().getCommonObj());
         gc.setScore(player.getPlayerGround().getPlayerScore());
         gc.setTotalResource(player.getPlayerGround().getTotalResources());
-
+        gc.placeFirstCard(startercard);
+        gc.showAvailablePos(player.getPlayerGround());
         stage.setScene(new Scene(root, 350, 300));
+        stage.show();  // finchè non è il suo turno
+    }
+
+    // non va qui, probabilmente sul controller, va chiamato dal client/server
+    public void yourTurnBanner(Player player, Game game) throws IOException {
+        Stage yourTurnStage = new Stage();
+        yourTurnStage.initModality(Modality.WINDOW_MODAL);
+        yourTurnStage.initOwner(stage);
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/yourTurn.fxml")));
+        stage.setScene(new Scene(root, 600, 200));
         stage.show();
     }
 
-    public int Draw(Stage stage, Player player, Game game) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/drawpanel.fxml"));
-        DrawController dc = new DrawController();
-        dc.addCards(game.getDecks());
+    public void showUpdatedPlayerGround(Player player) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/playground.fxml")));
+        gc.setNickname(player.getNickname());
+        gc.addImages(player.getHand());
+        gc.addSecretObj(player.getHand().getObjCard());
+        gc.addCommonObj(player.getGame().getCommonObj());
+        gc.setScore(player.getPlayerGround().getPlayerScore());
+        gc.setTotalResource(player.getPlayerGround().getTotalResources());
         stage.setScene(new Scene(root, 350, 300));
         stage.show();
-        return dc.chooseCard();
     }
 
 

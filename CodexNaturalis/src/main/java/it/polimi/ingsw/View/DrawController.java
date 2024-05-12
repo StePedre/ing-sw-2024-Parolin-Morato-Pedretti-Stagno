@@ -1,12 +1,18 @@
 package it.polimi.ingsw.View;
 
-import it.polimi.ingsw.Model.Deck;
+import it.polimi.ingsw.Model.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.*;
 import javafx.scene.effect.*;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.Objects;
 
 public class DrawController {
 
@@ -23,7 +29,15 @@ public class DrawController {
         goldFaceUp2.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[1].getCards().get(1).getId()));
         goldFaceDown.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[1].getCards().get(2).getId()));
     }
-    public int chooseCard(){
+
+    public void yourTurnDraw(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/drawpanel.fxml")));
+        stage.setScene(new Scene(root, 350, 300));
+        stage.show();
+        int chosen = chooseCard();
+        // send chosen to server
+    }
+    public int chooseCard(){   // l'int verrà mandato al server
         int[] choice = new int[] { -1 };
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(5);
