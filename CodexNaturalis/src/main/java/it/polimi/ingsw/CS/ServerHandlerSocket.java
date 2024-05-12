@@ -61,7 +61,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                     if(game.isOver()){
                         break;
                     }
-                    out.writeObject(false);
+                    if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))) {
+                        out.writeObject(false);
+                    }
                 }
                 out.writeObject(true);//è il tuo turno
                 if(game.isOver()){
