@@ -1,7 +1,9 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.CS.Room;
+import it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.Player;
+import it.polimi.ingsw.Model.StarterCard;
 
 import java.io.*;
 
@@ -25,5 +27,12 @@ public class GUIClientSocket {
     public boolean receiveBooleanFromServer() throws IOException, ClassNotFoundException {
         return (Boolean) in.readObject();
     }
+    public StarterCard receiveStarterCardFromServer() throws IOException, ClassNotFoundException {
+        return (StarterCard) in.readObject();
+    }
+    public Game receiveGameFromServer() throws IOException, ClassNotFoundException {
+        return (Game) in.readObject();
+    }
+
 }
 
