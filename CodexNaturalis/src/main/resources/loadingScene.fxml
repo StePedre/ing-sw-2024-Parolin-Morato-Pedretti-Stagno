@@ -22,7 +22,7 @@
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="loadingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="462.0" text="Press any key to continue..." visible="false">
+                  <Label fx:id="loadingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="862.0" text="Press any key to continue when loading ends ..." visible="true">
                      <font>
                         <Font name="Bookman Old Style" size="30.0" />
                      </font>

@@ -40,12 +40,13 @@ public class GUI extends Application{
             @Override
             public void handle(KeyEvent keyEvent) {
                 try {
-                    switchToLogin(stage);
+                    controller.switchToLogin(stage);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
+        /*
         scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -59,8 +60,10 @@ public class GUI extends Application{
         //switchToNumberPlayers(stage);
 
 
+         */
     }
 
+    /*
     public Scene switchToLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/insertNick.fxml"));
         Parent root = loader.load();
@@ -71,12 +74,15 @@ public class GUI extends Application{
     }
 
 
+
     public void switchToNumberPlayers(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/requestNoPlayers.fxml")));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
+
+     */
 /*
     public void switchToWaitingStart(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitingStart.fxml")));

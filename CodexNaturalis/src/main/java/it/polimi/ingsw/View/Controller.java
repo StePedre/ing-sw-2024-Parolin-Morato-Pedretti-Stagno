@@ -91,7 +91,7 @@ public class Controller {
         return nickButton;
     }
 
-    /*
+
     public void switchToLogin(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/insertNick.fxml")));
         Scene scene = new Scene(root, screenWidth, screenHeight);
@@ -99,7 +99,7 @@ public class Controller {
         stage.show();
     }
 
-     */
+
 
     public void animationLoadingBar() {
         Timeline timeline = new Timeline(
@@ -111,7 +111,7 @@ public class Controller {
 
     }
 
-    public void getNickname() throws IOException, ClassNotFoundException {
+    public void getNickname(ActionEvent event) throws IOException, ClassNotFoundException {
         int i = 0;
         String nickname;
         do {
@@ -124,10 +124,13 @@ public class Controller {
 //            client.sendToServer(nickname);
         } while (i < 0);
 //        }while(!client.receiveBooleanFromServer());
+        Scene scene = ((Node) event.getSource()).getScene();
+        Stage stage = (Stage) scene.getWindow();
+        switchToNumberPlayers(stage);
 
     }
     public void getNicknameHandle(ActionEvent event) throws IOException, ClassNotFoundException {
-        getNickname();
+        getNickname(event);
     }
 
 
@@ -190,7 +193,7 @@ public class Controller {
 //        switchToWaitingStart(stage);
     }
 
-    /*
+
     public void switchToWaitingStart(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitingStart.fxml")));
         Scene scene = new Scene(root);
@@ -198,9 +201,9 @@ public class Controller {
         stage.show();
     }
 
-     */
 
-    /*
+
+
     public void switchToStarterChoice(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/startingCardChoice.fxml")));
         // client manda starter card...
@@ -211,9 +214,9 @@ public class Controller {
         stage.show();
     }
 
-     */
 
-    /*
+
+
     public void switchToSelectSecretObj(MouseEvent event) throws IOException {
         // add method that returns the chosen side of the card!!!
         Scene scene = ((Node) event.getSource()).getScene();
@@ -229,22 +232,23 @@ public class Controller {
         stage.show();
     }
 
-     */
 
-    /*
+
+
     public void addStarterImages(StarterCard card) throws IOException {
         Image image1 = new Image("file:" + imagesFrontPath + card.getId() + ".png");
         Image image2 = new Image("file:" + imagesBackPath + card.getId() + ".png");
-        frontStarterCard.setImage(image1);
-        backStarterCard.setImage(image2);
+//        frontStarterCard.setImage(image1);
+//        backStarterCard.setImage(image2);
         // TO DO: metodo che gestisce la scelta e la manda al server
     }
 
     public void addSecretObjImages(ObjectiveCard[] secretObjs) {
-        secretObjLeft.setImage(new Image(imagesFrontPath + secretObjs[0].getId() + ".png"));
-        secretObjRight.setImage(new Image(imagesFrontPath + secretObjs[1].getId() + ".png"));
+//        secretObjLeft.setImage(new Image(imagesFrontPath + secretObjs[0].getId() + ".png"));
+//        secretObjRight.setImage(new Image(imagesFrontPath + secretObjs[1].getId() + ".png"));
     }
 
+    /*
     public void addImages(Hand hand) {
         handCardLeft.setImage(new Image(imagesFrontPath + hand.getCard(0).getId() + ".png"));
         handCardCenter.setImage(new Image(imagesFrontPath + hand.getCard(1).getId() + ".png"));
