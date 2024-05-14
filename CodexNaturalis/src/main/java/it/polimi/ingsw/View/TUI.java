@@ -112,7 +112,9 @@ public class TUI {
      */
     public int chooseObjective(ObjectiveCard obj1, ObjectiveCard obj2){
         int choice;
-        System.out.println("Choose between two secret objectives:\n1- " + toStringRule(obj1) + "\n2- " + toStringRule(obj2));
+        /*System.out.println("Choose between two secret objectives:\n1- " + toStringRule(obj1) + "\n2- " + toStringRule(obj2));*/
+        System.out.println("Choose between two secret objectives: ");
+        AdvancedTUI_temp.printObjectives(new ObjectiveCard[]{obj1, obj2});
         Scanner scanner = new Scanner(System.in);
         do {
             choice = scanner.nextInt();
@@ -178,6 +180,14 @@ public class TUI {
      * @exception IllegalStateException arises when an input error occurs.
      */
     public boolean yourTurnPlay(Game game, Player player){
+        AdvancedTUI_temp.printObjectives(game.getCommonObj());
+        AdvancedTUI_temp.printDeck(game.getDecks()[0]);
+        AdvancedTUI_temp.printDeck(game.getDecks()[1]);
+        AdvancedTUI_temp.printGround(player.getPlayerGround());
+        AdvancedTUI_temp.printResources(player.getPlayerGround().getTotalResources());
+        AdvancedTUI_temp.printHand(player.getHand());
+        return true;
+        /*
         System.out.println("It's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n 4- Play card\n\n");
         int choice;
         Scanner scanner = new Scanner(System.in);
@@ -215,6 +225,8 @@ public class TUI {
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + choice);
             }
+
+         */
     }
 
     /**
@@ -312,7 +324,8 @@ public class TUI {
      * @param player is the instance of the player who's waiting or playing.
      */
     public void showHand(Player player){
-       Hand hand = player.getHand();
+        AdvancedTUI_temp.printHand(player.getHand());
+       /*Hand hand = player.getHand();
        ObjectiveCard secretObj = hand.getObjCard();
 
        int i = 1;
@@ -334,6 +347,8 @@ public class TUI {
                 - CR 'Composition Rule'. Card gives the indicated amount of points for each time the indicated composition appears on the ground.
                 - OER 'One of Each Rule'. Card gives 3 points each time there is a set of plume, potion and scroll.
                 """);
+                */
+
     }
 
     /**
@@ -503,9 +518,11 @@ public class TUI {
     public void showGround(Game game, Player player){
         ObjectiveCard[] commonObjs = game.getCommonObj();
         System.out.println("\nThese are all players' common objectives:\n");
-        for(ObjectiveCard obj: commonObjs){
+        /* for(ObjectiveCard obj: commonObjs){
             System.out.println(toStringRule(obj));
-        }
+        } */
+        AdvancedTUI_temp.printObjectives(commonObjs);
+        /*
         Card[][] matrix = player.getPlayerGround().getGround();    // scrittura di una matrice 0 e 1 con 1 dove c'è una carta
         int[][] matrixToPrint = new int[84][84];
         for (int i = 0; i < 84; i++) {
@@ -518,14 +535,18 @@ public class TUI {
                 }
             }
         }
+        */
         //stampa della matrice
-        System.out.println("Your play ground looks like this (1 = there is a card, 0 = there isn't):\n");
+        System.out.println("Your play ground looks like this:\n");
+        AdvancedTUI_temp.printGround(player.getPlayerGround());
+        /*
         for (int i = 0; i < 84; i++) {
             for (int j = 0; j < 84; j++) {
                 System.out.print(matrixToPrint[i][j] + " ");
             }
             System.out.println();
-        }
+        } */
+
         // stampa available positions
         System.out.println("This is the list of positions where it is possible to place a card:\n");
         for (Position pos: player.getPlayerGround().getAvailablePositions()) {
@@ -551,18 +572,16 @@ public class TUI {
         Deck[] decks = game.getDecks();
         String deck1name = decks[0].getKindOfDeck();
         String deck2name = decks[1].getKindOfDeck();
-        ArrayList<PlayableCard> deck1 = decks[0].getCards();
-        ArrayList<PlayableCard> deck2 = decks[1].getCards();
-
+/*
         Card deck1card1 = deck1.getFirst();
         Card deck1card2 = deck1.get(1);
         Card deck2card1 = deck2.getFirst();
-        Card deck2card2 = deck2.get(1);
+        Card deck2card2 = deck2.get(1); */
 
         System.out.println("Here you are the game decks." +
                 "\nThe first and the second card of each deck are facing up. You can choose one of them or pick the top of the remaining deck (face down)\n" +
-                        "First card of the " + deck1name + " (0 to choose):\n");
-
+                        "" + deck1name + " deck (0, 1, 2 to choose):\n");
+        /*
         showCard((PlayableCard) deck1card1);
         System.out.println("\nSecond card of the " + deck1name + " (1 to choose):\n");
         showCard((PlayableCard) deck1card2);
@@ -572,7 +591,11 @@ public class TUI {
         System.out.println("\nSecond card of the " + deck2name + " (4 to choose):\n");
         showCard((PlayableCard) deck2card2);
         System.out.println("\nAlternatively, you can input 5 to choose the hidden card at the top of the " + deck2name + "deck.\n");
-        System.out.println("Which card do you choose? Input the number corresponding to your choice:\n");
+        System.out.println("Which card do you choose? Input the number corresponding to your choice:\n"); */
+        AdvancedTUI_temp.printDeck(decks[0]);
+        System.out.println( "\nThe first and the second card of each deck are facing up. You can choose one of them or pick the top of the remaining deck (face down)\n" +
+                "" + deck1name + " deck (3, 4, 5 to choose):\n");
+        AdvancedTUI_temp.printDeck(decks[1]);
         Scanner scanner = new Scanner(System.in);
         int choice;
         do{

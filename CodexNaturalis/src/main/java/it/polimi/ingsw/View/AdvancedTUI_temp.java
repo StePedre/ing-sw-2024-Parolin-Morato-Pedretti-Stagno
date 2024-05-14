@@ -16,7 +16,16 @@ public class AdvancedTUI_temp {
 
     public static void printGround(PlayerGround playerGround){
         Card[][] ground = playerGround.getGround();
-        Set<Position> availablePosition = playerGround.getAvailablePositions();
+        Set<Position> availablePosition = new HashSet<>(playerGround.getAvailablePositions());
+        Set<Position> unavailablePosition = new HashSet<>(playerGround.getUnavailablePositions());
+        Map<Position, Integer> positionIntegerMap = new HashMap<>();
+        int counter = 0;
+        for (Position position : availablePosition) {
+            positionIntegerMap.put(position, counter);
+            counter++;
+        }
+
+        availablePosition.addAll(unavailablePosition);
 
         int maxX = availablePosition.stream()
                 .mapToInt(Position::getX)
@@ -41,27 +50,100 @@ public class AdvancedTUI_temp {
         int lengthX = maxX - minX;
         int lengthY = maxY - minY;
 
-        StringBuilder topBorder = new StringBuilder();
-        StringBuilder contentLine1 =  new StringBuilder();
-        StringBuilder contentLine2 =  new StringBuilder();
-        StringBuilder contentLine3 =  new StringBuilder();
-        StringBuilder contentLine4 =  new StringBuilder();
+        String topBorder = "";
+        String contentLine1 =  "";
+        String contentLine2 =  "";
+        String contentLine3 =  "";
+        String contentLine4 = "";
 
-        maxY--;
-        for(int i = lengthY; i >0; i--,maxY--){
-            for(int j = 0; j <lengthX ; j++, minX++ ){
-                contentLine1.append(getGridLine1(ground[minX][maxY]));
-                contentLine1.append(getGridLine2(ground[minX][maxY]));
-                contentLine1.append(getGridLine3(ground[minX][maxY]));
-                contentLine1.append(getGridLine4(ground[minX][maxY]));
+        /* boolean state = true;
+        for(int i = lengthY, maxYOffset = maxY; i >=0; i--, maxYOffset--){
+            for(int j = 0, minXOffset = minX; j <lengthX ; j++, minXOffset++ ){
+                if(ground[minXOffset][maxY] != null) {
+                    //contentLine1.append(getGridLine1(ground[minXOffset][maxY]).append(ground[minXOffset][maxY].getId()));
+                    contentLine1.append(1);
+                }else{
+                    //contentLine1.append(getGridLine1(ground[minXOffset][maxY]));
+                    contentLine1.append(0);
+                }
+                //contentLine2.append(getGridLine2(ground[minXOffset][maxY]));
+                //contentLine3.append(getGridLine3(ground[minXOffset][maxY]));
+                if(state) {
+                    //contentLine4.append(getGridLine4(ground[minXOffset][maxY], state));
+                }else{
+                    int maxY2 = maxY--;
+                    //contentLine4.append(getGridLine4(ground[minXOffset][maxY2], state));
+                }
+                state = !state;
             }
             System.out.println(contentLine1);
-            System.out.println(contentLine2);
-            System.out.println(contentLine3);
-            System.out.println(contentLine4);
+            //System.out.println(contentLine2);
+            //System.out.println(contentLine3);
+            //System.out.println(contentLine4);
 
+        } */
+        // scrittura di una matrice 0 e 1 con 1 dove c'è una carta
+        Card[][] matrixToPrint = new Card[84][84];
+        for(int i = 0, maxYOffset = maxY; i <= lengthY; i++, maxYOffset--){
+            for(int j = 0, minXOffset = minX; j <= lengthX; j++, minXOffset++){
+                if(ground[minXOffset][maxYOffset]==null){
+                    matrixToPrint[i][j] = null;
+                }
+                else {
+                    matrixToPrint[i][j] = ground[minXOffset][maxYOffset];
+                }
+            }
         }
 
+        boolean state = true;
+        System.out.println("\n");
+        System.out.println("Your play ground looks like this:\n");
+        System.out.println("\n");
+        for (int j = lengthX; j >= 0; j--) {
+                contentLine4 += getGridLine5(matrixToPrint[j][lengthY], state);
+        }
+
+        System.out.println("                       " + contentLine4 + "                       ");
+        contentLine4 = "";
+        for (int i = lengthY; i >= 0; i--) {
+            for (int j = lengthX; j >= 0; j--) {
+                contentLine1 += getGridLine1(matrixToPrint[j][i]);
+                contentLine2 += getGridLine2(matrixToPrint[j][i]);
+                contentLine3 += getGridLine3(matrixToPrint[j][i]);
+                if(matrixToPrint[j][i] == null && i-1 >= 0) {
+                    if (state) {
+                        contentLine4 += getGridLine5(matrixToPrint[j][i - 1], state);
+                    } else {
+                        contentLine4 += getGridLine5(matrixToPrint[j][i - 1], state);
+                    }
+                }else{
+                    if (state) {
+                        contentLine4 += getGridLine4(matrixToPrint[j][i], state);
+                    } else {
+                        contentLine4 += getGridLine4(matrixToPrint[j][i], state);
+                    }
+                }
+                state = !state;
+            }
+            System.out.println("                       " + contentLine1 + "                       ");
+            System.out.println("                       " + contentLine2 + "                       ");
+            System.out.println("                       " + contentLine3 + "                       ");
+            System.out.println("                       " + contentLine4 + "                       ");
+            contentLine1 = "";
+            contentLine2 = "";
+            contentLine3 = "";
+            contentLine4 = "";
+        }
+        System.out.println("\n");
+
+    }
+
+    public static void printResources(HashMap<Resource, Integer> totalResources){
+            for (Map.Entry<Resource, Integer> entry : totalResources.entrySet()) {
+                Resource resource = entry.getKey();
+                Integer value = entry.getValue();
+                System.out.println("" + resource + ", Value: " + value);
+            }
     }
     public static void printDeck(Deck deck){
         StringBuilder topBorder = new StringBuilder();
@@ -150,16 +232,74 @@ public class AdvancedTUI_temp {
     }
 
     private static String getGridLine1(Card card){
-        return null;
+        if(card == null) return "                  ";
+        if(card.getId() >= 81 && card.getId() <= 86){
+            return getFirstGridLine(card, 1);
+        }
+        if(card.getId() == -1){
+            return cardColor(card) + "█                 █" + "\u001B[0m";
+        }
+        return cardColor(card) + "█                 █" + "\u001B[0m";
     }
     private static String getGridLine2(Card card){
-        return null;
+        if(card == null) return "                  ";
+        if(card.getId() >= 81 && card.getId() <= 86){
+            return getFirstGridLine(card, 2);
+        }
+        if(card.getId() == -1){
+            return cardColor(card) + "█                 █" + "\u001B[0m";
+        }
+
+        return cardColor(card) + "█                 █" + "\u001B[0m";
     }
     private static String getGridLine3(Card card){
-        return null;
+        if(card == null) return "                  ";
+        if(card.getId() >= 81 && card.getId() <= 86){
+            return getFirstGridLine(card, 3);
+        }
+        if(card.getId() == -1){
+            return cardColor(card) + "█                 █" + "\u001B[0m";
+        }
+        return cardColor(card) + "█                 █" + "\u001B[0m";
     }
-    private static String getGridLine4(Card card){
-        return null;
+    private static String getGridLine4(Card card, boolean state){
+        if(card == null) return "                  ";
+        if(card.getId() >= 81 && card.getId() <= 86){
+            return getFirstGridLine(card, 4);
+        }
+        if(card.getId() == -1){
+            return cardColor(card) + " ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ " + "\u001B[0m";
+
+        }
+        if(state) {
+            return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
+        }
+        return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+    }
+
+    private static String getGridLine5(Card card, boolean state){
+        if(card == null) return "                  ";
+        if(card.getId() >= 81 && card.getId() <= 86){
+            return getFirstGridLine(card, 4);
+        }
+        if(card.getId() == -1){
+            return cardColor(card) + " ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + "\u001B[0m";
+        }
+        if(state) {
+            return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
+        }
+        return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+    }
+
+
+    private static String getFirstGridLine(Card card, int state){
+        if(state == 4){
+            return "██████████████████";
+        }
+        if(state == 2){
+            return "█    first card    █";
+        }
+        return "█                  █";
     }
 
     private static String firstLineObjective(ObjectiveCard objectiveCard){
@@ -272,8 +412,11 @@ public class AdvancedTUI_temp {
                 }
                 return "  Points per "+ resource + ": " + rule.getPoints()+"   ";
             }
+            case null, default -> {
+                return "                    ";
+            }
         }
-        return "                    ";
+
     }
 
     private static String cardRequirements(PlayableCard card){
@@ -310,6 +453,7 @@ public class AdvancedTUI_temp {
     }
 
     private static String cardColor(Card card){
+        if(card.getId() == -1) return "\u001B[37m";
         switch(card.getColor()){
             case LEAF -> {
                 return "\u001B[32m";
@@ -384,7 +528,5 @@ public class AdvancedTUI_temp {
         printDeck(goldDeck);
         printObjectives(commonObj);
         printHand(hand);
-
-
     }
 }

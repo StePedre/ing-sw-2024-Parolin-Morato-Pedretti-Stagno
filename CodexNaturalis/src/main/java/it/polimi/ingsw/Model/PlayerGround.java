@@ -209,7 +209,7 @@ public class PlayerGround implements Serializable {
      * @param position is the desired position for that card to be added in.
      */
     private void addCard(Card newCard, Position position){
-        removeCornersResources(position);
+        removeCornersResources(position, newCard);
         addCornersResources(newCard);
         updatePositionsAvailability(newCard,position);
         raiseScore(newCard.getRule());
@@ -226,7 +226,7 @@ public class PlayerGround implements Serializable {
      *
      * @param placePosition is where the new card has been placed, used to calculate which corner has been covered.
      */
-    private void removeCornersResources(Position placePosition){
+    private void removeCornersResources(Position placePosition, Card newCard){
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 // Calculates one of the 4 position around the placePosition and gets the corresponding card
@@ -235,8 +235,11 @@ public class PlayerGround implements Serializable {
                 Card card = ground[newX][newY];
                 if (card != null) {
                     // Calculates the index of the corresponding corner that is covered if you place the card in the placePosition
+                    int newCornerPos = j+ 2*i;
                     int cornerPos = 3 - (j + 2 * i);
+
                     Resource resourceToRemove = card.getShowedCorners()[cornerPos].getCornerRes();
+                    card.getShowedCorners()[cornerPos].setResource(newCard.getShowedCorners()[newCornerPos].getCornerRes());
                     updateSingleResource(-1,resourceToRemove);
                 }
 

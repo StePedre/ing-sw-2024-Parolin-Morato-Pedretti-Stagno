@@ -1,72 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="stdAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GroundController" >
-   <children>
-      <Label fx:id="labelNick" alignment="CENTER" layoutX="20.0" layoutY="22.0" prefHeight="17.0" prefWidth="75.0" text="Nickname" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelPoints" alignment="CENTER" layoutX="20.0" layoutY="40.0" prefHeight="17.0" prefWidth="75.0" text="Points:" AnchorPane.topAnchor="40.0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelRes" alignment="CENTER" layoutX="304.33333333333337" layoutY="26.0" prefHeight="17.0" prefWidth="100.0" text="Total Resources:" AnchorPane.rightAnchor="195.66666666666663" AnchorPane.topAnchor="26.0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelSecret" alignment="CENTER" layoutX="20.0" layoutY="262.0" prefHeight="17.0" prefWidth="100.0" text="Secret objetcive:">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="labelCommon" alignment="CENTER" layoutX="456.0" layoutY="200.0" prefHeight="17.0" prefWidth="124.0" text="Common objectives:">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="mushroomNum" alignment="CENTER" layoutX="413.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="foxNum" alignment="CENTER" layoutX="488.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="potionNum" alignment="CENTER" layoutX="513.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="scrollNum" alignment="CENTER" layoutX="538.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="plumeNum" alignment="CENTER" layoutX="563.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="bugNum" alignment="CENTER" layoutX="438.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-      <Label fx:id="leafNum" alignment="CENTER" layoutX="463.0" layoutY="40.0" prefHeight="17.0" prefWidth="13.0" text="0">
-         <font>
-            <Font name="Bookman Old Style" size="12.0" />
-         </font>
-      </Label>
-   </children>
-</AnchorPane>
+<HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.GroundController">
+    <AnchorPane fx:id="stdAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0">
+        <HBox fx:id="hboxHand" layoutX="630.0" layoutY="950.0" prefHeight="100.0" prefWidth="440.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="420.0" AnchorPane.rightAnchor="420.0">
+            <ImageView fx:id="handCardCenter" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+            <HBox.margin>
+               <Insets top="2.5" />
+            </HBox.margin></ImageView>
+            <ImageView fx:id="handCardLeft" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+                <HBox.margin>
+                    <Insets left="10.0" top="2.5" />
+                </HBox.margin>
+            </ImageView>
+            <ImageView fx:id="handCardRight" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+                <HBox.margin>
+                    <Insets left="10.0" top="2.5" />
+                </HBox.margin>
+            </ImageView>
+        </HBox>
+        <VBox layoutX="46.0" layoutY="42.0" prefHeight="554.0" prefWidth="140.0" AnchorPane.leftAnchor="34.0" AnchorPane.topAnchor="34.0">
+            <Label fx:id="labelNick" alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="Nickname">
+                <font>
+                    <Font name="Bookman Old Style" size="18.0" />
+                </font>
+            </Label>
+            <Label fx:id="labelPoints" alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="Points:">
+                <font>
+                    <Font name="Bookman Old Style" size="18.0" />
+                </font>
+            </Label>
+            <Label fx:id="labelSecret" alignment="CENTER" prefHeight="0.0" prefWidth="140.0" text="Secret objetcive:">
+                <font>
+                    <Font name="Bookman Old Style" size="16.0" />
+                </font>
+                <padding>
+                    <Insets top="360.0" />
+                </padding>
+            </Label>
+            <ImageView fx:id="secretObj" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+                <VBox.margin>
+                    <Insets />
+                </VBox.margin>
+            </ImageView>
+        </VBox>
+      <ScrollPane fx:id="scrollPaneGround" layoutX="209.0" layoutY="157.0" pannable="true" prefHeight="560.0" prefWidth="840.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="35.0">
+         <content>
+            <GridPane fx:id="gridPaneGround" prefHeight="559.0" prefWidth="839.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+         </content>
+      </ScrollPane>
+        <VBox layoutX="1657.0" layoutY="379.0" prefHeight="207.0" prefWidth="160.0" AnchorPane.bottomAnchor="220.0" AnchorPane.rightAnchor="35.0">
+            <Label fx:id="labelCommon" alignment="CENTER" prefHeight="40.0" prefWidth="250.0" text="Common objectives:">
+                <font>
+                    <Font name="Bookman Old Style" size="16.0" />
+                </font>
+            </Label>
+            <ImageView fx:id="commonObj1" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+                <VBox.margin>
+                    <Insets left="10.0" />
+                </VBox.margin>
+            </ImageView>
+            <ImageView fx:id="commonObj2" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+                <VBox.margin>
+                    <Insets left="10.0" top="10.0" />
+                </VBox.margin>
+            </ImageView>
+        </VBox>
+        <VBox layoutX="1617.0" layoutY="50.0" prefHeight="58.0" prefWidth="168.0" AnchorPane.bottomAnchor="620.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="35.0">
+            <Label fx:id="labelRes" alignment="CENTER" prefHeight="12.0" prefWidth="167.0" text="Total Resources:">
+                <font>
+                    <Font name="Bookman Old Style" size="18.0" />
+                </font>
+            </Label>
+            <HBox>
+                <ImageView fx:id="mushroomRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+                <ImageView fx:id="bugRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+                <ImageView fx:id="leafRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+                <ImageView fx:id="foxRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+                <ImageView fx:id="potionRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+                <ImageView fx:id="scrollRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+                <ImageView fx:id="plumeRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                </ImageView>
+            </HBox>
+            <HBox>
+                <Label fx:id="mushroomNum" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" text="0">
+                    <font>
+                        <Font name="Bookman Old Style" size="20.0" />
+                    </font>
+                </Label>
+                <Label fx:id="bugNum" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" text="0">
+                    <font>
+                        <Font name="Bookman Old Style" size="20.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets left="6.6" />
+                    </HBox.margin>
+                </Label>
+                <Label fx:id="leafNum" alignment="CENTER" prefHeight="30.0" prefWidth="20.0" text="0">
+                    <font>
+                        <Font name="Bookman Old Style" size="20.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets left="6.6" />
+                    </HBox.margin>
+                </Label>
+                <Label fx:id="foxNum" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" text="0">
+                    <font>
+                        <Font name="Bookman Old Style" size="20.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets left="6.6" />
+                    </HBox.margin>
+                </Label>
+                <Label fx:id="potionNum" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" text="0">
+                    <font>
+                        <Font name="Bookman Old Style" size="20.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets left="6.6" />
+                    </HBox.margin>
+                </Label>
+                <Label fx:id="scrollNum" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" text="0">
+                    <font>
+                        <Font name="Bookman Old Style" size="20.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets left="6.6" />
+                    </HBox.margin>
+                </Label>
+                <Label fx:id="plumeNum" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" text="0">
+                    <font>
+                        <Font name="Bookman Old Style" size="20.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets left="6.6" />
+                    </HBox.margin>
+                </Label>
+            </HBox>
+        </VBox>
+    </AnchorPane>
+</HBox>
