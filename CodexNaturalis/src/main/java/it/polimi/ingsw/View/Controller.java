@@ -27,6 +27,7 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -87,14 +88,15 @@ public class Controller  implements  Initializable{
 
     }
 
-    public void getNickname(ActionEvent event) throws IOException {
+    public void getNickname(ActionEvent event) throws IOException, ClassNotFoundException {
         String nickname;
         do {
             nickname = nickTextField.getText();
             if (!nickname.isEmpty()) {
                 nickTextField.clear();
             }
-        }while()
+            client.sendToServer(nickname);
+        }while(!client.receiveBooleanFromServer());
         Scene scene = ((Node) event.getSource()).getScene();
         Stage stage = (Stage) scene.getWindow();
         switchToNumberPlayers(stage);
@@ -201,7 +203,13 @@ public class Controller  implements  Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        client =
+        try {
+            Socket socket = new Socket("127.0.0.1",59090);
+            client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
 

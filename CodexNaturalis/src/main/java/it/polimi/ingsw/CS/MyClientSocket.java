@@ -4,40 +4,28 @@ import java.net.ConnectException;
 import java.net.Socket;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.View.*;
+import javafx.application.Application;
 
 import java.util.ArrayList;
 
 
 public class MyClientSocket {
-    @SuppressWarnings("FieldCanBeLocal")
-    private final Socket socket;
-    private final ObjectInputStream in;
-    private final ObjectOutputStream out;
+    private  Socket socket;
+    private  ObjectInputStream in;
+    private  ObjectOutputStream out;
     Player player = null;
     Game game = null;
     TUI tui =  null;
     boolean inter;
-    public MyClientSocket(int port, String host,boolean inter) throws IOException {
-        try {
-            socket = new Socket(host, port);
-            in = new ObjectInputStream(socket.getInputStream());
-            out = new ObjectOutputStream(socket.getOutputStream());
-            this.inter = inter;
-        } catch (IOException e) {
-            close();
-            throw e;
-        }
+    public MyClientSocket(boolean inter) {
+        this.inter = inter;
     }
     public void runClient() throws IOException {// per test println
         try {
-            if (!(boolean) in.readObject()) {
-                throw new ConnectException();
-            }
             System.out.println("Client connected");
-
-            if (inter) {//decisione se usare TUI o GUI
-                useTUI();
-            } else {
+            if(inter) {
+                useTUI(59090, "127.0.0.1");
+            }else{
                 useGUI();
             }
         }catch (IOException e) {
@@ -51,9 +39,11 @@ public class MyClientSocket {
             e.printStackTrace();
         }
     }
-    public void useTUI() throws IOException, ClassNotFoundException, InterruptedException {
+    public void useTUI(int port, String host) throws IOException, ClassNotFoundException, InterruptedException {
         tui= new TUI();
-
+        socket = new Socket(host, port);
+        in = new ObjectInputStream(socket.getInputStream());
+        out = new ObjectOutputStream(socket.getOutputStream());
         // mostra stanze
         ArrayList<Room> room = (ArrayList<Room>) in.readObject();
         tui.showRoom(room);
@@ -129,15 +119,6 @@ public class MyClientSocket {
         tui.winnersPrint((ArrayList<Player>) in.readObject());
         close();
     }
-    public void useGUI() throws IOException, ClassNotFoundException {
-        String[] s = {""};
-        GUI.main(s);
-        in.readObject(); //lettura room
-        out.writeObject(true);
-        out.writeObject("pippo");
-        in.readObject();//fine controllo stanza
-
-    }
 
     public void close() throws IOException {
         socket.close();
@@ -145,5 +126,8 @@ public class MyClientSocket {
     public void updateData() throws IOException, ClassNotFoundException {
         game = (Game) in.readObject();
         player = (Player) in.readObject();
+    }
+    public void useGUI(){
+        GUI.startGUI();
     }
 }

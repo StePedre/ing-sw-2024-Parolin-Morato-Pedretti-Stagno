@@ -3,17 +3,15 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.Player;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 public class GUIClientSocket {
     ObjectInputStream in;
     ObjectOutputStream  out;
 
-    public GUIClientSocket(ObjectInputStream in, ObjectOutputStream out){
-        this.in = in;
-        this.out = out;
+    public GUIClientSocket(InputStream in, OutputStream out) throws IOException {
+        this.in = new ObjectInputStream(in);
+        this.out = new ObjectOutputStream(out);
     }
     public Player receivePlayerFromServer() throws IOException, ClassNotFoundException {
         return (Player) in.readObject();
@@ -23,6 +21,9 @@ public class GUIClientSocket {
     }
     public void sendToServer(Object obj) throws IOException {
         out.writeObject(obj);
+    }
+    public boolean receiveBooleanFromServer() throws IOException, ClassNotFoundException {
+        return (Boolean) in.readObject();
     }
 }
 

@@ -195,7 +195,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
 
     }
     public void start() throws IOException, ClassNotFoundException {
-        out.writeObject(true);
         //invio stanze
         out.writeObject(rooms.getRooms());
         Room room;

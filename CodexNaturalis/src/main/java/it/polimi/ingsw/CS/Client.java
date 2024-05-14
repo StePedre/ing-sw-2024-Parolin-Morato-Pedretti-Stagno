@@ -35,9 +35,10 @@ public class Client {
                     myClientRMI.runClient();
                     flag=true;
                 } else if(choice.equalsIgnoreCase("socket")){
-                    MyClientSocket myClientSocket = new MyClientSocket(59090, "127.0.0.1",inter);
+                    MyClientSocket myClientSocket = new MyClientSocket(inter);
                     myClientSocket.runClient();
-                    flag=true;
+                    flag = true;
+
                 }else{
                     System.out.println("Please, choose between Socket and RMI");
                 }
