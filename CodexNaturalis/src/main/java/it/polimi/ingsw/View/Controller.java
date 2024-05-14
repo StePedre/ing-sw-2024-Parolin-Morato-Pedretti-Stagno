@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View;
 
+
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.FlatRule;
 import javafx.animation.KeyFrame;
@@ -24,11 +25,13 @@ import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class Controller {
+public class Controller  implements  Initializable{
 
     @FXML
     private ImageView frontStarterCard, backStarterCard;
@@ -54,6 +57,8 @@ public class Controller {
     private final Screen screen = Screen.getPrimary();
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
+
+    private GUIClientSocket client;
     private final String imagesFrontPath = "/CodexNaturalis/src/main/resources/CODEX_cards_gold_back";
     private final String imagesBackPath = "/CodexNaturalis/src/main/java/it/polimi/ingsw/Resources/CODEX_cards_gold_back/";
 
@@ -83,16 +88,19 @@ public class Controller {
     }
 
     public void getNickname(ActionEvent event) throws IOException {
-        String nickname = nickTextField.getText();
-        if (!nickname.isEmpty()) {
-            System.out.println(nickname);
-            //server.sendNickname (nickname);
-            nickTextField.clear();
-        }
+        String nickname;
+        do {
+            nickname = nickTextField.getText();
+            if (!nickname.isEmpty()) {
+                nickTextField.clear();
+            }
+        }while()
         Scene scene = ((Node) event.getSource()).getScene();
         Stage stage = (Stage) scene.getWindow();
         switchToNumberPlayers(stage);
     }
+
+
 
     public void switchToNumberPlayers(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/requestNoPlayers.fxml")));
@@ -189,6 +197,11 @@ public class Controller {
     public void addSecretObjImages(ObjectiveCard[] secretObjs) {
         secretObjLeft.setImage(new Image(imagesFrontPath + secretObjs[0].getId() + ".png"));
         secretObjRight.setImage(new Image(imagesFrontPath + secretObjs[1].getId() + ".png"));
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        client =
     }
 }
 

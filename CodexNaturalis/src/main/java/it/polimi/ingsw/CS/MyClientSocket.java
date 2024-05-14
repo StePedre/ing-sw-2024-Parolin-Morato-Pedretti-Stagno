@@ -129,7 +129,15 @@ public class MyClientSocket {
         tui.winnersPrint((ArrayList<Player>) in.readObject());
         close();
     }
-    public void useGUI(){}
+    public void useGUI() throws IOException, ClassNotFoundException {
+        String[] s = {""};
+        GUI.main(s);
+        in.readObject(); //lettura room
+        out.writeObject(true);
+        out.writeObject("pippo");
+        in.readObject();//fine controllo stanza
+
+    }
 
     public void close() throws IOException {
         socket.close();
