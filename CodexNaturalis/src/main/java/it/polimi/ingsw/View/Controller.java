@@ -33,8 +33,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class Controller  implements  Initializable{
-
+public class Controller {
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight;
     @FXML
@@ -61,13 +60,13 @@ public class Controller  implements  Initializable{
     private static ImageView commonObj1, commonObj2;
     private int converter = 39; // 42 - 3 (coord iniziali matrice e gridPane)
     @FXML
-    private Button yourTurnButton;
+    private Button nickButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
-    private final Image voidImage = new Image("url immagine vuota");
+//    private final Image voidImage = new Image("url immagine vuota");
     private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
     private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
 
-
+/*
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -78,6 +77,8 @@ public class Controller  implements  Initializable{
         }
 
     }
+
+ */
     public ProgressBar getLoadingBar() {
         return loadingBar;
     }
@@ -86,12 +87,19 @@ public class Controller  implements  Initializable{
         return loadingLabel;
     }
 
+    public Button getNickButton() {
+        return nickButton;
+    }
+
+    /*
     public void switchToLogin(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/insertNick.fxml")));
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
     }
+
+     */
 
     public void animationLoadingBar() {
         Timeline timeline = new Timeline(
@@ -103,28 +111,38 @@ public class Controller  implements  Initializable{
 
     }
 
-    public void getNickname(ActionEvent event) throws IOException, ClassNotFoundException {
+    public void getNickname() throws IOException, ClassNotFoundException {
+        int i = 0;
         String nickname;
         do {
+            i ++;
             nickname = nickTextField.getText();
             if (!nickname.isEmpty()) {
+                System.out.println(nickname);
                 nickTextField.clear();
             }
-            client.sendToServer(nickname);
-        }while(!client.receiveBooleanFromServer());
-        Scene scene = ((Node) event.getSource()).getScene();
-        Stage stage = (Stage) scene.getWindow();
-        switchToNumberPlayers(stage);
+//            client.sendToServer(nickname);
+        } while (i < 0);
+//        }while(!client.receiveBooleanFromServer());
+
+    }
+    public void getNicknameHandle(ActionEvent event) throws IOException, ClassNotFoundException {
+        getNickname();
     }
 
 
 
+
     public void switchToNumberPlayers(Stage stage) throws IOException {
+        getClass().getResource("/requestNoPlayers.fxml");
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/requestNoPlayers.fxml")));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
+
+
+
 
     public void getNumberPlayers(ActionEvent event) throws IOException {
         int numberOfPlayers;
@@ -139,7 +157,7 @@ public class Controller  implements  Initializable{
                     System.out.println(numberOfPlayers);
                     Scene scene = ((Node) event.getSource()).getScene();
                     Stage stage = (Stage) scene.getWindow();
-                    switchToStarterChoice(stage);
+//                    switchToStarterChoice(stage);
                 }
             } catch (NumberFormatException e) {
                 validLabel.setVisible(true);
@@ -159,7 +177,7 @@ public class Controller  implements  Initializable{
         System.out.println("Chosen left secret objective");
         Scene scene = ((Node) event.getSource()).getScene();
         Stage stage = (Stage) scene.getWindow();
-        switchToWaitingStart(stage);
+//        switchToWaitingStart(stage);
     }
 
     public void getRightSecretObj(MouseEvent event) throws IOException {
@@ -169,9 +187,10 @@ public class Controller  implements  Initializable{
         System.out.println("Chosen right secret objective");
         Scene scene = ((Node) event.getSource()).getScene();
         Stage stage = (Stage) scene.getWindow();
-        switchToWaitingStart(stage);
+//        switchToWaitingStart(stage);
     }
 
+    /*
     public void switchToWaitingStart(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitingStart.fxml")));
         Scene scene = new Scene(root);
@@ -179,9 +198,12 @@ public class Controller  implements  Initializable{
         stage.show();
     }
 
+     */
+
+    /*
     public void switchToStarterChoice(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/startingCardChoice.fxml")));
-       // StarterCard card = client.receiveStarterCardFromServer();
+        // client manda starter card...
         StarterCard card = new StarterCard(86, new FlatRule(0), new Corner[4], new Corner[4], Resource.BLANK, null);
         addStarterImages(card);
         Scene scene = new Scene(root);
@@ -189,6 +211,9 @@ public class Controller  implements  Initializable{
         stage.show();
     }
 
+     */
+
+    /*
     public void switchToSelectSecretObj(MouseEvent event) throws IOException {
         // add method that returns the chosen side of the card!!!
         Scene scene = ((Node) event.getSource()).getScene();
@@ -204,6 +229,9 @@ public class Controller  implements  Initializable{
         stage.show();
     }
 
+     */
+
+    /*
     public void addStarterImages(StarterCard card) throws IOException {
         Image image1 = new Image("file:" + imagesFrontPath + card.getId() + ".png");
         Image image2 = new Image("file:" + imagesBackPath + card.getId() + ".png");
@@ -277,7 +305,7 @@ public class Controller  implements  Initializable{
         showAvailablePos(player.getPlayerGround());
         Game game = client.receiveGameFromServer();
         addCards(game.getDecks());
-        yourTurnDraw(stage);
+//        yourTurnDraw(stage);
 
     }
 
@@ -292,6 +320,7 @@ public class Controller  implements  Initializable{
         goldFaceDown.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[1].getCards().get(2).getId()));
     }
 
+    /*
     public void yourTurnDraw(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/drawpanel.fxml")));
         stage.setScene(new Scene(root, 350, 300));
@@ -299,6 +328,10 @@ public class Controller  implements  Initializable{
         int chosen = chooseCard();
         client.sendToServer(chosen);
     }
+
+     */
+
+    /*
     public int chooseCard(){
         int[] choice = new int[] { -1 };
         DropShadow dropShadow = new DropShadow();
@@ -435,6 +468,7 @@ public class Controller  implements  Initializable{
         return false;
     }
 
+    /*
     public void yourTurnBanner(Player player, Game game, Stage stage) throws IOException {
         Stage yourTurnStage = new Stage();
         yourTurnStage.initModality(Modality.WINDOW_MODAL);
@@ -469,6 +503,8 @@ public class Controller  implements  Initializable{
         stage.setScene(new Scene(root, 350, 300));
         stage.show();
     }
+
+     */
 }
 
 

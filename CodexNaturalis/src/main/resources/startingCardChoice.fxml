@@ -2,18 +2,17 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
+<AnchorPane prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.ImageViewController">
    <children>
       <VBox alignment="CENTER" layoutX="633.0" layoutY="284.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="starterlabel" alignment="CENTER" text="This is your starter card,">
+            <Label alignment="CENTER" text="This is your starter card,">
                <font>
                   <Font name="Bookman Old Style" size="30.0" />
                </font>
@@ -27,13 +26,12 @@
                </VBox.margin>
             </Label>
             <HBox alignment="CENTER" prefHeight="186.0" prefWidth="966.0">
-                <children>
-                  <ImageView fx:id="frontStarterCard" fitHeight="188.0" fitWidth="282.0" onMouseClicked="#switchToSelectSecretObj" pickOnBounds="true" preserveRatio="true">
+               <children>
+                  <ImageView fx:id="frontStarterCard" fitHeight="188.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true">
                      <HBox.margin>
                         <Insets right="50.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <ImageView fx:id="backStarterCard" fitHeight="188.0" fitWidth="282.0" onMouseClicked="#switchToSelectSecretObj" pickOnBounds="true" preserveRatio="true" />
+                     </HBox.margin></ImageView>
+                  <ImageView fx:id="backStarterCard" fitHeight="188.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true" />
                </children>
                <VBox.margin>
                   <Insets top="20.0" />
