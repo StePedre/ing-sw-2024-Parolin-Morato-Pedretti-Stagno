@@ -1,14 +1,18 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.Model.ObjectiveCard;
 import it.polimi.ingsw.Model.Position;
+import it.polimi.ingsw.Model.StarterCard;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Controller {
@@ -39,8 +43,8 @@ public class Controller {
     private Button nickButton, requestButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
 //    private final Image voidImage = new Image("url immagine vuota");
-    private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
-    private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
+    private final String imagesFrontPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_front\\";
+    private final String imagesBackPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_back\\";
 
 /*
     @Override
@@ -55,27 +59,24 @@ public class Controller {
     }
 
  */
-    public Label getLoadingLabel() {
-        return loadingLabel;
-    }
-
     public Button getNickButton() {
         return nickButton;
     }
-
     public Button getRequestButton() {
         return requestButton;
     }
-
-/*
-    public void switchToLogin(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/insertNick.fxml")));
-        Scene scene = new Scene(root, screenWidth, screenHeight);
-        stage.setScene(scene);
-        stage.show();
+    public ImageView getFrontStarterCard() {
+        return frontStarterCard;
     }
-
- */
+    public ImageView getBackStarterCard() {
+        return backStarterCard;
+    }
+    public ImageView getSecretObjLeft () {
+        return secretObjLeft;
+    }
+    public ImageView getSecretObjRight () {
+        return secretObjRight;
+    }
 
 
     public void getNickname () {
@@ -93,18 +94,6 @@ public class Controller {
 //        }while(!client.receiveBooleanFromServer());
 
     }
-
-
-
-/*
-    public void switchToNumberPlayers(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/requestNoPlayers.fxml")));
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
- */
 
     public int getNumberPlayers() {
         int numberOfPlayers = 0;
@@ -127,83 +116,25 @@ public class Controller {
         return numberOfPlayers;
     }
 
-    /*
-    public void getSideStarterCard(ActionEvent event) throws IOException {
-
-    }
-
-    public void getLeftSecretObj(MouseEvent event) throws IOException {
+    public void getLeftSecretObj() {
         ObjectiveCard secretObj;
-        //server.sendSecretObj (secretObj);
         System.out.println("Chosen left secret objective");
-        Scene scene = ((Node) event.getSource()).getScene();
-        Stage stage = (Stage) scene.getWindow();
-//        switchToWaitingStart(stage);
     }
 
-    public void getRightSecretObj(MouseEvent event) throws IOException {
+    public void getRightSecretObj() {
         ObjectiveCard secretObj;
-        // associazione immagine-carta
-        //server.sendSecretObj (secretObj);
         System.out.println("Chosen right secret objective");
-        Scene scene = ((Node) event.getSource()).getScene();
-        Stage stage = (Stage) scene.getWindow();
-//        switchToWaitingStart(stage);
     }
 
 
-    public void switchToWaitingStart(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitingStart.fxml")));
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-
-
-    public void switchToStarterChoice(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/startingCardChoice.fxml")));
-        // client manda starter card...
-        StarterCard card = new StarterCard(86, new FlatRule(0), new Corner[4], new Corner[4], Resource.BLANK, null);
-        addStarterImages(card);
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-
-
-    public void switchToSelectSecretObj(MouseEvent event) throws IOException {
-        // add method that returns the chosen side of the card!!!
-        Scene scene = ((Node) event.getSource()).getScene();
-        Stage stage = (Stage) scene.getWindow();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/selectSecretObjs.fxml")));
-        // client manda secret objectives
-        ObjectiveCard card1 = new ObjectiveCard(93, new FlatRule(0));
-        ObjectiveCard card2 = new ObjectiveCard(91, new FlatRule(0));
-        ObjectiveCard[] objs = {card1, card2};
-        addSecretObjImages(objs);
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-
-
-    public void addStarterImages(StarterCard card) throws IOException {
-//        Image image1 = new Image("file:" + imagesFrontPath + card.getId() + ".png");
-//        Image image2 = new Image("file:" + imagesBackPath + card.getId() + ".png");
-//        frontStarterCard.setImage(image1);
-//        backStarterCard.setImage(image2);
-        // TO DO: metodo che gestisce la scelta e la manda al server
+    public void addStarterImages(StarterCard card) {
+        frontStarterCard.setImage(new Image("file:" + imagesFrontPath + card.getId() + ".png"));
+        backStarterCard.setImage(new Image("file:" + imagesBackPath + card.getId() + ".png"));
     }
 
     public void addSecretObjImages(ObjectiveCard[] secretObjs) {
-//        secretObjLeft.setImage(new Image(imagesFrontPath + secretObjs[0].getId() + ".png"));
-//        secretObjRight.setImage(new Image(imagesFrontPath + secretObjs[1].getId() + ".png"));
+        secretObjLeft.setImage(new Image("file:" + imagesFrontPath + secretObjs[0].getId() + ".png"));
+        secretObjRight.setImage(new Image("file:" + imagesFrontPath + secretObjs[1].getId() + ".png"));
     }
 
     /*
