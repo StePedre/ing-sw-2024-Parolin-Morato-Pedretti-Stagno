@@ -3,18 +3,24 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.FlatRule;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.lang.management.MemoryUsage;
 import java.util.Objects;
 
 public class GUI extends Application{
@@ -34,22 +40,33 @@ public class GUI extends Application{
         stage.setFullScreen(false);
         stage.show();
 
-        controller.animationLoadingBar();
-
         scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
                 try {
-                    controller.switchToLogin(stage);
+                    switchToLogin(stage);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
-        /*
-        scene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+
+    }
+
+    public void switchToLogin(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/insertNick.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        Scene scene = new Scene(root, screenWidth, screenHeight);
+        stage.setScene(scene);
+        stage.show();
+
+        Button nickButton = controller.getNickButton();
+        nickButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(MouseEvent mouseEvent) {
+            public void handle(ActionEvent actionEvent) {
+                controller.getNickname();
                 try {
                     switchToNumberPlayers(stage);
                 } catch (IOException e) {
@@ -57,32 +74,35 @@ public class GUI extends Application{
                 }
             }
         });
-        //switchToNumberPlayers(stage);
-
-
-         */
-    }
-
-    /*
-    public Scene switchToLogin(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/insertNick.fxml"));
-        Parent root = loader.load();
-        Scene scene = new Scene(root, screenWidth, screenHeight);
-        stage.setScene(scene);
-        stage.show();
-        return scene;
     }
 
 
 
     public void switchToNumberPlayers(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/requestNoPlayers.fxml")));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/requestNoPlayers.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+
+        Button requestButton = controller.getRequestButton();
+        requestButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                int numberPlayers = controller.getNumberPlayers();
+                try {
+                    if (numberPlayers >= 2 && numberPlayers <= 4) {
+                        switchToStarterChoice(stage);
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
-     */
+
 /*
     public void switchToWaitingStart(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/waitingStart.fxml")));
@@ -90,17 +110,19 @@ public class GUI extends Application{
         stage.setScene(scene);
         stage.show();
     }
+*/
 
     public void switchToStarterChoice(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/startingCardChoice.fxml")));
         // client manda starter card...
-        StarterCard card = new StarterCard(86, new FlatRule(0), new Corner[4], new Corner[4], Resource.BLANK, null);
-        addStarterImages(card);
+        //StarterCard card = new StarterCard(86, new FlatRule(0), new Corner[4], new Corner[4], Resource.BLANK, null);
+        //addStarterImages(card);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
+/*
     public void switchToSelectSecretObj(MouseEvent event) throws IOException {
         // add method that returns the chosen side of the card!!!
         Scene scene = ((Node) event.getSource()).getScene();

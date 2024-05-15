@@ -62,7 +62,7 @@
             </Label>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="requestButton" alignment="CENTER" mnemonicParsing="false" onAction="#getNumberPlayers" prefHeight="47.0" prefWidth="180.0" style="-fx-background-color: #1560BD;" text="Continue..." textFill="WHITE">
+                  <Button fx:id="requestButton" alignment="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="180.0" style="-fx-background-color: #1560BD;" text="Continue..." textFill="WHITE">
                      <font>
                         <Font name="Bookman Old Style" size="23.0" />
                      </font>

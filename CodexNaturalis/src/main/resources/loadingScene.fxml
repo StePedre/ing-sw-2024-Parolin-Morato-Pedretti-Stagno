@@ -12,17 +12,10 @@
    <children>
       <VBox alignment="BOTTOM_CENTER" layoutX="198.0" layoutY="26.0" prefHeight="768.0" prefWidth="652.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <ProgressBar fx:id="loadingBar" prefHeight="30.0" prefWidth="966.0" progress="0.0" style="-fx-accent: #4B0082;" />
-               </children>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0"/>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="loadingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="862.0" text="Press any key to continue when loading ends ..." visible="true">
+                  <Label fx:id="loadingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="862.0" text="Press any key to continue...">
                      <font>
                         <Font name="Bookman Old Style" size="30.0" />
                      </font>

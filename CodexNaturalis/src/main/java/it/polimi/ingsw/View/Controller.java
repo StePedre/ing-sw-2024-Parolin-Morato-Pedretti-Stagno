@@ -1,43 +1,19 @@
 package it.polimi.ingsw.View;
-import it.polimi.ingsw.Model.*;
-import it.polimi.ingsw.Model.ScoreRules.FlatRule;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
+
+import it.polimi.ingsw.Model.Position;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.*;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Modality;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.URL;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.ResourceBundle;
 
 public class Controller {
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight;
-    @FXML
-    private ProgressBar loadingBar;
     @FXML
     private Button buttonSubDraw;
     @FXML
@@ -60,7 +36,7 @@ public class Controller {
     private static ImageView commonObj1, commonObj2;
     private int converter = 39; // 42 - 3 (coord iniziali matrice e gridPane)
     @FXML
-    private Button nickButton, yourTurnButton;
+    private Button nickButton, requestButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
 //    private final Image voidImage = new Image("url immagine vuota");
     private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
@@ -79,10 +55,6 @@ public class Controller {
     }
 
  */
-    public ProgressBar getLoadingBar() {
-        return loadingBar;
-    }
-
     public Label getLoadingLabel() {
         return loadingLabel;
     }
@@ -91,7 +63,11 @@ public class Controller {
         return nickButton;
     }
 
+    public Button getRequestButton() {
+        return requestButton;
+    }
 
+/*
     public void switchToLogin(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/insertNick.fxml")));
         Scene scene = new Scene(root, screenWidth, screenHeight);
@@ -99,19 +75,10 @@ public class Controller {
         stage.show();
     }
 
+ */
 
 
-    public void animationLoadingBar() {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(loadingBar.progressProperty(), 0)),
-                new KeyFrame(Duration.seconds(3), e -> {
-                }, new KeyValue(loadingBar.progressProperty(), 1))
-        );
-        timeline.play();
-
-    }
-
-    public void getNickname(ActionEvent event) throws IOException, ClassNotFoundException {
+    public void getNickname () {
         int i = 0;
         String nickname;
         do {
@@ -124,31 +91,23 @@ public class Controller {
 //            client.sendToServer(nickname);
         } while (i < 0);
 //        }while(!client.receiveBooleanFromServer());
-        Scene scene = ((Node) event.getSource()).getScene();
-        Stage stage = (Stage) scene.getWindow();
-        switchToNumberPlayers(stage);
 
     }
-    public void getNicknameHandle(ActionEvent event) throws IOException, ClassNotFoundException {
-        getNickname(event);
-    }
 
 
 
-
+/*
     public void switchToNumberPlayers(Stage stage) throws IOException {
-        getClass().getResource("/requestNoPlayers.fxml");
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/requestNoPlayers.fxml")));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
 
+ */
 
-
-
-    public void getNumberPlayers(ActionEvent event) throws IOException {
-        int numberOfPlayers;
+    public int getNumberPlayers() {
+        int numberOfPlayers = 0;
         String inputText = numberPlayersTF.getText();
         if (!inputText.isEmpty()) {
             try {
@@ -158,18 +117,17 @@ public class Controller {
                     numberPlayersTF.clear();
                 } else {
                     System.out.println(numberOfPlayers);
-                    Scene scene = ((Node) event.getSource()).getScene();
-                    Stage stage = (Stage) scene.getWindow();
-//                    switchToStarterChoice(stage);
+                    return  numberOfPlayers;
                 }
             } catch (NumberFormatException e) {
                 validLabel.setVisible(true);
                 numberPlayersTF.clear();
             }
         }
-
+        return numberOfPlayers;
     }
 
+    /*
     public void getSideStarterCard(ActionEvent event) throws IOException {
 
     }
@@ -236,8 +194,8 @@ public class Controller {
 
 
     public void addStarterImages(StarterCard card) throws IOException {
-        Image image1 = new Image("file:" + imagesFrontPath + card.getId() + ".png");
-        Image image2 = new Image("file:" + imagesBackPath + card.getId() + ".png");
+//        Image image1 = new Image("file:" + imagesFrontPath + card.getId() + ".png");
+//        Image image2 = new Image("file:" + imagesBackPath + card.getId() + ".png");
 //        frontStarterCard.setImage(image1);
 //        backStarterCard.setImage(image2);
         // TO DO: metodo che gestisce la scelta e la manda al server
