@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.Player;
 import it.polimi.ingsw.Model.StarterCard;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class GUIClientSocket {
     ObjectInputStream in;
@@ -20,6 +21,10 @@ public class GUIClientSocket {
     }
     public Room receiveRoomFromServer() throws IOException, ClassNotFoundException {
         return (Room) in.readObject();
+    }
+
+    public ArrayList<Room> receiveRoomsFromServer() throws IOException, ClassNotFoundException {
+        return (ArrayList<Room>) in.readObject();
     }
     public void sendToServer(Object obj) throws IOException {
         out.writeObject(obj);

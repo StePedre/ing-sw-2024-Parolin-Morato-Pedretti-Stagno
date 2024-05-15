@@ -1,21 +1,28 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.ObjectiveCard;
 import it.polimi.ingsw.Model.Position;
 import it.polimi.ingsw.Model.StarterCard;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 
+import java.beans.EventHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Controller {
+
+    @FXML
+    private VBox vboxRoom;
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight;
     @FXML
@@ -137,11 +144,22 @@ public class Controller {
         secretObjRight.setImage(new Image("file:" + imagesFrontPath + secretObjs[1].getId() + ".png"));
     }
 
-    public void addRoomsMenu(){
-
+    public void addRoomsMenu() throws IOException, ClassNotFoundException {
+        ArrayList<Room> rooms = client.receiveRoomsFromServer();
+        ComboBox<Label> menu = new ComboBox<>();
+        menu.setPrefHeight(312);
+        menu.setPrefWidth(440);
+        for (Room r: rooms){
+            Label elem = new Label(r.getName());
+            // aggiungere proprietà di click (evidenzia)
+            menu.getItems().add(elem);
+        }
+        vboxRoom.getChildren().add(menu);
     }
-    public void addRoomCreationInput(){
-
+    public void addRoomCreationInput() throws IOException {
+        TextField tf = new TextField("Insert new room's name:\n");
+        String name = tf.getText();
+        client.sendToServer(name);
     }
 
     /*

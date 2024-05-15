@@ -22,7 +22,7 @@
             <HBox />
             <HBox prefHeight="155.0" prefWidth="880.0">
                <children>
-                  <RadioButton mnemonicParsing="false" prefHeight="159.0" prefWidth="440.0" text="Enter existing room">
+                  <RadioButton mnemonicParsing="false" prefHeight="159.0" prefWidth="440.0" text="Enter existing room" onAction="#addRoomsMenu">
                      <font>
                         <Font name="Bookman Old Style" size="24.0" />
                      </font>
@@ -33,7 +33,7 @@
                         <Insets left="50.0" />
                      </padding>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" prefHeight="159.0" prefWidth="440.0" text="Create new room" toggleGroup="$room">
+                  <RadioButton mnemonicParsing="false" prefHeight="159.0" prefWidth="440.0" text="Create new room" toggleGroup="$room" onAction="#addRoomCreationInput">
                      <font>
                         <Font name="Bookman Old Style" size="24.0" />
                      </font>
