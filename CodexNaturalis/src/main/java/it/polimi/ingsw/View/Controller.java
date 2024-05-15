@@ -43,8 +43,8 @@ public class Controller {
     private Button nickButton, requestButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
 //    private final Image voidImage = new Image("url immagine vuota");
-    private final String imagesFrontPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_front\\";
-    private final String imagesBackPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_back\\";
+    private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
+    private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
 
 /*
     @Override
@@ -135,6 +135,13 @@ public class Controller {
     public void addSecretObjImages(ObjectiveCard[] secretObjs) {
         secretObjLeft.setImage(new Image("file:" + imagesFrontPath + secretObjs[0].getId() + ".png"));
         secretObjRight.setImage(new Image("file:" + imagesFrontPath + secretObjs[1].getId() + ".png"));
+    }
+
+    public void addRoomsMenu(){
+
+    }
+    public void addRoomCreationInput(){
+
     }
 
     /*
