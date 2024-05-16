@@ -137,8 +137,8 @@ public class TUI {
      * @param game is the instance of the game that is being played.
      * @param player is the instance of the player who's waiting.
      */
-    public void notYourTurn(Game game, Player  player){
-        System.out.println("\nYou have to wait other players.\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground (and common objectives)\n2- Show hand\n3- Show card on ground\n\n");
+    public boolean notYourTurn(Game game, Player  player){
+        System.out.println("\nYou have to wait other players.\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground (and common objectives)\n2- Show hand\n3- Show card on ground\n4- wait your turn\n\n");
         Scanner scanner = new Scanner(System.in);
         int choice;
         do {
@@ -146,10 +146,14 @@ public class TUI {
             scanner.nextLine();
         } while(!(choice>0 && choice<4));
         switch (choice) {
-            case 1 ->
+            case 1 -> {
                 showGround(game, player);
-            case 2 ->
+                return true;
+            }
+            case 2 -> {
                 showHand(player);
+                return true;
+            }
             case 3 -> {
                 System.out.println("Which card do you want to see? Insert coordinates (x first):\n");
                 int coordX = scanner.nextInt();
@@ -165,8 +169,13 @@ public class TUI {
                     PlayableCard CardToShow = (PlayableCard) cardToShow;
                     showCard(CardToShow);
                 }
+                return true;
+            }
+            case 4 -> {
+                return false;
             }
         }
+        return false;
     }
 
     /**

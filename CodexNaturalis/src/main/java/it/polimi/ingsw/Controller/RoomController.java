@@ -12,9 +12,14 @@ public class RoomController implements Serializable {
     public RoomController() {
         this.rooms = new ArrayList<Room>();
     }
-
     public synchronized ArrayList<Room> getRooms() {
-        return rooms;
+        ArrayList<Room> availableRoom= new ArrayList<Room>();
+        for(Room room : rooms) {
+            if(room.getGame().getNumPlayer() != room.getGame().getNumPlayer()){
+                availableRoom.add(room);
+            }
+        }
+        return availableRoom;
     }
     public synchronized void addRoom(Room room) {
         this.rooms.add(room);
@@ -30,7 +35,7 @@ public class RoomController implements Serializable {
         }
         return null;
     }
-    public synchronized boolean alredyExist(String s){// return false, not alredy exist
+    public synchronized boolean alredyExist(String s){// return false if not alredy exist
         boolean flag = false;
         for(Room r : rooms){
             if(r.getName().equals(s)){

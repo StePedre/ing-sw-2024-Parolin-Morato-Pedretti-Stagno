@@ -5,8 +5,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-
-//pensare a come gestire socket+RMI
 public class MyServerSocket {
     private final ServerSocket serverSocket;
     private Socket connection = null;
@@ -22,10 +20,8 @@ public class MyServerSocket {
              while (true) {
                  System.out.println("Waiting for player\n");
                  connection = serverSocket.accept();
-                 //reader e writer
                  oos = new ObjectOutputStream(connection.getOutputStream());
                  ois = new ObjectInputStream(connection.getInputStream());
-                 //craere connessione parallela
                  ServerHandlerSocket client = new ServerHandlerSocket(oos, ois, rooms, connection);
                  Thread t = new Thread(client);
                  t.start();

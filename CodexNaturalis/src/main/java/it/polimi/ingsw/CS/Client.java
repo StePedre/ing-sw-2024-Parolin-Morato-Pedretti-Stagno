@@ -13,11 +13,11 @@ public class Client {
             System.out.println("Do you want to use a GUI or a TUI?");
             Scanner s = new Scanner(System.in);
             String choice;
-            boolean inter = false,flag = false;
+            boolean chooseInterface = false,flag = false;
             do {
                 choice = s.nextLine();
                 if (choice.equalsIgnoreCase("TUI")) {
-                    inter = true;
+                    chooseInterface = true;
                     flag=true;
                 } else if(choice.equalsIgnoreCase("GUI")){
                     flag=true;
@@ -31,11 +31,11 @@ public class Client {
             do {
                 choice = s.nextLine();
                 if (choice.equalsIgnoreCase("RMI")) {
-                    ClientRMIInterface myClientRMI = new MyClientRMI("rmi://localhost/ServerRMI",inter);
+                    ClientRMIInterface myClientRMI = new MyClientRMI("rmi://localhost/ServerRMI",chooseInterface);
                     myClientRMI.runClient();
                     flag=true;
                 } else if(choice.equalsIgnoreCase("socket")){
-                    MyClientSocket myClientSocket = new MyClientSocket(inter);
+                    MyClientSocket myClientSocket = new MyClientSocket(chooseInterface);
                     myClientSocket.runClient();
                     flag = true;
 

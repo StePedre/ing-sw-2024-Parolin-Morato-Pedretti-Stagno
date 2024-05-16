@@ -7,9 +7,8 @@ import java.io.IOException;
 
 public class Server {
     public static void main(String[] args) {
-        RoomController rooms = new RoomController(); // passarlo ai server
+        RoomController rooms = new RoomController();
 
-        //c.InitializeGame();
         try {
             MyServerSocket ss = new MyServerSocket(59090, rooms);
             Thread t = new Thread(() -> {

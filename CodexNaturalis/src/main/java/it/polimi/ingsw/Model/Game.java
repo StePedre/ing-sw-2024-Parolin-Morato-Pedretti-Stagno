@@ -90,7 +90,7 @@ public class Game implements Serializable {
      *
      * @return the number of participant in the game.
      */
-    public int getNumPlayer() {
+    public synchronized int getNumPlayer() {
         synchronized (players) {
             return numPlayers;
         }
@@ -259,9 +259,9 @@ public class Game implements Serializable {
      *
      * @param player is the player to add.
      */
-    public void addPlayer(Player player) {
+    public synchronized void addPlayer(Player player) {
         synchronized (players) {
-            if (numPlayers < 4) {
+            if (numPlayers < 4 && numPlayers <= expPlayers) {
                 players.add(player);
                 numPlayers++;
             }

@@ -44,7 +44,6 @@ public class MyClientSocket {
         socket = new Socket(host, port);
         in = new ObjectInputStream(socket.getInputStream());
         out = new ObjectOutputStream(socket.getOutputStream());
-        // mostra stanze
         ArrayList<Room> room = (ArrayList<Room>) in.readObject();
         tui.showRoom(room);
         do {
@@ -56,11 +55,9 @@ public class MyClientSocket {
                 out.writeObject(tui.getRoomName(false, true));
             }
         }while((boolean)in.readObject());
-        //chiede nickname
         do {
             out.writeObject(tui.insertNickname(true));
         }while((boolean) in.readObject());
-        //ciclo nome stanza esistente
         boolean NoOk = false;
         if((boolean)in.readObject()){
             do {
@@ -76,12 +73,9 @@ public class MyClientSocket {
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         out.writeObject(tui.showStarterCard((StarterCard) in.readObject()));
-        //readPlayer();
-        //tui.showHand(player);
         updateData();
         tui.Welcome(player);
         tui.showGround(game,player);
-        //aspettare turno
         out.reset();
         boolean b =  (boolean) in.readObject();
         while(true){
@@ -110,8 +104,7 @@ public class MyClientSocket {
             }
             else{
                 while(!b) {
-                    tui.notYourTurn(game,player);//aggiungere possibilità di aspettare e basta
-                    out.writeObject(true);
+                    out.writeObject(tui.notYourTurn(game,player));//aggiungere possibilità di aspettare e basta
                     b=(boolean)in.readObject();
                 }
             }

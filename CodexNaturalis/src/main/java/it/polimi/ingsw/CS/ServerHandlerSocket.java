@@ -2,7 +2,6 @@ package it.polimi.ingsw.CS;
 
 import it.polimi.ingsw.Controller.*;
 import it.polimi.ingsw.Model.*;
-import it.polimi.ingsw.View.TUI;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,7 +25,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     }
     @Override
     public void run() {
-        //funzioni sul client
         try {
             start();
             out.writeObject(player);
@@ -34,35 +32,38 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
 
             }
             rc.setplayers(game.getPlayers());
-            //sendData(); //inviare istanza game
             rc.setFirstPlayer();
             PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
-            //popola la mano
             pc.populateHand(game,player);
-            //select secret obj
             ObjectiveCard[] obj = pc.pickObjCard(game);
             out.writeObject(obj);
             pc.setObjSecret(obj[((int)in.readObject())-1]);
-            //started card
             StarterCard st = pc.pickCard(game);
             out.writeObject(st);
+            boolean flag = true;
             if((boolean)in.readObject()){
                 st.flipCard();
             }
             pc.setFirstCard(st);
-            //sendPlayer();
             sendData();
-            if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){//primo turno
+            if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
                 out.writeObject(false);
             }
-            while(!game.isOver()){//fino a fine gioco, gestire primo turno
+            while(!game.isOver()){
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
-                    in.readObject();
-                    if(game.isOver()){
-                        break;
+                    if(flag) {
+                        flag = (boolean) in.readObject();
+                        if(game.isOver()){
+                            break;
+                        }
+                        if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))) {
+                            out.writeObject(false);
+                        }
                     }
-                    if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))) {
-                        out.writeObject(false);
+                    else {
+                        if (game.isOver()) {
+                            break;
+                        }
                     }
                 }
                 out.writeObject(true);//è il tuo turno
@@ -74,23 +75,20 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 else{
                     out.writeObject(false);
                 }
-                //invio componenti gioco aggiornate
                 sendData();
-                //attendo di ricevere carta da giocare
                 playCard();
-                //controllo se vittoria
                 if(player.getPlayerGround().getPlayerScore()>=20){
                     //fine gioco
                     out.writeObject(true);
                     game.finish();
                     over();
                     rc.setLastTurn();
+                    break;
                 }
                 else{
                     out.writeObject(false);
                     //non vinto
                 }
-                //pescaggio carta
                 drawCard();
                 if(game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0){//controllo numeri carte deck
                     //fine gioco
@@ -98,12 +96,13 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                     game.finish();
                     over();
                     rc.setLastTurn();
+                    break;
                 }
                 else{
                     out.writeObject(false);
                     //non vinto
                 }
-                rc.nextRound();//fine turno
+                rc.nextRound();
                 sendData();
                 out.writeObject(false);//non è più il suo turno
                 out.reset();
@@ -142,12 +141,11 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     }
     public void sendData() throws IOException, ClassNotFoundException {
         out.reset();
-        out.writeObject(game);//invio game aggiornato
-        out.writeObject(player);//invio Playerground e mano aggiornati
+        out.writeObject(game);
+        out.writeObject(player);
     }
     public void drawCard(){// 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
         try {
-            //Deck deck = (Deck) in.readObject();
             int i =(int) in.readObject();
             Deck deck;
             int card = switch (i) {
@@ -177,7 +175,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 }
                 default -> throw new Exception();
             };
-            if(player.getHand().drawCard(deck)){//sostituire con controller
+            if(player.getHand().drawCard(deck)){
                 player.getHand().chooseCard(deck.drawCard(card));
             }
         } catch (IOException e) {
@@ -191,18 +189,13 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     public void over() throws IOException {
         out.writeObject(game.getMultiWinners());
     }
-    public void doNothing(){
-
-    }
     public void start() throws IOException, ClassNotFoundException {
-        //invio stanze
         out.writeObject(rooms.getRooms());
         Room room;
         boolean b;
-        do { // controllo non esistano stanze con lo stesso nome
+        do {
             if ((boolean) in.readObject()) {
                 room = new Room((String) in.readObject());
-                //controllo nome stanza
                 if (rooms.alredyExist(room.getName())) {
                     out.writeObject(true);
                     b= true;
@@ -217,9 +210,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 out.writeObject(false);
             }
         }while (b);
-        //chiedere nickname
         String nickname;
-        do { // cicla finchè il nickname non è unico per la stanza
+        do {
             nickname = (String) in.readObject();
             if(rooms.alredyInGame(room.getGame(),nickname)){// true trovato nome uguale
                 out.writeObject(true);
@@ -230,9 +222,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 b=false;
             }
         }while(b);
-        //verificare primo player
         firstPlayer(room);
-        //istanziare primo player
         this.player = new Player(nickname);
         game = room.getGame();
         rc = room.getRoundController();
@@ -240,7 +230,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     }
     private void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza
         if(room.getGame().isFirst()) {
-            //chiedere num exp player
             out.writeObject(true);
             int n =(int) in.readObject();
             room.getGame().setExpPlayers(n);
