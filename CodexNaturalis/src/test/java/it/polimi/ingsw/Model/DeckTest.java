@@ -16,7 +16,7 @@ class DeckTest {
         PlayableCard card3 = new PlayableCard(3, new FlatRule(0), new Corner[4], new Corner[4], Resource.FOX, new HashMap<>());
         PlayableCard card4 = new PlayableCard(4, new FlatRule(0), new Corner[4], new Corner[4], Resource.FOX, new HashMap<>());
         PlayableCard card5 = new PlayableCard(5, new FlatRule(0), new Corner[4], new Corner[4], Resource.FOX, new HashMap<>());
-        ArrayList<Card> cards = new ArrayList<>();
+        ArrayList<PlayableCard> cards = new ArrayList<>();
         cards.add(card1);
         cards.add(card2);
         cards.add(card3);

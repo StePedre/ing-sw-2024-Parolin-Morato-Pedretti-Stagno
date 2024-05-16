@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.Corner;
 import it.polimi.ingsw.Model.ObjectiveCard;
 import it.polimi.ingsw.Model.Resource;
@@ -11,12 +12,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GUI extends Application{
     private final Screen screen = Screen.getPrimary();
@@ -36,13 +39,48 @@ public class GUI extends Application{
 
         scene.setOnKeyReleased(keyEvent -> {
             try {
-                switchToLogin(stage);
-            } catch (IOException e) {
+                switchToRoomChoice(stage);
+                // switchToLogin(stage);
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
 
 
+    }
+
+    public void switchToRoomChoice(Stage stage) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/roomChoice.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        Scene scene = new Scene(root, screenWidth, screenHeight);
+        stage.setScene(scene);
+        stage.show();
+        ArrayList<Room> rooms = controller.getRooms();
+        RadioButton buttonL = controller.getButtonL();
+        RadioButton buttonR = controller.getButtonR();
+        buttonL.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return; //no button selected
+            }
+            if (newValue.equals(buttonL)) {
+                try {
+                    if(controller.addRoomsMenu(rooms)){
+                        switchToLogin(stage);
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (newValue.equals(buttonR)) {
+                try {
+                    if (controller.addRoomCreationInput(rooms)) {
+                        switchToLogin(stage);
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
     public void switchToLogin(Stage stage) throws IOException {

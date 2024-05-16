@@ -5,22 +5,30 @@ import it.polimi.ingsw.Model.ObjectiveCard;
 import it.polimi.ingsw.Model.Position;
 import it.polimi.ingsw.Model.StarterCard;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 
-import java.beans.EventHandler;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Controller {
 
+    @FXML
+    private AnchorPane paneRoom;
+    @FXML
+    private HBox hboxRoom;
+    @FXML
+    private RadioButton buttonR;
+    @FXML
+    private RadioButton buttonL;
     @FXML
     private VBox vboxRoom;
     @FXML
@@ -31,6 +39,11 @@ public class Controller {
     private TextField nickTextField, numberPlayersTF;
     @FXML
     private Label validLabel, loadingLabel;
+    Button confirmRoom = new Button("Submit");
+    TextField tfRoom = new TextField();
+    Label labelRoom = new Label("Insert new room's name:");
+    VBox vbox = new VBox(labelRoom, tfRoom);
+    ComboBox<Label> menu = new ComboBox<>();
     private final Screen screen = Screen.getPrimary();
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
@@ -84,6 +97,9 @@ public class Controller {
     public ImageView getSecretObjRight () {
         return secretObjRight;
     }
+    public RadioButton getButtonL() {return buttonL;}
+    public RadioButton getButtonR() {return buttonR;}
+
 
 
     public void getNickname () {
@@ -144,22 +160,85 @@ public class Controller {
         secretObjRight.setImage(new Image("file:" + imagesFrontPath + secretObjs[1].getId() + ".png"));
     }
 
-    public void addRoomsMenu() throws IOException, ClassNotFoundException {
-        ArrayList<Room> rooms = client.receiveRoomsFromServer();
-        ComboBox<Label> menu = new ComboBox<>();
-        menu.setPrefHeight(312);
-        menu.setPrefWidth(440);
+    public ArrayList<Room> getRooms() throws IOException, ClassNotFoundException {
+        return client.receiveRoomsFromServer();
+    }
+    public boolean addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
+        final boolean[] flag = {false};
+        confirmRoom.setVisible(false);
+        confirmRoom.setPrefWidth(100);
+        menu.setPrefWidth(200);
+        menu.setPromptText("Available rooms:");
+        HBox.setMargin(menu, new Insets(25, 0, 0, 350));
+        menu.setStyle("-fx-text-background-color: black;");
         for (Room r: rooms){
             Label elem = new Label(r.getName());
-            // aggiungere proprietà di click (evidenzia)
             menu.getItems().add(elem);
         }
-        vboxRoom.getChildren().add(menu);
+        hboxRoom.getChildren().clear();
+        if(vboxRoom.getChildren().getLast()==confirmRoom){
+            vboxRoom.getChildren().removeLast();
+        }
+        confirmRoom.setVisible(false);
+        hboxRoom.getChildren().add(menu);
+        menu.setOnAction(e ->{
+            vboxRoom.getChildren().add(confirmRoom);
+            VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
+            confirmRoom.setVisible(true);
+            confirmRoom.setOnAction(e2->{
+               try {
+                    client.sendToServer(false); // comunica al server che vuole joinare una stanza
+                    client.sendToServer(menu.getSelectionModel().getSelectedItem().getText()); // comunica al server nome stanza
+                    flag[0]  = true;
+               } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+               }
+            });
+        });
+        return flag[0];
     }
-    public void addRoomCreationInput() throws IOException {
-        TextField tf = new TextField("Insert new room's name:\n");
-        String name = tf.getText();
-        client.sendToServer(name);
+    public boolean addRoomCreationInput(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
+        client.sendToServer(true);
+        final boolean[] flag = {false};
+        labelRoom.setPrefWidth(200);
+        tfRoom.setPrefWidth(200);
+        vbox.setPrefWidth(200);
+        confirmRoom.setPrefWidth(100);
+        confirmRoom.setVisible(false);
+        HBox.setMargin(vbox, new Insets(25, 0, 0, 350));
+        hboxRoom.getChildren().clear();
+        if(vboxRoom.getChildren().getLast()==confirmRoom){
+            vboxRoom.getChildren().removeLast();
+        }
+        confirmRoom.setVisible(false);
+        hboxRoom.getChildren().add(vbox);
+        vbox.getChildren().get(1).setOnKeyTyped(e ->{
+            vboxRoom.getChildren().add(confirmRoom);
+            VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
+            confirmRoom.setVisible(true);
+            confirmRoom.setOnAction(e2->{
+                boolean found = false;
+                try {
+                    for(Room r: rooms){
+                        if(Objects.equals(r.getName(), tfRoom.getText())){
+                            found = true;
+                            tfRoom.setText("");
+                            labelRoom.setPrefWidth(250);
+                            labelRoom.setText("This name is already taken, choose a new one:");
+                        }
+                    }
+                    if(!found){
+                        client.sendToServer(tfRoom.getText());
+                    }
+                    if(!client.receiveBooleanFromServer()){
+                            flag[0]  = true;
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+        });
+        return flag[0];
     }
 
     /*
