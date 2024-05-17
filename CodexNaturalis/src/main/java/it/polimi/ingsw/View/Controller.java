@@ -12,7 +12,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
-
+import javafx.stage.Stage;
+import javafx.scene.effect.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,6 +85,9 @@ public class Controller {
  */
     public Button getNickButton() {
         return nickButton;
+    }
+    public Button getYourTurnButton() {
+        return yourTurnButton;
     }
     public Button getRequestButton() {
         return requestButton;
@@ -167,7 +171,7 @@ public class Controller {
                             found = true;
                             tfRoom.setText("");
                             labelRoom.setPrefWidth(250);
-                            labelRoom.setStyle("-fx-text-fill: red");
+                            labelRoom.setStyle("-fx-text-fill: #b31010");
                             labelRoom.setText("This name is already taken, choose a new one:");
                         }
                     }
@@ -201,7 +205,7 @@ public class Controller {
             }
             else{
                 nickLabel.setPrefWidth(800);    // eventualmente aggiungere un'altra label
-                nickLabel.setStyle("-fx-text-fill: red");
+                nickLabel.setStyle("-fx-text-fill: #b20b0b");
                 nickLabel.setText("This name is already taken, choose another one:");
             }
         } while (!flag);
@@ -229,7 +233,7 @@ public class Controller {
         return numberOfPlayers;
     }
 
-        public void getLeftSecretObj() {
+    public void getLeftSecretObj() {
         ObjectiveCard secretObj;
         System.out.println("Chosen left secret objective");
     }
@@ -261,7 +265,7 @@ public class Controller {
         return client.receiveRoomsFromServer();
     }
 
-    public void addGround() throws IOException, ClassNotFoundException {
+    public boolean addGround() throws IOException, ClassNotFoundException {
         client.reset();
         Player p = client.receivePlayerFromServer();
         Game g = client.receiveGameFromServer();
@@ -270,7 +274,8 @@ public class Controller {
         addSecretObj(p.getHand().getObjCard());
         addCommonObj(g.getCommonObj());
         setTotalResource(p.getPlayerGround().getTotalResources());
-
+        // show actual ground
+        return client.receiveBooleanFromServer();
     }
 
     public void addImages(Hand hand) {
@@ -299,40 +304,47 @@ public class Controller {
         plumeNum.setText(String.valueOf(map.get(Resource.PLUME)));
     }
 
+    public boolean checkIfOver() throws IOException, ClassNotFoundException {
+        return client.receiveBooleanFromServer();
+    }
     /*
     public void placeFirstCard(StarterCard sc) throws IOException, ClassNotFoundException {
         ImageView iv = new ImageView(new Image(imagesFrontPath + sc.getId() + ".png"));
         gridPaneGround.add(iv, 3, 3);
         Player updated = client.receivePlayerFromServer();
         showAvailablePos(updated.getPlayerGround());
-    }
+    }*/
 
-
-    public void close(ActionEvent e) throws IOException, ClassNotFoundException {    // chiusura finestra yourturn
-        Stage stage = (Stage) yourTurnButton.getScene().getWindow();
-        stage.close();
-        playCard(stage);
-    }
-
-    public void playCard(Stage stage) throws IOException, ClassNotFoundException {
-        setDragDetected(handCardLeft);
-        setDragDetected(handCardCenter);
-        setDragDetected(handCardRight);
-        setDropZones();
-        setDropCompleted(handCardLeft);
-        setDropCompleted(handCardCenter);
-        setDropCompleted(handCardRight);
+    public boolean playCard() throws IOException, ClassNotFoundException {
+        client.reset();
         Player player = client.receivePlayerFromServer();
-        showAvailablePos(player.getPlayerGround());
         Game game = client.receiveGameFromServer();
-        addCards(game.getDecks());
-//        yourTurnDraw(stage);
-
+        showAvailablePos(player.getPlayerGround());
+        //  setDragDetected(handCardLeft);                  to do: setting drag and drop, depending on graphic structure of ground
+        //  setDragDetected(handCardCenter);
+        //  setDragDetected(handCardRight);
+        //  setDropZones();
+        //  setDropCompleted(handCardLeft);
+        //  setDropCompleted(handCardCenter);
+        //  setDropCompleted(handCardRight);
+        // client.sendToServer(cardToPlay);
+        // client.sendToServer(cardPosition);
+        client.receivePlayerFromServer();  // riceve player con mano aggiornata -> vedi placeCardController per capire com'è la nuova mano e aggiorna il playground
+        client.reset();
+        if(client.receiveBooleanFromServer()){
+            // to do: cosa succede se ha vinto
+            return false;
+        }
+        else{
+            addCards(game.getDecks());
+            return true;
+        }
     }
+
 
 
     public void addCards(Deck[] decks) {
-        buttonSubDraw.setDisable(true);
+        buttonSubDraw.setVisible(false);
         resFaceUp1.setImage(new Image("src/main/resources/CODEX_cards_gold_front/" + decks[0].getCards().get(0).getId()));
         resFaceUp1.setImage(new Image("src/main/resources/CODEX_cards_gold_front/" + decks[0].getCards().get(1).getId()));
         resFaceDown.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[0].getCards().get(2).getId()));
@@ -341,19 +353,8 @@ public class Controller {
         goldFaceDown.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[1].getCards().get(2).getId()));
     }
 
-    /*
-    public void yourTurnDraw(Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/drawpanel.fxml")));
-        stage.setScene(new Scene(root, 350, 300));
-        stage.show();
-        int chosen = chooseCard();
-        client.sendToServer(chosen);
-    }
 
-     */
-
-    /*
-    public int chooseCard(){
+    public boolean yourTurnDraw() throws IOException {
         int[] choice = new int[] { -1 };
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(5);
@@ -366,49 +367,61 @@ public class Controller {
         resFaceUp1.setOnMouseClicked(event -> {
             choice[0] = 1;
             resFaceUp1.setEffect(dropShadow);
-            buttonSubDraw.setDisable(false);
+            buttonSubDraw.setVisible(true);
         });
         resFaceUp2.setOnMouseClicked(event ->{
             choice[0] = 2;
             resFaceUp2.setEffect(dropShadow);
-            buttonSubDraw.setDisable(false);
+            buttonSubDraw.setVisible(true);
         });
         goldFaceDown.setOnMouseClicked(event ->{
             choice[0] = 3;
             goldFaceDown.setEffect(dropShadow);
-            buttonSubDraw.setDisable(false);
+            buttonSubDraw.setVisible(true);
         });
         goldFaceUp1.setOnMouseClicked(event -> {
             choice[0] = 4;
             goldFaceUp1.setEffect(dropShadow);
-            buttonSubDraw.setDisable(false);
+            buttonSubDraw.setVisible(true);
         });
         goldFaceUp2.setOnMouseClicked(event-> {
             choice[0] = 5;
             goldFaceUp2.setEffect(dropShadow);
-            buttonSubDraw.setDisable(false);
+            buttonSubDraw.setVisible(true);
         });
 
         buttonSubDraw.setOnAction(event -> {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) (buttonSubDraw.getScene().getWindow());
             stage.close();
         });
-        return choice[0];
+        client.sendToServer(choice[0]);
+        return true;
     }
 
     public void putDrawnInHand(PlayableCard card){
         Image toPut = new Image(imagesFrontPath + card.getId() + ".png");
-        if(handCardRight.getImage() == voidImage){
+ //       if(handCardRight.getImage() == voidImage){
             handCardRight.setImage(toPut);
-        }
-        if(handCardCenter.getImage()==voidImage){
+  //      }
+  //      if(handCardCenter.getImage()==voidImage){
             handCardCenter.setImage(toPut);
-        }
-        if(handCardLeft.getImage()==voidImage){
+ //       }
+  //      if(handCardLeft.getImage()==voidImage){
             handCardLeft.setImage(toPut);
-        }
+   //     }
     }
 
+    public boolean waitForTurn(Stage stage) throws IOException, ClassNotFoundException {
+        // aspetta turno (scritta che indica turno corrente?)
+        // può vedere pg altri giocatori
+        return client.receiveBooleanFromServer();
+    }
+
+    public ArrayList<Player> getWinners() throws IOException, ClassNotFoundException {
+        return client.receiveWinnersFromServer();
+    }
+
+/*
     public void setDragDetected(ImageView iv) {  //iv da dove parto (hand) iv2 dove arrivo)
         iv.setOnDragDetected(event -> {
             Dragboard db = iv.startDragAndDrop(TransferMode.MOVE);
@@ -461,7 +474,7 @@ public class Controller {
             }
             event.consume();
         });
-    }
+    }*/
 
     public void showAvailablePos(PlayerGround pg){
         int x, y;
@@ -473,7 +486,7 @@ public class Controller {
                 Position pos = new Position(x, y);
                 Card c = matrix[i][j];
                 if (c.getId() == -1 && !isFound(availablePos, pos)) {
-                    gridPaneGround.add(new ImageView(voidImage), x, y);
+                    //gridPaneGround.add(new ImageView(voidImage), x, y);
                     availablePos.add(new Position(x, y));
                 }
             }
@@ -488,44 +501,6 @@ public class Controller {
         }
         return false;
     }
-
-    /*
-    public void yourTurnBanner(Player player, Game game, Stage stage) throws IOException {
-        Stage yourTurnStage = new Stage();
-        yourTurnStage.initModality(Modality.WINDOW_MODAL);
-        yourTurnStage.initOwner(stage);
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/yourTurn.fxml")));
-        stage.setScene(new Scene(root, 600, 200));
-        stage.show();
-    }
-
-    public void InitializePlayerGround(Player player, StarterCard startercard, Stage stage) throws IOException, ClassNotFoundException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/playground.fxml")));
-        setNickname(player.getNickname());
-        addImages(player.getHand());
-        addSecretObj(player.getHand().getObjCard());
-        addCommonObj(player.getGame().getCommonObj());
-        setScore(player.getPlayerGround().getPlayerScore());
-        setTotalResource(player.getPlayerGround().getTotalResources());
-        placeFirstCard(startercard);
-        showAvailablePos(player.getPlayerGround());
-        stage.setScene(new Scene(root, 350, 300));
-        stage.show();  // finchè non è il suo turno
-    }
-
-    public void showUpdatedPlayerGround(Player player, Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/playground.fxml")));
-        setNickname(player.getNickname());
-        addImages(player.getHand());
-        addSecretObj(player.getHand().getObjCard());
-        addCommonObj(player.getGame().getCommonObj());
-        setScore(player.getPlayerGround().getPlayerScore());
-        setTotalResource(player.getPlayerGround().getTotalResources());
-        stage.setScene(new Scene(root, 350, 300));
-        stage.show();
-    }
-
-     */
 }
 
 

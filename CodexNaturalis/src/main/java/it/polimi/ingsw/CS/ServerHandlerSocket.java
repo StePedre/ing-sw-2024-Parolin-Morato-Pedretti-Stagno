@@ -46,12 +46,12 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             pc.setFirstCard(st);
             sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
-                out.writeObject(false);
+                out.writeObject(false);  // non è il suo turno
             }
             while(!game.isOver()){
-                while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
+                while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){  // finchè non è il suo turno
                     if(flag) {
-                        flag = (boolean) in.readObject();
+                        flag = (boolean) in.readObject(); 
                         if(game.isOver()){
                             break;
                         }
@@ -99,7 +99,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 }
                 else{
                     out.writeObject(false);
-                    //non vinto
+                    //non fine gioco
                 }
                 rc.nextRound();
                 sendData();

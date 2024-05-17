@@ -44,6 +44,9 @@ public class GUIClientSocket {
     public Game receiveGameFromServer() throws IOException, ClassNotFoundException {
         return (Game) in.readObject();
     }
+    public ArrayList<Player> receiveWinnersFromServer() throws IOException, ClassNotFoundException {
+        return (ArrayList<Player>) in.readObject();
+    }
 
 }
 
