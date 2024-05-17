@@ -2,6 +2,7 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.Game;
+import it.polimi.ingsw.Model.ObjectiveCard;
 import it.polimi.ingsw.Model.Player;
 import it.polimi.ingsw.Model.StarterCard;
 
@@ -16,13 +17,18 @@ public class GUIClientSocket {
         this.in = new ObjectInputStream(in);
         this.out = new ObjectOutputStream(out);
     }
+    public void reset() throws IOException {
+        in.reset();
+    }
     public Player receivePlayerFromServer() throws IOException, ClassNotFoundException {
         return (Player) in.readObject();
     }
     public Room receiveRoomFromServer() throws IOException, ClassNotFoundException {
         return (Room) in.readObject();
     }
-
+    public ObjectiveCard[] receiveSecretObjsFromServer() throws IOException, ClassNotFoundException {
+        return (ObjectiveCard[]) in.readObject();
+    }
     public ArrayList<Room> receiveRoomsFromServer() throws IOException, ClassNotFoundException {
         return (ArrayList<Room>) in.readObject();
     }

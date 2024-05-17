@@ -28,8 +28,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         try {
             start();
             out.writeObject(player);
-            while (game.getNumPlayer() != game.getExpPlayers()) {
-
+            while (game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
             rc.setplayers(game.getPlayers());
             rc.setFirstPlayer();

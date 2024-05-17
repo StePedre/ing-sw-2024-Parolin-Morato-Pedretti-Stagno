@@ -41,9 +41,9 @@ public class GUI extends Application{
 
         scene.setOnKeyReleased(keyEvent -> {
             try {
-//                switchToRoomChoice(stage);
-                 switchToLogin(stage);
-            } catch (IOException e) {
+                switchToRoomChoice(stage);
+                // switchToLogin(stage);
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -84,7 +84,6 @@ public class GUI extends Application{
             }
         });
     }
-
     public void switchToLogin(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/insertNick.fxml"));
         Parent root = loader.load();
@@ -94,13 +93,18 @@ public class GUI extends Application{
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
-
         Button nickButton = controller.getNickButton();
+        final boolean[] isFirst = {false};
         nickButton.setOnAction(actionEvent -> {
-            controller.getNickname();
             try {
-                switchToNumberPlayers(stage);
-            } catch (IOException e) {
+                isFirst[0] = controller.sendNickname();
+                if(isFirst[0]){
+                    switchToNumberPlayers(stage);
+                }
+                else{
+                    switchToSelectSecretObj(stage);
+                }
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -115,93 +119,86 @@ public class GUI extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-
         Button requestButton = controller.getRequestButton();
         requestButton.setOnAction(event -> {
             int numberPlayers = controller.getNumberPlayers();
             try {
                 if (numberPlayers >= 2 && numberPlayers <= 4) {
-                    switchToStarterChoice(stage);
+                    switchToSelectSecretObj(stage);
                 }
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-
-    public void switchToWaitingStart(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingStart.fxml"));
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-    public void switchToStarterChoice(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
-        Parent root = loader.load();
-        Controller controller = loader.getController();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-
-        // client manda starter card...
-        StarterCard card = new StarterCard(86, new FlatRule(0), new Corner[4], new Corner[4], Resource.BLANK, null);
-        controller.addStarterImages(card);
-
-        ImageView frontStarterCard = controller.getFrontStarterCard();
-        frontStarterCard.setOnMouseClicked(mouseEvent -> {
-            try {
-                switchToSelectSecretObj(stage);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        ImageView backStarterCard = controller.getBackStarterCard();
-        backStarterCard.setOnMouseClicked(mouseEvent -> {
-            try {
-                switchToSelectSecretObj(stage);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-
-    public void switchToSelectSecretObj(Stage stage) throws IOException {
+    public void switchToSelectSecretObj(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-
-        // client manda objective cards...
-        ObjectiveCard card1 = new ObjectiveCard(93, new FlatRule(0));
-        ObjectiveCard card2 = new ObjectiveCard(91, new FlatRule(0));
-        ObjectiveCard[] objs = {card1, card2};
-        controller.addSecretObjImages(objs);
-
+        //ObjectiveCard card1 = new ObjectiveCard(93, new FlatRule(0)); just for test
+        // ObjectiveCard card2 = new ObjectiveCard(91, new FlatRule(0));
+        // ObjectiveCard[] objs = {card1, card2};
+        controller.addSecretObjImages();
         ImageView secretObjLeft = controller.getSecretObjLeft();
         secretObjLeft.setOnMouseClicked(mouseEvent -> {
             try {
-                switchToWaitingStart(stage);
-            } catch (IOException e) {
+                controller.sendSecret(1);
+                switchToStarterChoice(stage);
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
-
         ImageView secretObjRight = controller.getSecretObjRight();
         secretObjRight.setOnMouseClicked(mouseEvent -> {
             try {
-                switchToWaitingStart(stage);
+                controller.sendSecret(2);
+                switchToStarterChoice(stage);
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public void switchToStarterChoice(Stage stage) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+      // for testing  StarterCard card = new StarterCard(86, new FlatRule(0), new Corner[4], new Corner[4], Resource.BLANK, null);
+        controller.addStarterImages();
+        ImageView frontStarterCard = controller.getFrontStarterCard();
+        frontStarterCard.setOnMouseClicked(mouseEvent -> {
+            try {
+                controller.sendIfStarterFlipped(false);
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
+        ImageView backStarterCard = controller.getBackStarterCard();
+        backStarterCard.setOnMouseClicked(mouseEvent -> {
+            try {
+                controller.sendIfStarterFlipped(true);
+                showUpdatedPlayerGround(stage);
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    // usarlo durante while vuoto del server
+    public void switchToWaitingStart(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingStart.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     /*
@@ -235,21 +232,17 @@ public class GUI extends Application{
         showAvailablePos(player.getPlayerGround());
         stage.setScene(new Scene(root, 350, 300));
         stage.show();  // finchè non è il suo turno
-    }
+    }*/
 
-    public void showUpdatedPlayerGround(Player player, Stage stage) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/playground.fxml")));
-        setNickname(player.getNickname());
-        addImages(player.getHand());
-        addSecretObj(player.getHand().getObjCard());
-        addCommonObj(player.getGame().getCommonObj());
-        setScore(player.getPlayerGround().getPlayerScore());
-        setTotalResource(player.getPlayerGround().getTotalResources());
-        stage.setScene(new Scene(root, 350, 300));
+    public void showUpdatedPlayerGround(Stage stage) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
         stage.show();
+        controller.addGround();
     }
-
-     */
 
     public static void startGUI(){
         launch();

@@ -1,9 +1,7 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.CS.Room;
-import it.polimi.ingsw.Model.ObjectiveCard;
-import it.polimi.ingsw.Model.Position;
-import it.polimi.ingsw.Model.StarterCard;
+import it.polimi.ingsw.Model.*;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -17,9 +15,11 @@ import javafx.stage.Screen;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class Controller {
+
     @FXML
     private VBox vboxNoPlayers;
     @FXML
@@ -41,7 +41,7 @@ public class Controller {
     @FXML
     private TextField nickTextField, numberPlayersTF;
     @FXML
-    private Label validLabel, loadingLabel;
+    private Label nickLabel, validLabel, loadingLabel;
     Button confirmRoom = new Button("Submit");
     TextField tfRoom = new TextField();
     Label labelRoom = new Label("Insert new room's name:");
@@ -106,69 +106,6 @@ public class Controller {
     public VBox getVboxRoom() {return vboxRoom;}
     public VBox getVboxNoPlayers() {return vboxNoPlayers;}
 
-
-
-    public void getNickname () {
-        int i = 0;
-        String nickname;
-        do {
-            i ++;
-            nickname = nickTextField.getText();
-            if (!nickname.isEmpty()) {
-                System.out.println(nickname);
-                nickTextField.clear();
-            }
-//            client.sendToServer(nickname);
-        } while (i < 0);
-//        }while(!client.receiveBooleanFromServer());
-
-    }
-
-    public int getNumberPlayers() {
-        int numberOfPlayers = 0;
-        String inputText = numberPlayersTF.getText();
-        if (!inputText.isEmpty()) {
-            try {
-                numberOfPlayers = Integer.parseInt(inputText);
-                if (numberOfPlayers < 2 || numberOfPlayers > 4) {
-                    validLabel.setVisible(true);
-                    numberPlayersTF.clear();
-                } else {
-                    System.out.println(numberOfPlayers);
-                    return  numberOfPlayers;
-                }
-            } catch (NumberFormatException e) {
-                validLabel.setVisible(true);
-                numberPlayersTF.clear();
-            }
-        }
-        return numberOfPlayers;
-    }
-
-    public void getLeftSecretObj() {
-        ObjectiveCard secretObj;
-        System.out.println("Chosen left secret objective");
-    }
-
-    public void getRightSecretObj() {
-        ObjectiveCard secretObj;
-        System.out.println("Chosen right secret objective");
-    }
-
-
-    public void addStarterImages(StarterCard card) {
-        frontStarterCard.setImage(new Image("file:" + imagesFrontPath + card.getId() + ".png"));
-        backStarterCard.setImage(new Image("file:" + imagesBackPath + card.getId() + ".png"));
-    }
-
-    public void addSecretObjImages(ObjectiveCard[] secretObjs) {
-        secretObjLeft.setImage(new Image("file:" + imagesFrontPath + secretObjs[0].getId() + ".png"));
-        secretObjRight.setImage(new Image("file:" + imagesFrontPath + secretObjs[1].getId() + ".png"));
-    }
-
-    public ArrayList<Room> getRooms() throws IOException, ClassNotFoundException {
-        return client.receiveRoomsFromServer();
-    }
     public boolean addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         final boolean[] flag = {false};
         confirmRoom.setVisible(false);
@@ -192,13 +129,13 @@ public class Controller {
             VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
             confirmRoom.setVisible(true);
             confirmRoom.setOnAction(e2->{
-               try {
+                try {
                     client.sendToServer(false); // comunica al server che vuole joinare una stanza
                     client.sendToServer(menu.getSelectionModel().getSelectedItem().getText()); // comunica al server nome stanza
                     flag[0]  = true;
-               } catch (IOException ex) {
+                } catch (IOException ex) {
                     throw new RuntimeException(ex);
-               }
+                }
             });
         });
         return flag[0];
@@ -213,31 +150,32 @@ public class Controller {
         confirmRoom.setVisible(false);
         HBox.setMargin(vbox, new Insets(25, 0, 0, 350));
         hboxRoom.getChildren().clear();
-        if(vboxRoom.getChildren().getLast()==confirmRoom){
+        if (vboxRoom.getChildren().getLast() == confirmRoom) {
             vboxRoom.getChildren().removeLast();
         }
         confirmRoom.setVisible(false);
         hboxRoom.getChildren().add(vbox);
-        vbox.getChildren().get(1).setOnKeyTyped(e ->{
+        vbox.getChildren().get(1).setOnKeyTyped(e -> {
             vboxRoom.getChildren().add(confirmRoom);
             VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
             confirmRoom.setVisible(true);
-            confirmRoom.setOnAction(e2->{
+            confirmRoom.setOnAction(e2 -> {
                 boolean found = false;
                 try {
-                    for(Room r: rooms){
-                        if(Objects.equals(r.getName(), tfRoom.getText())){
+                    for (Room r : rooms) {
+                        if (Objects.equals(r.getName(), tfRoom.getText())) {
                             found = true;
                             tfRoom.setText("");
                             labelRoom.setPrefWidth(250);
+                            labelRoom.setStyle("-fx-text-fill: red");
                             labelRoom.setText("This name is already taken, choose a new one:");
                         }
                     }
-                    if(!found){
+                    if (!found) {
                         client.sendToServer(tfRoom.getText());
                     }
-                    if(!client.receiveBooleanFromServer()){
-                            flag[0]  = true;
+                    if (!client.receiveBooleanFromServer()) {
+                        flag[0] = true;
                     }
                 } catch (IOException | ClassNotFoundException ex) {
                     throw new RuntimeException(ex);
@@ -247,7 +185,94 @@ public class Controller {
         return flag[0];
     }
 
-    /*
+    public boolean sendNickname() throws IOException, ClassNotFoundException {
+        int i = 0;
+        String nickname;
+        boolean flag = false;
+        do {
+            i++;
+            nickname = nickTextField.getText();
+            if (!nickname.isEmpty()) {
+                nickTextField.clear();
+            }
+            client.sendToServer(nickname);
+            if(client.receiveBooleanFromServer()){
+                flag = true;
+            }
+            else{
+                nickLabel.setPrefWidth(800);    // eventualmente aggiungere un'altra label
+                nickLabel.setStyle("-fx-text-fill: red");
+                nickLabel.setText("This name is already taken, choose another one:");
+            }
+        } while (!flag);
+        return client.receiveBooleanFromServer();
+    }
+
+    public int getNumberPlayers() {
+        int numberOfPlayers = 0;
+        String inputText = numberPlayersTF.getText();
+        if (!inputText.isEmpty()) {
+            try {
+                numberOfPlayers = Integer.parseInt(inputText);
+                if (numberOfPlayers < 2 || numberOfPlayers > 4) {
+                    validLabel.setVisible(true);
+                    numberPlayersTF.clear();
+                } else {
+                    System.out.println(numberOfPlayers);
+                    return  numberOfPlayers;
+                }
+            } catch (NumberFormatException e) {
+                validLabel.setVisible(true);
+                numberPlayersTF.clear();
+            }
+        }
+        return numberOfPlayers;
+    }
+
+        public void getLeftSecretObj() {
+        ObjectiveCard secretObj;
+        System.out.println("Chosen left secret objective");
+    }
+
+    public void getRightSecretObj() {
+        ObjectiveCard secretObj;
+        System.out.println("Chosen right secret objective");
+    }
+    public void addSecretObjImages() throws IOException, ClassNotFoundException {
+        Player player = client.receivePlayerFromServer();   // server manda istanza player, setto già il nick per il ground
+        labelNick.setText(player.getNickname());
+        ObjectiveCard[] objs = client.receiveSecretObjsFromServer();
+        secretObjLeft.setImage(new Image("file:" + imagesFrontPath + objs[0].getId() + ".png"));
+        secretObjRight.setImage(new Image("file:" + imagesFrontPath + objs[1].getId() + ".png"));
+    }
+    public void sendSecret(int i) throws IOException {
+        client.sendToServer(i);
+    }
+    public void addStarterImages() throws IOException, ClassNotFoundException {
+        StarterCard card = client.receiveStarterCardFromServer();
+        frontStarterCard.setImage(new Image("file:" + imagesFrontPath + card.getId() + ".png"));
+        backStarterCard.setImage(new Image("file:" + imagesBackPath + card.getId() + ".png"));
+    }
+    public void sendIfStarterFlipped(boolean flip) throws IOException {
+        client.sendToServer(flip);
+    }
+
+    public ArrayList<Room> getRooms() throws IOException, ClassNotFoundException {
+        return client.receiveRoomsFromServer();
+    }
+
+    public void addGround() throws IOException, ClassNotFoundException {
+        client.reset();
+        Player p = client.receivePlayerFromServer();
+        Game g = client.receiveGameFromServer();
+        labelPoints.setText("Points: "+ p.getPlayerGround().getPlayerScore());
+        addImages(p.getHand());
+        addSecretObj(p.getHand().getObjCard());
+        addCommonObj(g.getCommonObj());
+        setTotalResource(p.getPlayerGround().getTotalResources());
+
+    }
+
     public void addImages(Hand hand) {
         handCardLeft.setImage(new Image(imagesFrontPath + hand.getCard(0).getId() + ".png"));
         handCardCenter.setImage(new Image(imagesFrontPath + hand.getCard(1).getId() + ".png"));
@@ -264,14 +289,6 @@ public class Controller {
         commonObj2.setImage(new Image(imagesFrontPath + commonObj[1].getId() + ".png"));
     }
 
-    public void setNickname(String name) {
-        labelNick.setText(name);
-    }
-
-    public void setScore(int score) {
-        labelPoints.setText("Score: " + score);
-    }
-
     public void setTotalResource(HashMap<Resource, Integer> map) {
         mushroomNum.setText(String.valueOf(map.get(Resource.MUSHROOM)));
         bugNum.setText(String.valueOf(map.get(Resource.BUG)));
@@ -282,6 +299,7 @@ public class Controller {
         plumeNum.setText(String.valueOf(map.get(Resource.PLUME)));
     }
 
+    /*
     public void placeFirstCard(StarterCard sc) throws IOException, ClassNotFoundException {
         ImageView iv = new ImageView(new Image(imagesFrontPath + sc.getId() + ".png"));
         gridPaneGround.add(iv, 3, 3);
