@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Controller {
-
+    @FXML
+    private VBox vboxNoPlayers;
+    @FXML
+    private VBox vboxNickname;
     @FXML
     private AnchorPane paneRoom;
     @FXML
@@ -63,8 +66,8 @@ public class Controller {
     private Button nickButton, requestButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
 //    private final Image voidImage = new Image("url immagine vuota");
-    private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
-    private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
+    private final String imagesFrontPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_front\\";
+    private final String imagesBackPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_back\\";
 
 /*
     @Override
@@ -91,14 +94,17 @@ public class Controller {
     public ImageView getBackStarterCard() {
         return backStarterCard;
     }
-    public ImageView getSecretObjLeft () {
+    public ImageView getSecretObjLeft() {
         return secretObjLeft;
     }
-    public ImageView getSecretObjRight () {
+    public ImageView getSecretObjRight() {
         return secretObjRight;
     }
     public RadioButton getButtonL() {return buttonL;}
     public RadioButton getButtonR() {return buttonR;}
+    public VBox getVboxNick() {return vboxNickname;}
+    public VBox getVboxRoom() {return vboxRoom;}
+    public VBox getVboxNoPlayers() {return vboxNoPlayers;}
 
 
 

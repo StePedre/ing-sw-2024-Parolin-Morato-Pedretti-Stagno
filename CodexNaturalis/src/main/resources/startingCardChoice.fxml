@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -30,8 +32,20 @@
                   <ImageView fx:id="frontStarterCard" fitHeight="188.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true">
                      <HBox.margin>
                         <Insets right="50.0" />
-                     </HBox.margin></ImageView>
-                  <ImageView fx:id="backStarterCard" fitHeight="188.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true" />
+                     </HBox.margin>
+                     <effect>
+                        <InnerShadow choke="0.1" height="30.0" radius="14.5" width="30.0" />
+                     </effect>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></ImageView>
+                  <ImageView fx:id="backStarterCard" fitHeight="188.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true">
+                     <effect>
+                        <InnerShadow choke="0.1" height="30.0" radius="14.5" width="30.0" />
+                     </effect>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></ImageView>
                </children>
                <VBox.margin>
                   <Insets top="20.0" />

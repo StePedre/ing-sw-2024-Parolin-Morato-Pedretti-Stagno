@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="633.0" layoutY="284.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="vboxNoPlayers" alignment="TOP_CENTER" layoutX="633.0" layoutY="284.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="CENTER" prefHeight="138.0" prefWidth="966.0">
                <children>
@@ -49,10 +49,10 @@
                   <Font name="Bookman Old Style" size="25.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="5.0" left="300.0" right="300.0" />
+                  <Insets bottom="5.0" left="400.0" right="400.0" />
                </VBox.margin>
             </TextField>
-            <Label fx:id="validLabel" visible="false" alignment="CENTER" contentDisplay="CENTER" text="Please, insert a valid number" textAlignment="CENTER" textFill="#bf0000">
+            <Label fx:id="validLabel" alignment="CENTER" contentDisplay="CENTER" text="Please, insert a valid number" textAlignment="CENTER" textFill="#bf0000" visible="false">
                <font>
                   <Font name="Bookman Old Style" size="20.0" />
                </font>

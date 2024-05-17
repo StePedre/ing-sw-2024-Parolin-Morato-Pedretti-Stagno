@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane fx:id="paneRoom" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <children>
-      <VBox fx:id="vboxRoom" layoutX="573.0" layoutY="213.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="50.0">
+      <VBox fx:id="vboxRoom" alignment="CENTER" layoutX="573.0" layoutY="213.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
          <children>
-            <Label alignment="CENTER" prefHeight="76.0" prefWidth="880.0" text="Welcome to Codex Naturalis!">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="76.0" prefWidth="880.0" text="Welcome to Codex Naturalis!">
                <font>
                   <Font name="Bookman Old Style" size="24.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" prefHeight="76.0" prefWidth="880.0" text="Do you want to enter an existing room or create a new one?">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="76.0" prefWidth="880.0" text="Do you want to enter an existing room or create a new one?">
                <font>
                   <Font name="Bookman Old Style" size="24.0" />
                </font>
             </Label>
             <HBox />
-            <HBox prefHeight="155.0" prefWidth="880.0">
+            <HBox alignment="CENTER" prefHeight="155.0" prefWidth="880.0">
                <children>
-                  <RadioButton fx:id="buttonL" mnemonicParsing="false" prefHeight="159.0" prefWidth="440.0" text="Enter existing room">
+                  <RadioButton fx:id="buttonL" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="159.0" prefWidth="440.0" text="Enter existing room">
                      <font>
                         <Font name="Bookman Old Style" size="24.0" />
                      </font>
@@ -33,7 +37,7 @@
                         <Insets left="50.0" />
                      </padding>
                   </RadioButton>
-                  <RadioButton fx:id="buttonR" mnemonicParsing="false" prefHeight="159.0" prefWidth="440.0" text="Create new room" toggleGroup="$room">
+                  <RadioButton fx:id="buttonR" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="159.0" prefWidth="440.0" text="Create new room" toggleGroup="$room">
                      <font>
                         <Font name="Bookman Old Style" size="24.0" />
                      </font>

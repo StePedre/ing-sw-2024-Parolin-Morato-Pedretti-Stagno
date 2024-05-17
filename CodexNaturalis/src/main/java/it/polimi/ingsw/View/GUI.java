@@ -7,14 +7,16 @@ import it.polimi.ingsw.Model.Resource;
 import it.polimi.ingsw.Model.ScoreRules.FlatRule;
 import it.polimi.ingsw.Model.StarterCard;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -39,20 +41,20 @@ public class GUI extends Application{
 
         scene.setOnKeyReleased(keyEvent -> {
             try {
-                switchToRoomChoice(stage);
-                // switchToLogin(stage);
-            } catch (IOException | ClassNotFoundException e) {
+//                switchToRoomChoice(stage);
+                 switchToLogin(stage);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
-
-
     }
 
     public void switchToRoomChoice(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/roomChoice.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
+        VBox vboxRoom = controller.getVboxRoom();
+        adjustLayout(vboxRoom, screenHeight, screenWidth, 1280, 720);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
@@ -87,6 +89,8 @@ public class GUI extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/insertNick.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
+        VBox vboxNick = controller.getVboxNick();
+        adjustLayout(vboxNick, screenHeight, screenWidth, 1366, 768);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
@@ -106,6 +110,8 @@ public class GUI extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/requestNoPlayers.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
+        VBox vboxNoPlayers = controller.getVboxNoPlayers();
+        adjustLayout(vboxNoPlayers, screenHeight, screenWidth, 1366, 768);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -127,7 +133,6 @@ public class GUI extends Application{
     public void switchToWaitingStart(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingStart.fxml"));
         Parent root = loader.load();
-        Controller controller = loader.getController();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -147,26 +152,20 @@ public class GUI extends Application{
         controller.addStarterImages(card);
 
         ImageView frontStarterCard = controller.getFrontStarterCard();
-        frontStarterCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    switchToSelectSecretObj(stage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        frontStarterCard.setOnMouseClicked(mouseEvent -> {
+            try {
+                switchToSelectSecretObj(stage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
 
         ImageView backStarterCard = controller.getBackStarterCard();
-        backStarterCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    switchToSelectSecretObj(stage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        backStarterCard.setOnMouseClicked(mouseEvent -> {
+            try {
+                switchToSelectSecretObj(stage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
     }
@@ -187,26 +186,20 @@ public class GUI extends Application{
         controller.addSecretObjImages(objs);
 
         ImageView secretObjLeft = controller.getSecretObjLeft();
-        secretObjLeft.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    switchToWaitingStart(stage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        secretObjLeft.setOnMouseClicked(mouseEvent -> {
+            try {
+                switchToWaitingStart(stage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
 
         ImageView secretObjRight = controller.getSecretObjRight();
-        secretObjRight.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    switchToWaitingStart(stage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        secretObjRight.setOnMouseClicked(mouseEvent -> {
+            try {
+                switchToWaitingStart(stage);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
     }
@@ -264,6 +257,28 @@ public class GUI extends Application{
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public void adjustLayout (Node node, double screenHeight, double screenWidth, int sceneBuilderHeight, int sceneBuilderWidth) {
+        double nodeHeight, nodeWidth;
+        if (node instanceof VBox nodeVBox) {
+            nodeHeight = nodeVBox.getPrefHeight();
+            nodeWidth = nodeVBox.getPrefWidth();
+        } else if (node instanceof HBox nodeHBox) {
+            nodeHeight = nodeHBox.getPrefHeight();
+            nodeWidth = nodeHBox.getPrefWidth();
+        } else {
+            System.out.println("Error in resizing...");
+        }
+        double newAnchor = AnchorPane.getTopAnchor(node) * screenHeight / sceneBuilderHeight;
+        AnchorPane.setTopAnchor(node, newAnchor);
+        newAnchor = AnchorPane.getBottomAnchor(node) * screenHeight / sceneBuilderHeight;
+        AnchorPane.setBottomAnchor(node, newAnchor);
+        newAnchor = AnchorPane.getLeftAnchor(node) * screenWidth / sceneBuilderWidth;
+        AnchorPane.setLeftAnchor(node, newAnchor);
+        newAnchor = AnchorPane.getRightAnchor(node) * screenWidth / sceneBuilderWidth;
+        AnchorPane.setRightAnchor(node, newAnchor);
+
     }
 
 }
