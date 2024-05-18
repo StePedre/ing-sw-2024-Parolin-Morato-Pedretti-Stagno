@@ -5,19 +5,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <children>
-      <VBox layoutX="590.0" layoutY="195.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
+      <VBox fx:id="vboxWinners" alignment="CENTER" layoutX="590.0" layoutY="195.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
          <children>
             <Label alignment="CENTER" prefHeight="170.0" prefWidth="1080.0" text="The game is over!">
                <font>
-                  <Font name="Bookman Old Style" size="50.0" />
+                  <Font name="Bookman Old Style" size="40.0" />
                </font>
             </Label>
             <Label alignment="CENTER" prefHeight="170.0" prefWidth="1080.0" text="It's a draw! The winners are...">
                <font>
-                  <Font name="Bookman Old Style" size="50.0" />
+                  <Font name="Bookman Old Style" size="30.0" />
                </font>
             </Label>
          </children>

@@ -9,7 +9,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <children>
-      <VBox fx:id="vboxRoom" layoutX="250.0" layoutY="100.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0">
+      <VBox fx:id="vboxRoom" alignment="CENTER" layoutX="250.0" layoutY="100.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
          <children>
             <Label fx:id="yourTurnLabel1" alignment="CENTER" prefHeight="50.0" prefWidth="500.0" text="It's your turn!">
                <font>
@@ -21,12 +21,12 @@
                   <Font name="Bookman Old Style" size="14.0" />
                </font>
             </Label>
-            <Button fx:id="yourTurnButton" alignment="CENTER" contentDisplay="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#close" prefWidth="75.0" text="Ok" textFill="WHITE">
+            <Button fx:id="yourTurnButton" alignment="CENTER" contentDisplay="CENTER" defaultButton="true" graphicTextGap="0.0" mnemonicParsing="false" prefWidth="75.0" text="Ok" textFill="WHITE">
                <font>
                   <Font name="Bookman Old Style" size="14.0" />
                </font>
                <VBox.margin>
-                  <Insets left="212.5" top="10.0" />
+                  <Insets top="10.0" />
                </VBox.margin>
             </Button>
          </children>

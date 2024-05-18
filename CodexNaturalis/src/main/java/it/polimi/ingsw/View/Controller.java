@@ -20,7 +20,16 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Controller {
-
+    @FXML
+    private VBox vboxWinners;
+    @FXML
+    private VBox vboxWinner;
+    @FXML
+    private VBox vboxWaitStart;
+    @FXML
+    private VBox vboxStartCard;
+    @FXML
+    private VBox vboxSecretObjs;
     @FXML
     private VBox vboxNoPlayers;
     @FXML
@@ -109,6 +118,11 @@ public class Controller {
     public VBox getVboxNick() {return vboxNickname;}
     public VBox getVboxRoom() {return vboxRoom;}
     public VBox getVboxNoPlayers() {return vboxNoPlayers;}
+    public VBox getVboxSecretObjs() {return vboxSecretObjs;}
+    public VBox getVboxStartCard() {return vboxStartCard;}
+    public VBox getVboxWaitStart() {return vboxWaitStart;}
+    public VBox getVboxWinners() {return vboxWinners;}
+    public VBox getVboxWinner() {return vboxWinner;}
 
     public boolean addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         final boolean[] flag = {false};
@@ -190,11 +204,9 @@ public class Controller {
     }
 
     public boolean sendNickname() throws IOException, ClassNotFoundException {
-        int i = 0;
         String nickname;
         boolean flag = false;
         do {
-            i++;
             nickname = nickTextField.getText();
             if (!nickname.isEmpty()) {
                 nickTextField.clear();

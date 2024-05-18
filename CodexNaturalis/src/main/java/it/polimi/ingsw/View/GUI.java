@@ -53,7 +53,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         VBox vboxRoom = controller.getVboxRoom();
-        adjustLayout(vboxRoom, screenHeight, screenWidth, 1280, 720);
+        adjustLayout(vboxRoom, screenHeight, screenWidth, 720, 1280);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
@@ -88,7 +88,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         VBox vboxNick = controller.getVboxNick();
-        adjustLayout(vboxNick, screenHeight, screenWidth, 1366, 768);
+        adjustLayout(vboxNick, screenHeight, screenWidth, 768, 1366);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
@@ -114,7 +114,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         VBox vboxNoPlayers = controller.getVboxNoPlayers();
-        adjustLayout(vboxNoPlayers, screenHeight, screenWidth, 1366, 768);
+        adjustLayout(vboxNoPlayers, screenHeight, screenWidth, 768, 1366);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -135,6 +135,8 @@ public class GUI extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
+        VBox vboxSecretObjs = controller.getVboxSecretObjs();
+        adjustLayout(vboxSecretObjs, screenHeight, screenWidth, 768, 1366);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -166,6 +168,8 @@ public class GUI extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
+        VBox vboxStartCard = controller.getVboxStartCard();
+        adjustLayout(vboxStartCard, screenHeight, screenWidth, 768, 1366);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -274,6 +278,9 @@ public class GUI extends Application{
     public void switchToWaitingStart(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingStart.fxml"));
         Parent root = loader.load();
+        Controller controller = loader.getController();
+        VBox vboxWaitStart = controller.getVboxWaitStart();
+        adjustLayout(vboxWaitStart, screenHeight, screenWidth, 768, 1366);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -282,6 +289,9 @@ public class GUI extends Application{
     public void showWinners(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/winners.fxml"));
         Parent root = loader.load();
+        Controller controller = loader.getController();
+        VBox vboxWinners = controller.getVboxWinners();
+        adjustLayout(vboxWinners, screenHeight, screenWidth, 720, 1280);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -289,6 +299,9 @@ public class GUI extends Application{
     public void showSingleWinner(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/winner.fxml"));
         Parent root = loader.load();
+        Controller controller = loader.getController();
+        VBox vboxWinner = controller.getVboxWinner();
+        adjustLayout(vboxWinner, screenHeight, screenWidth, 720, 1280);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
