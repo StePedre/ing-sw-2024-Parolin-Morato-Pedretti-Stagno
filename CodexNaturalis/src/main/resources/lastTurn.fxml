@@ -9,12 +9,12 @@
    <children>
       <VBox alignment="CENTER" layoutX="6.0" prefHeight="200.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label alignment="CENTER" prefHeight="100.0" prefWidth="600.0" text="Someone reached 20 points!">
+            <Label alignment="CENTER" prefHeight="100.0" prefWidth="600.0" text="This is your last turn!">
                <font>
                   <Font name="Bookman Old Style" size="24.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" prefHeight="155.0" prefWidth="600.0" text="This is your last turn! Good luck!">
+            <Label alignment="CENTER" prefHeight="155.0" prefWidth="600.0" text="Good luck!">
                <font>
                   <Font name="Bookman Old Style" size="32.0" />
                </font>
