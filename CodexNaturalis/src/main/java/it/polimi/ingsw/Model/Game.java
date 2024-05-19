@@ -167,7 +167,7 @@ public class Game implements Serializable {
      * score is the winner and a message is printed to show it. In case of more than one player with the same maximum
      * score, there is a draw, and they are all considered winners.
      */
-    public void finish(){
+    public synchronized void finish(){
         int currPoint;
         for(Player p : players){
             currPoint = p.getPlayerGround().getPlayerScore();
@@ -186,7 +186,6 @@ public class Game implements Serializable {
                 p.setReachedObjNo(p.getReachedObjNo()+1);
             }
         }
-        isOver = true;
         int[] scores = new int[numPlayers];
         ArrayList<Player> multi2 = new ArrayList<>();
         int i = 0;
@@ -216,6 +215,7 @@ public class Game implements Serializable {
                 }
             }
             multiWinners = multi2;
+            isOver = true;
         }
     }
 

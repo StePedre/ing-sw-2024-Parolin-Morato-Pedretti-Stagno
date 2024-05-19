@@ -159,7 +159,6 @@ public class Controller {
         return flag[0];
     }
     public boolean addRoomCreationInput(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
-        client.sendToServer(true);
         final boolean[] flag = {false};
         labelRoom.setPrefWidth(200);
         tfRoom.setPrefWidth(200);
@@ -181,7 +180,7 @@ public class Controller {
                 boolean found = false;
                 try {
                     for (Room r : rooms) {
-                        if (Objects.equals(r.getName(), tfRoom.getText())) {
+                        if (r.getName().equals(tfRoom.getText())) {
                             found = true;
                             tfRoom.setText("");
                             labelRoom.setPrefWidth(250);
@@ -190,9 +189,10 @@ public class Controller {
                         }
                     }
                     if (!found) {
+                        client.sendToServer(true);
                         client.sendToServer(tfRoom.getText());
                     }
-                    if (!client.receiveBooleanFromServer()) {
+                    if (!client.receiveBooleanFromServer()) {// controolo nome stanze contemporanee
                         flag[0] = true;
                     }
                 } catch (IOException | ClassNotFoundException ex) {
@@ -316,7 +316,7 @@ public class Controller {
         plumeNum.setText(String.valueOf(map.get(Resource.PLUME)));
     }
 
-    public boolean checkIfOver() throws IOException, ClassNotFoundException {
+    public boolean checkIfLast() throws IOException, ClassNotFoundException {
         return client.receiveBooleanFromServer();
     }
     /*
@@ -512,6 +512,9 @@ public class Controller {
             }
         }
         return false;
+    }
+    public void setStreams(GUIClientSocket client){
+        this.client = client;
     }
 }
 

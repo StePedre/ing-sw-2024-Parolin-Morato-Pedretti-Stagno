@@ -69,7 +69,9 @@ public class MyClientSocket {
             }while(!NoOk);
         }
         player = (Player) in.readObject();
+        in.readObject();//legge false per non numero di player
         tui.Welcome(player);
+        in.readObject();//legge true per raggiungimento numero player
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         out.writeObject(tui.showStarterCard((StarterCard) in.readObject()));
@@ -80,8 +82,11 @@ public class MyClientSocket {
         boolean b =  (boolean) in.readObject();
         while(true){
             if(b){
-                if((boolean)in.readObject()){//finito gioco per vittoria altrui
+                /*if((boolean)in.readObject()){//finito gioco per vittoria altrui
                     break;
+                }*/
+                if((boolean) in.readObject()){
+                    System.out.println("è l'ultimo turno");// Aggiungere a tui
                 }
                 updateData();
                 while(!tui.yourTurnPlay(game,player)){
@@ -94,13 +99,17 @@ public class MyClientSocket {
                 if((boolean)in.readObject()){
                     break;
                 }
-                out.writeObject(tui.yourTurnDraw(game,player));
+                if((boolean)in.readObject()) {
+                    out.writeObject(tui.yourTurnDraw(game, player));
+                }else{
+                    break;
+                }
                 //aspetta riscontro vittoria
                 if((boolean) in.readObject()){
                     break;
                 }
                 updateData();
-                b=false;
+                b=(boolean) in.readObject();
             }
             else{
                 while(!b) {

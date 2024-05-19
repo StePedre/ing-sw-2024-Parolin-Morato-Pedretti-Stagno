@@ -38,11 +38,19 @@ public class RoundController implements Serializable {
         }
     }
 
+    public Player getLastPlayer() {
+        return LastPlayer;
+    }
+
+    public synchronized boolean isLastTurn() {
+        return lastTurn;
+    }
+
     public synchronized void setFirstPlayer(){
         if (round == -1) {
             round = rand.nextInt(players.size());
             if(round == 0){
-                LastPlayer = players.get(players.size() - 1);
+                LastPlayer = players.getLast();
             }else{
                 LastPlayer = players.get(round - 1);
             }

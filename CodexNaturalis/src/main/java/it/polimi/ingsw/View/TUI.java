@@ -686,4 +686,9 @@ public class TUI {
     public void playerJoined(Player player){
         System.out.println("Player " + player.getNickname() + " has joined the room");
     }
+    public boolean refreshRoom(){
+        System.out.println("Do you want to update rooms list or not?\n1-yes\nother-no");
+        Scanner s = new Scanner(System.in);
+        return (s.nextInt()==1) ? true : false;
+    }
 }

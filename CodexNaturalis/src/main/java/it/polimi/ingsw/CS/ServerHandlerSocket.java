@@ -28,59 +28,48 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         try {
             start();
             out.writeObject(player);
+            out.writeObject(false);
             while (game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
-            rc.setplayers(game.getPlayers());
-            rc.setFirstPlayer();
-            PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
-            pc.populateHand(game,player);
-            ObjectiveCard[] obj = pc.pickObjCard(game);
-            out.writeObject(obj);
-            pc.setObjSecret(obj[((int)in.readObject())-1]);
-            StarterCard st = pc.pickCard(game);
-            out.writeObject(st);
-            boolean flag = true;
-            if((boolean)in.readObject()){
-                st.flipCard();
-            }
-            pc.setFirstCard(st);
+            out.writeObject(true);
+            playerinit();
             sendData();
+            boolean flag;
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
                 out.writeObject(false);  // non è il suo turno
             }
-            while(!game.isOver()){
+            while(true){// start game flow
+                flag = true;
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){  // finchè non è il suo turno
                     if(flag) {
-                        flag = (boolean) in.readObject(); 
-                        if(game.isOver()){
-                            break;
-                        }
-                        if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))) {
+                        flag = (boolean) in.readObject();
+                        if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname())) && flag) {
                             out.writeObject(false);
-                        }
-                    }
-                    else {
-                        if (game.isOver()) {
-                            break;
                         }
                     }
                 }
                 out.writeObject(true);//è il tuo turno
-                if(game.isOver()){
+                if(rc.isLastTurn()){
+                    out.writeObject(true);
+                }
+                else{
+                    out.writeObject(false);
+                }
+                /*if(game.isOver()){
                     out.writeObject(true);
                     over();
                     break;
                 }
                 else{
                     out.writeObject(false);
-                }
+                }*/
                 sendData();
                 playCard();
-                if(player.getPlayerGround().getPlayerScore()>=20){
+                if(player.getPlayerGround().getPlayerScore()>=20 && !rc.isLastTurn()){
                     //fine gioco
                     out.writeObject(true);
-                    game.finish();
-                    over();
+                    //game.finish();
+                    //over();
                     rc.setLastTurn();
                     break;
                 }
@@ -88,12 +77,19 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                     out.writeObject(false);
                     //non vinto
                 }
-                drawCard();
+                if(!rc.isLastTurn()) {
+                    out.writeObject(true);
+                    drawCard();
+                }
+                else{
+                    out.writeObject(false);
+                    break;
+                }
                 if(game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0){//controllo numeri carte deck
                     //fine gioco
                     out.writeObject(true);
-                    game.finish();
-                    over();
+                    //game.finish();
+                    //over();
                     rc.setLastTurn();
                     break;
                 }
@@ -106,6 +102,12 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 out.writeObject(false);//non è più il suo turno
                 out.reset();
             }
+            if(rc.getLastPlayer().getNickname().equals(player.getNickname())){
+                game.finish();
+            }
+            while(!game.isOver()){
+            }
+            over();
             socket.close();
         }
         catch (IOException e){
@@ -189,6 +191,25 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         out.writeObject(game.getMultiWinners());
     }
     public void start() throws IOException, ClassNotFoundException {
+        Room room = roomChoice();
+        String nickname = nicknameChoice(room);
+        firstPlayer(room);
+        this.player = new Player(nickname);
+        game = room.getGame();
+        rc = room.getRoundController();
+        game.addPlayer(player);
+    }
+    public void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza
+        if(room.getGame().isFirst()) {
+            out.writeObject(true);
+            int n =(int) in.readObject();
+            room.getGame().setExpPlayers(n);
+        }
+        else{
+            out.writeObject(false);
+        }
+    }
+    public Room roomChoice() throws IOException, ClassNotFoundException {
         out.writeObject(rooms.getRooms());
         Room room;
         boolean b;
@@ -209,7 +230,11 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 out.writeObject(false);
             }
         }while (b);
+        return room;
+    }
+    public String nicknameChoice(Room room) throws IOException, ClassNotFoundException {
         String nickname;
+        Boolean b;
         do {
             nickname = (String) in.readObject();
             if(rooms.alredyInGame(room.getGame(),nickname)){// true trovato nome uguale
@@ -221,20 +246,22 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 b=false;
             }
         }while(b);
-        firstPlayer(room);
-        this.player = new Player(nickname);
-        game = room.getGame();
-        rc = room.getRoundController();
-        game.addPlayer(player);
+        return nickname;
     }
-    private void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza
-        if(room.getGame().isFirst()) {
-            out.writeObject(true);
-            int n =(int) in.readObject();
-            room.getGame().setExpPlayers(n);
+    public void playerinit() throws IOException, ClassNotFoundException, InvalidPositionException {
+        rc.setplayers(game.getPlayers());
+        rc.setFirstPlayer();
+        PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
+        pc.populateHand(game,player);
+        ObjectiveCard[] obj = pc.pickObjCard(game);
+        out.writeObject(obj);
+        pc.setObjSecret(obj[((int)in.readObject())-1]);
+        StarterCard st = pc.pickCard(game);
+        out.writeObject(st);
+        if((boolean)in.readObject()){
+            st.flipCard();
         }
-        else{
-            out.writeObject(false);
-        }
+        pc.setFirstCard(st);
     }
+
 }
