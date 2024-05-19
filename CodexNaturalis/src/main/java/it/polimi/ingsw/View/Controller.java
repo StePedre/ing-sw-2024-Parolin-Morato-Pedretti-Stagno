@@ -27,6 +27,8 @@ public class Controller {
     @FXML
     private VBox vboxWaitStart;
     @FXML
+    private VBox vboxWaitFinish;
+    @FXML
     private VBox vboxStartCard;
     @FXML
     private VBox vboxSecretObjs;
@@ -47,11 +49,11 @@ public class Controller {
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight;
     @FXML
-    private Button buttonSubDraw;
+    private Button buttonSubDraw, finishButton, finishButton2;
     @FXML
     private TextField nickTextField, numberPlayersTF;
     @FXML
-    private Label nickLabel, validLabel, loadingLabel;
+    private Label nickLabel, validLabel, loadingLabel, winnerName;
     Button confirmRoom = new Button("Submit");
     TextField tfRoom = new TextField();
     Label labelRoom = new Label("Insert new room's name:");
@@ -121,8 +123,12 @@ public class Controller {
     public VBox getVboxSecretObjs() {return vboxSecretObjs;}
     public VBox getVboxStartCard() {return vboxStartCard;}
     public VBox getVboxWaitStart() {return vboxWaitStart;}
+    public VBox getVboxWaitFinish() {return vboxWaitFinish;}
     public VBox getVboxWinners() {return vboxWinners;}
     public VBox getVboxWinner() {return vboxWinner;}
+    public Label getWinnerName() {return winnerName;}
+    public Button getFinishButton() {return finishButton;}
+    public Button getFinishButton2() {return finishButton2;}
 
     public boolean addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         final boolean[] flag = {false};
@@ -277,6 +283,14 @@ public class Controller {
         return client.receiveRoomsFromServer();
     }
 
+    public boolean getWaiting() throws IOException, ClassNotFoundException {
+        return client.receiveBooleanFromServer();
+    }
+
+    public boolean ifDrawable() throws IOException, ClassNotFoundException {
+        return client.receiveBooleanFromServer();
+    }
+
     public boolean addGround() throws IOException, ClassNotFoundException {
         client.reset();
         Player p = client.receivePlayerFromServer();
@@ -319,6 +333,11 @@ public class Controller {
     public boolean checkIfLast() throws IOException, ClassNotFoundException {
         return client.receiveBooleanFromServer();
     }
+
+    public boolean checkIfOver() throws IOException, ClassNotFoundException {
+        return client.receiveBooleanFromServer();
+    }
+
     /*
     public void placeFirstCard(StarterCard sc) throws IOException, ClassNotFoundException {
         ImageView iv = new ImageView(new Image(imagesFrontPath + sc.getId() + ".png"));

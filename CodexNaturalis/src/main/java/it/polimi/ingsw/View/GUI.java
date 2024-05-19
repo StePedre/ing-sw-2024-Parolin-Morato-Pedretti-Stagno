@@ -20,8 +20,10 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GUI extends Application{
     private final Screen screen = Screen.getPrimary();
@@ -108,7 +110,9 @@ public class GUI extends Application{
                     switchToNumberPlayers(stage);
                 }
                 else{
-                    switchToSelectSecretObj(stage);
+                    if(!controller.getWaiting()) {
+                        switchToWaitingStart(stage);
+                    }
                 }
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -131,7 +135,9 @@ public class GUI extends Application{
             int numberPlayers = controller.getNumberPlayers();
             try {
                 if (numberPlayers >= 2 && numberPlayers <= 4) {
-                    switchToSelectSecretObj(stage);
+                    if(controller.getWaiting()){
+                        switchToWaitingStart(stage);
+                    }
                 }
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -216,21 +222,15 @@ public class GUI extends Application{
         boolean flag;
         flag = controller.addGround();
         if(flag){ // se è il suo turno
-            if(!controller.checkIfLast()){   // to do: gestire ultimo turno (else)
+            if(!controller.checkIfLast()){
                 switchToYourTurn(stage);
             }
-            else{
-                // questione ultimo turno
-              /*  if(controller.getWinners().size() == 1){
-                    showSingleWinner(stage);
-                }
-                else{
-                    showWinners(stage);
-                }*/
+            else{ // ultimo turno
+                switchToLastTurn(stage);
             }
         }
         else{
-        // da sistemare lato server -> chiamare metodo waitForTurn sul controller
+            // wait for turn to do
         }
     }
 
@@ -244,21 +244,22 @@ public class GUI extends Application{
         stage2.initOwner(stage);
         Scene scene = new Scene(root, 600, 200);
         stage2.setScene(scene);
+        stage2.showAndWait();
         controller.getYourTurnButton().setOnAction(e ->{
             stage2.close();
             try {
                 if(controller.playCard()){
-                    switchToDraw(stage);
+                    if(controller.ifDrawable()){
+                        switchToDraw(stage);
+                    }
                 }
-                else{ // fine gioco dovuto al raggiungimento di 20 pt
-                   // showTwentyPoints();  // inoltre bisogna capire come notificare gli altri che è lastTurn
+                else{
+                    showTwentyPoints(stage);
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
-        stage2.showAndWait();
-
     }
 
     public void switchToDraw(Stage stage) throws IOException, ClassNotFoundException {
@@ -283,12 +284,12 @@ public class GUI extends Application{
         if(!controller.checkIfOver()){
             showUpdatedPlayerGround(stage);
         }
-        else{ // fine gioco dovuto a fine mazzi
+        else{
+            showZeroCards(stage);
         }
     }
 
-    // usarlo durante while vuoto del server
-    public void switchToWaitingStart(Stage stage) throws IOException {
+    public void switchToWaitingStart(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingStart.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -298,58 +299,119 @@ public class GUI extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+        if(controller.getWaiting()){
+            switchToSelectSecretObj(stage);
+        }
     }
 
-    public void showWinners(Stage stage) throws IOException {
+    public void switchToWaitingFinish(Stage stage) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingFinish.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setStreams(client);
+        VBox vboxWaitStart = controller.getVboxWaitStart();
+        adjustLayout(vboxWaitStart, screenHeight, screenWidth, 768, 1366);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        ArrayList<Player> winners = controller.getWinners();
+            if(winners.size()==1){
+                showSingleWinner(stage, winners);
+            }
+            else{
+                showWinners(stage, winners);
+            }
+    }
+
+    public void showWinners(Stage stage, ArrayList<Player> winners) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/winners.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
         VBox vboxWinners = controller.getVboxWinners();
         adjustLayout(vboxWinners, screenHeight, screenWidth, 720, 1280);
+        String x = "";
+        for(Player p: winners){
+            if(winners.getLast().getNickname().equals(p.getNickname())){
+                x = x.concat(p.getNickname()+" ");
+            }
+            x = x.concat(p.getNickname()+", ");
+        }
+        controller.getWinnerName().setText("The winners are "+x + "!");
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
-    public void showSingleWinner(Stage stage) throws IOException {
+    public void showSingleWinner(Stage stage, ArrayList<Player> winners) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/winner.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
         VBox vboxWinner = controller.getVboxWinner();
         adjustLayout(vboxWinner, screenHeight, screenWidth, 720, 1280);
+        controller.getWinnerName().setText("The winner is "+winners.getFirst().getNickname()+" !");
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
     }
-    // messaggio che annuncia il raggiungimento di 20 punti -> dice di aspettare
+    // messaggio che annuncia il raggiungimento di 20 punti -> poi va a schermata waiting
     public void showTwentyPoints(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/20points.fxml"));
         Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setStreams(client);
         Stage stage2 = new Stage();
         stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
         stage2.initOwner(stage);
         Scene scene = new Scene(root);
         stage2.setScene(scene);
+        controller.getFinishButton().setOnAction(e ->{
+            try {
+                switchToWaitingFinish(stage);
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
-    public void showLastTurn(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/lastTurn.fxml"));
+    public void showZeroCards(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/zeroCards.fxml"));
         Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setStreams(client);
         Stage stage2 = new Stage();
         stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
         stage2.initOwner(stage);
         Scene scene = new Scene(root);
         stage2.setScene(scene);
+        controller.getFinishButton2().setOnAction(e ->{
+            try {
+                switchToWaitingFinish(stage);
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
-    public void showLastTurn2(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/lastTurn2.fxml"));
+    public void switchToLastTurn(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/lastTurn.fxml"));
         Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setStreams(client);
         Stage stage2 = new Stage();
         stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
         stage2.initOwner(stage);
         Scene scene = new Scene(root);
         stage2.setScene(scene);
+        stage2.showAndWait();
+        try {
+            if(controller.playCard()){
+                if(controller.ifDrawable()){
+                    switchToWaitingFinish(stage);
+                }
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public static void startGUI(){
