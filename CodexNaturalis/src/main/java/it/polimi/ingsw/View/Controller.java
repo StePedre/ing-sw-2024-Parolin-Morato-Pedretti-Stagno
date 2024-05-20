@@ -21,31 +21,13 @@ import java.util.Objects;
 
 public class Controller {
     @FXML
-    private VBox vboxWinners;
-    @FXML
-    private VBox vboxWinner;
-    @FXML
-    private VBox vboxWaitStart;
-    @FXML
-    private VBox vboxWaitFinish;
-    @FXML
-    private VBox vboxStartCard;
-    @FXML
-    private VBox vboxSecretObjs;
-    @FXML
-    private VBox vboxNoPlayers;
-    @FXML
-    private VBox vboxNickname;
+    private VBox vboxWinners,vboxWinner,vboxWaitStart,vboxWaitFinish,vboxStartCard,vboxSecretObjs,vboxNoPlayers,vboxNickname,vboxRoom;
     @FXML
     private AnchorPane paneRoom;
     @FXML
     private HBox hboxRoom;
     @FXML
-    private RadioButton buttonR;
-    @FXML
-    private RadioButton buttonL;
-    @FXML
-    private VBox vboxRoom;
+    private RadioButton buttonR,buttonL;
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight;
     @FXML
@@ -132,9 +114,9 @@ public class Controller {
     public Button getConfirmRoom() {return confirmRoom;}
     public TextField getTfRoom(){return tfRoom;}
     public Label getLabelRoom(){return labelRoom;}
+    public ComboBox<Label> getMenu() {return menu;}
 
-    public boolean addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
-        final boolean[] flag = {false};
+    public void addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
         confirmRoom.setPrefWidth(100);
         menu.setPrefWidth(200);
@@ -151,24 +133,8 @@ public class Controller {
         }
         confirmRoom.setVisible(false);
         hboxRoom.getChildren().add(menu);
-        menu.setOnAction(e ->{
-            vboxRoom.getChildren().add(confirmRoom);
-            VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
-            confirmRoom.setVisible(true);
-            confirmRoom.setOnAction(e2->{
-                try {
-                    client.sendToServer(false); // comunica al server che vuole joinare una stanza
-                    client.sendToServer(menu.getSelectionModel().getSelectedItem().getText()); // comunica al server nome stanza
-                    flag[0]  = true;
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-        });
-        return flag[0];
     }
     public void addRoomCreationInput(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
-        final boolean[] flag = {false};
         labelRoom.setPrefWidth(200);
         tfRoom.setPrefWidth(200);
         vbox.setPrefWidth(200);

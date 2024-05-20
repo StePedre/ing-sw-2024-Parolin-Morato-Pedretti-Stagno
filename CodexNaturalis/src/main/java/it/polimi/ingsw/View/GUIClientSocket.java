@@ -23,14 +23,12 @@ public class GUIClientSocket {
     public Player receivePlayerFromServer() throws IOException, ClassNotFoundException {
         return (Player) in.readObject();
     }
-    public Room receiveRoomFromServer() throws IOException, ClassNotFoundException {
-        return (Room) in.readObject();
-    }
     public ObjectiveCard[] receiveSecretObjsFromServer() throws IOException, ClassNotFoundException {
         return (ObjectiveCard[]) in.readObject();
     }
     public ArrayList<Room> receiveRoomsFromServer() throws IOException, ClassNotFoundException {
-        return (ArrayList<Room>) in.readObject();
+        ArrayList<Room> room = (ArrayList<Room>) in.readObject();
+        return room;
     }
     public void sendToServer(Object obj) throws IOException {
         out.writeObject(obj);

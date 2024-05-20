@@ -158,7 +158,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     private void startNormalGame() throws RemoteException, MissingResourcesException, InvalidPositionException {
 
         RoundController roundController = server.getRooms().getRoom(roomJoined).getRoundController();
-        roundController.setplayers(game.getPlayers());
+        roundController.setPlayers(game.getPlayers());
         roundController.setFirstPlayer();
         while(!game.isOver()) {//fino a fine gioco, gestire primo turno
             while (!(player.getNickname().equals(roundController.getCurrentPlayer().getNickname()))) {

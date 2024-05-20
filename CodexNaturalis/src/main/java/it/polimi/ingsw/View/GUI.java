@@ -5,6 +5,7 @@ import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.FlatRule;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -65,7 +66,7 @@ public class GUI extends Application{
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
-        ArrayList<Room> rooms = controller.getRooms();
+        ArrayList<Room> rooms = client.receiveRoomsFromServer();
         RadioButton buttonL = controller.getButtonL();
         RadioButton buttonR = controller.getButtonR();
         buttonL.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -74,7 +75,6 @@ public class GUI extends Application{
             }
             if (newValue.equals(buttonR)) {
                 try {
-                   // controller.addRoomsMenu(rooms);
                     controller.addRoomCreationInput(rooms);
                     controller.getConfirmRoom().setOnAction(e -> {
                         boolean found, flag;
@@ -110,15 +110,27 @@ public class GUI extends Application{
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-            } /* else if (newValue.equals(buttonR)) {
-                try {
-                    if (controller.addRoomCreationInput(rooms)) {
-                        switchToLogin(stage);
-                    }
+            }else if (newValue.equals(buttonL)) {
+                try{
+                    controller.addRoomsMenu(rooms);
+                    controller.getMenu().setOnAction(e ->{
+                        vboxRoom.getChildren().add(controller.getConfirmRoom());
+                        VBox.setMargin(controller.getConfirmRoom(), new Insets(0, 0, 50, 400));
+                        controller.getConfirmRoom().setVisible(true);
+                        controller.getConfirmRoom().setOnAction(e2->{
+                            try {
+                                client.sendToServer(false); // comunica al server che vuole joinare una stanza
+                                client.sendToServer(controller.getMenu().getSelectionModel().getSelectedItem().getText()); // comunica al server nome stanza
+                                switchToLogin(stage);
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
+                    });
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-            }*/
+            }
         });
     }
     public void switchToLogin(Stage stage) throws IOException {

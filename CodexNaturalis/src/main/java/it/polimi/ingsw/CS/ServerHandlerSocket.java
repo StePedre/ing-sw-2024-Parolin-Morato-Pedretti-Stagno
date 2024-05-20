@@ -203,6 +203,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         }
     }
     public Room roomChoice() throws IOException, ClassNotFoundException {
+        out.reset();
         out.writeObject(rooms.getRooms());
         Room room;
         boolean b;
@@ -242,7 +243,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         return nickname;
     }
     public void playerinit() throws IOException, ClassNotFoundException, InvalidPositionException {
-        rc.setplayers(game.getPlayers());
+        rc.setPlayers(game.getPlayers());
         rc.setFirstPlayer();
         PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
         pc.populateHand(game,player);

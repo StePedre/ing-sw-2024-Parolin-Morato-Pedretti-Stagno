@@ -23,7 +23,13 @@ public class RoundController implements Serializable {
     public RoundController() {
 
     }
-    public synchronized void setplayers(ArrayList<Player> player) {
+
+    /**
+     * Initialize the list of player
+     *
+     * @param player list of players who partecipate at the game
+     */
+    public synchronized void setPlayers(ArrayList<Player> player) {
         if (players.isEmpty()) {
             this.players = player;
         }
