@@ -112,10 +112,8 @@ public class MyClientSocket {
                 b=(boolean) in.readObject();
             }
             else{
-                while(!b) {
-                    out.writeObject(tui.notYourTurn(game,player));//aggiungere possibilità di aspettare e basta
-                    b=(boolean)in.readObject();
-                }
+                out.writeObject(tui.notYourTurn(game,player));//aggiungere possibilità di aspettare e basta
+                b=(boolean)in.readObject();
             }
         }
         tui.winnersPrint((ArrayList<Player>) in.readObject());

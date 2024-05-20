@@ -129,6 +129,9 @@ public class Controller {
     public Label getWinnerName() {return winnerName;}
     public Button getFinishButton() {return finishButton;}
     public Button getFinishButton2() {return finishButton2;}
+    public Button getConfirmRoom() {return confirmRoom;}
+    public TextField getTfRoom(){return tfRoom;}
+    public Label getLabelRoom(){return labelRoom;}
 
     public boolean addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         final boolean[] flag = {false};
@@ -164,7 +167,7 @@ public class Controller {
         });
         return flag[0];
     }
-    public boolean addRoomCreationInput(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
+    public void addRoomCreationInput(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         final boolean[] flag = {false};
         labelRoom.setPrefWidth(200);
         tfRoom.setPrefWidth(200);
@@ -182,31 +185,7 @@ public class Controller {
             vboxRoom.getChildren().add(confirmRoom);
             VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
             confirmRoom.setVisible(true);
-            confirmRoom.setOnAction(e2 -> {
-                boolean found = false;
-                try {
-                    for (Room r : rooms) {
-                        if (r.getName().equals(tfRoom.getText())) {
-                            found = true;
-                            tfRoom.setText("");
-                            labelRoom.setPrefWidth(250);
-                            labelRoom.setStyle("-fx-text-fill: #b31010");
-                            labelRoom.setText("This name is already taken, choose a new one:");
-                        }
-                    }
-                    if (!found) {
-                        client.sendToServer(true);
-                        client.sendToServer(tfRoom.getText());
-                    }
-                    if (!client.receiveBooleanFromServer()) {// controolo nome stanze contemporanee
-                        flag[0] = true;
-                    }
-                } catch (IOException | ClassNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
         });
-        return flag[0];
     }
 
     public boolean sendNickname() throws IOException, ClassNotFoundException {

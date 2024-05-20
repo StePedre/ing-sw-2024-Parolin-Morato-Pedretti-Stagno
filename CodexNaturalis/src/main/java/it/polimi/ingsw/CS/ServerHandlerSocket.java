@@ -39,14 +39,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 out.writeObject(false);  // non è il suo turno
             }
             while(true){// start game flow
-                flag = true;
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){  // finchè non è il suo turno
-                    if(flag) {
-                        flag = (boolean) in.readObject();
-                        if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname())) && flag) {
-                            out.writeObject(false);
-                        }
-                    }
                 }
                 out.writeObject(true);//è il tuo turno
                 if(rc.isLastTurn()){
