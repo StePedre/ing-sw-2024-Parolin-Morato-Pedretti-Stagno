@@ -72,15 +72,45 @@ public class GUI extends Application{
             if (newValue == null) {
                 return; //no button selected
             }
-            if (newValue.equals(buttonL)) {
+            if (newValue.equals(buttonR)) {
                 try {
-                    if(controller.addRoomsMenu(rooms)){
-                        switchToLogin(stage);
-                    }
+                   // controller.addRoomsMenu(rooms);
+                    controller.addRoomCreationInput(rooms);
+                    controller.getConfirmRoom().setOnAction(e -> {
+                        boolean found, flag;
+                        try {
+                                found = false;
+                                for (Room r : rooms) {
+                                    if (r.getName().equals(controller.getTfRoom().getText())) {
+                                        found = true;
+                                        controller.getTfRoom().setText("");
+                                        controller.getLabelRoom().setPrefWidth(250);
+                                        controller.getLabelRoom().setStyle("-fx-text-fill: #b31010");
+                                        controller.getLabelRoom().setText("This name is already taken, choose a new one:");
+                                        break;
+
+                                    }
+                                }
+                                if (!found) {
+                                    client.sendToServer(true);
+                                    client.sendToServer(controller.getTfRoom().getText());
+                                    flag = client.receiveBooleanFromServer();
+                                    if(flag){
+                                        controller.getTfRoom().setText("");
+                                        controller.getLabelRoom().setText("Too late! Someone else has just created a room with this name! Please input another one:");
+                                    }
+                                    else{
+                                        switchToLogin(stage);
+                                    }
+                                }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    });
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-            } else if (newValue.equals(buttonR)) {
+            } /* else if (newValue.equals(buttonR)) {
                 try {
                     if (controller.addRoomCreationInput(rooms)) {
                         switchToLogin(stage);
@@ -88,7 +118,7 @@ public class GUI extends Application{
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-            }
+            }*/
         });
     }
     public void switchToLogin(Stage stage) throws IOException {
@@ -415,10 +445,6 @@ public class GUI extends Application{
     }
 
     public static void startGUI(){
-        launch();
-    }
-
-    public static void main(String[] args) {
         launch();
     }
 
