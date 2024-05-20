@@ -27,8 +27,7 @@ public class GUIClientSocket {
         return (ObjectiveCard[]) in.readObject();
     }
     public ArrayList<Room> receiveRoomsFromServer() throws IOException, ClassNotFoundException {
-        ArrayList<Room> room = (ArrayList<Room>) in.readObject();
-        return room;
+        return (ArrayList<Room>) in.readObject();
     }
     public void sendToServer(Object obj) throws IOException {
         out.writeObject(obj);
