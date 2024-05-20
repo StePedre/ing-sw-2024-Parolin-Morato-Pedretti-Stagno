@@ -35,7 +35,7 @@ public class Controller {
     @FXML
     private TextField nickTextField, numberPlayersTF;
     @FXML
-    private Label nickLabel, validLabel, loadingLabel, winnerName;
+    private Label nickLabel, validLabel, loadingLabel, winnerName, startLabel;
     Button confirmRoom = new Button("Submit");
     TextField tfRoom = new TextField();
     Label labelRoom = new Label("Insert new room's name:");
@@ -115,6 +115,9 @@ public class Controller {
     public TextField getTfRoom(){return tfRoom;}
     public Label getLabelRoom(){return labelRoom;}
     public ComboBox<Label> getMenu() {return menu;}
+    public Label getStartLabel(){return startLabel;}
+    public Label getNickLabel(){return nickLabel;}
+    public TextField getNickTextField() {return nickTextField;}
 
     public void addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
@@ -128,11 +131,18 @@ public class Controller {
             menu.getItems().add(elem);
         }
         hboxRoom.getChildren().clear();
-        if(vboxRoom.getChildren().getLast()==confirmRoom){
+        if (vboxRoom.getChildren().getLast() == confirmRoom) {
             vboxRoom.getChildren().removeLast();
         }
         confirmRoom.setVisible(false);
         hboxRoom.getChildren().add(menu);
+        menu.setOnAction(e -> {
+            if (vboxRoom.getChildren().getLast() != confirmRoom) {
+                vboxRoom.getChildren().add(confirmRoom);
+            }
+            VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
+            confirmRoom.setVisible(true);
+        });
     }
     public void addRoomCreationInput(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         labelRoom.setPrefWidth(200);
@@ -148,34 +158,24 @@ public class Controller {
         confirmRoom.setVisible(false);
         hboxRoom.getChildren().add(vbox);
         vbox.getChildren().get(1).setOnKeyTyped(e -> {
-            vboxRoom.getChildren().add(confirmRoom);
+            if(vboxRoom.getChildren().getLast()!=confirmRoom){
+                vboxRoom.getChildren().add(confirmRoom);
+            }
             VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
             confirmRoom.setVisible(true);
         });
     }
 
-    public boolean sendNickname() throws IOException, ClassNotFoundException {
+    public String getNickname() throws IOException, ClassNotFoundException {
         String nickname;
-        boolean flag = false;
-        do {
-            nickname = nickTextField.getText();
-            if (!nickname.isEmpty()) {
-                nickTextField.clear();
-            }
-            client.sendToServer(nickname);
-            if(client.receiveBooleanFromServer()){
-                flag = true;
-            }
-            else{
-                nickLabel.setPrefWidth(800);    // eventualmente aggiungere un'altra label
-                nickLabel.setStyle("-fx-text-fill: #b20b0b");
-                nickLabel.setText("This name is already taken, choose another one:");
-            }
-        } while (!flag);
-        return client.receiveBooleanFromServer();
+        nickname = nickTextField.getText();
+        if (!nickname.isEmpty()) {
+            nickTextField.clear();
+        }
+        return nickname;
     }
 
-    public int getNumberPlayers() {
+    public boolean getNumberPlayers() {
         int numberOfPlayers = 0;
         String inputText = numberPlayersTF.getText();
         if (!inputText.isEmpty()) {
@@ -185,15 +185,17 @@ public class Controller {
                     validLabel.setVisible(true);
                     numberPlayersTF.clear();
                 } else {
-                    System.out.println(numberOfPlayers);
-                    return  numberOfPlayers;
+                    client.sendToServer(numberOfPlayers);
+                    return true;
                 }
             } catch (NumberFormatException e) {
                 validLabel.setVisible(true);
                 numberPlayersTF.clear();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
-        return numberOfPlayers;
+        return false;
     }
 
     public void getLeftSecretObj() {
@@ -222,14 +224,6 @@ public class Controller {
     }
     public void sendIfStarterFlipped(boolean flip) throws IOException {
         client.sendToServer(flip);
-    }
-
-    public ArrayList<Room> getRooms() throws IOException, ClassNotFoundException {
-        return client.receiveRoomsFromServer();
-    }
-
-    public boolean getWaiting() throws IOException, ClassNotFoundException {
-        return client.receiveBooleanFromServer();
     }
 
     public boolean ifDrawable() throws IOException, ClassNotFoundException {

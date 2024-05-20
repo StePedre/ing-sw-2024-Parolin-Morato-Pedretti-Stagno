@@ -113,19 +113,14 @@ public class GUI extends Application{
             }else if (newValue.equals(buttonL)) {
                 try{
                     controller.addRoomsMenu(rooms);
-                    controller.getMenu().setOnAction(e ->{
-                        vboxRoom.getChildren().add(controller.getConfirmRoom());
-                        VBox.setMargin(controller.getConfirmRoom(), new Insets(0, 0, 50, 400));
-                        controller.getConfirmRoom().setVisible(true);
-                        controller.getConfirmRoom().setOnAction(e2->{
-                            try {
-                                client.sendToServer(false); // comunica al server che vuole joinare una stanza
-                                client.sendToServer(controller.getMenu().getSelectionModel().getSelectedItem().getText()); // comunica al server nome stanza
-                                switchToLogin(stage);
-                            } catch (IOException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        });
+                    controller.getConfirmRoom().setOnAction(e2->{
+                        try {
+                            client.sendToServer(false); // comunica al server che vuole joinare una stanza
+                            client.sendToServer(controller.getMenu().getSelectionModel().getSelectedItem().getText()); // comunica al server nome stanza
+                            switchToLogin(stage);
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     });
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
@@ -133,7 +128,7 @@ public class GUI extends Application{
             }
         });
     }
-    public void switchToLogin(Stage stage) throws IOException {
+    public void switchToLogin(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/insertNick.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -144,15 +139,21 @@ public class GUI extends Application{
         stage.setScene(scene);
         stage.show();
         Button nickButton = controller.getNickButton();
-        final boolean[] isFirst = {false};
         nickButton.setOnAction(actionEvent -> {
             try {
-                isFirst[0] = controller.sendNickname();
-                if(isFirst[0]){
-                    switchToNumberPlayers(stage);
+                client.sendToServer(controller.getNickname());
+                if(client.receiveBooleanFromServer()){
+                    controller.getNickLabel().setPrefWidth(800);    // eventualmente aggiungere un'altra label
+                    controller.getNickLabel().setStyle("-fx-text-fill: #b20b0b");
+                    controller.getNickLabel().setText("This name is already taken, choose another one:");
+                    controller.getNickTextField().setText("");
                 }
                 else{
-                    if(!controller.getWaiting()) {
+                    if(client.receiveBooleanFromServer()){
+                        switchToNumberPlayers(stage);
+                    }
+                    else{
+                        // legge un boleano in ritardo
                         switchToWaitingStart(stage);
                     }
                 }
@@ -172,14 +173,13 @@ public class GUI extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+        final boolean[] flag = {false};
         Button requestButton = controller.getRequestButton();
         requestButton.setOnAction(event -> {
-            int numberPlayers = controller.getNumberPlayers();
             try {
-                if (numberPlayers >= 2 && numberPlayers <= 4) {
-                    if(controller.getWaiting()){
-                        switchToWaitingStart(stage);
-                    }
+                flag[0] = controller.getNumberPlayers();
+                if (flag[0]) {
+                    switchToWaitingStart(stage);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -336,14 +336,26 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
+        Player player = client.receivePlayerFromServer();
+        controller.getStartLabel().setText("Please "+player.getNickname()+", wait for other players to join.");
         VBox vboxWaitStart = controller.getVboxWaitStart();
         adjustLayout(vboxWaitStart, screenHeight, screenWidth, 768, 1366);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        if(controller.getWaiting()){
-            switchToSelectSecretObj(stage);
-        }
+        Thread t = new Thread(() ->{
+            try {
+                if(!client.receiveBooleanFromServer()){
+                    if(client.receiveBooleanFromServer()){
+                        switchToSelectSecretObj(stage);
+                    }
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        t.start();
+
     }
 
     public void switchToWaitingFinish(Stage stage) throws IOException, ClassNotFoundException {
