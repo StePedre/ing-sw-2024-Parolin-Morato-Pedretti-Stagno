@@ -29,7 +29,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             start();
             out.writeObject(player);
             out.writeObject(false);
-            while (game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
+            while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
             out.writeObject(true);
             playerinit();
@@ -186,6 +186,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     public void start() throws IOException, ClassNotFoundException {
         Room room = roomChoice();
         String nickname = nicknameChoice(room);
+        out.reset();
         firstPlayer(room);
         this.player = new Player(nickname);
         game = room.getGame();
@@ -197,9 +198,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             out.writeObject(true);
             int n =(int) in.readObject();
             room.getGame().setExpPlayers(n);
-        }
-        else{
-            out.writeObject(false);
+        } else{
+            out.writeObject(false);// da problemi al secondo player nellaa GUI
         }
     }
     public Room roomChoice() throws IOException, ClassNotFoundException {

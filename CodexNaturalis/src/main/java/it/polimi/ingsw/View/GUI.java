@@ -76,7 +76,7 @@ public class GUI extends Application{
                 try {
                     controller.addRoomCreationInput(rooms);
                     controller.getConfirmRoom().setOnAction(e -> {
-                        boolean found,flag;
+                        boolean found, flag;
                         try {
                                 found = false;
                                 for (Room r : rooms) {
