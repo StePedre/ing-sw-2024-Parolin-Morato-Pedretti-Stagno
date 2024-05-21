@@ -35,7 +35,7 @@ public class Controller {
     @FXML
     private TextField nickTextField, numberPlayersTF, textFieldRoom;
     @FXML
-    private Label nickLabel, labelRoom,  labelInputRoom, validLabel, loadingLabel, winnerName, startLabel, startLabel2;
+    private Label nickLabel, labelRoom,  labelInputRoom, validLabel, loadingLabel, winnerName, winnersNames, startLabel, startLabel2;
     @FXML
     private ProgressBar waitingBar;
     @FXML
@@ -109,6 +109,7 @@ public class Controller {
     public VBox getVboxWinners() {return vboxWinners;}
     public VBox getVboxWinner() {return vboxWinner;}
     public Label getWinnerName() {return winnerName;}
+    public Label getWinnersNames() {return winnersNames;}
     public Button getFinishButton() {return finishButton;}
     public Button getFinishButton2() {return finishButton2;}
     public Button getConfirmRoom() {return confirmRoom;}
@@ -121,17 +122,13 @@ public class Controller {
     public TextField getNickTextField() {return nickTextField;}
     public ProgressBar getWaitingBar() {return waitingBar;}
 
-    public void addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
+    public void addRoomsMenu() throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
         labelInputRoom.setVisible(false);
         textFieldRoom.setVisible(false);
         textFieldRoom.setDisable(true);
         menu.setPromptText("Available rooms:");
         menu.setStyle("-fx-text-background-color: black;");
-        for (Room r: rooms){
-            Label elem = new Label(r.getName());
-            menu.getItems().add(elem);
-        }
         menu.setVisible(true);
         menu.setDisable(false);
         menu.setOnAction(e->{
@@ -248,10 +245,6 @@ public class Controller {
         plumeNum.setText(String.valueOf(map.get(Resource.PLUME)));
     }
 
-    public boolean checkIfLast() throws IOException, ClassNotFoundException {
-        return client.receiveBooleanFromServer();
-    }
-
     public boolean checkIfOver() throws IOException, ClassNotFoundException {
         return client.receiveBooleanFromServer();
     }
@@ -268,7 +261,7 @@ public class Controller {
         client.reset();
         Player player = client.receivePlayerFromServer();
         Game game = client.receiveGameFromServer();
-        showAvailablePos(player.getPlayerGround());
+       // showAvailablePos(player.getPlayerGround());
         //  setDragDetected(handCardLeft);                  to do: setting drag and drop, depending on graphic structure of ground
         //  setDragDetected(handCardCenter);
         //  setDragDetected(handCardRight);

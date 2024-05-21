@@ -14,7 +14,7 @@
                   <Font name="Bookman Old Style" size="40.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" prefHeight="170.0" prefWidth="1080.0" text="It's a draw! The winners are...">
+            <Label fx:id="winnersNames" alignment="CENTER" prefHeight="170.0" prefWidth="1080.0" text="It's a draw! The winners are...">
                <font>
                   <Font name="Bookman Old Style" size="30.0" />
                </font>

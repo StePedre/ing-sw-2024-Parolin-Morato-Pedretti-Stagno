@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -69,6 +70,10 @@ public class GUI extends Application{
         stage.setScene(scene);
         stage.show();
         ArrayList<Room> rooms = client.receiveRoomsFromServer();
+        for (Room r: rooms){
+            Label elem = new Label(r.getName());
+            controller.getMenu().getItems().add(elem);
+        }
         RadioButton buttonL = controller.getButtonL();
         RadioButton buttonR = controller.getButtonR();
         buttonL.getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -114,7 +119,7 @@ public class GUI extends Application{
                 }
             }else if (newValue.equals(buttonL)) {
                 try{
-                    controller.addRoomsMenu(rooms);
+                    controller.addRoomsMenu();
                     controller.getConfirmRoom().setOnAction(e2->{
                         boolean flag;
                         try {
@@ -206,11 +211,6 @@ public class GUI extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-
-
-        //ObjectiveCard card1 = new ObjectiveCard(93, new FlatRule(0)); just for test
-        // ObjectiveCard card2 = new ObjectiveCard(91, new FlatRule(0));
-        // ObjectiveCard[] objs = {card1, card2};
         controller.addSecretObjImages();
         ImageView secretObjLeft = controller.getSecretObjLeft();
         secretObjLeft.setOnMouseClicked(mouseEvent -> {
@@ -242,13 +242,13 @@ public class GUI extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-      // for testing  StarterCard card = new StarterCard(86, new FlatRule(0), new Corner[4], new Corner[4], Resource.BLANK, null);
         controller.addStarterImages();
         ImageView frontStarterCard = controller.getFrontStarterCard();
         frontStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
                 controller.sendIfStarterFlipped(false);
                 showUpdatedPlayerGround(stage);
+               // simulateEnd(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -258,6 +258,7 @@ public class GUI extends Application{
             try {
                 controller.sendIfStarterFlipped(true);
                 showUpdatedPlayerGround(stage);
+                // simulateEnd(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -271,11 +272,11 @@ public class GUI extends Application{
         controller.setStreams(client);
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();
+     //   stage.show();
         boolean flag;
         flag = controller.addGround();
         if(flag){ // se è il suo turno
-            if(!controller.checkIfLast()){
+            if(!client.receiveBooleanFromServer()){
                 switchToYourTurn(stage);
             }
             else{ // ultimo turno
@@ -410,12 +411,14 @@ public class GUI extends Application{
         adjustLayout(vboxWinners, screenHeight, screenWidth, 720, 1280);
         String x = "";
         for(Player p: winners){
-            if(winners.getLast().getNickname().equals(p.getNickname())){
-                x = x.concat(p.getNickname()+" ");
+            if(winners.getLast().getNickname().equals(p.getNickname())) {
+                x = x.concat(p.getNickname());
             }
-            x = x.concat(p.getNickname()+", ");
+            else{
+                x = x.concat(p.getNickname() + ", ");
+            }
         }
-        controller.getWinnerName().setText("The winners are "+x + "!");
+        controller.getWinnersNames().setText("The winners are "+x + "!");
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -443,6 +446,7 @@ public class GUI extends Application{
         stage2.initOwner(stage);
         Scene scene = new Scene(root);
         stage2.setScene(scene);
+        stage2.showAndWait();
         controller.getFinishButton().setOnAction(e ->{
             try {
                 switchToWaitingFinish(stage);
@@ -461,6 +465,7 @@ public class GUI extends Application{
         stage2.initOwner(stage);
         Scene scene = new Scene(root);
         stage2.setScene(scene);
+        stage2.showAndWait();
         controller.getFinishButton2().setOnAction(e ->{
             try {
                 switchToWaitingFinish(stage);
@@ -518,5 +523,22 @@ public class GUI extends Application{
 
     }
 
+ /*   public void simulateEnd(Stage stage) throws IOException {
+        boolean flag = true;
+        if(flag){ // se è il suo turno
+            if(!flag){
+                switchToYourTurn(stage);
+            }
+            else{ // ultimo turno
+                // showTwentyPoints(stage);
+                showZeroCards(stage);
+            }
+        }
+        ArrayList<Player> winners = new ArrayList<>();
+        winners.add(new Player("silvia"));
+      //  showSingleWinner(stage, winners);
+        winners.add(new Player("matteo"));
+        showWinners(stage, winners);
+    }*/
 }
 

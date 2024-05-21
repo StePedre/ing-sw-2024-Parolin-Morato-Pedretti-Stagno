@@ -15,7 +15,7 @@
                   <Font name="Bookman Old Style" size="36.0" />
                </font>
             </Label>
-            <Button fx:id="finishButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" text="Button" textFill="WHITE">
+            <Button fx:id="finishButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" text="Ok" textFill="WHITE">
                <font>
                   <Font name="Bookman Old Style" size="16.0" />
                </font>

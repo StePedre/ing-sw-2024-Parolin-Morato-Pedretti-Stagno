@@ -61,7 +61,7 @@
                            </font>
                         </Label>
                         <TextField fx:id="textFieldRoom" alignment="CENTER" disable="true" prefHeight="25.0" prefWidth="232.0" visible="false" />
-                        <Button fx:id="confirmRoom" defaultButton="true" disable="true" mnemonicParsing="false" text="Submit" textFill="WHITE" visible="false">
+                        <Button fx:id="confirmRoom" style="-fx-background-color: #1560BD;" disable="true" mnemonicParsing="false" text="Submit" textFill="WHITE" visible="false">
                            <VBox.margin>
                               <Insets top="100.0" />
                            </VBox.margin>
