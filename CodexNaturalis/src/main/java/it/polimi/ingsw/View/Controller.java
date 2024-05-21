@@ -31,16 +31,15 @@ public class Controller {
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight;
     @FXML
-    private Button buttonSubDraw, finishButton, finishButton2;
+    private Button buttonSubDraw, finishButton, finishButton2, buttonStart, confirmRoom;
     @FXML
-    private TextField nickTextField, numberPlayersTF;
+    private TextField nickTextField, numberPlayersTF, textFieldRoom;
     @FXML
-    private Label nickLabel, validLabel, loadingLabel, winnerName, startLabel;
-    Button confirmRoom = new Button("Submit");
-    TextField tfRoom = new TextField();
-    Label labelRoom = new Label("Insert new room's name:");
-    VBox vbox = new VBox(labelRoom, tfRoom);
-    ComboBox<Label> menu = new ComboBox<>();
+    private Label nickLabel, labelRoom,  labelInputRoom, validLabel, loadingLabel, winnerName, startLabel, startLabel2;
+    @FXML
+    private ProgressBar waitingBar;
+    @FXML
+    private ComboBox<Label> menu;
     private final Screen screen = Screen.getPrimary();
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
@@ -60,8 +59,8 @@ public class Controller {
     private Button nickButton, requestButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
 //    private final Image voidImage = new Image("url immagine vuota");
-    private final String imagesFrontPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_front\\";
-    private final String imagesBackPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_back\\";
+    private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
+    private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
 
 /*
     @Override
@@ -99,6 +98,7 @@ public class Controller {
     }
     public RadioButton getButtonL() {return buttonL;}
     public RadioButton getButtonR() {return buttonR;}
+    public Button getButtonStart() {return buttonStart;}
     public VBox getVboxNick() {return vboxNickname;}
     public VBox getVboxRoom() {return vboxRoom;}
     public VBox getVboxNoPlayers() {return vboxNoPlayers;}
@@ -112,57 +112,45 @@ public class Controller {
     public Button getFinishButton() {return finishButton;}
     public Button getFinishButton2() {return finishButton2;}
     public Button getConfirmRoom() {return confirmRoom;}
-    public TextField getTfRoom(){return tfRoom;}
+    public TextField getTfRoom(){return textFieldRoom;}
     public Label getLabelRoom(){return labelRoom;}
     public ComboBox<Label> getMenu() {return menu;}
     public Label getStartLabel(){return startLabel;}
+    public Label getStartLabel2(){return startLabel2;}
     public Label getNickLabel(){return nickLabel;}
     public TextField getNickTextField() {return nickTextField;}
+    public ProgressBar getWaitingBar() {return waitingBar;}
 
     public void addRoomsMenu(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
-        confirmRoom.setPrefWidth(100);
-        menu.setPrefWidth(200);
+        labelInputRoom.setVisible(false);
+        textFieldRoom.setVisible(false);
+        textFieldRoom.setDisable(true);
         menu.setPromptText("Available rooms:");
-        HBox.setMargin(menu, new Insets(25, 0, 0, 350));
         menu.setStyle("-fx-text-background-color: black;");
         for (Room r: rooms){
             Label elem = new Label(r.getName());
             menu.getItems().add(elem);
         }
-        hboxRoom.getChildren().clear();
-        if (vboxRoom.getChildren().getLast() == confirmRoom) {
-            vboxRoom.getChildren().removeLast();
-        }
-        confirmRoom.setVisible(false);
-        hboxRoom.getChildren().add(menu);
-        menu.setOnAction(e -> {
-            if (vboxRoom.getChildren().getLast() != confirmRoom) {
-                vboxRoom.getChildren().add(confirmRoom);
-            }
-            VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
+        menu.setVisible(true);
+        menu.setDisable(false);
+        menu.setOnAction(e->{
             confirmRoom.setVisible(true);
+            confirmRoom.setDisable(false);
         });
+
     }
     public void addRoomCreationInput(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
-        labelRoom.setPrefWidth(200);
-        tfRoom.setPrefWidth(200);
-        vbox.setPrefWidth(200);
-        confirmRoom.setPrefWidth(100);
+        menu.setDisable(true);
+        menu.setVisible(false);
         confirmRoom.setVisible(false);
-        HBox.setMargin(vbox, new Insets(25, 0, 0, 350));
-        hboxRoom.getChildren().clear();
-        if (vboxRoom.getChildren().getLast() == confirmRoom) {
-            vboxRoom.getChildren().removeLast();
-        }
-        confirmRoom.setVisible(false);
-        hboxRoom.getChildren().add(vbox);
-        vbox.getChildren().get(1).setOnKeyTyped(e -> {
-            if(vboxRoom.getChildren().getLast()!=confirmRoom){
-                vboxRoom.getChildren().add(confirmRoom);
-            }
-            VBox.setMargin(confirmRoom, new Insets(0, 0, 50, 400));
+        labelInputRoom.setVisible(true);
+        textFieldRoom.setVisible(true);
+        labelInputRoom.setDisable(false);
+        textFieldRoom.setDisable(false);
+        textFieldRoom.setOnKeyTyped(e -> {
             confirmRoom.setVisible(true);
+            confirmRoom.setDisable(false);
         });
     }
 
@@ -208,14 +196,9 @@ public class Controller {
         System.out.println("Chosen right secret objective");
     }
     public void addSecretObjImages() throws IOException, ClassNotFoundException {
-        Player player = client.receivePlayerFromServer();   // server manda istanza player, setto già il nick per il ground
-        labelNick.setText(player.getNickname());
         ObjectiveCard[] objs = client.receiveSecretObjsFromServer();
         secretObjLeft.setImage(new Image("file:" + imagesFrontPath + objs[0].getId() + ".png"));
         secretObjRight.setImage(new Image("file:" + imagesFrontPath + objs[1].getId() + ".png"));
-    }
-    public void sendSecret(int i) throws IOException {
-        client.sendToServer(i);
     }
     public void addStarterImages() throws IOException, ClassNotFoundException {
         StarterCard card = client.receiveStarterCardFromServer();
@@ -224,10 +207,6 @@ public class Controller {
     }
     public void sendIfStarterFlipped(boolean flip) throws IOException {
         client.sendToServer(flip);
-    }
-
-    public boolean ifDrawable() throws IOException, ClassNotFoundException {
-        return client.receiveBooleanFromServer();
     }
 
     public boolean addGround() throws IOException, ClassNotFoundException {

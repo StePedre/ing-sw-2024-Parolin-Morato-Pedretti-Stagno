@@ -4,6 +4,8 @@ import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.FlatRule;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -161,7 +163,6 @@ public class GUI extends Application{
                         switchToNumberPlayers(stage);
                     }
                     else{
-                        // legge un boleano in ritardo
                         switchToWaitingStart(stage);
                     }
                 }
@@ -177,7 +178,7 @@ public class GUI extends Application{
         Controller controller = loader.getController();
         controller.setStreams(client);
         VBox vboxNoPlayers = controller.getVboxNoPlayers();
-        adjustLayout(vboxNoPlayers, screenHeight, screenWidth, 768, 1366);
+        //adjustLayout(vboxNoPlayers, screenHeight, screenWidth, 768, 1366);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -205,6 +206,8 @@ public class GUI extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+
+
         //ObjectiveCard card1 = new ObjectiveCard(93, new FlatRule(0)); just for test
         // ObjectiveCard card2 = new ObjectiveCard(91, new FlatRule(0));
         // ObjectiveCard[] objs = {card1, card2};
@@ -212,7 +215,7 @@ public class GUI extends Application{
         ImageView secretObjLeft = controller.getSecretObjLeft();
         secretObjLeft.setOnMouseClicked(mouseEvent -> {
             try {
-                controller.sendSecret(1);
+                client.sendToServer((int)1);
                 switchToStarterChoice(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -221,7 +224,7 @@ public class GUI extends Application{
         ImageView secretObjRight = controller.getSecretObjRight();
         secretObjRight.setOnMouseClicked(mouseEvent -> {
             try {
-                controller.sendSecret(2);
+                client.sendToServer((int)1);
                 switchToStarterChoice(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -299,7 +302,7 @@ public class GUI extends Application{
             stage2.close();
             try {
                 if(controller.playCard()){
-                    if(controller.ifDrawable()){
+                    if(client.receiveBooleanFromServer()){
                         switchToDraw(stage);
                     }
                 }
@@ -351,18 +354,31 @@ public class GUI extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        Thread t = new Thread(() ->{
-            try {
+        Task<Integer> task = new Task<Integer>(){
+            @Override
+            protected Integer call() throws Exception {
                 if(!client.receiveBooleanFromServer()){
                     if(client.receiveBooleanFromServer()){
-                        switchToSelectSecretObj(stage);
+                     //   controller.getStartLabel().setText("Every player has logged in!");
+                     //   controller.getStartLabel2().setText("Press the button to continue.");
+                        controller.getWaitingBar().setVisible(false);
+                        controller.getButtonStart().setDisable(false);
+                        controller.getButtonStart().setVisible(true);
                     }
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                return null;
+            }
+        };
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+        controller.getButtonStart().setOnAction(e->{
+            try {
+                switchToSelectSecretObj(stage);
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
             }
         });
-        t.start();
 
     }
 
@@ -467,7 +483,7 @@ public class GUI extends Application{
         stage2.showAndWait();
         try {
             if(controller.playCard()){
-                if(controller.ifDrawable()){
+                if(client.receiveBooleanFromServer()){
                     switchToWaitingFinish(stage);
                 }
             }
