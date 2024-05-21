@@ -96,7 +96,7 @@
                 {"name": "card83", "color": "none", "TLFcorner": "blank", "TRFcorner": "blank", "BLFcorner": "blank", "BRFcorner": "blank", "TLBcorner": "bug", "TRBcorner": "fox", "BLBcorner": "mushroom", "BRBcorner": "leaf", "rule": "none", "backres": [{"res1": "leaf", "res2": "mushroom", "res3": "none"}]},
                 {"name": "card84", "color": "none", "TLFcorner": "blank", "TRFcorner": "blank", "BLFcorner": "blank", "BRFcorner": "blank", "TLBcorner": "leaf", "TRBcorner": "bug", "BLBcorner": "fox", "BRBcorner": "mushroom", "rule": "none", "backres": [{"res1": "fox", "res2": "bug", "res3": "none"}]},
                 {"name": "card85", "color": "none", "TLFcorner": "blank", "TRFcorner": "blank", "BLFcorner": "notavail", "BRFcorner": "notavail", "TLBcorner": "bug", "TRBcorner": "mushroom", "BLBcorner": "leaf", "BRBcorner": "fox", "rule": "none", "backres": [{"res1": "fox", "res2": "bug", "res3": "leaf"}]},
-                {"name": "card86", "color": "none", "TLFcorner": "notavail", "TRFcorner": "blank", "BLFcorner": "notavail", "BRFcorner": "notavail", "TLBcorner": "mushroom", "TRBcorner": "fox", "BLBcorner": "leaf", "BRBcorner": "bug", "rule": "none", "backres": [{"res1": "leaf", "res2": "fox", "res3": "mushroom"}]}
+                {"name": "card86", "color": "none", "TLFcorner": "blank", "TRFcorner": "blank", "BLFcorner": "notavail", "BRFcorner": "notavail", "TLBcorner": "mushroom", "TRBcorner": "fox", "BLBcorner": "leaf", "BRBcorner": "bug", "rule": "none", "backres": [{"res1": "leaf", "res2": "fox", "res3": "mushroom"}]}
             ]
         },
         "objectivecards": [
