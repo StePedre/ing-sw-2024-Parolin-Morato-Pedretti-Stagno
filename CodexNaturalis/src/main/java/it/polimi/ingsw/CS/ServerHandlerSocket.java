@@ -220,8 +220,14 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 }
             } else {
                 room = rooms.getRoom((String) in.readObject());
-                b = false;
-                out.writeObject(false);
+                if(room.getGame().getNumPlayer() == room.getGame().getExpPlayers()){
+                    b=true;
+                    out.writeObject(true);
+                }else{
+                    b = false;
+                    out.writeObject(false);
+                }
+
             }
         }while (b);
         return room;

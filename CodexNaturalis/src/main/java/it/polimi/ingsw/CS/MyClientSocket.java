@@ -7,6 +7,7 @@ import it.polimi.ingsw.View.*;
 import javafx.application.Application;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class MyClientSocket {
@@ -24,7 +25,9 @@ public class MyClientSocket {
         try {
             System.out.println("Client connected");
             if(inter) {
-                useTUI(59090, "127.0.0.1");
+                System.out.println("Write the IP of the server");
+                Scanner s = new Scanner(System.in);
+                useTUI(59090, s.nextLine());
             }else{
                 useGUI();
             }

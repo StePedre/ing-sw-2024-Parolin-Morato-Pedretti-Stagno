@@ -36,7 +36,7 @@ public class GUI extends Application{
 
     @Override
     public void start(Stage stage) throws IOException {
-        Socket socket = new Socket("127.0.0.1", 59090);
+        Socket socket = new Socket("127.0.0.1", 59090);//modificare socket con inserimento ip server
         client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/loadingScene.fxml"));
         Parent root = loader.load();

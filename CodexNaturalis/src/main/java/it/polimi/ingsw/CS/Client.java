@@ -5,11 +5,14 @@ import it.polimi.ingsw.Model.MissingResourcesException;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.InetAddress;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
         try{//chiedere Gui/Tui e tipo di connesione
+            System.out.println(InetAddress.getLocalHost().getHostAddress());
             System.out.println("Do you want to use a GUI or a TUI?");
             Scanner s = new Scanner(System.in);
             String choice;

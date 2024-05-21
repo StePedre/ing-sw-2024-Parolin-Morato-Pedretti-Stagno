@@ -3,6 +3,8 @@ package it.polimi.ingsw.CS;
 import it.polimi.ingsw.Controller.RoomController;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.Arrays;
 
 
 public class Server {
@@ -10,6 +12,7 @@ public class Server {
         RoomController rooms = new RoomController();
 
         try {
+            System.out.println(InetAddress.getLocalHost().getHostAddress());
             MyServerSocket ss = new MyServerSocket(59090, rooms);
             Thread t = new Thread(() -> {
                 try {
