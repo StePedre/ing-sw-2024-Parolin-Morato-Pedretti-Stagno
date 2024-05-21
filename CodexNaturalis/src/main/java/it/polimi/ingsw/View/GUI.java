@@ -114,10 +114,18 @@ public class GUI extends Application{
                 try{
                     controller.addRoomsMenu(rooms);
                     controller.getConfirmRoom().setOnAction(e2->{
+                        boolean flag;
                         try {
                             client.sendToServer(false); // comunica al server che vuole joinare una stanza
                             client.sendToServer(controller.getMenu().getSelectionModel().getSelectedItem().getText()); // comunica al server nome stanza
-                            switchToLogin(stage);
+                            flag = client.receiveBooleanFromServer();
+                            if(flag){
+                                controller.getTfRoom().setText("");
+                                controller.getLabelRoom().setText("Too late! Someone else has just created a room with this name! Please input another one:");
+                            }
+                            else{
+                                switchToLogin(stage);
+                            }
                         } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
