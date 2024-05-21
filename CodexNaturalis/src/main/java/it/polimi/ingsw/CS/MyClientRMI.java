@@ -46,7 +46,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     public void setPlayer(Player player) throws RemoteException{
         this.player = player;
     }
-    public void runClient() throws RemoteException, InvalidPositionException, MissingResourcesException {
+    public void runClient() throws IOException, InvalidPositionException, MissingResourcesException {
         System.out.println("Client connected");
 
         if(inter) {//decisione se usare TUI o GUI
@@ -57,7 +57,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
-    private void useTUI() throws RemoteException, InvalidPositionException, MissingResourcesException {
+    private void useTUI() throws IOException, InvalidPositionException, MissingResourcesException {
         tui = new TUI();
         tui.showRoom(server.showRooms());
         if(tui.chooseRoom()){
@@ -140,7 +140,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             }
     }
 
-    private void startEarlyGame() throws RemoteException, InvalidPositionException {
+    private void startEarlyGame() throws IOException, InvalidPositionException {
         playerController = new PlayerController(player.getPlayerGround(),player.getHand());
         //select secret obj
         game = server.getRooms().getRoom(roomJoined).getGame();

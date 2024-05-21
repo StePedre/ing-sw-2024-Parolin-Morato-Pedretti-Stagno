@@ -3,6 +3,9 @@ import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
 import it.polimi.ingsw.Model.ScoreRules.NSymbolsRule;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -12,6 +15,9 @@ import java.util.*;
  * Methods from TUI class are invoked by clients both in RMI and socket implementation.
  */
 public class TUI {
+
+
+    private static final String LOG_FILE_PATH = "debug.log";
 
     /**
      * Constructor of the class with no parameters.
@@ -85,8 +91,9 @@ public class TUI {
      */
     public boolean showStarterCard(StarterCard startcard){
         System.out.println("Your first card it's this:\n");
-        showCard(startcard);
-        System.out.println(toStringBackCorners(startcard));
+        /*showCard(startcard);
+        System.out.println(toStringBackCorners(startcard));*/
+        AdvancedTUI_temp.printStartingCard(startcard);
         System.out.println("\nDo you want to place it flipped or not? Input 0 for not flipped, 1 for flipped.\n");
         Scanner scanner = new Scanner(System.in);
         int choice;
@@ -110,7 +117,7 @@ public class TUI {
      * @param obj2 is the second proposed secret objective.
      * @return the number corresponding to the player's choice (1 for the first objective, 2 for the second).
      */
-    public int chooseObjective(ObjectiveCard obj1, ObjectiveCard obj2){
+    public int chooseObjective(ObjectiveCard obj1, ObjectiveCard obj2) throws IOException {
         int choice;
         /*System.out.println("Choose between two secret objectives:\n1- " + toStringRule(obj1) + "\n2- " + toStringRule(obj2));*/
         System.out.println("Choose between two secret objectives: ");
@@ -120,6 +127,7 @@ public class TUI {
             choice = scanner.nextInt();
             scanner.nextLine();
         } while(!(choice==1 || choice == 2));
+
         return choice;
     }
 
@@ -531,6 +539,7 @@ public class TUI {
             System.out.println(toStringRule(obj));
         } */
         AdvancedTUI_temp.printObjectives(commonObjs);
+
         /*
         Card[][] matrix = player.getPlayerGround().getGround();    // scrittura di una matrice 0 e 1 con 1 dove c'è una carta
         int[][] matrixToPrint = new int[84][84];
@@ -690,5 +699,14 @@ public class TUI {
         System.out.println("Do you want to update rooms list or not?\n1-yes\nother-no");
         Scanner s = new Scanner(System.in);
         return (s.nextInt()==1) ? true : false;
+    }
+
+    public static void cleanDebugLog() throws IOException {
+        // Truncate the file to remove all content
+        File file = new File(LOG_FILE_PATH);
+        if (file.exists()) {
+            file.delete();
+            file.createNewFile();
+        }
     }
 }

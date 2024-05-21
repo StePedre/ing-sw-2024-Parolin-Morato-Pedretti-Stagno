@@ -235,8 +235,8 @@ public class PlayerGround implements Serializable {
                 Card card = ground[newX][newY];
                 if (card != null) {
                     // Calculates the index of the corresponding corner that is covered if you place the card in the placePosition
-                    int newCornerPos = j+ 2*i;
-                    int cornerPos = 3 - (j + 2 * i);
+                    int newCornerPos = i + 2 * j;
+                    int cornerPos = 3 - (i + 2 * j);
 
                     Resource resourceToRemove = card.getShowedCorners()[cornerPos].getCornerRes();
                     card.getShowedCorners()[cornerPos].setResource(newCard.getShowedCorners()[newCornerPos].getCornerRes());
@@ -311,7 +311,7 @@ public class PlayerGround implements Serializable {
                 // checks if the ground is free in that position and if is not unavailable
                 if ((ground[newX][newY] == null || ground[newX][newY].getId() ==-1) && !checkPosition(newPosition, unavailablePositions)) {
                     // calculates the index of the corresponding covering corner and checks its availability
-                    int cornerPosition = j + 2 * i;
+                    int cornerPosition = i + 2 * j;
                     if (card.getShowedCorners()[cornerPosition].getAvailability()) {
                         availablePositions.add(newPosition);
                         ground[newX][newY] = availabilityCard;

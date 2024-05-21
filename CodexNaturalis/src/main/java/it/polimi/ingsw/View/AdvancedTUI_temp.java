@@ -95,7 +95,7 @@ public class AdvancedTUI_temp {
             }
         }
 
-        boolean state = true;
+        boolean state = false;
         System.out.println("\n");
         System.out.println("Your play ground looks like this:\n");
         System.out.println("\n");
@@ -123,8 +123,9 @@ public class AdvancedTUI_temp {
                         contentLine4 += getGridLine4(matrixToPrint[j][i], state);
                     }
                 }
-                state = !state;
+
             }
+            state = !state;
             System.out.println("                       " + contentLine1 + "                       ");
             System.out.println("                       " + contentLine2 + "                       ");
             System.out.println("                       " + contentLine3 + "                       ");
@@ -196,6 +197,55 @@ public class AdvancedTUI_temp {
 
 
 }
+
+    public static void printStartingCard(StarterCard card){
+
+        StringBuilder topBorder = new StringBuilder();
+        StringBuilder contentLine1 =  new StringBuilder();
+        StringBuilder contentLine2 =  new StringBuilder();
+        StringBuilder contentLine3 =  new StringBuilder();
+        StringBuilder buttonBorder =  new StringBuilder();
+
+        String ANSI_RESET = "\u001B[0m";
+
+
+            topBorder.append(" ").append(cornerColor(card.getCorners()[1])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ ").append(ANSI_RESET).append(cornerColor(card.getCorners()[3])).append(" ");
+            contentLine1.append("\u001B[0m").append(" ▌").append(firstCardContent(card,1)).append("\u001B[0m").append("▌  ");
+            contentLine2.append("\u001B[0m").append(" ▌").append(firstCardContent(card,2)).append("\u001B[0m").append("▌  ");
+            contentLine3.append("\u001B[0m").append(" ▌").append(firstCardContent(card,3)).append("\u001B[0m").append("▌  ");
+            buttonBorder.append(" ").append(cornerColor(card.getCorners()[0])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ ").append(ANSI_RESET).append(cornerColor(card.getCorners()[2])).append(" ");
+
+        topBorder.append(" ").append(cornerColor(card.getBackCorners()[1])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(card.getBackCorners()[3])).append(" ");
+        contentLine1.append("\u001B[0m").append(" ▌").append("                    ").append("\u001B[0m").append("▌ ");
+        contentLine2.append("\u001B[0m").append(" ▌").append("                    ").append("\u001B[0m").append("▌ ");
+        contentLine3.append("\u001B[0m").append(" ▌").append("                    ").append("\u001B[0m").append("▌ ");
+        buttonBorder.append(" ").append(cornerColor(card.getBackCorners()[0])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(card.getBackCorners()[2])).append(" ");
+
+
+        System.out.println("                        " + topBorder);
+        System.out.println("                        " + contentLine1);
+        System.out.println("                        " + contentLine2);
+        System.out.println("                        " + contentLine3);
+        System.out.println("                        " + buttonBorder);
+    }
+    private static String firstCardContent(StarterCard starterCard, int state){
+        if(state == 1){
+            Corner corner = new Corner("top",starterCard.getBackRes().getFirst(), true);
+            return "         "+ "\u200A" + "\u200A" + "\u200A" + "\u200A" +cornerColor(corner) + "\u200A" + "\u200A" + "\u200A" + "\u200A" +"        ";
+        }
+        if(state == 2 && !starterCard.getBackRes().get(1).equals(BLANK)){
+            //return "█    first card    █
+            Corner corner = new Corner("top",starterCard.getBackRes().get(1), true);
+            return "         "+ "\u200A" + "\u200A" + "\u200A" + "\u200A" +cornerColor(corner) + "\u200A" + "\u200A" + "\u200A" + "\u200A" +"        ";
+        }
+        if(state == 3 && !starterCard.getBackRes().get(2).equals(BLANK)){
+            Corner corner = new Corner("top",starterCard.getBackRes().get(2), true);
+            return "         "+ "\u200A" + "\u200A" + "\u200A" + "\u200A" +cornerColor(corner) + "\u200A" + "\u200A" + "\u200A" + "\u200A" +"        ";
+        }
+        else{
+            return "                    ";
+        }
+    }
     public static void printHand(Hand hand){
 
         PlayableCard[] cards = hand.getCards();
@@ -293,11 +343,25 @@ public class AdvancedTUI_temp {
 
 
     private static String getFirstGridLine(Card card, int state){
-        if(state == 4){
-            return "██████████████████";
+        StarterCard starterCard = (StarterCard) card;
+        if(state == 1 && !starterCard.getFlip()){
+            Corner corner = new Corner("top",starterCard.getBackRes().getFirst(), true);
+            return "█         "+ cornerColor(corner) +"        █";
         }
-        if(state == 2){
-            return "█    first card    █";
+        if(state == 2 && !starterCard.getFlip() && !starterCard.getBackRes().get(1).equals(BLANK)){
+            //return "█    first card    █
+            Corner corner = new Corner("top",starterCard.getBackRes().get(1), true);
+            return "█         "+ cornerColor(corner) +"        █";
+        }
+        if(state == 3 && !starterCard.getFlip() && !starterCard.getBackRes().get(2).equals(BLANK)){
+            Corner corner = new Corner("top",starterCard.getBackRes().get(2), true);
+            return "█         "+ cornerColor(corner) +"        █";
+        }
+        if(state == 4){
+            return cornerColor(card.getShowedCorners()[0]) + "████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
+        }
+        if(state == 5){
+            return cornerColor(card.getShowedCorners()[1]) + "████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
         }
         return "█                  █";
     }
