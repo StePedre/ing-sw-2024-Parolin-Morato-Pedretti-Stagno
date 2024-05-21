@@ -49,7 +49,6 @@ public class GUI extends Application{
         scene.setOnKeyReleased(keyEvent -> {
             try {
                 switchToRoomChoice(stage);
-                // switchToLogin(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -77,7 +76,7 @@ public class GUI extends Application{
                 try {
                     controller.addRoomCreationInput(rooms);
                     controller.getConfirmRoom().setOnAction(e -> {
-                        boolean found, flag;
+                        boolean found,flag;
                         try {
                                 found = false;
                                 for (Room r : rooms) {
@@ -118,11 +117,19 @@ public class GUI extends Application{
                         VBox.setMargin(controller.getConfirmRoom(), new Insets(0, 0, 50, 400));
                         controller.getConfirmRoom().setVisible(true);
                         controller.getConfirmRoom().setOnAction(e2->{
+                            boolean flag;
                             try {
                                 client.sendToServer(false); // comunica al server che vuole joinare una stanza
                                 client.sendToServer(controller.getMenu().getSelectionModel().getSelectedItem().getText()); // comunica al server nome stanza
-                                switchToLogin(stage);
-                            } catch (IOException ex) {
+                                flag = client.receiveBooleanFromServer();
+                                if(flag){
+                                    controller.getTfRoom().setText("");
+                                    controller.getLabelRoom().setText("Too late! Someone else has just created a room with this name! Please input another one:");
+                                }
+                                else{
+                                    switchToLogin(stage);
+                                }
+                            } catch (IOException | ClassNotFoundException ex) {
                                 throw new RuntimeException(ex);
                             }
                         });
