@@ -3,6 +3,7 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.FlatRule;
+import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -14,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -22,6 +24,8 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
+import javafx.animation.*;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -41,14 +45,20 @@ public class GUI extends Application{
         client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/loadingScene.fxml"));
         Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setStreams(client);
+        adjustLayout(controller.getHboxStart(), screenHeight, screenWidth, 768, 1366);
+        controller.getBackgroundIV().fitWidthProperty().bind(controller.getHboxStart().widthProperty());
+        controller.getBackgroundIV().fitHeightProperty().bind(controller.getHboxStart().heightProperty());
+       // adjustLayout(controller.getVboxStart(), screenHeight, screenWidth, 768, 1366);
+     //   controller.getLogo().fitWidthProperty().bind(controller.getHboxStart2().widthProperty());
+    //    controller.getLogo().fitHeightProperty().bind(controller.getHboxStart2().heightProperty());
         stage.setTitle("Codex Naturalis");
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.setFullScreen(false);
         stage.show();
-        Controller controller = loader.getController();
-        controller.setStreams(client);
         scene.setOnKeyReleased(keyEvent -> {
             try {
                 switchToRoomChoice(stage);
@@ -247,9 +257,9 @@ public class GUI extends Application{
         frontStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
                 controller.sendIfStarterFlipped(false);
-                showUpdatedPlayerGround(stage);
-               // simulateEnd(stage);
-            } catch (IOException | ClassNotFoundException e) {
+               // showUpdatedPlayerGround(stage);
+                simulateEnd(stage);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -257,9 +267,9 @@ public class GUI extends Application{
         backStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
                 controller.sendIfStarterFlipped(true);
-                showUpdatedPlayerGround(stage);
-                // simulateEnd(stage);
-            } catch (IOException | ClassNotFoundException e) {
+               // showUpdatedPlayerGround(stage);
+                 simulateEnd(stage);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -446,6 +456,17 @@ public class GUI extends Application{
         stage2.initOwner(stage);
         Scene scene = new Scene(root);
         stage2.setScene(scene);
+        // pulsing label animation
+        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(500), controller.getLabel20p());
+        scaleUp.setToX(1.2);
+        scaleUp.setToY(1.2);
+        ScaleTransition scaleDown = new ScaleTransition(Duration.millis(500), controller.getLabel20p());
+        scaleDown.setToX(1.0);
+        scaleDown.setToY(1.0);
+        SequentialTransition pulse = new SequentialTransition(scaleUp, scaleDown);
+        pulse.setCycleCount(SequentialTransition.INDEFINITE);
+        pulse.setAutoReverse(true);
+        pulse.play();
         stage2.showAndWait();
         controller.getFinishButton().setOnAction(e ->{
             try {
@@ -523,15 +544,15 @@ public class GUI extends Application{
 
     }
 
- /*   public void simulateEnd(Stage stage) throws IOException {
+ public void simulateEnd(Stage stage) throws IOException {
         boolean flag = true;
         if(flag){ // se è il suo turno
             if(!flag){
                 switchToYourTurn(stage);
             }
             else{ // ultimo turno
-                // showTwentyPoints(stage);
-                showZeroCards(stage);
+                showTwentyPoints(stage);
+              //  showZeroCards(stage);
             }
         }
         ArrayList<Player> winners = new ArrayList<>();
@@ -539,6 +560,6 @@ public class GUI extends Application{
       //  showSingleWinner(stage, winners);
         winners.add(new Player("matteo"));
         showWinners(stage, winners);
-    }*/
+    }
 }
 

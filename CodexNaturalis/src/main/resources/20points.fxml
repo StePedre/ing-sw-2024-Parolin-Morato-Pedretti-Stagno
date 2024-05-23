@@ -10,7 +10,7 @@
    <children>
       <VBox alignment="CENTER" layoutX="6.0" prefHeight="200.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label alignment="CENTER" prefHeight="100.0" prefWidth="600.0" text="You reached 20 points!">
+            <Label fx:id="label20p" alignment="CENTER" prefHeight="100.0" prefWidth="600.0" text="You reached 20 points!">
                <font>
                   <Font name="Bookman Old Style" size="36.0" />
                </font>

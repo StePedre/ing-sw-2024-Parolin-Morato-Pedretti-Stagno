@@ -21,21 +21,21 @@ import java.util.Objects;
 
 public class Controller {
     @FXML
-    private VBox vboxWinners,vboxWinner,vboxWaitStart,vboxWaitFinish,vboxStartCard,vboxSecretObjs,vboxNoPlayers,vboxNickname,vboxRoom;
+    private VBox vboxWinners,vboxWinner,vboxWaitStart,vboxWaitFinish,vboxStartCard,vboxSecretObjs,vboxNoPlayers,vboxNickname,vboxRoom, VboxStart;
     @FXML
     private AnchorPane paneRoom;
     @FXML
-    private HBox hboxRoom;
+    private HBox hBoxStart, hBoxStart2;
     @FXML
     private RadioButton buttonR,buttonL;
     @FXML
-    private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight;
+    private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV;
     @FXML
     private Button buttonSubDraw, finishButton, finishButton2, buttonStart, confirmRoom;
     @FXML
     private TextField nickTextField, numberPlayersTF, textFieldRoom;
     @FXML
-    private Label nickLabel, labelRoom,  labelInputRoom, validLabel, loadingLabel, winnerName, winnersNames, startLabel, startLabel2;
+    private Label nickLabel, labelRoom, label20p,  labelInputRoom, validLabel, loadingLabel, winnerName, winnersNames, startLabel, startLabel2;
     @FXML
     private ProgressBar waitingBar;
     @FXML
@@ -51,7 +51,7 @@ public class Controller {
     @FXML
     private Label labelNick, labelPoints, mushroomNum, bugNum, leafNum, foxNum, potionNum, scrollNum, plumeNum;
     @FXML
-    private ImageView handCardLeft, handCardCenter, handCardRight, secretObj;
+    private ImageView handCardLeft, handCardCenter, handCardRight, secretObj, logo;
     @FXML
     private static ImageView commonObj1, commonObj2;
     private int converter = 39; // 42 - 3 (coord iniziali matrice e gridPane)
@@ -108,6 +108,9 @@ public class Controller {
     public VBox getVboxWaitFinish() {return vboxWaitFinish;}
     public VBox getVboxWinners() {return vboxWinners;}
     public VBox getVboxWinner() {return vboxWinner;}
+    public VBox getVboxStart() {return VboxStart;}
+    public HBox getHboxStart() {return hBoxStart;}
+    public HBox getHboxStart2() {return hBoxStart2;}
     public Label getWinnerName() {return winnerName;}
     public Label getWinnersNames() {return winnersNames;}
     public Button getFinishButton() {return finishButton;}
@@ -119,8 +122,13 @@ public class Controller {
     public Label getStartLabel(){return startLabel;}
     public Label getStartLabel2(){return startLabel2;}
     public Label getNickLabel(){return nickLabel;}
+    public Label getLabel20p(){return label20p;}
     public TextField getNickTextField() {return nickTextField;}
     public ProgressBar getWaitingBar() {return waitingBar;}
+    public ImageView getLogo() {
+        return logo;
+    }
+    public ImageView getBackgroundIV(){ return backgroundIV;}
 
     public void addRoomsMenu() throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
