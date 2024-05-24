@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER" layoutX="590.0" layoutY="196.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="200.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="160.0" prefWidth="881.0" text="Insert correct Server IP (example: x.y.w.z)">
+               <font>
+                  <Font name="Bookman Old Style" size="30.0" />
+               </font>
+            </Label>
+            <TextField prefHeight="120.0" prefWidth="600.0" promptText="Type here...">
+               <font>
+                  <Font name="Bookman Old Style" size="30.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="50.0" right="50.0" />
+               </VBox.margin>
+            </TextField>
+            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="68.0" prefWidth="108.0" style="-fx-background-color: #1560BD;" text="Submit" textFill="WHITE">
+               <font>
+                  <Font name="Bookman Old Style" size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

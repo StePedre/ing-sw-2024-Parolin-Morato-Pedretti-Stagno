@@ -57,7 +57,7 @@
                   <VBox fx:id="vbox" alignment="TOP_CENTER" prefHeight="87.0" prefWidth="232.0">
                      <children>
                         <ComboBox fx:id="menu" prefHeight="25.0" prefWidth="235.0" promptText="Choose a room:" visible="false" />
-                        <Label fx:id="labelInputRoom" alignment="CENTER" text="Insert new room's name:" visible="false">
+                        <Label fx:id="labelRoom" alignment="CENTER" text="Insert new room's name:" visible="false">
                            <font>
                               <Font name="Bookman Old Style" size="18.0" />
                            </font>

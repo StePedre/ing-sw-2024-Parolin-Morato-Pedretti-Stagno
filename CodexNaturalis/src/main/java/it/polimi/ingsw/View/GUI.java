@@ -6,23 +6,18 @@ import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import javafx.animation.*;
-
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -212,7 +207,7 @@ public class GUI extends Application{
         ImageView secretObjLeft = controller.getSecretObjLeft();
         secretObjLeft.setOnMouseClicked(mouseEvent -> {
             try {
-                client.sendToServer((int)1);
+                client.sendToServer(1);
                 switchToStarterChoice(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -221,7 +216,7 @@ public class GUI extends Application{
         ImageView secretObjRight = controller.getSecretObjRight();
         secretObjRight.setOnMouseClicked(mouseEvent -> {
             try {
-                client.sendToServer((int)1);
+                client.sendToServer(2);
                 switchToStarterChoice(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -350,7 +345,7 @@ public class GUI extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        Task<Integer> task = new Task<Integer>(){
+        Task<Integer> task = new Task<>(){
             @Override
             protected Integer call() throws Exception {
                 if(!client.receiveBooleanFromServer()){

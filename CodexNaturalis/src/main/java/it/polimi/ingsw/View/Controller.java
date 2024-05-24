@@ -3,56 +3,32 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.scene.effect.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class Controller {
 
     @FXML
-    private VBox vboxWinners,vboxWinner,vboxWaitStart,vboxWaitFinish,vboxStartCard,vboxSecretObjs,vboxNoPlayers,vboxNickname,vboxRoom, VboxStart;
+    private AnchorPane anchor2, anchor3, anchor4, anchor5, anchor6, anchor7, anchor8, anchor9,nickAnchorPane;
     @FXML
-    private AnchorPane anchor1;
-    @FXML
-    private AnchorPane anchor2;
-    @FXML
-    private AnchorPane anchor3;
-    @FXML
-    private AnchorPane anchor4;
-    @FXML
-    private AnchorPane anchor5;
-    @FXML
-    private AnchorPane anchor6;
-    @FXML
-    private AnchorPane anchor7;
-    @FXML
-    private AnchorPane anchor8;
-    @FXML
-    private AnchorPane anchor9,nickAnchorPane;
-    @FXML
-    private HBox hBoxStart, hBoxRoom;
+    private HBox hBoxStart;
     @FXML
     private RadioButton buttonR,buttonL;
     @FXML
-    private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV, backgroundIV2;
+    private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV;
     @FXML
-    private Button buttonSubDraw, finishButton, finishButton2, buttonStart, confirmRoom;
+    private Button finishButton, finishButton2, buttonStart, confirmRoom;
     @FXML
     private TextField nickTextField, numberPlayersTF, textFieldRoom;
     @FXML
-    private Label nickLabel, labelRoom, label20p,  labelInputRoom, validLabel, loadingLabel, winnerName, winnersNames, startLabel, startLabel2;
+    private Label nickLabel, label20p, labelRoom, validLabel, winnerName, winnersNames, startLabel, startLabel2;
     @FXML
     private ProgressBar waitingBar;
     @FXML
@@ -65,9 +41,7 @@ public class Controller {
     private ImageView goldFaceDown, resFaceDown, goldFaceUp1, goldFaceUp2, resFaceUp1, resFaceUp2;
     private GUIClientSocket client;
     @FXML
-    private GridPane gridPaneGround;
-    @FXML
-    private Label labelNick, labelPoints, mushroomNum, bugNum, leafNum, foxNum, potionNum, scrollNum, plumeNum;
+    private Label labelPoints, mushroomNum, bugNum, leafNum, foxNum, potionNum, scrollNum, plumeNum;
     @FXML
     private ImageView handCardLeft, handCardCenter, handCardRight, secretObj, logo;
     @FXML
@@ -80,19 +54,6 @@ public class Controller {
     private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
     private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
 
-/*
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            Socket socket = new Socket("127.0.0.1",59090);
-            client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
- */
     public AnchorPane getAnchor2() {return anchor2;}
     public Button getNickButton() {
         return nickButton;
@@ -118,18 +79,7 @@ public class Controller {
     public RadioButton getButtonL() {return buttonL;}
     public RadioButton getButtonR() {return buttonR;}
     public Button getButtonStart() {return buttonStart;}
-    public VBox getVboxNick() {return vboxNickname;}
-    public VBox getVboxRoom() {return vboxRoom;}
-    public VBox getVboxNoPlayers() {return vboxNoPlayers;}
-    public VBox getVboxSecretObjs() {return vboxSecretObjs;}
-    public VBox getVboxStartCard() {return vboxStartCard;}
-    public VBox getVboxWaitStart() {return vboxWaitStart;}
-    public VBox getVboxWaitFinish() {return vboxWaitFinish;}
-    public VBox getVboxWinners() {return vboxWinners;}
-    public VBox getVboxWinner() {return vboxWinner;}
-    public VBox getVboxStart() {return VboxStart;}
     public HBox getHboxStart() {return hBoxStart;}
-    public HBox getHboxRoom() {return hBoxRoom;}
     public Label getWinnerName() {return winnerName;}
     public Label getWinnersNames() {return winnersNames;}
     public Button getFinishButton() {return finishButton;}
@@ -148,41 +98,33 @@ public class Controller {
         return logo;
     }
     public ImageView getBackgroundIV(){ return backgroundIV;}
-    public ImageView getBackgroundIV2(){ return backgroundIV2;}
     public AnchorPane getAnchor4() {
         return anchor4;
     }
-
     public AnchorPane getAnchor5() {
         return anchor5;
     }
-
     public AnchorPane getAnchor6() {
         return anchor6;
     }
-
     public AnchorPane getAnchor7() {
         return anchor7;
     }
-
     public AnchorPane getAnchor8() {
         return anchor8;
     }
-
     public AnchorPane getAnchor9() {
         return anchor9;
     }
-
     public AnchorPane getAnchor3() {
         return anchor3;
     }
     public AnchorPane getNickAnchor(){
         return nickAnchorPane;
     }
-
     public void addRoomsMenu() throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
-        labelInputRoom.setVisible(false);
+        labelRoom.setVisible(false);
         textFieldRoom.setVisible(false);
         textFieldRoom.setDisable(true);
         menu.setPromptText("Available rooms:");
@@ -199,9 +141,9 @@ public class Controller {
         menu.setDisable(true);
         menu.setVisible(false);
         confirmRoom.setVisible(false);
-        labelInputRoom.setVisible(true);
+        labelRoom.setVisible(true);
         textFieldRoom.setVisible(true);
-        labelInputRoom.setDisable(false);
+        labelRoom.setDisable(false);
         textFieldRoom.setDisable(false);
         textFieldRoom.setOnKeyTyped(e -> {
             confirmRoom.setVisible(true);
@@ -344,7 +286,7 @@ public class Controller {
 
 
     public void addCards(Deck[] decks) {
-        buttonSubDraw.setVisible(false);
+      //  buttonSubDraw.setVisible(false);
         resFaceUp1.setImage(new Image("src/main/resources/CODEX_cards_gold_front/" + decks[0].getCards().get(0).getId()));
         resFaceUp1.setImage(new Image("src/main/resources/CODEX_cards_gold_front/" + decks[0].getCards().get(1).getId()));
         resFaceDown.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[0].getCards().get(2).getId()));
@@ -356,7 +298,7 @@ public class Controller {
 
     public boolean yourTurnDraw() throws IOException {
         int[] choice = new int[] { -1 };
-        DropShadow dropShadow = new DropShadow();
+    /*    DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(5);
         dropShadow.setColor(javafx.scene.paint.Color.BLUE);
 
@@ -394,7 +336,7 @@ public class Controller {
             Stage stage = (Stage) (buttonSubDraw.getScene().getWindow());
             stage.close();
         });
-        client.sendToServer(choice[0]);
+        client.sendToServer(choice[0]);*/
         return true;
     }
 
@@ -411,16 +353,15 @@ public class Controller {
    //     }
     }
 
-    public boolean waitForTurn(Stage stage) throws IOException, ClassNotFoundException {
+  /*  public boolean waitForTurn(Stage stage) throws IOException, ClassNotFoundException {
         // aspetta turno (scritta che indica turno corrente?)
         // può vedere pg altri giocatori
         return client.receiveBooleanFromServer();
-    }
+    }*/
 
     public ArrayList<Player> getWinners() throws IOException, ClassNotFoundException {
         return client.receiveWinnersFromServer();
     }
-
 /*
     public void setDragDetected(ImageView iv) {  //iv da dove parto (hand) iv2 dove arrivo)
         iv.setOnDragDetected(event -> {
@@ -474,7 +415,7 @@ public class Controller {
             }
             event.consume();
         });
-    }*/
+    }
 
     public void showAvailablePos(PlayerGround pg){
         int x, y;
@@ -500,7 +441,7 @@ public class Controller {
             }
         }
         return false;
-    }
+    }*/
     public void setStreams(GUIClientSocket client){
         this.client = client;
     }
