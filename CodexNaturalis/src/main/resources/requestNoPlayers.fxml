@@ -9,7 +9,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
+<?import javafx.stage.Screen?>
+<AnchorPane fx:id="anchor3" prefHeight="${screenHeight}" prefWidth="${screenWidth}" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <children>
       <VBox fx:id="vboxNoPlayers" alignment="TOP_CENTER" layoutX="633.0" layoutY="284.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -43,13 +44,16 @@
                <VBox.margin>
                   <Insets top="220.0" />
                </VBox.margin>
+               <padding>
+                  <Insets right="60.0"/>
+               </padding>
             </VBox>
             <TextField fx:id="numberPlayersTF" alignment="CENTER" prefHeight="25.0" prefWidth="618.0">
                <font>
                   <Font name="Bookman Old Style" size="25.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="5.0" left="400.0" right="400.0" />
+                  <Insets bottom="5.0" left="400.0" right="460.0" />
                </VBox.margin>
             </TextField>
             <Label fx:id="validLabel" alignment="CENTER" contentDisplay="CENTER" text="Please, insert a valid number" textAlignment="CENTER" textFill="#bf0000" visible="false">
@@ -59,6 +63,9 @@
                <VBox.margin>
                   <Insets bottom="25.0" />
                </VBox.margin>
+               <padding>
+                  <Insets right="60.0"/>
+               </padding>
             </Label>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -74,6 +81,9 @@
                <VBox.margin>
                   <Insets top="-20.0" />
                </VBox.margin>
+               <padding>
+                  <Insets right="60.0"/>
+               </padding>
             </HBox>
          </children>
       </VBox>

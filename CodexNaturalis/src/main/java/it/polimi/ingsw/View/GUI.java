@@ -2,20 +2,16 @@ package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
-import it.polimi.ingsw.Model.ScoreRules.FlatRule;
 import javafx.animation.ScaleTransition;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -28,16 +24,15 @@ import javafx.util.Duration;
 import javafx.animation.*;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class GUI extends Application{
     private final Screen screen = Screen.getPrimary();
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
     private GUIClientSocket client;
+    private ImageView background;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -47,12 +42,9 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        adjustLayout(controller.getHboxStart(), screenHeight, screenWidth, 768, 1366);
         controller.getBackgroundIV().fitWidthProperty().bind(controller.getHboxStart().widthProperty());
         controller.getBackgroundIV().fitHeightProperty().bind(controller.getHboxStart().heightProperty());
-       // adjustLayout(controller.getVboxStart(), screenHeight, screenWidth, 768, 1366);
-     //   controller.getLogo().fitWidthProperty().bind(controller.getHboxStart2().widthProperty());
-    //    controller.getLogo().fitHeightProperty().bind(controller.getHboxStart2().heightProperty());
+        background = controller.getBackgroundIV();
         stage.setTitle("Codex Naturalis");
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
@@ -62,7 +54,6 @@ public class GUI extends Application{
         scene.setOnKeyReleased(keyEvent -> {
             try {
                 switchToRoomChoice(stage);
-                // switchToLogin(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -74,8 +65,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        VBox vboxRoom = controller.getVboxRoom();
-        adjustLayout(vboxRoom, screenHeight, screenWidth, 720, 1280);
+        controller.getAnchor2().getChildren().addFirst(background);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
@@ -158,8 +148,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        VBox vboxNick = controller.getVboxNick();
-        adjustLayout(vboxNick, screenHeight, screenWidth, 768, 1366);
+        controller.getNickAnchor().getChildren().addFirst(background);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
@@ -192,8 +181,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        VBox vboxNoPlayers = controller.getVboxNoPlayers();
-        //adjustLayout(vboxNoPlayers, screenHeight, screenWidth, 768, 1366);
+        controller.getAnchor3().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -216,8 +204,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        VBox vboxSecretObjs = controller.getVboxSecretObjs();
-        adjustLayout(vboxSecretObjs, screenHeight, screenWidth, 768, 1366);
+        controller.getAnchor7().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -247,8 +234,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        VBox vboxStartCard = controller.getVboxStartCard();
-        adjustLayout(vboxStartCard, screenHeight, screenWidth, 768, 1366);
+        controller.getAnchor6().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -358,10 +344,9 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
+        controller.getAnchor4().getChildren().addFirst(background);
         Player player = client.receivePlayerFromServer();
         controller.getStartLabel().setText("Please "+player.getNickname()+", wait for other players to join.");
-        VBox vboxWaitStart = controller.getVboxWaitStart();
-        adjustLayout(vboxWaitStart, screenHeight, screenWidth, 768, 1366);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -398,8 +383,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        VBox vboxWaitStart = controller.getVboxWaitStart();
-        adjustLayout(vboxWaitStart, screenHeight, screenWidth, 768, 1366);
+        controller.getAnchor5().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -417,8 +401,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        VBox vboxWinners = controller.getVboxWinners();
-        adjustLayout(vboxWinners, screenHeight, screenWidth, 720, 1280);
+        controller.getAnchor9().getChildren().addFirst(background);
         String x = "";
         for(Player p: winners){
             if(winners.getLast().getNickname().equals(p.getNickname())) {
@@ -438,8 +421,7 @@ public class GUI extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        VBox vboxWinner = controller.getVboxWinner();
-        adjustLayout(vboxWinner, screenHeight, screenWidth, 720, 1280);
+        controller.getAnchor8().getChildren().addFirst(background);
         controller.getWinnerName().setText("The winner is "+winners.getFirst().getNickname()+" !");
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -517,49 +499,26 @@ public class GUI extends Application{
             throw new RuntimeException(ex);
         }
     }
-
-    public static void startGUI(){
+public static void startGUI(){
         launch();
     }
-
-    public void adjustLayout (Node node, double screenHeight, double screenWidth, int sceneBuilderHeight, int sceneBuilderWidth) {
-        double nodeHeight, nodeWidth;
-        if (node instanceof VBox nodeVBox) {
-            nodeHeight = nodeVBox.getPrefHeight();
-            nodeWidth = nodeVBox.getPrefWidth();
-        } else if (node instanceof HBox nodeHBox) {
-            nodeHeight = nodeHBox.getPrefHeight();
-            nodeWidth = nodeHBox.getPrefWidth();
-        } else {
-            System.out.println("Error in resizing...");
+public void simulateEnd(Stage stage) throws IOException {
+    boolean flag = true;
+    if(flag){ // se è il suo turno
+        if(!flag){
+            switchToYourTurn(stage);
         }
-        double newAnchor = AnchorPane.getTopAnchor(node) * screenHeight / sceneBuilderHeight;
-        AnchorPane.setTopAnchor(node, newAnchor);
-        newAnchor = AnchorPane.getBottomAnchor(node) * screenHeight / sceneBuilderHeight;
-        AnchorPane.setBottomAnchor(node, newAnchor);
-        newAnchor = AnchorPane.getLeftAnchor(node) * screenWidth / sceneBuilderWidth;
-        AnchorPane.setLeftAnchor(node, newAnchor);
-        newAnchor = AnchorPane.getRightAnchor(node) * screenWidth / sceneBuilderWidth;
-        AnchorPane.setRightAnchor(node, newAnchor);
-
-    }
-
- public void simulateEnd(Stage stage) throws IOException {
-        boolean flag = true;
-        if(flag){ // se è il suo turno
-            if(!flag){
-                switchToYourTurn(stage);
-            }
-            else{ // ultimo turno
-                showTwentyPoints(stage);
-              //  showZeroCards(stage);
-            }
+        else{ // ultimo turno
+            showTwentyPoints(stage);
+          //  showZeroCards(stage);
         }
-        ArrayList<Player> winners = new ArrayList<>();
-        winners.add(new Player("silvia"));
-      //  showSingleWinner(stage, winners);
-        winners.add(new Player("matteo"));
-        showWinners(stage, winners);
     }
+    ArrayList<Player> winners = new ArrayList<>();
+    winners.add(new Player("silvia"));
+  //  showSingleWinner(stage, winners);
+    winners.add(new Player("matteo"));
+    showWinners(stage, winners);
+}
+
 }
 

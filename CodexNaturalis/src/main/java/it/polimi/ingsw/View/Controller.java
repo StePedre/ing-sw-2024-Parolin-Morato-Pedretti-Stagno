@@ -20,16 +20,33 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Controller {
+
     @FXML
     private VBox vboxWinners,vboxWinner,vboxWaitStart,vboxWaitFinish,vboxStartCard,vboxSecretObjs,vboxNoPlayers,vboxNickname,vboxRoom, VboxStart;
     @FXML
-    private AnchorPane paneRoom;
+    private AnchorPane anchor1;
     @FXML
-    private HBox hBoxStart, hBoxStart2;
+    private AnchorPane anchor2;
+    @FXML
+    private AnchorPane anchor3;
+    @FXML
+    private AnchorPane anchor4;
+    @FXML
+    private AnchorPane anchor5;
+    @FXML
+    private AnchorPane anchor6;
+    @FXML
+    private AnchorPane anchor7;
+    @FXML
+    private AnchorPane anchor8;
+    @FXML
+    private AnchorPane anchor9,nickAnchorPane;
+    @FXML
+    private HBox hBoxStart, hBoxRoom;
     @FXML
     private RadioButton buttonR,buttonL;
     @FXML
-    private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV;
+    private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV, backgroundIV2;
     @FXML
     private Button buttonSubDraw, finishButton, finishButton2, buttonStart, confirmRoom;
     @FXML
@@ -40,6 +57,7 @@ public class Controller {
     private ProgressBar waitingBar;
     @FXML
     private ComboBox<Label> menu;
+    @FXML
     private final Screen screen = Screen.getPrimary();
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
@@ -75,6 +93,7 @@ public class Controller {
     }
 
  */
+    public AnchorPane getAnchor2() {return anchor2;}
     public Button getNickButton() {
         return nickButton;
     }
@@ -110,7 +129,7 @@ public class Controller {
     public VBox getVboxWinner() {return vboxWinner;}
     public VBox getVboxStart() {return VboxStart;}
     public HBox getHboxStart() {return hBoxStart;}
-    public HBox getHboxStart2() {return hBoxStart2;}
+    public HBox getHboxRoom() {return hBoxRoom;}
     public Label getWinnerName() {return winnerName;}
     public Label getWinnersNames() {return winnersNames;}
     public Button getFinishButton() {return finishButton;}
@@ -129,6 +148,37 @@ public class Controller {
         return logo;
     }
     public ImageView getBackgroundIV(){ return backgroundIV;}
+    public ImageView getBackgroundIV2(){ return backgroundIV2;}
+    public AnchorPane getAnchor4() {
+        return anchor4;
+    }
+
+    public AnchorPane getAnchor5() {
+        return anchor5;
+    }
+
+    public AnchorPane getAnchor6() {
+        return anchor6;
+    }
+
+    public AnchorPane getAnchor7() {
+        return anchor7;
+    }
+
+    public AnchorPane getAnchor8() {
+        return anchor8;
+    }
+
+    public AnchorPane getAnchor9() {
+        return anchor9;
+    }
+
+    public AnchorPane getAnchor3() {
+        return anchor3;
+    }
+    public AnchorPane getNickAnchor(){
+        return nickAnchorPane;
+    }
 
     public void addRoomsMenu() throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
