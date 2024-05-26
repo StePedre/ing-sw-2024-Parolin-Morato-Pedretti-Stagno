@@ -463,6 +463,18 @@ public class GUI extends Application{
         stage2.initOwner(stage);
         Scene scene = new Scene(root);
         stage2.setScene(scene);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+            double xOffset = (Math.random() - 0.5) * 10;
+            double yOffset = (Math.random() - 0.5) * 10;
+            double xOffset2 = (Math.random() - 0.5) * 10;
+            double yOffset2 = (Math.random() - 0.5) * 10;
+            controller.getSadFace().setTranslateX(xOffset);
+            controller.getSadFace().setTranslateY(yOffset);
+            controller.getSadFace2().setTranslateX(xOffset2);
+            controller.getSadFace2().setTranslateY(yOffset2);
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE); // Make the timeline run indefinitely
+        timeline.play();
         stage2.showAndWait();
         controller.getFinishButton2().setOnAction(e ->{
             try {
@@ -504,8 +516,8 @@ public void simulateEnd(Stage stage) throws IOException {
             switchToYourTurn(stage);
         }
         else{ // ultimo turno
-            showTwentyPoints(stage);
-          //  showZeroCards(stage);
+            //showTwentyPoints(stage);
+            showZeroCards(stage);
         }
     }
     ArrayList<Player> winners = new ArrayList<>();

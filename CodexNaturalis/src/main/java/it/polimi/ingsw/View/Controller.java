@@ -22,7 +22,7 @@ public class Controller {
     @FXML
     private RadioButton buttonR,buttonL;
     @FXML
-    private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV;
+    private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV, sadFace, sadFace2;
     @FXML
     private Button finishButton, finishButton2, buttonStart, confirmRoom;
     @FXML
@@ -98,6 +98,8 @@ public class Controller {
         return logo;
     }
     public ImageView getBackgroundIV(){ return backgroundIV;}
+    public ImageView getSadFace(){ return sadFace;}
+    public ImageView getSadFace2(){ return sadFace2;}
     public AnchorPane getAnchor4() {
         return anchor4;
     }
