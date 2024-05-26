@@ -19,7 +19,7 @@
             </ImageView>
          </children>
       </HBox>
-      <VBox layoutY="167.0" prefHeight="487.0" prefWidth="480.0" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="170.0">
+      <VBox alignment = "CENTER" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="170.0">
          <children>
             <HBox>
                <children>

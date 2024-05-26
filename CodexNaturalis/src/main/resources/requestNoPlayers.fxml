@@ -9,10 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.stage.Screen?>
-<AnchorPane fx:id="anchor3" prefHeight="${screenHeight}" prefWidth="${screenWidth}" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
+<AnchorPane fx:id="anchor3" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <children>
-      <VBox fx:id="vboxNoPlayers" alignment="TOP_CENTER" layoutX="633.0" layoutY="284.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="vboxNoPlayers" alignment="CENTER" layoutX="633.0" layoutY="284.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="CENTER" prefHeight="138.0" prefWidth="966.0">
                <children>
@@ -21,16 +20,16 @@
                         <Font name="Bookman Old Style" size="30.0" />
                      </font>
                      <VBox.margin>
-                        <Insets top="-50.0" />
+                        <Insets />
                      </VBox.margin>
                   </Label>
                   <Label text="insert the number of total players:">
                      <font>
                         <Font name="Bookman Old Style" size="30.0" />
                      </font>
-                     <padding>
+                     <VBox.margin>
                         <Insets top="5.0" />
-                     </padding>
+                     </VBox.margin>
                   </Label>
                   <Label alignment="CENTER" contentDisplay="CENTER" text="(min 2 and max 4)" textAlignment="CENTER">
                      <font>
@@ -42,18 +41,15 @@
                   </Label>
                </children>
                <VBox.margin>
-                  <Insets top="220.0" />
+                  <Insets top="100.0" />
                </VBox.margin>
-               <padding>
-                  <Insets right="60.0"/>
-               </padding>
             </VBox>
             <TextField fx:id="numberPlayersTF" alignment="CENTER" prefHeight="25.0" prefWidth="618.0">
                <font>
                   <Font name="Bookman Old Style" size="25.0" />
                </font>
                <VBox.margin>
-                  <Insets bottom="5.0" left="400.0" right="460.0" />
+                  <Insets bottom="5.0" left="400.0" right="400.0" />
                </VBox.margin>
             </TextField>
             <Label fx:id="validLabel" alignment="CENTER" contentDisplay="CENTER" text="Please, insert a valid number" textAlignment="CENTER" textFill="#bf0000" visible="false">
@@ -63,9 +59,6 @@
                <VBox.margin>
                   <Insets bottom="25.0" />
                </VBox.margin>
-               <padding>
-                  <Insets right="60.0"/>
-               </padding>
             </Label>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
@@ -74,16 +67,13 @@
                         <Font name="Bookman Old Style" size="23.0" />
                      </font>
                      <HBox.margin>
-                        <Insets />
+                        <Insets top="-40.0" />
                      </HBox.margin>
                   </Button>
                </children>
                <VBox.margin>
-                  <Insets top="-20.0" />
+                  <Insets />
                </VBox.margin>
-               <padding>
-                  <Insets right="60.0"/>
-               </padding>
             </HBox>
          </children>
       </VBox>
