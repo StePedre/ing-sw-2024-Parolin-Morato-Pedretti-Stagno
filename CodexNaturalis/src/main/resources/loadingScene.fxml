@@ -21,15 +21,12 @@
       </HBox>
       <VBox alignment = "CENTER" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="170.0">
          <children>
-            <HBox>
+            <HBox alignment="CENTER">
                <children>
                   <ImageView fitHeight="315.0" fitWidth="482.0" pickOnBounds="true" preserveRatio="true">
                      <Image url="Logo.png"/>
                   </ImageView>
                </children>
-               <padding>
-                  <Insets left="80.0" />
-               </padding>
             </HBox>
             <Label alignment="CENTER" prefHeight="63.0" prefWidth="500.0" text="Press any key to continue...">
                <VBox.margin>
