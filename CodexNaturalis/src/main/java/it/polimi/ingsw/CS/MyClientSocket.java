@@ -95,7 +95,7 @@ public class MyClientSocket {
                 while(!tui.yourTurnPlay(game,player)){
                 }
                 out.writeObject(tui.inputCardToPlace(player));
-                out.writeObject(tui.inputCoordinates());
+                out.writeObject(tui.inputCoordinates(player));
                 out.reset();
                 player = (Player) in.readObject();
                 //aspetta riscontro vittoria

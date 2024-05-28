@@ -108,7 +108,7 @@ public class AdvancedTUI_temp {
         for (int i = lengthY; i >= 0; i--) {
             for (int j = lengthX; j >= 0; j--) {
                 contentLine1 += getGridLine1(matrixToPrint[j][i]);
-                contentLine2 += getGridLine2(matrixToPrint[j][i]);
+                contentLine2 += getGridLine2(matrixToPrint[j][i],minX + i, maxY - j, playerGround);
                 contentLine3 += getGridLine3(matrixToPrint[j][i]);
                 if(matrixToPrint[j][i] == null && i-1 >= 0) {
                     if (state) {
@@ -135,6 +135,7 @@ public class AdvancedTUI_temp {
             contentLine3 = "";
             contentLine4 = "";
         }
+
         System.out.println("\n");
 
     }
@@ -146,6 +147,9 @@ public class AdvancedTUI_temp {
                 System.out.println("" + resource + ", Value: " + value);
             }
     }
+
+
+
     public static void printDeck(Deck deck){
         StringBuilder topBorder = new StringBuilder();
         StringBuilder contentLine1 =  new StringBuilder();
@@ -173,6 +177,9 @@ public class AdvancedTUI_temp {
         System.out.println(buttonBorder);
 
     }
+
+
+
     public static void printObjectives(ObjectiveCard[] objectiveCards){
         StringBuilder topBorder = new StringBuilder();
         StringBuilder contentLine1 =  new StringBuilder();
@@ -291,13 +298,21 @@ public class AdvancedTUI_temp {
         }
         return cardColor(card) + "█                 █" + "\u001B[0m";
     }
-    private static String getGridLine2(Card card){
+    private static String getGridLine2(Card card, int positionX, int positionY, PlayerGround ground){
         if(card == null) return "                  ";
         if(card.getId() >= 81 && card.getId() <= 86){
             return getFirstGridLine(card, 2);
         }
         if(card.getId() == -1){
-            return cardColor(card) + "█                 █" + "\u001B[0m";
+            Position position = new Position(positionX,positionY);
+            int value = findPosition(position, ground);
+            if(value <10) {
+                return cardColor(card) + "█        "+ value +"        █" + "\u001B[0m";
+            }
+            if(value < 100){
+                return cardColor(card) + "█        "+ value +"       █" + "\u001B[0m";
+            }
+            return cardColor(card) + "█       "+ value +"       █" + "\u001B[0m";
         }
 
         return cardColor(card) + "█                 █" + "\u001B[0m";
@@ -537,6 +552,7 @@ public class AdvancedTUI_temp {
         }
     }
 
+
     private static String cornerColor(Corner corner){
         if(corner.getAvailability()) {
             switch (corner.getCornerRes()) {
@@ -567,6 +583,25 @@ public class AdvancedTUI_temp {
             }
         }
         return "\u001B[30m"+"◙"+ "\u001B[0m";
+    }
+
+    public static int findPosition(Position position, PlayerGround ground) {
+        for (Map.Entry<Integer, Position> entry : ground.getAvailableNumbers().entrySet()) {
+            if (entry.getValue().equals(getExactPosition(position, ground.getAvailablePositions()))) {
+                return entry.getKey();
+            }
+        }
+        return 0;
+    }
+
+    private static Position getExactPosition(Position position, Set<Position> positions){
+        for(Position p : positions){
+            if(position.getX() == p.getX() && position.getY() == p.getY()){
+                return p;
+            }
+
+        }
+        return position;
     }
 
     public static void main(String[] args) throws IOException, ParseException {

@@ -18,6 +18,8 @@ public class PlayerGround implements Serializable {
     private static final long serialVersionUID = 2L;
     private int playerScore;
     private Map<Position, Card> cardPosition;
+
+    private Map<Integer, Position> availableNumbers;
     private Card[][] ground;
     private Set<Position> availablePositions;
     private Set<Position> unavailablePositions;
@@ -40,6 +42,7 @@ public class PlayerGround implements Serializable {
         ground = new Card[84][84];
         unavailablePositions = new HashSet<>();
         availablePositions = new HashSet<>();
+        availableNumbers = new HashMap<>();
         initializePosition();
 
         totalResources = new HashMap<>();
@@ -120,6 +123,8 @@ public class PlayerGround implements Serializable {
     public Position getLastPosition() {
         return lastPositionPlaced;
     }
+
+    public Map<Integer, Position> getAvailableNumbers(){ return availableNumbers;}
 
     /**
      * The method place the starter card (which means no other playable card and no objective card) on the ground.
@@ -238,9 +243,11 @@ public class PlayerGround implements Serializable {
                     int newCornerPos = i + 2 * j;
                     int cornerPos = 3 - (i + 2 * j);
 
-                    Resource resourceToRemove = card.getShowedCorners()[cornerPos].getCornerRes();
-                    card.getShowedCorners()[cornerPos].setResource(newCard.getShowedCorners()[newCornerPos].getCornerRes());
-                    updateSingleResource(-1,resourceToRemove);
+                    if(card.getShowedCorners() != null) {
+                        Resource resourceToRemove = card.getShowedCorners()[cornerPos].getCornerRes();
+                        card.getShowedCorners()[cornerPos].setResource(newCard.getShowedCorners()[newCornerPos].getCornerRes());
+                        updateSingleResource(-1, resourceToRemove);
+                    }
                 }
 
             }
@@ -302,6 +309,7 @@ public class PlayerGround implements Serializable {
      * @param placePosition is the position of the last added card.
      */
     private void updatePositionsAvailability(Card card, Position placePosition) {
+        removeAvailableNumber(placePosition);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 // Calculates one of the 4 position around the placePosition
@@ -314,11 +322,13 @@ public class PlayerGround implements Serializable {
                     int cornerPosition = i + 2 * j;
                     if (card.getShowedCorners()[cornerPosition].getAvailability()) {
                         availablePositions.add(newPosition);
+                        addAvailableNumber(newPosition);
                         ground[newX][newY] = availabilityCard;
                     } else {
                         // if the corner is not available, the newPosition becomes unavailable
                         unavailablePositions.add(newPosition);
                         availablePositions.remove(getExactPosition(newPosition, availablePositions));
+                        removeAvailableNumber(newPosition);
                         ground[newX][newY] = null;
                     }
                 }
@@ -440,6 +450,31 @@ public class PlayerGround implements Serializable {
 
         }
         return position;
+    }
+
+    private void addAvailableNumber(Position position) {
+        if (availableNumbers.containsValue(getExactPosition(position,availablePositions))) {
+            return;
+        }
+        int lowestAvailableKey = 1;
+        while (availableNumbers.containsKey(lowestAvailableKey)) {
+            lowestAvailableKey++;
+        }
+        availableNumbers.put(lowestAvailableKey, position);
+    }
+
+
+    private void removeAvailableNumber(Position position) {
+        Integer keyToRemove = null;
+        for (Map.Entry<Integer, Position> entry : availableNumbers.entrySet()) {
+            if (entry.getValue().equals(getExactPosition(position, availablePositions))) {
+                keyToRemove = entry.getKey();
+                break;
+            }
+        }
+        if (keyToRemove != null) {
+            availableNumbers.remove(keyToRemove);
+        }
     }
 
 }

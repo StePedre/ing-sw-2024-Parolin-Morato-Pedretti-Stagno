@@ -8,9 +8,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="nickAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
+<?import javafx.stage.Screen?>
+<AnchorPane fx:id="nickAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="${screenHeight}" prefWidth="${screenWidth}" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <children>
-      <VBox fx:id="vboxNickname" alignment="CENTER" layoutX="633.0" layoutY="284.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="vboxNickname" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label id="nick" fx:id="nickLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="53.0" prefWidth="476.0" text="Insert your nickname, please:">
                <font>
@@ -20,15 +21,15 @@
                   <Insets bottom="40.0" top="-20.0" />
                </VBox.margin>
             </Label>
-            <TextField fx:id="nickTextField" prefHeight="41.0" prefWidth="404.0">
+            <TextField fx:id="nickTextField" prefHeight="41.0" prefWidth="200.0">
                <font>
                   <Font name="Bookman Old Style" size="22.0" />
                </font>
                <VBox.margin>
-                  <Insets left="350.0" right="350.0" />
+                  <Insets left="450.0" right="450.0" />
                </VBox.margin>
             </TextField>
-            <Button fx:id="nickButton" alignment="CENTER" mnemonicParsing="false" onAction="#sendNickname" prefHeight="47.0" prefWidth="180.0" style="-fx-background-color: #1560BD;" text="Continue..." textFill="WHITE">
+            <Button fx:id="nickButton" alignment="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="180.0" style="-fx-background-color: #1560BD;" text="Continue..." textFill="WHITE">
                <font>
                   <Font name="Bookman Old Style" size="23.0" />
                </font>

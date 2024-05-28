@@ -50,13 +50,7 @@ public class Client {
         catch (ConnectException e){
             System.out.println("Max number of player reached or no server listening");
         }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        catch (MissingResourcesException e) {
-            e.printStackTrace();
-        }
-        catch (InvalidPositionException e) {
+        catch(IOException | InvalidPositionException | MissingResourcesException e){
             e.printStackTrace();
         }
     }

@@ -197,12 +197,20 @@ public class TUI {
      * @exception IllegalStateException arises when an input error occurs.
      */
     public boolean yourTurnPlay(Game game, Player player){
+        System.out.println("\n");
         AdvancedTUI_temp.printObjectives(game.getCommonObj());
+        System.out.println("\n");
         AdvancedTUI_temp.printDeck(game.getDecks()[0]);
         AdvancedTUI_temp.printDeck(game.getDecks()[1]);
+        System.out.println("\n");
         AdvancedTUI_temp.printGround(player.getPlayerGround());
         AdvancedTUI_temp.printResources(player.getPlayerGround().getTotalResources());
-        AdvancedTUI_temp.printHand(player.getHand());
+        System.out.println("\n");
+        System.out.println("This is the list of positions where it is possible to place a card:\n");
+        for (Position pos: player.getPlayerGround().getAvailablePositions()) {
+            System.out.println("(" + pos.getX()+", " + pos.getY() + ") ");
+        }
+        System.out.println("\n");
         return true;
         /*
         System.out.println("It's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n 4- Play card\n\n");
@@ -252,19 +260,20 @@ public class TUI {
      *
      * @return desired position where to place the card.
      */
-    public Position inputCoordinates(){
-        System.out.println("Where do you want to place the card? Insert coordinates between 0 and 83 (X first):\n");
-        int coordX = -1;
-        int coordY = -1;
+    public Position inputCoordinates(Player player){
+        System.out.println("Where do you want to place the card? Insert the number of the corresponding position:\n");
+        int position = -1;
         Scanner scanner = new Scanner(System.in);
-        while(!(coordY>=0 && coordY<84 && coordX>=0 && coordX <84)){
-            coordX = scanner.nextInt();
-            scanner.nextLine();
-            coordY = scanner.nextInt();
-            scanner.nextLine();
+        position = scanner.nextInt();
+        while(position > player.getPlayerGround().getAvailablePositions().size() || position <= 0){
+            System.out.println("Please insert a valid number:\n");
+            position = scanner.nextInt();
         }
-        return (new Position(coordX, coordY));
+        Map<Integer, Position> numbers = player.getPlayerGround().getAvailableNumbers();
+        Position position1 = numbers.get(position);
+        return (new Position(position1.getX(), position1.getY()));
     }
+
 
     /**
      * The method asks the player which of the three cards in their hand they want to play, and show them the hand.
@@ -317,7 +326,7 @@ public class TUI {
      * @return numeric choice corresponding to Playable Card drawn from Resource deck or Golden deck.
      */
     public int yourTurnDraw(Game game, Player player){
-        System.out.println("You placed one card. Now it's time to draw. What do you want to do? Select the number corresponding to your choice:\n1- Show hand\n2- Show decks and draw a card\n\n");
+        /*System.out.println("You placed one card. Now it's time to draw. What do you want to do? Select the number corresponding to your choice:\n1- Show hand\n2- Show decks and draw a card\n\n");
         int choice2 = 0;
         Scanner scanner = new Scanner(System.in);
         while(choice2!=2) {
@@ -330,8 +339,8 @@ public class TUI {
                 case 2 -> {
                 }
             }
-        }
-        return chooseFromDecks(game);
+        }*/
+        return chooseFromDecks(game, player);
     }
 
     /**
@@ -586,10 +595,13 @@ public class TUI {
      * - 4 same as 1 but from Golden deck
      * - 5 same as 2 but from Golden deck
      */
-    public int chooseFromDecks(Game game){
+    public int chooseFromDecks(Game game, Player player){
         Deck[] decks = game.getDecks();
         String deck1name = decks[0].getKindOfDeck();
         String deck2name = decks[1].getKindOfDeck();
+
+        System.out.println("This is your hand: ");
+        AdvancedTUI_temp.printHand(player.getHand());
 /*
         Card deck1card1 = deck1.getFirst();
         Card deck1card2 = deck1.get(1);
@@ -597,8 +609,7 @@ public class TUI {
         Card deck2card2 = deck2.get(1); */
 
         System.out.println("Here you are the game decks." +
-                "\nThe first and the second card of each deck are facing up. You can choose one of them or pick the top of the remaining deck (face down)\n" +
-                        "" + deck1name + " deck (0, 1, 2 to choose):\n");
+               "" + deck1name + " deck (0, 1, 2 to choose):\n");
         /*
         showCard((PlayableCard) deck1card1);
         System.out.println("\nSecond card of the " + deck1name + " (1 to choose):\n");
@@ -611,8 +622,7 @@ public class TUI {
         System.out.println("\nAlternatively, you can input 5 to choose the hidden card at the top of the " + deck2name + "deck.\n");
         System.out.println("Which card do you choose? Input the number corresponding to your choice:\n"); */
         AdvancedTUI_temp.printDeck(decks[0]);
-        System.out.println( "\nThe first and the second card of each deck are facing up. You can choose one of them or pick the top of the remaining deck (face down)\n" +
-                "" + deck1name + " deck (3, 4, 5 to choose):\n");
+        System.out.println( "" + deck2name + " deck (3, 4, 5 to choose):\n");
         AdvancedTUI_temp.printDeck(decks[1]);
         Scanner scanner = new Scanner(System.in);
         int choice;
@@ -702,7 +712,6 @@ public class TUI {
     }
 
     public static void cleanDebugLog() throws IOException {
-        // Truncate the file to remove all content
         File file = new File(LOG_FILE_PATH);
         if (file.exists()) {
             file.delete();

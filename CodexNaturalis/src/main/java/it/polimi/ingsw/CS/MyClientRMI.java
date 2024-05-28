@@ -173,7 +173,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                     break;
                 }else{
                     if(tui.yourTurnPlay(game, player)){
-                        player.getPlayerGround().placeCard(tui.inputCardToPlace(player), tui.inputCoordinates());
+                        player.getPlayerGround().placeCard(tui.inputCardToPlace(player), tui.inputCoordinates(player));
                         drawCardFromDeck(tui.yourTurnDraw(game, player));
                         roundController.nextRound();
                     }
