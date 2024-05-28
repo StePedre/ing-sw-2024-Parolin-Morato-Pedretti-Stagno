@@ -233,14 +233,14 @@ public class GUI extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        controller.addStarterImages();
+        StarterCard startCard = controller.addStarterImages();
         ImageView frontStarterCard = controller.getFrontStarterCard();
         frontStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
                 controller.sendIfStarterFlipped(false);
-               // showUpdatedPlayerGround(stage);
-                simulateEnd(stage);
-            } catch (IOException e) {
+                initializePlayerGround(stage, startCard);
+                //simulateEnd(stage);
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -248,24 +248,37 @@ public class GUI extends Application{
         backStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
                 controller.sendIfStarterFlipped(true);
-               // showUpdatedPlayerGround(stage);
-                 simulateEnd(stage);
-            } catch (IOException e) {
+                initializePlayerGround(stage, startCard);
+                //simulateEnd(stage);
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    public void showUpdatedPlayerGround(Stage stage) throws IOException, ClassNotFoundException {
+    public void initializePlayerGround(Stage stage, StarterCard sc) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
+        controller.getPlayGroundHBox().getChildren().addFirst(background);
+        controller.setStreams(client);
+        Game g = client.receiveGameFromServer();
+        Player p = client.receivePlayerFromServer();
+        controller.placeFirstCard(sc, p);
+        showUpdatedPlayerGround(stage, g, p);
+    }
+
+    public void showUpdatedPlayerGround(Stage stage, Game g, Player p) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.getPlayGroundAnchor().getChildren().addFirst(background);
         controller.setStreams(client);
         Scene scene = new Scene(root);
         stage.setScene(scene);
-     //   stage.show();
+        stage.show();
         boolean flag;
-        flag = controller.addGround();
+        flag = controller.addGround(p, g);
         if(flag){ // se è il suo turno
             if(!client.receiveBooleanFromServer()){
                 switchToYourTurn(stage);
@@ -275,7 +288,7 @@ public class GUI extends Application{
             }
         }
         else{
-            // wait for turn to do
+            System.out.println("godo!");
         }
     }
 
@@ -295,7 +308,7 @@ public class GUI extends Application{
             try {
                 if(controller.playCard()){
                     if(client.receiveBooleanFromServer()){
-                        switchToDraw(stage);
+                        // showUpdatedPlayerGround(stage);
                     }
                 }
                 else{
@@ -327,7 +340,7 @@ public class GUI extends Application{
             }
         });
         if(!controller.checkIfOver()){
-            showUpdatedPlayerGround(stage);
+            // showUpdatedPlayerGround(stage);
         }
         else{
             showZeroCards(stage);
@@ -506,26 +519,28 @@ public class GUI extends Application{
             throw new RuntimeException(ex);
         }
     }
-public static void startGUI(){
+    public static void startGUI(){
         launch();
     }
-public void simulateEnd(Stage stage) throws IOException {
-    boolean flag = true;
-    if(flag){ // se è il suo turno
-        if(!flag){
-            switchToYourTurn(stage);
+    /*
+    public void simulateEnd(Stage stage) throws IOException {
+        boolean flag = true;
+        if(flag){ // se è il suo turno
+            if(!flag){
+                switchToYourTurn(stage);
+            }
+            else{ // ultimo turno
+                //showTwentyPoints(stage);
+                showZeroCards(stage);
+            }
         }
-        else{ // ultimo turno
-            //showTwentyPoints(stage);
-            showZeroCards(stage);
-        }
+        ArrayList<Player> winners = new ArrayList<>();
+        winners.add(new Player("silvia"));
+      //  showSingleWinner(stage, winners);
+        winners.add(new Player("matteo"));
+        showWinners(stage, winners);
     }
-    ArrayList<Player> winners = new ArrayList<>();
-    winners.add(new Player("silvia"));
-  //  showSingleWinner(stage, winners);
-    winners.add(new Player("matteo"));
-    showWinners(stage, winners);
-}
+    */
 
 }
 

@@ -3,18 +3,27 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Controller {
-
+    @FXML
+    private AnchorPane playGroundAnchor;
+    @FXML
+    private HBox playGroundHBox;
+    @FXML
+    private GridPane gridPaneGround;
     @FXML
     private AnchorPane anchor2, anchor3, anchor4, anchor5, anchor6, anchor7, anchor8, anchor9,nickAnchorPane;
     @FXML
@@ -45,14 +54,14 @@ public class Controller {
     @FXML
     private ImageView handCardLeft, handCardCenter, handCardRight, secretObj, logo;
     @FXML
-    private static ImageView commonObj1, commonObj2;
+    private ImageView commonObj1, commonObj2;
     private int converter = 39; // 42 - 3 (coord iniziali matrice e gridPane)
     @FXML
     private Button nickButton, requestButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
-//    private final Image voidImage = new Image("url immagine vuota");
-    private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
-    private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
+    private final String emptyImagePath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\border_image.png";
+    private final String imagesFrontPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_front\\";
+    private final String imagesBackPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_back\\";
 
     public AnchorPane getAnchor2() {return anchor2;}
     public Button getNickButton() {
@@ -124,6 +133,10 @@ public class Controller {
     public AnchorPane getNickAnchor(){
         return nickAnchorPane;
     }
+    public AnchorPane getPlayGroundAnchor(){
+        return playGroundAnchor;
+    }
+    public HBox getPlayGroundHBox(){return playGroundHBox;}
     public void addRoomsMenu() throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
         labelRoom.setVisible(false);
@@ -199,19 +212,20 @@ public class Controller {
         secretObjLeft.setImage(new Image("file:" + imagesFrontPath + objs[0].getId() + ".png"));
         secretObjRight.setImage(new Image("file:" + imagesFrontPath + objs[1].getId() + ".png"));
     }
-    public void addStarterImages() throws IOException, ClassNotFoundException {
+    public StarterCard addStarterImages() throws IOException, ClassNotFoundException {
         StarterCard card = client.receiveStarterCardFromServer();
         frontStarterCard.setImage(new Image("file:" + imagesFrontPath + card.getId() + ".png"));
         backStarterCard.setImage(new Image("file:" + imagesBackPath + card.getId() + ".png"));
+        return card;
     }
     public void sendIfStarterFlipped(boolean flip) throws IOException {
         client.sendToServer(flip);
     }
 
-    public boolean addGround() throws IOException, ClassNotFoundException {
-        client.reset();
-        Player p = client.receivePlayerFromServer();
-        Game g = client.receiveGameFromServer();
+    public boolean addGround(Player p, Game g) throws IOException, ClassNotFoundException {
+        // client.reset();
+        // Game g = client.receiveGameFromServer();
+        // Player p = client.receivePlayerFromServer();
         labelPoints.setText("Points: "+ p.getPlayerGround().getPlayerScore());
         addImages(p.getHand());
         addSecretObj(p.getHand().getObjCard());
@@ -222,19 +236,19 @@ public class Controller {
     }
 
     public void addImages(Hand hand) {
-        handCardLeft.setImage(new Image(imagesFrontPath + hand.getCard(0).getId() + ".png"));
-        handCardCenter.setImage(new Image(imagesFrontPath + hand.getCard(1).getId() + ".png"));
-        handCardRight.setImage(new Image(imagesFrontPath + hand.getCard(2).getId() + ".png"));
+        handCardLeft.setImage(new Image("file:" + imagesFrontPath + hand.getCard(0).getId() + ".png"));
+        handCardCenter.setImage(new Image("file:" + imagesFrontPath + hand.getCard(1).getId() + ".png"));
+        handCardRight.setImage(new Image("file:" + imagesFrontPath + hand.getCard(2).getId() + ".png"));
     }
 
     public void addSecretObj(ObjectiveCard secretObjective) {
-        secretObj.setImage(new Image(imagesFrontPath + secretObjective.getId() + ".png"));
+        secretObj.setImage(new Image("file:" + imagesFrontPath + secretObjective.getId() + ".png"));
     }
 
     // questo potrebbe andare bene statico perchè tutti condividono gli stessi commonObj
     public void addCommonObj(ObjectiveCard[] commonObj) {
-        commonObj1.setImage(new Image(imagesFrontPath + commonObj[0].getId() + ".png"));
-        commonObj2.setImage(new Image(imagesFrontPath + commonObj[1].getId() + ".png"));
+        commonObj1.setImage(new Image("file:" + imagesFrontPath + commonObj[0].getId() + ".png"));
+        commonObj2.setImage(new Image("file:" + imagesFrontPath + commonObj[1].getId() + ".png"));
     }
 
     public void setTotalResource(HashMap<Resource, Integer> map) {
@@ -251,26 +265,24 @@ public class Controller {
         return client.receiveBooleanFromServer();
     }
 
-    /*
-    public void placeFirstCard(StarterCard sc) throws IOException, ClassNotFoundException {
-        ImageView iv = new ImageView(new Image(imagesFrontPath + sc.getId() + ".png"));
-        gridPaneGround.add(iv, 3, 3);
-        Player updated = client.receivePlayerFromServer();
-        showAvailablePos(updated.getPlayerGround());
-    }*/
+    public void placeFirstCard(StarterCard sc, Player updatedP) throws IOException, ClassNotFoundException {
+        ImageView iv = new ImageView(new Image("file:" + imagesFrontPath + sc.getId() + ".png"));
+        gridPaneGround.add(iv, 3, 4);
+        showAvailablePos(updatedP.getPlayerGround());
+    }
 
     public boolean playCard() throws IOException, ClassNotFoundException {
         client.reset();
         Player player = client.receivePlayerFromServer();
         Game game = client.receiveGameFromServer();
-       // showAvailablePos(player.getPlayerGround());
-        //  setDragDetected(handCardLeft);                  to do: setting drag and drop, depending on graphic structure of ground
-        //  setDragDetected(handCardCenter);
-        //  setDragDetected(handCardRight);
-        //  setDropZones();
-        //  setDropCompleted(handCardLeft);
-        //  setDropCompleted(handCardCenter);
-        //  setDropCompleted(handCardRight);
+        showAvailablePos(player.getPlayerGround());
+        setDragDetected(handCardLeft);
+        setDragDetected(handCardCenter);
+        setDragDetected(handCardRight);
+        setDropZones();
+        setDropCompleted(handCardLeft);
+        setDropCompleted(handCardCenter);
+        setDropCompleted(handCardRight);
         // client.sendToServer(cardToPlay);
         // client.sendToServer(cardPosition);
         client.receivePlayerFromServer();  // riceve player con mano aggiornata -> vedi placeCardController per capire com'è la nuova mano e aggiorna il playground
@@ -289,12 +301,12 @@ public class Controller {
 
     public void addCards(Deck[] decks) {
       //  buttonSubDraw.setVisible(false);
-        resFaceUp1.setImage(new Image("src/main/resources/CODEX_cards_gold_front/" + decks[0].getCards().get(0).getId()));
-        resFaceUp1.setImage(new Image("src/main/resources/CODEX_cards_gold_front/" + decks[0].getCards().get(1).getId()));
-        resFaceDown.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[0].getCards().get(2).getId()));
-        goldFaceUp1.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[1].getCards().get(0).getId()));
-        goldFaceUp2.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[1].getCards().get(1).getId()));
-        goldFaceDown.setImage(new Image("src/main/resources/CODEX_cards_gold_back/" + decks[1].getCards().get(2).getId()));
+        resFaceUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(0).getId()));
+        resFaceUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(1).getId()));
+        resFaceDown.setImage(new Image("file:" + imagesBackPath + decks[0].getCards().get(2).getId()));
+        goldFaceUp1.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(0).getId()));
+        goldFaceUp2.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(1).getId()));
+        goldFaceDown.setImage(new Image("file:" + imagesBackPath + decks[1].getCards().get(2).getId()));
     }
 
 
@@ -343,7 +355,7 @@ public class Controller {
     }
 
     public void putDrawnInHand(PlayableCard card){
-        Image toPut = new Image(imagesFrontPath + card.getId() + ".png");
+        Image toPut = new Image("file:" + imagesFrontPath + card.getId() + ".png");
  //       if(handCardRight.getImage() == voidImage){
             handCardRight.setImage(toPut);
   //      }
@@ -364,18 +376,22 @@ public class Controller {
     public ArrayList<Player> getWinners() throws IOException, ClassNotFoundException {
         return client.receiveWinnersFromServer();
     }
-/*
+
     public void setDragDetected(ImageView iv) {  //iv da dove parto (hand) iv2 dove arrivo)
         iv.setOnDragDetected(event -> {
             Dragboard db = iv.startDragAndDrop(TransferMode.MOVE);
-            db.setDragView(iv.getImage());
+            Image dragMiniature = new Image(iv.getImage().getUrl(), 150, 100, true, true);
+            ClipboardContent content = new ClipboardContent();
+            content.putImage(dragMiniature);
+            db.setContent(content);
             event.consume();
         });
     }
 
     public void setDropZones() {
         for (Position pos : availablePos) {
-            ImageView zone = (ImageView) gridPaneGround.getChildren().get(pos.getY() * gridPaneGround.getColumnCount() + pos.getX());
+            ImageView zone = new ImageView(new Image("file:" + emptyImagePath + "border_image.png", 150, 100, false, false));
+            gridPaneGround.add(zone, pos.getX() - converter, pos.getY() - converter);
             zone.setOnDragOver(e -> {
                 if (e.getDragboard().hasImage()) {
                     e.acceptTransferModes(TransferMode.MOVE);
@@ -387,19 +403,24 @@ public class Controller {
                 ca.setBrightness(0.5);
                 zone.setEffect(ca);
             });
+            zone.setOnDragExited(e -> {
+                ColorAdjust ca = new ColorAdjust();
+                ca.setBrightness(0);
+                zone.setEffect(ca);
+            });
             zone.setOnDragDropped(e -> {
                 Dragboard db = e.getDragboard();
                 boolean success = false;
                 if (db.hasImage()) {
                     zone.setImage(db.getImage());
-                    if(zone.getX() == 0 || zone.getY()==0 ){
-                        gridPaneGround.addColumn(0);
-                        gridPaneGround.addRow(0);
-                        converter--;
+                    zone.toFront();
+                    if(GridPane.getColumnIndex(zone) == 0 || GridPane.getRowIndex(zone) == 0) {
+                        System.out.println("Top border");
+                        addColumnRowTop();
                     }
-                    if(zone.getX() == (gridPaneGround.getColumnCount()-1) || zone.getY() ==(gridPaneGround.getRowCount()-1)){
-                        gridPaneGround.addColumn(gridPaneGround.getColumnCount());
-                        gridPaneGround.addRow(gridPaneGround.getRowCount());
+                    if(GridPane.getColumnIndex(zone) == (gridPaneGround.getColumnCount() - 1) || GridPane.getRowIndex(zone) ==(gridPaneGround.getRowCount() - 1)){
+                        System.out.println("Bottom border");
+                        addColumnRowBottom();
                     }
                     success = true;
                 }
@@ -409,11 +430,53 @@ public class Controller {
         }
     }
 
+    private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public void addColumnRowTop() {
+        double widthGridPane = gridPaneGround.getWidth();
+        double heightGridPane = gridPaneGround.getHeight();
+        gridPaneGround.setPrefWidth(widthGridPane + 117.14);
+        gridPaneGround.setPrefHeight(heightGridPane + 59.29);
+
+        for (int i = 0; i < gridPaneGround.getColumnCount(); i ++) {
+            for (int j = 0; j < gridPaneGround.getRowCount(); j++) {
+                Node node = getNodeFromGridPane(gridPaneGround, i, j);
+                GridPane.setColumnIndex(node, i + 1);
+                GridPane.setRowIndex(node, j + 1);
+            }
+        }
+        gridPaneGround.getColumnConstraints().addFirst(new ColumnConstraints(117.14));
+        gridPaneGround.getRowConstraints().addFirst(new RowConstraints(59.29));
+    }
+
+    public void addColumnRowBottom() {
+        double widthGridPane = gridPaneGround.getWidth();
+        double heightGridPane = gridPaneGround.getHeight();
+        gridPaneGround.setPrefWidth(widthGridPane + 117.14);
+        gridPaneGround.setPrefHeight(heightGridPane + 59.29);
+
+        for (int i = 0; i < gridPaneGround.getColumnCount(); i ++) {
+            for (int j = 0; j < gridPaneGround.getRowCount(); j++) {
+                Node node = getNodeFromGridPane(gridPaneGround, i, j);
+                GridPane.setColumnIndex(node, i + 1);
+                GridPane.setRowIndex(node, j + 1);
+            }
+        }
+        gridPaneGround.getColumnConstraints().addFirst(new ColumnConstraints(117.14));
+        gridPaneGround.getRowConstraints().addFirst(new RowConstraints(59.29));
+    }
+
     public void setDropCompleted(ImageView iv){
         iv.setOnDragDone(event -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
-                iv.setImage(voidImage);
-
+                iv.setImage(new Image("file:" + imagesBackPath + "95.png"));
             }
             event.consume();
         });
@@ -428,7 +491,7 @@ public class Controller {
                 y = j-converter;
                 Position pos = new Position(x, y);
                 Card c = matrix[i][j];
-                if (c.getId() == -1 && !isFound(availablePos, pos)) {
+                if (c != null && (c.getId() == -1 && !isFound(availablePos, pos))) {
                     //gridPaneGround.add(new ImageView(voidImage), x, y);
                     availablePos.add(new Position(x, y));
                 }
@@ -443,7 +506,7 @@ public class Controller {
             }
         }
         return false;
-    }*/
+    }
     public void setStreams(GUIClientSocket client){
         this.client = client;
     }
