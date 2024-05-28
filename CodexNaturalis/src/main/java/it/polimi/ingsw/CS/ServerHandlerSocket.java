@@ -26,6 +26,18 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     @Override
     public void run() {
         try {
+            Thread t = new Thread(() ->{
+                while(!game.isOver()){
+                    if(game.getNumPlayer()!=game.getExpPlayers()){
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    }
+                }
+            });
             start();
             out.writeObject(player);
             out.writeObject(false);
@@ -105,6 +117,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         }
         catch (IOException | ClassNotFoundException | InvalidPositionException e){
             //creare eccezione per chiudere socket sul MyServerSocket
+            game.removePlayer(player.getNickname());
             e.printStackTrace();
         }
 

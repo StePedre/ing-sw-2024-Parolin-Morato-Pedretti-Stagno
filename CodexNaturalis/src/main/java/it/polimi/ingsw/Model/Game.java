@@ -373,4 +373,8 @@ public class Game implements Serializable {
     public ArrayList<Player> getMultiWinners() {
         return multiWinners;
     }
+    public void removePlayer(String nickname){
+        players.removeIf(p -> p.getNickname().equals(nickname));
+        numPlayers--;
+    }
 }
