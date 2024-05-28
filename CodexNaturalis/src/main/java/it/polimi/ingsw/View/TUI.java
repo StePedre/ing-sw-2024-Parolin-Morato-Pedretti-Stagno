@@ -609,7 +609,7 @@ public class TUI {
         Card deck2card2 = deck2.get(1); */
 
         System.out.println("Here you are the game decks." +
-               "" + deck1name + " deck (0, 1, 2 to choose):\n");
+               "\n" + deck1name + " deck (0, 1, 2 to choose):");
         /*
         showCard((PlayableCard) deck1card1);
         System.out.println("\nSecond card of the " + deck1name + " (1 to choose):\n");
@@ -622,7 +622,7 @@ public class TUI {
         System.out.println("\nAlternatively, you can input 5 to choose the hidden card at the top of the " + deck2name + "deck.\n");
         System.out.println("Which card do you choose? Input the number corresponding to your choice:\n"); */
         AdvancedTUI_temp.printDeck(decks[0]);
-        System.out.println( "" + deck2name + " deck (3, 4, 5 to choose):\n");
+        System.out.println( "\n" + deck2name + " deck (3, 4, 5 to choose):");
         AdvancedTUI_temp.printDeck(decks[1]);
         Scanner scanner = new Scanner(System.in);
         int choice;

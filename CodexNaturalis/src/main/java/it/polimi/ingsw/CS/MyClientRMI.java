@@ -1,5 +1,6 @@
 package it.polimi.ingsw.CS;
 
+import it.polimi.ingsw.Controller.PlaceCardController;
 import it.polimi.ingsw.Controller.PlayerController;
 import it.polimi.ingsw.Controller.RoundController;
 import it.polimi.ingsw.Model.*;
@@ -173,7 +174,9 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                     break;
                 }else{
                     if(tui.yourTurnPlay(game, player)){
-                        player.getPlayerGround().placeCard(tui.inputCardToPlace(player), tui.inputCoordinates(player));
+                        PlayableCard card = tui.inputCardToPlace(player);
+                        player.getPlayerGround().placeCard(card, tui.inputCoordinates(player));
+                        PlaceCardController.removeFromHand(card,player);
                         drawCardFromDeck(tui.yourTurnDraw(game, player));
                         roundController.nextRound();
                     }

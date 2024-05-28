@@ -103,14 +103,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             over();
             socket.close();
         }
-        catch (IOException e){
-            //creare eccezione per chiudere socket sul MyServerSocket
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException e) {
-            //creare eccezione per chiudere socket sul MyServerSocket
-            e.printStackTrace();
-        } catch (InvalidPositionException e) {
+        catch (IOException | ClassNotFoundException | InvalidPositionException e){
             //creare eccezione per chiudere socket sul MyServerSocket
             e.printStackTrace();
         }
@@ -172,9 +165,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             if(player.getHand().drawCard(deck)){
                 player.getHand().chooseCard(deck.drawCard(card));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } catch (Exception e) {
             throw new RuntimeException(e);
