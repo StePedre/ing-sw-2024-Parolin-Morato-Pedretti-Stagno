@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
@@ -264,21 +265,23 @@ public class GUI extends Application{
         controller.setStreams(client);
         Game g = client.receiveGameFromServer();
         Player p = client.receivePlayerFromServer();
-        controller.placeFirstCard(sc, p);
-        showUpdatedPlayerGround(stage, g, p);
-    }
-
-    public void showUpdatedPlayerGround(Stage stage, Game g, Player p) throws IOException, ClassNotFoundException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
-        Parent root = loader.load();
-        Controller controller = loader.getController();
-        controller.getPlayGroundAnchor().getChildren().addFirst(background);
-        controller.setStreams(client);
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        controller.placeFirstCard(sc, p);
+        showUpdatedPlayerGround(stage, g, p, controller);
+    }
+
+    public void showUpdatedPlayerGround(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
+//        Parent root = loader.load();
+//        Controller controller = loader.getController();
+        controller.getPlayGroundAnchor().getChildren().addFirst(background);
+        controller.setStreams(client);
+//        Scene scene = new Scene(root);
+//        stage.setScene(scene);
         stage.show();
         boolean flag;
-        flag = controller.addGround(p, g);
+        flag = controller.addGround(g, p);
         if(flag){ // se è il suo turno
             if(!client.receiveBooleanFromServer()){
                 switchToYourTurn(stage);
@@ -288,7 +291,7 @@ public class GUI extends Application{
             }
         }
         else{
-            System.out.println("godo!");
+            // ...
         }
     }
 
@@ -308,7 +311,8 @@ public class GUI extends Application{
             try {
                 if(controller.playCard()){
                     if(client.receiveBooleanFromServer()){
-                        // showUpdatedPlayerGround(stage);
+//                        showUpdatedPlayerGround(stage);
+                        System.out.println("Card placed");
                     }
                 }
                 else{

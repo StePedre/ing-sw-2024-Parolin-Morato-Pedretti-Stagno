@@ -222,10 +222,10 @@ public class Controller {
         client.sendToServer(flip);
     }
 
-    public boolean addGround(Player p, Game g) throws IOException, ClassNotFoundException {
-        // client.reset();
-        // Game g = client.receiveGameFromServer();
-        // Player p = client.receivePlayerFromServer();
+    public boolean addGround(Game g, Player p) throws IOException, ClassNotFoundException {
+//        client.reset();
+//        Game g = client.receiveGameFromServer();
+//        Player p = client.receivePlayerFromServer();
         labelPoints.setText("Points: "+ p.getPlayerGround().getPlayerScore());
         addImages(p.getHand());
         addSecretObj(p.getHand().getObjCard());
@@ -266,7 +266,7 @@ public class Controller {
     }
 
     public void placeFirstCard(StarterCard sc, Player updatedP) throws IOException, ClassNotFoundException {
-        ImageView iv = new ImageView(new Image("file:" + imagesFrontPath + sc.getId() + ".png"));
+        ImageView iv = new ImageView(new Image("file:" + imagesFrontPath + sc.getId() + ".png", 150, 100, true, true));
         gridPaneGround.add(iv, 3, 4);
         showAvailablePos(updatedP.getPlayerGround());
     }
