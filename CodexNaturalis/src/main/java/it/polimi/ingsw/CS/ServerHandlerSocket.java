@@ -46,7 +46,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             out.writeObject(true);
             playerinit();
             sendData();
-            boolean flag;
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
                 out.writeObject(false);  // non è il suo turno
             }
@@ -60,47 +59,28 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 else{
                     out.writeObject(false);
                 }
-                /*if(game.isOver()){
-                    out.writeObject(true);
-                    over();
-                    break;
-                }
-                else{
-                    out.writeObject(false);
-                }*/
                 sendData();
                 playCard();
-                if(player.getPlayerGround().getPlayerScore()>=20 && !rc.isLastTurn()){
-                    //fine gioco
+                if(rc.isLastTurn()){
+                    rc.nextRound();
                     out.writeObject(true);
-                    //game.finish();
-                    //over();
-                    rc.setLastTurn();
                     break;
                 }
                 else{
                     out.writeObject(false);
-                    //non vinto
                 }
-                if(!rc.isLastTurn()) {
+                if(player.getPlayerGround().getPlayerScore()>=20 && !rc.isEnding()){
+                    rc.setEnding();
+                }
+                if(!(rc.isLastTurn() || (game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0))) {
                     out.writeObject(true);
                     drawCard();
                 }
                 else{
                     out.writeObject(false);
-                    break;
                 }
                 if(game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0){//controllo numeri carte deck
-                    //fine gioco
-                    out.writeObject(true);
-                    //game.finish();
-                    //over();
-                    rc.setLastTurn();
-                    break;
-                }
-                else{
-                    out.writeObject(false);
-                    //non fine gioco
+                    rc.setEnding();
                 }
                 rc.nextRound();
                 sendData();

@@ -85,9 +85,6 @@ public class MyClientSocket {
         boolean b =  (boolean) in.readObject();
         while(true){
             if(b){
-                /*if((boolean)in.readObject()){//finito gioco per vittoria altrui
-                    break;
-                }*/
                 if((boolean) in.readObject()){
                     System.out.println("è l'ultimo turno");// Aggiungere a tui
                 }
@@ -98,18 +95,11 @@ public class MyClientSocket {
                 out.writeObject(tui.inputCoordinates(player));
                 out.reset();
                 player = (Player) in.readObject();
-                //aspetta riscontro vittoria
                 if((boolean)in.readObject()){
                     break;
                 }
                 if((boolean)in.readObject()) {
                     out.writeObject(tui.yourTurnDraw(game, player));
-                }else{
-                    break;
-                }
-                //aspetta riscontro vittoria
-                if((boolean) in.readObject()){
-                    break;
                 }
                 updateData();
                 b=(boolean) in.readObject();

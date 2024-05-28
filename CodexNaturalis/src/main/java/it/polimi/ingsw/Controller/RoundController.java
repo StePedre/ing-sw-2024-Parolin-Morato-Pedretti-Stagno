@@ -4,7 +4,6 @@ import it.polimi.ingsw.Model.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -19,6 +18,7 @@ public class RoundController implements Serializable {
     private final Random rand = new Random();
     private Player LastPlayer;
     private boolean lastTurn = false;
+    private boolean isEnding = false;
 
     public RoundController() {
 
@@ -36,6 +36,10 @@ public class RoundController implements Serializable {
     }
 
     public synchronized void nextRound(){
+        if(isEnding && LastPlayer.equals(players.get(round))){
+            isEnding = false;
+            lastTurn = true;
+        }
         if(!(lastTurn && LastPlayer.equals(players.get(round)))) {
             if (round == players.size() - 1)
                 round = 0;
@@ -51,6 +55,7 @@ public class RoundController implements Serializable {
     public synchronized boolean isLastTurn() {
         return lastTurn;
     }
+    public synchronized boolean isEnding() {return isEnding;}
 
     public synchronized void setFirstPlayer(){
         if (round == -1) {
@@ -65,8 +70,5 @@ public class RoundController implements Serializable {
     public synchronized Player getCurrentPlayer(){
         return players.get(round);
     }
-    public synchronized void setLastTurn(){
-        lastTurn = true;
-    }
-
+    public synchronized void setEnding(){isEnding = true;}
 }
