@@ -238,15 +238,15 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         rc.setFirstPlayer();
         PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
         pc.populateHand(game,player);
-        ObjectiveCard[] obj = pc.pickObjCard(game);
-        out.writeObject(obj);
-        pc.setObjSecret(obj[((int)in.readObject())-1]);
         StarterCard st = pc.pickCard(game);
         out.writeObject(st);
         if((boolean)in.readObject()){
             st.flipCard();
         }
         pc.setFirstCard(st);
+        ObjectiveCard[] obj = pc.pickObjCard(game);
+        out.writeObject(obj);
+        pc.setObjSecret(obj[((int)in.readObject())-1]);
     }
     public void colorChoose() throws IOException, ClassNotFoundException {
         out.writeObject(game);// to be managed in tui
