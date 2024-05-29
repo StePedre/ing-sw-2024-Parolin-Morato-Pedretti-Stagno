@@ -19,6 +19,8 @@ import java.util.HashMap;
 
 public class Controller {
     @FXML
+    private ToggleButton red, blue, green, yellow;
+    @FXML
     private AnchorPane playGroundAnchor;
     @FXML
     private HBox playGroundHBox;
@@ -33,11 +35,11 @@ public class Controller {
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV, sadFace, sadFace2;
     @FXML
-    private Button finishButton, finishButton2, buttonStart, confirmRoom;
+    private Button finishButton, finishButton2, buttonStart, confirmRoom, confirmColor;
     @FXML
     private TextField nickTextField, numberPlayersTF, textFieldRoom;
     @FXML
-    private Label nickLabel, label20p, labelRoom, validLabel, winnerName, winnersNames, startLabel, startLabel2;
+    private Label nickLabel, label20p, labelRoom, validLabel, winnerName, winnersNames, startLabel, startLabel2, colorValidLabel;
     @FXML
     private ProgressBar waitingBar;
     @FXML
@@ -94,6 +96,7 @@ public class Controller {
     public Button getFinishButton() {return finishButton;}
     public Button getFinishButton2() {return finishButton2;}
     public Button getConfirmRoom() {return confirmRoom;}
+    public Button getConfirmColor() {return confirmColor;}
     public TextField getTfRoom(){return textFieldRoom;}
     public Label getLabelRoom(){return labelRoom;}
     public ComboBox<Label> getMenu() {return menu;}
@@ -101,6 +104,7 @@ public class Controller {
     public Label getStartLabel2(){return startLabel2;}
     public Label getNickLabel(){return nickLabel;}
     public Label getLabel20p(){return label20p;}
+    public Label getColorValidLabel(){return colorValidLabel;}
     public TextField getNickTextField() {return nickTextField;}
     public ProgressBar getWaitingBar() {return waitingBar;}
     public ImageView getLogo() {
@@ -137,6 +141,11 @@ public class Controller {
         return playGroundAnchor;
     }
     public HBox getPlayGroundHBox(){return playGroundHBox;}
+    public ToggleButton getRed(){return red;}
+    public ToggleButton getBlue(){return blue;}
+    public ToggleButton getGreen(){return red;}
+    public ToggleButton getYellow(){return red;}
+
     public void addRoomsMenu() throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
         labelRoom.setVisible(false);

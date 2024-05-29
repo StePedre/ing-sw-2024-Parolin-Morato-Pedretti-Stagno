@@ -22,6 +22,7 @@ import javafx.animation.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class GUI extends Application{
     private final Screen screen = Screen.getPrimary();
@@ -163,7 +164,7 @@ public class GUI extends Application{
                         switchToNumberPlayers(stage);
                     }
                     else{
-                        switchToWaitingStart(stage);
+                        switchToColorChoice(stage);
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
@@ -184,16 +185,88 @@ public class GUI extends Application{
         final boolean[] flag = {false};
         Button requestButton = controller.getRequestButton();
         requestButton.setOnAction(event -> {
-            try {
-                flag[0] = controller.getNumberPlayers();
-                if (flag[0]) {
-                    switchToWaitingStart(stage);
+            flag[0] = controller.getNumberPlayers();
+            if (flag[0]) {
+                try {
+                    switchToColorChoice(stage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
             }
         });
     }
+
+    public void switchToColorChoice(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/colorChoice.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setStreams(client);
+        controller.getAnchor3().getChildren().addFirst(background);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        String[] choice = new String[1];
+        String[] choiceCurr = new String[1];
+        choiceCurr[0] = "";
+        controller.getRed().getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                controller.getConfirmColor().setVisible(true);
+                controller.getConfirmColor().setDisable(false);
+                if (newValue.equals(controller.getRed())) {
+                    choice[0] = "red";
+                }
+                if (newValue.equals(controller.getBlue())) {
+                    choice[0] = "blue";
+                }
+                if (newValue.equals(controller.getGreen())) {
+                    choice[0] = "green";
+                }
+                if (newValue.equals(controller.getYellow())) {
+                    choice[0] = "yellow";
+                }
+                boolean[] flag = new boolean[1];
+                controller.getConfirmColor().setOnAction(e->{
+                    while(!flag[0]){
+                        try {
+                            if(!choice[0].equals(choiceCurr[0])){
+                                client.sendToServer(choice[0]);
+                                if(client.receiveBooleanFromServer()){
+                                    controller.getColorValidLabel().setVisible(true);
+                                    choiceCurr[0] = choice[0];
+                                }
+                                else{
+                                    flag[0] = true;
+                                }
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                    try {
+                        switchToWaitingStart(stage);
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+            }
+        });
+    }
+    /* boolean colorOK = false;
+        String color;
+        while(!colorOK){
+            out.writeObject(game);
+            color = (String) in.readObject();
+            if(game.getColors().contains(color)){
+                colorOK = game.markColor(color);
+                out.writeObject(colorOK);
+            }
+            else{
+                out.writeObject(false);
+            }
+            if(colorOK){
+                player.setColor(color);
+            }
+        }*/
 
     public void switchToSelectSecretObj(Stage stage,StarterCard starterCard) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
