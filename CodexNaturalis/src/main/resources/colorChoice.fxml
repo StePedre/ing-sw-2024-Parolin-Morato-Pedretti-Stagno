@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchor10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
+   <children>
+      <VBox alignment="CENTER" layoutX="590.0" layoutY="260.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="colorLabel" text="Choose the color that will represent you:">
+               <font>
+                  <Font name="Bookman Old Style" size="36.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" prefHeight="255.0" prefWidth="737.0">
+               <VBox.margin>
+                  <Insets left="200.0" right="200.0" />
+               </VBox.margin>
+               <children>
+                  <ToggleButton fx:id="red" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #ff1f1f;">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="colors" />
+                     </toggleGroup>
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </ToggleButton>
+                  <ToggleButton fx:id="blue" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: DODGERBLUE;" toggleGroup="$colors">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </ToggleButton>
+                  <ToggleButton fx:id="green" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #55e43f;" toggleGroup="$colors">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </ToggleButton>
+                  <ToggleButton fx:id="yellow" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #fff11f;" toggleGroup="$colors">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </ToggleButton>
+               </children>
+            </HBox>
+            <Label fx:id="colorValidLabel" alignment="CENTER" text="This color has already been taken, please choose another one." textFill="#d00101" visible="false">
+               <font>
+                  <Font name="Bookman Old Style" size="26.0" />
+               </font>
+            </Label>
+            <Button fx:id="confirmColor" disable="true" mnemonicParsing="false" style="-fx-background-color: #1560BD;" text="Confirm" textFill="WHITE" visible="false">
+               <font>
+                  <Font name="Bookman Old Style" size="20.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

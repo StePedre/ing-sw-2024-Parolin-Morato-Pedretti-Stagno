@@ -44,6 +44,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
             out.writeObject(true);
+            out.writeObject(game); // to be managed in tui
             playerinit();
             sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
@@ -235,6 +236,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     public void playerinit() throws IOException, ClassNotFoundException, InvalidPositionException {
         rc.setPlayers(game.getPlayers());
         rc.setFirstPlayer();
+        String color = (String)in.readObject();
+        game.markColor(color);
+        player.setColor(color);
         PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
         pc.populateHand(game,player);
         ObjectiveCard[] obj = pc.pickObjCard(game);

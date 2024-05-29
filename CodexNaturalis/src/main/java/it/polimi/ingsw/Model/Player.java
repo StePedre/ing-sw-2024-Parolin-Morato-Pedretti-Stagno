@@ -20,6 +20,7 @@ public class Player implements Serializable {
     private PlayerGround playerGround;
     private Game game;
     private int reachedObjNo;
+    private String color;
     private static final int maxLengthMsg = 255;
     // still a temporary value
     private String message;
@@ -81,6 +82,9 @@ public class Player implements Serializable {
         this.game = game;
     }
 
+    public void setColor(String s){
+        this.color = s;
+    }
     /**
      * The method gets the nickname of the player.
      *

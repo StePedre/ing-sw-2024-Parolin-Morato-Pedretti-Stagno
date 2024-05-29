@@ -2,9 +2,7 @@ package it.polimi.ingsw.Model;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Each instance of Game class is a game session. Objects of class Game must have: a list of players and their number,
@@ -27,6 +25,7 @@ public class Game implements Serializable {
     private ArrayList<ObjectiveCard> otherObjs = null;
     private boolean isOver = false;
     private ArrayList<StarterCard> starterCards;
+    private Set<String> colors = new HashSet<>();
 
     public Game(ArrayList<Player> players, Deck[] decks, ObjectiveCard[] commonObj, ArrayList<Player> multiWinners, int expPlayers, int numPlayers, ArrayList<ObjectiveCard> otherObjs, boolean isOver, ArrayList<StarterCard> starterCards) {
         this.players = players;
@@ -38,6 +37,10 @@ public class Game implements Serializable {
         this.otherObjs = otherObjs;
         this.isOver = isOver;
         this.starterCards = starterCards;
+        this.colors.add("red");
+        this.colors.add("blue");
+        this.colors.add("green");
+        this.colors.add("yellow");
     }
 
     /**
@@ -94,6 +97,14 @@ public class Game implements Serializable {
         synchronized (players) {
             return numPlayers;
         }
+    }
+
+    public void markColor(String color){
+        colors.remove(color);
+    }
+
+    public Set<String> getColors(){
+        return colors;
     }
 
     /**
