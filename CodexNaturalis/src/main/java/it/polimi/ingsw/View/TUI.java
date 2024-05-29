@@ -718,4 +718,12 @@ public class TUI {
             file.createNewFile();
         }
     }
+    public String chooseColor(Game game){
+        System.out.println("Choose a color: ");
+        for(String s : game.getColors()){
+            System.out.println(s);
+        }
+        Scanner s = new Scanner(System.in);
+        return s.nextLine();
+    }
 }

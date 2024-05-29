@@ -195,7 +195,7 @@ public class GUI extends Application{
         });
     }
 
-    public void switchToSelectSecretObj(Stage stage) throws IOException, ClassNotFoundException {
+    public void switchToSelectSecretObj(Stage stage,StarterCard starterCard) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -209,7 +209,7 @@ public class GUI extends Application{
         secretObjLeft.setOnMouseClicked(mouseEvent -> {
             try {
                 client.sendToServer(1);
-                switchToStarterChoice(stage);
+                initializePlayerGround(stage,starterCard);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -218,7 +218,7 @@ public class GUI extends Application{
         secretObjRight.setOnMouseClicked(mouseEvent -> {
             try {
                 client.sendToServer(2);
-                switchToStarterChoice(stage);
+                initializePlayerGround(stage,starterCard);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -239,7 +239,7 @@ public class GUI extends Application{
         frontStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
                 controller.sendIfStarterFlipped(false);
-                initializePlayerGround(stage, startCard);
+                switchToSelectSecretObj(stage, startCard);
                 //simulateEnd(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -249,7 +249,7 @@ public class GUI extends Application{
         backStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
                 controller.sendIfStarterFlipped(true);
-                initializePlayerGround(stage, startCard);
+                switchToSelectSecretObj(stage, startCard);
                 //simulateEnd(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -382,7 +382,7 @@ public class GUI extends Application{
         t.start();
         controller.getButtonStart().setOnAction(e->{
             try {
-                switchToSelectSecretObj(stage);
+                switchToStarterChoice(stage);
             } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
