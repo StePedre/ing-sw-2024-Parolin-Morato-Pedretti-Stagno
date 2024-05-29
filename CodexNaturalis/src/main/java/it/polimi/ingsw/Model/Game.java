@@ -99,11 +99,11 @@ public class Game implements Serializable {
         }
     }
 
-    public void markColor(String color){
-        colors.remove(color);
+    public synchronized boolean markColor(String color){
+        return colors.remove(color);
     }
 
-    public Set<String> getColors(){
+    public synchronized Set<String> getColors(){
         return colors;
     }
 
