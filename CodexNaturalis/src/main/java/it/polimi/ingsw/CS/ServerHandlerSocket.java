@@ -54,13 +54,13 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){  // finchè non è il suo turno
                 }
                 out.writeObject(true);//è il tuo turno
+                sendData();
                 if(rc.isLastTurn()){
                     out.writeObject(true);
                 }
                 else{
                     out.writeObject(false);
                 }
-                sendData();
                 playCard();
                 if(rc.isLastTurn()){
                     rc.nextRound();

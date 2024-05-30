@@ -222,13 +222,13 @@ public class GUIsocket extends Application{
                 if (newValue.equals(controller.getYellow())) {
                     choice[0] = "yellow";
                 }
-                boolean[] flag = new boolean[1];
+                boolean[] flag = {false};
                 controller.getConfirmColor().setOnAction(e->{
                     while(!flag[0]){
                         try {
                             if(!choice[0].equals(choiceCurr[0])){
                                 client.sendToServer(choice[0]);
-                                if(client.receiveBooleanFromServer()){
+                                if(!client.receiveBooleanFromServer()){
                                     controller.getColorValidLabel().setVisible(true);
                                     choiceCurr[0] = choice[0];
                                 }

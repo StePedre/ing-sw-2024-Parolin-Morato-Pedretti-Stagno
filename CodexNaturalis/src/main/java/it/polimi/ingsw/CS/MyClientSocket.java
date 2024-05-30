@@ -87,11 +87,10 @@ public class MyClientSocket {
         boolean b =  (boolean) in.readObject();
         while(true){
             if(b){
+                updateData();
+                tui.yourTurnPlay(game,player);
                 if((boolean) in.readObject()){
                     System.out.println("è l'ultimo turno");// Aggiungere a tui
-                }
-                updateData();
-                while(!tui.yourTurnPlay(game,player)){
                 }
                 out.writeObject(tui.inputCardToPlace(player));
                 out.writeObject(tui.inputCoordinates(player));
