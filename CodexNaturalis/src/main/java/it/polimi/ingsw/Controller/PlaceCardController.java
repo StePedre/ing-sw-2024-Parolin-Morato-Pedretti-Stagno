@@ -9,15 +9,7 @@ public class PlaceCardController {
     }
     public static void place(PlayableCard card,Player player,Position pos) throws InvalidPositionException, MissingResourcesException {
         PlayerGround ground = player.getPlayerGround();
-        try{
-            ground.placeCard(card,pos);
-        }
-        catch(InvalidPositionException e){
-            throw e;
-        }
-        catch (MissingResourcesException e){
-            throw e;
-        }
+        ground.placeCard(card,pos);
 
     }
     public static void removeFromHand(PlayableCard card, Player player){

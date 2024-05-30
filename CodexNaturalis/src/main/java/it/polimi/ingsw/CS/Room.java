@@ -70,6 +70,11 @@ public class Room implements Serializable {
         return roundController;
     }
 
+
+    public synchronized boolean isFull() {
+        return game.getNumPlayer() == game.getExpPlayers();
+    }
+
     /**
      * The method initializes each field of the Game associated to the Room.
      *

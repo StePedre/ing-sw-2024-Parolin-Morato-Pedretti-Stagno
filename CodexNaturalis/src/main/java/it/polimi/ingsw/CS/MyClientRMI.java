@@ -4,6 +4,7 @@ import it.polimi.ingsw.Controller.PlaceCardController;
 import it.polimi.ingsw.Controller.PlayerController;
 import it.polimi.ingsw.Controller.RoundController;
 import it.polimi.ingsw.Model.*;
+import it.polimi.ingsw.View.GUIrmi;
 import it.polimi.ingsw.View.TUI;
 
 import java.io.IOException;
@@ -78,37 +79,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             startNormalGame();
     }
 
-    private void listenToEndTurn() {
-        try {
-            ArrayList<Player> oldPlayers = getPlayers();
-
-            while (waitingForPlayers) {
-
-                ArrayList<Player> currentPlayers = getPlayers();
-
-                for (Player currentPlayer : currentPlayers) {
-                    boolean isNewPlayer = true;
-                    for (Player oldPlayer : oldPlayers) {
-                        if (currentPlayer.getNickname().equals(oldPlayer.getNickname())) {
-                            isNewPlayer = false;
-                            break;
-                        }
-                    }
-                    if (isNewPlayer) {
-                        tui.playerJoined(currentPlayer);
-                    }
-                }
-
-                oldPlayers = new ArrayList<>(currentPlayers);
-
-                if(currentPlayers.size() == server.getRooms().getRoom(roomJoined).getGame().getExpPlayers())
-                    waitingForPlayers = false;
-                Thread.sleep(1000);
-            }
-        } catch (RemoteException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void listenToPlayers() {
             try {
@@ -134,25 +104,22 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
 
                     if(currentPlayers.size() == server.getRooms().getRoom(roomJoined).getGame().getExpPlayers())
                         waitingForPlayers = false;
-                    Thread.sleep(1000);
                 }
-            } catch (RemoteException | InterruptedException e) {
+            } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
     }
 
     private void startEarlyGame() throws IOException, InvalidPositionException {
         playerController = new PlayerController(player.getPlayerGround(),player.getHand());
-        //select secret obj
         game = server.getRooms().getRoom(roomJoined).getGame();
-        ObjectiveCard[] obj = playerController.pickObjCard(game);
-        playerController.setObjSecret(obj[tui.chooseObjective(obj[0],obj[1])-1]);
         StarterCard st = playerController.pickCard(game);
         if(tui.showStarterCard(st)){
             st.flipCard();
         }
         playerController.setFirstCard(st);
-        System.out.println(player.getNickname());
+        ObjectiveCard[] obj = playerController.pickObjCard(game);
+        playerController.setObjSecret(obj[tui.chooseObjective(obj[0],obj[1])-1]);
         playerController.populateHand(game,player);
     }
 
@@ -261,7 +228,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         return server.getRooms().getRoom(roomJoined).getGame().getPlayers();
     }
     private void useGUI(){
-
+        GUIrmi.startGUI();
     }
 
 

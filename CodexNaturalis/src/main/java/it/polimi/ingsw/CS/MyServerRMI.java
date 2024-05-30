@@ -30,10 +30,15 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         return rooms;
     }
 
-    public Player addNewPlayer(String nickname, String room) throws RemoteException{
+
+    public Player addNewPlayer(String nickname, String roomName) throws RemoteException{
         Player newPlayer = new Player(nickname);
-        rooms.getRoom(room).getGame().addPlayer(newPlayer);
-        return newPlayer;
+        Game game = rooms.getRoom(roomName).getGame();
+        if(game.getPlayer(nickname) == null) {
+            game.addPlayer(newPlayer);
+            return newPlayer;
+        }
+        return null;
     }
 
     public ArrayList<Room> showRooms() throws RemoteException{
@@ -49,9 +54,16 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         return rooms.getRoom(room).getGame().isFirst();
     }
 
-    public void addRoom(String roomName) throws RemoteException{
+    public boolean addRoom(String roomName) throws RemoteException{
+
         Room room = new Room(roomName);
+        for(Room r : rooms.getRooms()) {
+            if(r.getName().equals(roomName)){
+                return false;
+            }
+        }
         rooms.addRoom(room);
+        return true;
     }
 
 

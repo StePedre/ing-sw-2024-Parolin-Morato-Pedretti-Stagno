@@ -202,7 +202,6 @@ public class TUI {
         System.out.println("\n");
         AdvancedTUI_temp.printDeck(game.getDecks()[0]);
         AdvancedTUI_temp.printDeck(game.getDecks()[1]);
-        System.out.println("\n");
         AdvancedTUI_temp.printGround(player.getPlayerGround());
         AdvancedTUI_temp.printResources(player.getPlayerGround().getTotalResources());
         System.out.println("\n");
@@ -210,7 +209,6 @@ public class TUI {
         for (Position pos: player.getPlayerGround().getAvailablePositions()) {
             System.out.println("(" + pos.getX()+", " + pos.getY() + ") ");
         }
-        System.out.println("\n");
         return true;
         /*
         System.out.println("It's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n 4- Play card\n\n");
@@ -307,7 +305,6 @@ public class TUI {
         while(flip!=1 && flip!=0) {
             flip = scanner.nextInt();
             scanner.nextLine();
-            System.out.println("Invalid choice. Choose between 1, 2 and 3:\n");
         }
         if (flip ==1) {
             cardToPlay.flipCard();
@@ -579,6 +576,7 @@ public class TUI {
         for (Position pos: player.getPlayerGround().getAvailablePositions()) {
             System.out.println("(" + pos.getX()+", " + pos.getY() + ") ");
         }
+
     }
 
     /**
@@ -599,7 +597,7 @@ public class TUI {
         Deck[] decks = game.getDecks();
         String deck1name = decks[0].getKindOfDeck();
         String deck2name = decks[1].getKindOfDeck();
-
+        AdvancedTUI_temp.printGround(player.getPlayerGround());
         System.out.println("This is your hand: ");
         AdvancedTUI_temp.printHand(player.getHand());
 /*
@@ -608,8 +606,8 @@ public class TUI {
         Card deck2card1 = deck2.getFirst();
         Card deck2card2 = deck2.get(1); */
 
-        System.out.println("Here you are the game decks." +
-               "\n" + deck1name + " deck (0, 1, 2 to choose):");
+        System.out.println("\nHere you are the game decks." +
+               "\n" + deck1name + " deck (0, 1, 2 to choose):\n");
         /*
         showCard((PlayableCard) deck1card1);
         System.out.println("\nSecond card of the " + deck1name + " (1 to choose):\n");
@@ -622,7 +620,7 @@ public class TUI {
         System.out.println("\nAlternatively, you can input 5 to choose the hidden card at the top of the " + deck2name + "deck.\n");
         System.out.println("Which card do you choose? Input the number corresponding to your choice:\n"); */
         AdvancedTUI_temp.printDeck(decks[0]);
-        System.out.println( "\n" + deck2name + " deck (3, 4, 5 to choose):");
+        System.out.println( "\n" + deck2name + " deck (3, 4, 5 to choose):\n");
         AdvancedTUI_temp.printDeck(decks[1]);
         Scanner scanner = new Scanner(System.in);
         int choice;

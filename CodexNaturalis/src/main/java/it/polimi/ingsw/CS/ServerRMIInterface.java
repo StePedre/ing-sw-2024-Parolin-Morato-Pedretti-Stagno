@@ -19,7 +19,7 @@ public interface ServerRMIInterface extends Remote {
     public ArrayList<Room> showRooms() throws RemoteException;
     public boolean isFirstPlayer(String room) throws RemoteException;
 
-    public void addRoom(String roomName) throws RemoteException;
+    public boolean addRoom(String roomName) throws RemoteException;
 
     RoomController getRooms() throws RemoteException;
 

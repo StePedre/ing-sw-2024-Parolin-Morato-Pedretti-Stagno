@@ -130,11 +130,26 @@ public class AdvancedTUI_temp {
     }
 
     public static void printResources(HashMap<Resource, Integer> totalResources){
+        StringBuilder resourceLine1 = new StringBuilder("  ");
+        StringBuilder resourceLine2 = new StringBuilder("  ");
             for (Map.Entry<Resource, Integer> entry : totalResources.entrySet()) {
                 Resource resource = entry.getKey();
-                Integer value = entry.getValue();
-                System.out.println("" + resource + ", Value: " + value);
+                if(!(resource.equals(NOTVISIBLE) || resource.equals(BLANK))) {
+                    if(!(resource.equals(POTION) || resource.equals(SCROLL) || resource.equals(PLUME))) {
+                        Corner corner = new Corner("top", resource, true);
+                        Integer value = entry.getValue();
+                        resourceLine1.append(resourceColor(resource)).append(resource).append("  ").append(cornerColor(corner)).append("\u001B[0m").append(": ").append(value).append("           ");
+                    }
+                    else{
+                        Corner corner = new Corner("top", resource, true);
+                        Integer value = entry.getValue();
+                        resourceLine2.append(resourceColor(resource)).append(resource).append("  ").append(cornerColor(corner)).append("\u001B[0m").append(": ").append(value).append("           ");
+                    }
+                }
             }
+        System.out.println("                                     RESOURCES:\n");
+        System.out.println("    " + resourceLine1 + "\n");
+        System.out.println("             " + resourceLine2);
     }
 
 
@@ -176,7 +191,7 @@ public class AdvancedTUI_temp {
         StringBuilder contentLine3 =  new StringBuilder();
         StringBuilder buttonBorder =  new StringBuilder();
 
-        for(int i = 0; i<2; i++) {
+        for(int i = 0; i< objectiveCards.length; i++) {
             topBorder.append("  ").append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀");
             contentLine1.append("\u001B[33m").append(" ▌").append(firstLineObjective(objectiveCards[i])).append("\u001B[33m").append("▌ ");
             contentLine2.append("\u001B[33m").append(" ▌").append(secondLineObjective(objectiveCards[i])).append("\u001B[33m").append("▌ ");
@@ -190,8 +205,6 @@ public class AdvancedTUI_temp {
         System.out.println("                        " + contentLine2);
         System.out.println("                        " + contentLine3);
         System.out.println("                        " + buttonBorder);
-
-
 }
 
     public static void printStartingCard(StarterCard card){
@@ -393,6 +406,12 @@ public class AdvancedTUI_temp {
                 else if( sumX == 3){
                     return " " + cornerColor(corner) + "\u001B[33m" + "        "+ compositionRule.getPoints() + " points ";
                 }
+                else if(compositionRule.getOffsets()[0] ==-1){
+                    return "       " + cornerColor(corner) + "\u001B[33m" + "  " + compositionRule.getPoints() + " points ";
+                }
+                else if(compositionRule.getOffsets()[2] == 1){
+                    return " " + cornerColor(corner) + "\u001B[33m" + "        "+ compositionRule.getPoints() + " points ";
+                }
             }
             case null, default -> {
                 return "                    ";
@@ -436,7 +455,7 @@ public class AdvancedTUI_temp {
         ScoreRule rule = objectiveCard.getRule();
         switch (rule.getName()){
             case "NSR", "OER" -> {
-                return "                    ";
+                return "      resources     ";
             }
             case "CR" -> {
                 CompositionRule compositionRule = (CompositionRule) rule;
@@ -450,13 +469,14 @@ public class AdvancedTUI_temp {
                 else if( sumX == 3 || sumX == 1){
                     return "       " + cornerColor(corner) + "\u001B[33m" + "     comp  ";
 
+                }else{
+                    return "    " + cornerColor(corner) + "\u001B[33m" + "        comp  ";
                 }
             }
             case null, default -> {
                 return "                   ";
             }
         }
-        return "                   ";
     }
     private static String cardContent(Card card){
         if(card.getFlip()) return "                    ";
@@ -543,6 +563,25 @@ public class AdvancedTUI_temp {
         }
     }
 
+    private static String resourceColor(Resource resource){
+        switch(resource){
+            case LEAF -> {
+                return "\u001B[32m";
+            }
+            case BUG -> {
+                return "\u001B[35m";
+            }
+            case FOX -> {
+                return "\u001B[34m";
+            }
+            case MUSHROOM -> {
+                return "\u001B[31m";
+            }
+            case null, default -> {
+                return "\u001B[33m";
+            }
+        }
+    }
 
     private static String cornerColor(Corner corner){
         if(corner.getAvailability()) {
@@ -612,11 +651,14 @@ public class AdvancedTUI_temp {
         hand.setSecretObj(objectiveCards.get(rand.nextInt(objectiveCards.size())));
         commonObj[0] = objectiveCards.get(rand.nextInt(objectiveCards.size()));
         commonObj[1] = objectiveCards.get(rand.nextInt(objectiveCards.size()));
+        ObjectiveCard[] objectiveCardsArray = new ObjectiveCard[objectiveCards.size()];
+        objectiveCardsArray = objectiveCards.toArray(objectiveCardsArray);
         resDeck.shuffle();
         goldDeck.shuffle();
         printDeck(resDeck);
         printDeck(goldDeck);
         printObjectives(commonObj);
         printHand(hand);
+        printObjectives(objectiveCardsArray);
     }
 }

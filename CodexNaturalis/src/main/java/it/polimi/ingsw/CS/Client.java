@@ -13,7 +13,7 @@ public class Client {
     public static void main(String[] args) {
         try{//chiedere Gui/Tui e tipo di connesione
             System.out.println(InetAddress.getLocalHost().getHostAddress());
-            System.out.println("Do you want to use a GUIsocket or a TUI?");
+            System.out.println("Do you want to use a GUI or a TUI?");
             Scanner s = new Scanner(System.in);
             String choice;
             boolean chooseInterface = false,flag = false;
@@ -22,11 +22,11 @@ public class Client {
                 if (choice.equalsIgnoreCase("TUI")) {
                     chooseInterface = true;
                     flag=true;
-                } else if(choice.equalsIgnoreCase("GUIsocket")){
+                } else if(choice.equalsIgnoreCase("GUI")){
                     flag=true;
                 }
                 else{
-                    System.out.println("Please, choose between GUIsocket and TUI");
+                    System.out.println("Please, choose between GUI and TUI");
                 }
             }while(!flag);
             flag=false;

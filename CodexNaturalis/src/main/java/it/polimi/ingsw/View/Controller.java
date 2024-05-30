@@ -50,7 +50,7 @@ public class Controller {
     private final double screenWidth = screen.getBounds().getWidth();
     @FXML
     private ImageView goldFaceDown, resFaceDown, goldFaceUp1, goldFaceUp2, resFaceUp1, resFaceUp2;
-    private GUIClientSocket client;
+    private GUIClientSocket client; // togliere riferimenti socket al controller GUI (this)
     @FXML
     private Label labelPoints, mushroomNum, bugNum, leafNum, foxNum, potionNum, scrollNum, plumeNum;
     @FXML

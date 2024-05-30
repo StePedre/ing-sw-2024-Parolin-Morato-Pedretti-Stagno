@@ -1,9 +1,9 @@
 package it.polimi.ingsw.View;
 
 import it.polimi.ingsw.CS.Room;
-import it.polimi.ingsw.Model.Game;
-import it.polimi.ingsw.Model.Player;
-import it.polimi.ingsw.Model.StarterCard;
+import it.polimi.ingsw.CS.ServerRMIInterface;
+import it.polimi.ingsw.Controller.PlayerController;
+import it.polimi.ingsw.Model.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
@@ -24,28 +24,35 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.Socket;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class GUIrmi extends Application{
+public class GUIrmi extends Application {
+
     private final Screen screen = Screen.getPrimary();
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
     private ImageView background;
 
+    private ServerRMIInterface server;
+
+    private PlayerController playerController;
+
     @Override
     public void start(Stage stage) throws Exception {
-
-    }
-
-
-  /*  public void start(Stage stage) throws IOException {
-        Socket socket = new Socket("127.0.0.1", 59090);//modificare socket con inserimento ip server
-        client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
+        try {
+            server = (ServerRMIInterface) Naming.lookup("rmi://localhost/ServerRMI");
+        } catch (Exception e) {
+            System.err.println("Client exception: " + e.toString());
+            e.printStackTrace();
+        }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/loadingScene.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getBackgroundIV().fitWidthProperty().bind(controller.getHboxStart().widthProperty());
         controller.getBackgroundIV().fitHeightProperty().bind(controller.getHboxStart().heightProperty());
         background = controller.getBackgroundIV();
@@ -68,13 +75,12 @@ public class GUIrmi extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/roomChoice.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor2().getChildren().addFirst(background);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
-        ArrayList<Room> rooms = client.receiveRoomsFromServer();
-        for (Room r: rooms){
+        ArrayList<Room> rooms = server.getRooms().getRooms();
+        for (Room r : rooms) {
             Label elem = new Label(r.getName());
             controller.getMenu().getItems().add(elem);
         }
@@ -90,30 +96,27 @@ public class GUIrmi extends Application{
                     controller.getConfirmRoom().setOnAction(e -> {
                         boolean found, flag;
                         try {
-                                found = false;
-                                for (Room r : rooms) {
-                                    if (r.getName().equals(controller.getTfRoom().getText())) {
-                                        found = true;
-                                        controller.getTfRoom().setText("");
-                                        controller.getLabelRoom().setPrefWidth(250);
-                                        controller.getLabelRoom().setStyle("-fx-text-fill: #b31010");
-                                        controller.getLabelRoom().setText("This name is already taken, choose a new one:");
-                                        break;
+                            found = false;
+                            for (Room r : rooms) {
+                                if (r.getName().equals(controller.getTfRoom().getText())) {
+                                    found = true;
+                                    controller.getTfRoom().setText("");
+                                    controller.getLabelRoom().setPrefWidth(250);
+                                    controller.getLabelRoom().setStyle("-fx-text-fill: #b31010");
+                                    controller.getLabelRoom().setText("This name is already taken, choose a new one:");
+                                    break;
 
-                                    }
                                 }
-                                if (!found) {
-                                    client.sendToServer(true);
-                                    client.sendToServer(controller.getTfRoom().getText());
-                                    flag = client.receiveBooleanFromServer();
-                                    if(flag){
-                                        controller.getTfRoom().setText("");
-                                        controller.getLabelRoom().setText("Too late! Someone else has just created a room with this name! Please input another one:");
-                                    }
-                                    else{
-                                        switchToLogin(stage);
-                                    }
+                            }
+                            if (!found) {
+                                String roomName = controller.getTfRoom().getText();
+                                if (!server.addRoom(roomName)) {
+                                    controller.getTfRoom().setText("");
+                                    controller.getLabelRoom().setText("Too late! Someone else has just created a room with this name! Please input another one:");
+                                } else {
+                                    switchToLogin(stage, roomName);
                                 }
+                            }
                         } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -121,21 +124,18 @@ public class GUIrmi extends Application{
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-            }else if (newValue.equals(buttonL)) {
-                try{
+            } else if (newValue.equals(buttonL)) {
+                try {
                     controller.addRoomsMenu();
-                    controller.getConfirmRoom().setOnAction(e2->{
+                    controller.getConfirmRoom().setOnAction(e2 -> {
                         boolean flag;
                         try {
-                            client.sendToServer(false); // comunica al server che vuole joinare una stanza
-                            client.sendToServer(controller.getMenu().getSelectionModel().getSelectedItem().getText()); // comunica al server nome stanza
-                            flag = client.receiveBooleanFromServer();
-                            if(flag){
+                            Room roomJoined = server.getRooms().getRoom(controller.getMenu().getSelectionModel().getSelectedItem().getText());
+                            if (roomJoined.isFull()) {
                                 controller.getTfRoom().setText("");
-                                controller.getLabelRoom().setText("Too late! Someone else has just created a room with this name! Please input another one:");
-                            }
-                            else{
-                                switchToLogin(stage);
+                                controller.getLabelRoom().setText("Too late! The room is full!");
+                            } else {
+                                switchToLogin(stage, roomJoined.getName());
                             }
                         } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
@@ -147,11 +147,11 @@ public class GUIrmi extends Application{
             }
         });
     }
-    public void switchToLogin(Stage stage) throws IOException, ClassNotFoundException {
+
+    public void switchToLogin(Stage stage, String roomName) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/insertNick.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getNickAnchor().getChildren().addFirst(background);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
@@ -159,19 +159,19 @@ public class GUIrmi extends Application{
         Button nickButton = controller.getNickButton();
         nickButton.setOnAction(actionEvent -> {
             try {
-                client.sendToServer(controller.getNickname());
-                if(client.receiveBooleanFromServer()){
+
+                if(server.addNewPlayer(controller.getNickname(), roomName) == null){
                     controller.getNickLabel().setPrefWidth(800);    // eventualmente aggiungere un'altra label
                     controller.getNickLabel().setStyle("-fx-text-fill: #b20b0b");
                     controller.getNickLabel().setText("This name is already taken, choose another one:");
                     controller.getNickTextField().setText("");
                 }
                 else{
-                    if(client.receiveBooleanFromServer()){
-                        switchToNumberPlayers(stage);
+                    if(server.getRooms().getRoom(roomName).getGame().getNumPlayer() == 1){
+                        switchToNumberPlayers(stage, roomName);
                     }
                     else{
-                        switchToColorChoice(stage);
+                        //switchToColorChoice(stage);
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
@@ -180,11 +180,10 @@ public class GUIrmi extends Application{
         });
     }
 
-    public void switchToNumberPlayers(Stage stage) throws IOException {
+    public void switchToNumberPlayers(Stage stage, String roomName) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/requestNoPlayers.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor3().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -192,16 +191,80 @@ public class GUIrmi extends Application{
         final boolean[] flag = {false};
         Button requestButton = controller.getRequestButton();
         requestButton.setOnAction(event -> {
-            flag[0] = controller.getNumberPlayers();
+          /*  flag[0] = controller.getNumberPlayers();
             if (flag[0]) {
                 try {
                     switchToColorChoice(stage);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+            } */
+            //server.getRooms().getRoom(roomName).getGame().setExpPlayers(controller.getNumberPlayers());
+
+        });
+    }
+
+    public void switchToStarterChoice(Stage stage, Player player) throws IOException, ClassNotFoundException, InvalidPositionException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
+        playerController = new PlayerController(player.getPlayerGround(),player.getHand());
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.getAnchor6().getChildren().addFirst(background);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        StarterCard startCard = playerController.pickCard(player.getGame());
+        //StarterCard startCard = controller.addStarterImages();
+        ImageView frontStarterCard = controller.getFrontStarterCard();
+        frontStarterCard.setOnMouseClicked(mouseEvent -> {
+            try {
+                playerController.setFirstCard(startCard);
+            } catch (InvalidPositionException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        ImageView backStarterCard = controller.getBackStarterCard();
+        backStarterCard.setOnMouseClicked(mouseEvent -> {
+            startCard.flipCard();
+            try {
+                playerController.setFirstCard(startCard);
+            } catch (InvalidPositionException e) {
+                throw new RuntimeException(e);
             }
         });
     }
+
+    public void switchToSelectSecretObj(Stage stage,StarterCard starterCard, Player player) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.getAnchor7().getChildren().addFirst(background);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        ObjectiveCard[] obj = playerController.pickObjCard(player.getGame());
+        //controller.addSecretObjImages();
+        ImageView secretObjLeft = controller.getSecretObjLeft();
+        secretObjLeft.setOnMouseClicked(mouseEvent -> {
+            playerController.setObjSecret(obj[0]);
+         //initializePlayground(stage);
+        });
+        ImageView secretObjRight = controller.getSecretObjRight();
+        secretObjRight.setOnMouseClicked(mouseEvent -> {
+            playerController.setObjSecret(obj[1]);
+            //initializePlayground(stage);
+        });
+    }
+
+    public static void startGUI() {
+        launch();
+    }
+
+
+  /*
+
+
+
 
     public void switchToColorChoice(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/colorChoice.fxml"));
@@ -275,67 +338,9 @@ public class GUIrmi extends Application{
             }
         }
 
-    public void switchToSelectSecretObj(Stage stage,StarterCard starterCard) throws IOException, ClassNotFoundException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
-        Parent root = loader.load();
-        Controller controller = loader.getController();
-        controller.setStreams(client);
-        controller.getAnchor7().getChildren().addFirst(background);
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        controller.addSecretObjImages();
-        ImageView secretObjLeft = controller.getSecretObjLeft();
-        secretObjLeft.setOnMouseClicked(mouseEvent -> {
-            try {
-                client.sendToServer(1);
-                initializePlayerGround(stage,starterCard);
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        ImageView secretObjRight = controller.getSecretObjRight();
-        secretObjRight.setOnMouseClicked(mouseEvent -> {
-            try {
-                client.sendToServer(2);
-                initializePlayerGround(stage,starterCard);
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
 
-    public void switchToStarterChoice(Stage stage) throws IOException, ClassNotFoundException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
-        Parent root = loader.load();
-        Controller controller = loader.getController();
-        controller.setStreams(client);
-        controller.getAnchor6().getChildren().addFirst(background);
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        StarterCard startCard = controller.addStarterImages();
-        ImageView frontStarterCard = controller.getFrontStarterCard();
-        frontStarterCard.setOnMouseClicked(mouseEvent -> {
-            try {
-                controller.sendIfStarterFlipped(false);
-                switchToSelectSecretObj(stage, startCard);
-                //simulateEnd(stage);
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        ImageView backStarterCard = controller.getBackStarterCard();
-        backStarterCard.setOnMouseClicked(mouseEvent -> {
-            try {
-                controller.sendIfStarterFlipped(true);
-                switchToSelectSecretObj(stage, startCard);
-                //simulateEnd(stage);
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
+
+
 
     public void initializePlayerGround(Stage stage, StarterCard sc) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
