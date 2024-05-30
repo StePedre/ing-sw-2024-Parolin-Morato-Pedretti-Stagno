@@ -50,7 +50,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     public void runClient() throws IOException, InvalidPositionException, MissingResourcesException {
         System.out.println("Client connected");
 
-        if(inter) {//decisione se usare TUI o GUI
+        if(inter) {//decisione se usare TUI o GUIsocket
             useTUI();
         }
         else{

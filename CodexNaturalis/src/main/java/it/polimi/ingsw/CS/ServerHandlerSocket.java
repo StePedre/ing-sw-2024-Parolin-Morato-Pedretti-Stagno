@@ -184,7 +184,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             int n =(int) in.readObject();
             room.getGame().setExpPlayers(n);
         } else{
-            out.writeObject(false);// da problemi al secondo player nellaa GUI
+            out.writeObject(false);// da problemi al secondo player nellaa GUIsocket
         }
     }
     public Room roomChoice() throws IOException, ClassNotFoundException {

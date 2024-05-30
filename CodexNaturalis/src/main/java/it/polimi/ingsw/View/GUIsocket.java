@@ -9,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
@@ -22,9 +21,8 @@ import javafx.animation.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class GUI extends Application{
+public class GUIsocket extends Application{
     private final Screen screen = Screen.getPrimary();
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();

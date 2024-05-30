@@ -1,10 +1,8 @@
 package it.polimi.ingsw.CS;
 import java.io.*;
-import java.net.ConnectException;
 import java.net.Socket;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.View.*;
-import javafx.application.Application;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -125,6 +123,6 @@ public class MyClientSocket {
         player = (Player) in.readObject();
     }
     public void useGUI(){
-        GUI.startGUI();
+        GUIsocket.startGUI();
     }
 }
