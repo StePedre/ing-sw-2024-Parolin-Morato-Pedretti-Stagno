@@ -6,6 +6,7 @@ import it.polimi.ingsw.View.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Set;
 
 
 public class MyClientSocket {
@@ -70,9 +71,8 @@ public class MyClientSocket {
             }while(!NoOk);
         }
         do{
-            game = (Game) in.readObject();
-            out.writeObject(tui.chooseColor(game));
-        }while((boolean)in.readObject());
+            out.writeObject(tui.chooseColor((Set<String>) in.readObject()));
+        }while(!(boolean)in.readObject());
         player = (Player) in.readObject();
         in.readObject();//legge false per non numero di player
         tui.Welcome(player);

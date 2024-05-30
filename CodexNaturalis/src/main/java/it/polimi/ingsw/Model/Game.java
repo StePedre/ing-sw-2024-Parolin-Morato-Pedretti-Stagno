@@ -55,11 +55,19 @@ public class Game implements Serializable {
         this.numPlayers = players.size();
         this.decks = decks;
         this.commonObj = commonObj;
+        this.colors.add("red");
+        this.colors.add("blue");
+        this.colors.add("green");
+        this.colors.add("yellow");
     }
 
     public Game() {
         players = new ArrayList<>();
         numPlayers = 0;
+        this.colors.add("red");
+        this.colors.add("blue");
+        this.colors.add("green");
+        this.colors.add("yellow");
     }
 
     /**

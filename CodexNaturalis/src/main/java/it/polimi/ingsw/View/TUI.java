@@ -716,9 +716,9 @@ public class TUI {
             file.createNewFile();
         }
     }
-    public String chooseColor(Game game){
+    public String chooseColor(Set<String> colors){
         System.out.println("Choose a color: ");
-        for(String s : game.getColors()){
+        for(String s : colors){
             System.out.println(s);
         }
         Scanner s = new Scanner(System.in);

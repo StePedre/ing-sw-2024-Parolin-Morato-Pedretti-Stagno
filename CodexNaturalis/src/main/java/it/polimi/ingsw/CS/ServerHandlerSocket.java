@@ -42,6 +42,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             colorChoose();
             out.writeObject(player);
             out.writeObject(false);
+            game.addPlayer(player);
             while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
             out.writeObject(true);
@@ -176,7 +177,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         this.player = new Player(nickname);
         game = room.getGame();
         rc = room.getRoundController();
-        game.addPlayer(player);
     }
     public void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza
         if(room.getGame().isFirst()) {
@@ -253,7 +253,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         boolean colorOK = false;
         String color;
         while(!colorOK){
-            out.writeObject(game);
+            out.writeObject(game.getColors());
             color = (String) in.readObject();
             if(game.getColors().contains(color)){
                 colorOK = game.markColor(color);
