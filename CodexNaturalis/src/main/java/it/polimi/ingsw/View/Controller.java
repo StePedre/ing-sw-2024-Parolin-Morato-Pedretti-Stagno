@@ -27,7 +27,7 @@ public class Controller {
     @FXML
     private GridPane gridPaneGround;
     @FXML
-    private AnchorPane anchor2, anchor3, anchor4, anchor5, anchor6, anchor7, anchor8, anchor9,nickAnchorPane;
+    private AnchorPane anchor2, anchor3, anchor4, anchor5, anchor6, anchor7, anchor8, anchor9,nickAnchorPane,anchor10;
     @FXML
     private HBox hBoxStart;
     @FXML
@@ -35,9 +35,9 @@ public class Controller {
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV, sadFace, sadFace2;
     @FXML
-    private Button finishButton, finishButton2, buttonStart, confirmRoom, confirmColor;
+    private Button finishButton, finishButton2, buttonStart, confirmRoom, confirmColor, IpButton;
     @FXML
-    private TextField nickTextField, numberPlayersTF, textFieldRoom;
+    private TextField nickTextField, numberPlayersTF, textFieldRoom,IpField;
     @FXML
     private Label nickLabel, label20p, labelRoom, validLabel, winnerName, winnersNames, startLabel, startLabel2, colorValidLabel;
     @FXML
@@ -90,7 +90,9 @@ public class Controller {
     public RadioButton getButtonL() {return buttonL;}
     public RadioButton getButtonR() {return buttonR;}
     public Button getButtonStart() {return buttonStart;}
+    public Button getIpButton(){return IpButton;}
     public HBox getHboxStart() {return hBoxStart;}
+    public TextField getIpField(){return IpField;}
     public Label getWinnerName() {return winnerName;}
     public Label getWinnersNames() {return winnersNames;}
     public Button getFinishButton() {return finishButton;}
@@ -134,6 +136,7 @@ public class Controller {
     public AnchorPane getAnchor3() {
         return anchor3;
     }
+    public AnchorPane getAnchor10(){return anchor10;}
     public AnchorPane getNickAnchor(){
         return nickAnchorPane;
     }

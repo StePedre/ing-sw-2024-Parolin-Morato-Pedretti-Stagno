@@ -19,7 +19,9 @@ import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import javafx.animation.*;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class GUIsocket extends Application{
@@ -31,12 +33,9 @@ public class GUIsocket extends Application{
 
     @Override
     public void start(Stage stage) throws IOException {
-        Socket socket = new Socket("127.0.0.1", 59090);//modificare socket con inserimento ip server
-        client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/loadingScene.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getBackgroundIV().fitWidthProperty().bind(controller.getHboxStart().widthProperty());
         controller.getBackgroundIV().fitHeightProperty().bind(controller.getHboxStart().heightProperty());
         background = controller.getBackgroundIV();
@@ -48,8 +47,9 @@ public class GUIsocket extends Application{
         stage.show();
         scene.setOnKeyReleased(keyEvent -> {
             try {
-                switchToRoomChoice(stage);
-            } catch (IOException | ClassNotFoundException e) {
+                switchToIpInput(stage);
+                //switchToRoomChoice(stage);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -616,6 +616,29 @@ public class GUIsocket extends Application{
         showWinners(stage, winners);
     }
     */
-
+    public void switchToIpInput(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/IpInputScene.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.getAnchor10().getChildren().addFirst(background);
+        controller.getIpButton().setOnAction(e -> {
+            try{
+                String host = controller.getIpField().getText();
+                Socket socket = new Socket(host, 59090);//modificare socket con inserimento ip server
+                client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
+                switchToRoomChoice(stage);
+            }
+            catch (ConnectException ex){
+                try {
+                    switchToIpInput(stage);
+                } catch (IOException exc) {
+                    throw new RuntimeException(exc);
+                }
+            }
+            catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
 }
 
