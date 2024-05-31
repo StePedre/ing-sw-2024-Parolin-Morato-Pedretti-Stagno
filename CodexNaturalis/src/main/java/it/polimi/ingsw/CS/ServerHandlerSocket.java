@@ -39,7 +39,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 }
             });
             start();
-            colorChoose();
+            colorChoice();
             out.writeObject(player);
             out.writeObject(false);
             game.addPlayer(player);
@@ -248,7 +248,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         out.writeObject(obj);
         pc.setObjSecret(obj[((int)in.readObject())-1]);
     }
-    public void colorChoose() throws IOException, ClassNotFoundException {
+    public void colorChoice() throws IOException, ClassNotFoundException {
         boolean colorOK = false;
         String color;
         out.writeObject(game.getColors());
