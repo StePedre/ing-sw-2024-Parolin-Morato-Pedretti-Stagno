@@ -23,6 +23,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class GUIsocket extends Application{
     private final Screen screen = Screen.getPrimary();
@@ -187,14 +188,14 @@ public class GUIsocket extends Application{
             if (flag[0]) {
                 try {
                     switchToColorChoice(stage);
-                } catch (IOException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
     }
 
-    public void switchToColorChoice(Stage stage) throws IOException {
+    public void switchToColorChoice(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/colorChoice.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -206,11 +207,10 @@ public class GUIsocket extends Application{
         String[] choice = new String[1];
         String[] choiceCurr = new String[1];
         choiceCurr[0] = "";
+        Set<String> colors = client.receiveColorsFromServer();
+        hideColor(colors, controller);
         controller.getRed().getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
-                System.out.println("Debug");
-            }
-            else {
+            if (newValue != null) {
                 controller.getConfirmColor().setVisible(true);
                 controller.getConfirmColor().setDisable(false);
                 if (newValue.equals(controller.getRed())) {
@@ -227,30 +227,49 @@ public class GUIsocket extends Application{
                 }
                 boolean[] flag = {false};
                 controller.getConfirmColor().setOnAction(e->{
-                    while(!flag[0]){
+                    while(!flag[0]) {
                         try {
-                            if(!choice[0].equals(choiceCurr[0])){
-                                client.sendToServer(choice[0]);
-                                if(!client.receiveBooleanFromServer()){
-                                    controller.getColorValidLabel().setVisible(true);
-                                    choiceCurr[0] = choice[0];
-                                }
-                                else{
-                                    flag[0] = true;
-                                }
+                            client.sendToServer(choice[0]);
+                            if (!client.receiveBooleanFromServer()) {
+                                controller.getColorValidLabel().setVisible(true);
+                                Set<String> colors2 = client.receiveColorsFromServer();
+                                hideColor(colors2, controller);
+                            } else {
+                                flag[0] = true;
                             }
                         } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
-                    }
-                    try {
-                        switchToWaitingStart(stage);
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                        try {
+                            switchToWaitingStart(stage);
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 });
             }
         });
+    }
+
+    public void hideColor(Set<String> colors, Controller controller){
+        for (String s : colors) {
+            if (s.equals("red")) {
+                controller.getRed().setDisable(true);
+                controller.getRed().setVisible(false);
+            }
+            if (s.equals("blue")) {
+                controller.getBlue().setDisable(true);
+                controller.getBlue().setVisible(false);
+            }
+            if (s.equals("green")) {
+                controller.getGreen().setDisable(true);
+                controller.getGreen().setVisible(false);
+            }
+            if (s.equals("yellow")) {
+                controller.getYellow().setDisable(true);
+                controller.getYellow().setVisible(false);
+            }
+        }
     }
     /* boolean colorOK = false;
         String color;
@@ -349,19 +368,27 @@ public class GUIsocket extends Application{
 //        FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
 //        Parent root = loader.load();
 //        Controller controller = loader.getController();
+
         controller.getPlayGroundAnchor().getChildren().addFirst(background);
         controller.setStreams(client);
 //        Scene scene = new Scene(root);
 //        stage.setScene(scene);
+        // controller.addCards(g.getDecks());
+        // controller.updateGrounds(g.getPlayers());
         stage.show();
         boolean flag;
+        client.reset();
+        g = client.receiveGameFromServer();
+        p = client.receivePlayerFromServer();
         flag = controller.addGround(g, p);
+        // controller.addCards(g.getDecks());
+        // controller.updateGrounds(g.getPlayers());
         if(flag){ // se è il suo turno
             if(!client.receiveBooleanFromServer()){
-                switchToYourTurn(stage);
+                switchToYourTurn(stage, p, g);
             }
             else{ // ultimo turno
-                switchToLastTurn(stage);
+                switchToLastTurn(stage, p, g);
             }
         }
         else{
@@ -369,7 +396,7 @@ public class GUIsocket extends Application{
         }
     }
 
-    public void switchToYourTurn(Stage stage) throws IOException {
+    public void switchToYourTurn(Stage stage, Player player, Game game) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/yourTurn.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -383,14 +410,14 @@ public class GUIsocket extends Application{
         controller.getYourTurnButton().setOnAction(e ->{
             stage2.close();
             try {
-                if(controller.playCard()){
-                    if(client.receiveBooleanFromServer()){
-//                        showUpdatedPlayerGround(stage);
-                        System.out.println("Card placed");
+                if(!controller.playCard(player, game)){
+                    if(client.receiveBooleanFromServer()){   // se ci sono carte nel deck
+                        switchToDraw(stage);
                     }
-                }
-                else{
-                    showTwentyPoints(stage);
+                    else{
+                        showZeroCards(stage);
+                        // wait(client.receivePlayerFromServer(), client.receiveGameFromServer());
+                    }
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
@@ -417,12 +444,12 @@ public class GUIsocket extends Application{
                 throw new RuntimeException(e);
             }
         });
+        Game g = client.receiveGameFromServer();
+        Player p = client.receivePlayerFromServer();
         if(!controller.checkIfOver()){
-            // showUpdatedPlayerGround(stage);
+            showUpdatedPlayerGround(stage, g, p, controller);
         }
-        else{
-            showZeroCards(stage);
-        }
+
     }
 
     public void switchToWaitingStart(Stage stage) throws IOException, ClassNotFoundException {
@@ -576,7 +603,7 @@ public class GUIsocket extends Application{
         });
     }
 
-    public void switchToLastTurn(Stage stage) throws IOException {
+    public void switchToLastTurn(Stage stage, Player p, Game g) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lastTurn.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -588,7 +615,7 @@ public class GUIsocket extends Application{
         stage2.setScene(scene);
         stage2.showAndWait();
         try {
-            if(controller.playCard()){
+            if(controller.playCard(p, g)){
                 if(client.receiveBooleanFromServer()){
                     switchToWaitingFinish(stage);
                 }

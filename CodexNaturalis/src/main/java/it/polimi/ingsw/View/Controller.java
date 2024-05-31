@@ -235,9 +235,6 @@ public class Controller {
     }
 
     public boolean addGround(Game g, Player p) throws IOException, ClassNotFoundException {
-//        client.reset();
-//        Game g = client.receiveGameFromServer();
-//        Player p = client.receivePlayerFromServer();
         labelPoints.setText("Points: "+ p.getPlayerGround().getPlayerScore());
         addImages(p.getHand());
         addSecretObj(p.getHand().getObjCard());
@@ -283,11 +280,11 @@ public class Controller {
         showAvailablePos(updatedP.getPlayerGround());
     }
 
-    public boolean playCard() throws IOException, ClassNotFoundException {
-        client.reset();
-        Player player = client.receivePlayerFromServer();
-        Game game = client.receiveGameFromServer();
-        showAvailablePos(player.getPlayerGround());
+    public boolean playCard(Player p, Game g) throws IOException, ClassNotFoundException {
+      //  client.reset();
+     //   Player player = client.receivePlayerFromServer();
+      //  Game game = client.receiveGameFromServer();
+        showAvailablePos(p.getPlayerGround());
         setDragDetected(handCardLeft);
         setDragDetected(handCardCenter);
         setDragDetected(handCardRight);
@@ -297,14 +294,14 @@ public class Controller {
         setDropCompleted(handCardRight);
         // client.sendToServer(cardToPlay);
         // client.sendToServer(cardPosition);
-        client.receivePlayerFromServer();  // riceve player con mano aggiornata -> vedi placeCardController per capire com'è la nuova mano e aggiorna il playground
+        p = client.receivePlayerFromServer();  // riceve player con mano aggiornata -> vedi placeCardController per capire com'è la nuova mano e aggiorna il playground
         client.reset();
         if(client.receiveBooleanFromServer()){
             // to do: cosa succede se ha vinto
             return false;
         }
         else{
-            addCards(game.getDecks());
+            addCards(g.getDecks());
             return true;
         }
     }

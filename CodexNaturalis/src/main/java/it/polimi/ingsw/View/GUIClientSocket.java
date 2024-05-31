@@ -8,6 +8,7 @@ import it.polimi.ingsw.Model.StarterCard;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class GUIClientSocket {
     ObjectInputStream in;
@@ -34,6 +35,10 @@ public class GUIClientSocket {
     }
     public boolean receiveBooleanFromServer() throws IOException, ClassNotFoundException {
         return (Boolean) in.readObject();
+    }
+
+    public Set<String> receiveColorsFromServer() throws IOException, ClassNotFoundException {
+        return (Set<String>) in.readObject();
     }
     public StarterCard receiveStarterCardFromServer() throws IOException, ClassNotFoundException {
         return (StarterCard) in.readObject();
