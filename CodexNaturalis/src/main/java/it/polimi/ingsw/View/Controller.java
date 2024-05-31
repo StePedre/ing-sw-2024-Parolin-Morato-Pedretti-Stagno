@@ -21,6 +21,8 @@ public class Controller {
     @FXML
     private ToggleButton red, blue, green, yellow;
     @FXML
+    private ToggleGroup colors;
+    @FXML
     private AnchorPane playGroundAnchor;
     @FXML
     private HBox playGroundHBox;
@@ -146,8 +148,8 @@ public class Controller {
     public HBox getPlayGroundHBox(){return playGroundHBox;}
     public ToggleButton getRed(){return red;}
     public ToggleButton getBlue(){return blue;}
-    public ToggleButton getGreen(){return red;}
-    public ToggleButton getYellow(){return red;}
+    public ToggleButton getGreen(){return green;}
+    public ToggleButton getYellow(){return yellow;}
 
     public void addRoomsMenu() throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);

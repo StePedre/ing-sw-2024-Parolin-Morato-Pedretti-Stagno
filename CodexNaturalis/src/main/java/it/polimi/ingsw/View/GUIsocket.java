@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
@@ -208,7 +209,7 @@ public class GUIsocket extends Application{
         String[] choiceCurr = new String[1];
         choiceCurr[0] = "";
         Set<String> colors = client.receiveColorsFromServer();
-        hideColor(colors, controller);
+        showColor(colors, controller);
         controller.getRed().getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 controller.getConfirmColor().setVisible(true);
@@ -227,19 +228,19 @@ public class GUIsocket extends Application{
                 }
                 boolean[] flag = {false};
                 controller.getConfirmColor().setOnAction(e->{
-                    while(!flag[0]) {
-                        try {
-                            client.sendToServer(choice[0]);
-                            if (!client.receiveBooleanFromServer()) {
-                                controller.getColorValidLabel().setVisible(true);
-                                Set<String> colors2 = client.receiveColorsFromServer();
-                                hideColor(colors2, controller);
-                            } else {
-                                flag[0] = true;
-                            }
-                        } catch (IOException | ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
+                    try {
+                        client.sendToServer(choice[0]);
+                        if (!client.receiveBooleanFromServer()) {
+                            Set<String> colors2 = client.receiveColorsFromServer();
+                            showColor(colors2, controller);
+                            controller.getColorValidLabel().setVisible(true);
+                        } else {
+                            flag[0] = true;
                         }
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    if(flag[0]) {
                         try {
                             switchToWaitingStart(stage);
                         } catch (IOException | ClassNotFoundException ex) {
@@ -251,23 +252,23 @@ public class GUIsocket extends Application{
         });
     }
 
-    public void hideColor(Set<String> colors, Controller controller){
+    public void showColor(Set<String> colors, Controller controller){
         for (String s : colors) {
             if (s.equals("red")) {
-                controller.getRed().setDisable(true);
-                controller.getRed().setVisible(false);
+                controller.getRed().setDisable(false);
+                controller.getRed().setVisible(true);
             }
             if (s.equals("blue")) {
-                controller.getBlue().setDisable(true);
-                controller.getBlue().setVisible(false);
+                controller.getBlue().setDisable(false);
+                controller.getBlue().setVisible(true);
             }
             if (s.equals("green")) {
-                controller.getGreen().setDisable(true);
-                controller.getGreen().setVisible(false);
+                controller.getGreen().setDisable(false);
+                controller.getGreen().setVisible(true);
             }
             if (s.equals("yellow")) {
-                controller.getYellow().setDisable(true);
-                controller.getYellow().setVisible(false);
+                controller.getYellow().setDisable(false);
+                controller.getYellow().setVisible(true);
             }
         }
     }
@@ -361,7 +362,13 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         controller.placeFirstCard(sc, p);
-        showUpdatedPlayerGround(stage, g, p, controller);
+        try{
+            showUpdatedPlayerGround(stage, g, p, controller);
+        }
+        catch (IOException e){
+            showError(stage);
+        }
+
     }
 
     public void showUpdatedPlayerGround(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
@@ -394,6 +401,20 @@ public class GUIsocket extends Application{
         else{
             // ...
         }
+    }
+
+    public void showError(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/errorMessageBanner.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setStreams(client);
+        Stage stage2 = new Stage();
+        stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
+        stage2.initOwner(stage);
+        Scene scene = new Scene(root, 600, 200);
+        stage2.setScene(scene);
+        stage2.showAndWait();
+        stage.close();
     }
 
     public void switchToYourTurn(Stage stage, Player player, Game game) throws IOException {
@@ -663,7 +684,7 @@ public class GUIsocket extends Application{
             }
             catch (ConnectException ex){
                 try {
-                    switchToIpInput(stage);
+                    switchToIpInput(stage);   // dovrebbe essere sostituito con valid label e permesso di reinserire l'input
                 } catch (IOException exc) {
                     throw new RuntimeException(exc);
                 }
