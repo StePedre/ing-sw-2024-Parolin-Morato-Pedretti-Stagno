@@ -199,7 +199,7 @@ public class GUIsocket extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.setStreams(client);
-        controller.getAnchor3().getChildren().addFirst(background);
+        controller.getAnchor10().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -207,7 +207,10 @@ public class GUIsocket extends Application{
         String[] choiceCurr = new String[1];
         choiceCurr[0] = "";
         controller.getRed().getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
+            if (newValue == null) {
+                System.out.println("Debug");
+            }
+            else {
                 controller.getConfirmColor().setVisible(true);
                 controller.getConfirmColor().setDisable(false);
                 if (newValue.equals(controller.getRed())) {
@@ -621,10 +624,13 @@ public class GUIsocket extends Application{
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.getAnchor10().getChildren().addFirst(background);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
         controller.getIpButton().setOnAction(e -> {
             try{
                 String host = controller.getIpField().getText();
-                Socket socket = new Socket(host, 59090);//modificare socket con inserimento ip server
+                Socket socket = new Socket(host, 59090);
                 client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
                 switchToRoomChoice(stage);
             }
