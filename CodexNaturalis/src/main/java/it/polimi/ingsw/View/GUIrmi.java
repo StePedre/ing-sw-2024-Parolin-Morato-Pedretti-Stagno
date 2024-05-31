@@ -30,6 +30,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class GUIrmi extends Application {
 
@@ -128,7 +129,6 @@ public class GUIrmi extends Application {
                 try {
                     controller.addRoomsMenu();
                     controller.getConfirmRoom().setOnAction(e2 -> {
-                        boolean flag;
                         try {
                             Room roomJoined = server.getRooms().getRoom(controller.getMenu().getSelectionModel().getSelectedItem().getText());
                             if (roomJoined.isFull()) {
@@ -160,18 +160,16 @@ public class GUIrmi extends Application {
         nickButton.setOnAction(actionEvent -> {
             try {
 
-                if(server.addNewPlayer(controller.getNickname(), roomName) == null){
+                if (server.addNewPlayer(controller.getNickname(), roomName) == null) {
                     controller.getNickLabel().setPrefWidth(800);    // eventualmente aggiungere un'altra label
                     controller.getNickLabel().setStyle("-fx-text-fill: #b20b0b");
                     controller.getNickLabel().setText("This name is already taken, choose another one:");
                     controller.getNickTextField().setText("");
-                }
-                else{
-                    if(server.getRooms().getRoom(roomName).getGame().getNumPlayer() == 1){
+                } else {
+                    if (server.getRooms().getRoom(roomName).getGame().getNumPlayer() == 1) {
                         switchToNumberPlayers(stage, roomName);
-                    }
-                    else{
-                        //switchToColorChoice(stage);
+                    } else {
+                        // switchToColorChoice(stage);
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
@@ -179,6 +177,83 @@ public class GUIrmi extends Application {
             }
         });
     }
+
+    /*  public void switchToColorChoice(Stage stage) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/colorChoice.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setStreams(client);
+        controller.getAnchor10().getChildren().addFirst(background);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        String[] choice = new String[1];
+        String[] choiceCurr = new String[1];
+        choiceCurr[0] = "";
+        Set<String> colors = client.receiveColorsFromServer();
+        showColor(colors, controller);
+        controller.getRed().getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                controller.getConfirmColor().setVisible(true);
+                controller.getConfirmColor().setDisable(false);
+                if (newValue.equals(controller.getRed())) {
+                    choice[0] = "red";
+                }
+                if (newValue.equals(controller.getBlue())) {
+                    choice[0] = "blue";
+                }
+                if (newValue.equals(controller.getGreen())) {
+                    choice[0] = "green";
+                }
+                if (newValue.equals(controller.getYellow())) {
+                    choice[0] = "yellow";
+                }
+                boolean[] flag = {false};
+                controller.getConfirmColor().setOnAction(e->{
+                    try {
+                        client.sendToServer(choice[0]);
+                        if (!client.receiveBooleanFromServer()) {
+                            Set<String> colors2 = client.receiveColorsFromServer();
+                            showColor(colors2, controller);
+                            controller.getColorValidLabel().setVisible(true);
+                        } else {
+                            flag[0] = true;
+                        }
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    if(flag[0]) {
+                        try {
+                         //   switchToWaitingStart(stage);
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    public void showColor(Set<String> colors, Controller controller){
+        for (String s : colors) {
+            if (s.equals("red")) {
+                controller.getRed().setDisable(false);
+                controller.getRed().setVisible(true);
+            }
+            if (s.equals("blue")) {
+                controller.getBlue().setDisable(false);
+                controller.getBlue().setVisible(true);
+            }
+            if (s.equals("green")) {
+                controller.getGreen().setDisable(false);
+                controller.getGreen().setVisible(true);
+            }
+            if (s.equals("yellow")) {
+                controller.getYellow().setDisable(false);
+                controller.getYellow().setVisible(true);
+            }
+        }
+    }*/
 
     public void switchToNumberPlayers(Stage stage, String roomName) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/requestNoPlayers.fxml"));
@@ -188,25 +263,20 @@ public class GUIrmi extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        final boolean[] flag = {false};
         Button requestButton = controller.getRequestButton();
         requestButton.setOnAction(event -> {
-          /*  flag[0] = controller.getNumberPlayers();
-            if (flag[0]) {
-                try {
-                    switchToColorChoice(stage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            } */
-            //server.getRooms().getRoom(roomName).getGame().setExpPlayers(controller.getNumberPlayers());
-
+            try {
+                server.getRooms().getRoom(roomName).getGame().setExpPlayers(controller.getNumberPlayers());
+               // switchToColorChoice(stage);  to fix for rmi
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
     public void switchToStarterChoice(Stage stage, Player player) throws IOException, ClassNotFoundException, InvalidPositionException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
-        playerController = new PlayerController(player.getPlayerGround(),player.getHand());
+        playerController = new PlayerController(player.getPlayerGround(), player.getHand());
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.getAnchor6().getChildren().addFirst(background);
@@ -214,7 +284,7 @@ public class GUIrmi extends Application {
         stage.setScene(scene);
         stage.show();
         StarterCard startCard = playerController.pickCard(player.getGame());
-        //StarterCard startCard = controller.addStarterImages();
+        controller.addStarterImages(startCard);
         ImageView frontStarterCard = controller.getFrontStarterCard();
         frontStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
@@ -234,7 +304,7 @@ public class GUIrmi extends Application {
         });
     }
 
-    public void switchToSelectSecretObj(Stage stage,StarterCard starterCard, Player player) throws IOException, ClassNotFoundException {
+    public void switchToSelectSecretObj(Stage stage, StarterCard starterCard, Player player) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -243,11 +313,11 @@ public class GUIrmi extends Application {
         stage.setScene(scene);
         stage.show();
         ObjectiveCard[] obj = playerController.pickObjCard(player.getGame());
-        //controller.addSecretObjImages();
+        controller.addSecretObjImages(obj);
         ImageView secretObjLeft = controller.getSecretObjLeft();
         secretObjLeft.setOnMouseClicked(mouseEvent -> {
             playerController.setObjSecret(obj[0]);
-         //initializePlayground(stage);
+            //initializePlayground(stage);
         });
         ImageView secretObjRight = controller.getSecretObjRight();
         secretObjRight.setOnMouseClicked(mouseEvent -> {
@@ -259,14 +329,10 @@ public class GUIrmi extends Application {
     public static void startGUI() {
         launch();
     }
+}
 
 
-  /*
-
-
-
-
-    public void switchToColorChoice(Stage stage) throws IOException {
+  /*    public void switchToColorChoice(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/colorChoice.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -320,26 +386,7 @@ public class GUIrmi extends Application {
                 });
             }
         });
-    }
-    /* boolean colorOK = false;
-        String color;
-        while(!colorOK){
-            out.writeObject(game);
-            color = (String) in.readObject();
-            if(game.getColors().contains(color)){
-                colorOK = game.markColor(color);
-                out.writeObject(colorOK);
-            }
-            else{
-                out.writeObject(false);
-            }
-            if(colorOK){
-                player.setColor(color);
-            }
-        }
-
-
-
+  }
 
 
     public void initializePlayerGround(Stage stage, StarterCard sc) throws IOException, ClassNotFoundException {
@@ -608,28 +655,5 @@ public class GUIrmi extends Application {
             throw new RuntimeException(ex);
         }
     }
-    public static void startGUI(){
-        launch();
-    }
-    /*
-    public void simulateEnd(Stage stage) throws IOException {
-        boolean flag = true;
-        if(flag){ // se è il suo turno
-            if(!flag){
-                switchToYourTurn(stage);
-            }
-            else{ // ultimo turno
-                //showTwentyPoints(stage);
-                showZeroCards(stage);
-            }
-        }
-        ArrayList<Player> winners = new ArrayList<>();
-        winners.add(new Player("silvia"));
-      //  showSingleWinner(stage, winners);
-        winners.add(new Player("matteo"));
-        showWinners(stage, winners);
-    }*/
-
-
 }
-
+  */

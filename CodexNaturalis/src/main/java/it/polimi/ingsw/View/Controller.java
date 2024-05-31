@@ -64,8 +64,8 @@ public class Controller {
     private Button nickButton, requestButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
     private final String emptyImagePath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\border_image.png";
-    private final String imagesFrontPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_front\\";
-    private final String imagesBackPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_back\\";
+    private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
+    private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
 
     public AnchorPane getAnchor2() {return anchor2;}
     public Button getNickButton() {
@@ -189,7 +189,7 @@ public class Controller {
         return nickname;
     }
 
-    public boolean getNumberPlayers() {
+    public int getNumberPlayers() {
         int numberOfPlayers = 0;
         String inputText = numberPlayersTF.getText();
         if (!inputText.isEmpty()) {
@@ -198,18 +198,13 @@ public class Controller {
                 if (numberOfPlayers < 2 || numberOfPlayers > 4) {
                     validLabel.setVisible(true);
                     numberPlayersTF.clear();
-                } else {
-                    client.sendToServer(numberOfPlayers);
-                    return true;
                 }
             } catch (NumberFormatException e) {
                 validLabel.setVisible(true);
                 numberPlayersTF.clear();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         }
-        return false;
+        return numberOfPlayers;
     }
 
     public void getLeftSecretObj() {
@@ -221,19 +216,14 @@ public class Controller {
         ObjectiveCard secretObj;
         System.out.println("Chosen right secret objective");
     }
-    public void addSecretObjImages() throws IOException, ClassNotFoundException {
-        ObjectiveCard[] objs = client.receiveSecretObjsFromServer();
-        secretObjLeft.setImage(new Image("file:" + imagesFrontPath + objs[0].getId() + ".png"));
-        secretObjRight.setImage(new Image("file:" + imagesFrontPath + objs[1].getId() + ".png"));
-    }
-    public StarterCard addStarterImages() throws IOException, ClassNotFoundException {
-        StarterCard card = client.receiveStarterCardFromServer();
+    public void addStarterImages(StarterCard card){
         frontStarterCard.setImage(new Image("file:" + imagesFrontPath + card.getId() + ".png"));
         backStarterCard.setImage(new Image("file:" + imagesBackPath + card.getId() + ".png"));
-        return card;
     }
-    public void sendIfStarterFlipped(boolean flip) throws IOException {
-        client.sendToServer(flip);
+
+    public void addSecretObjImages(ObjectiveCard[] objs){
+        secretObjLeft.setImage(new Image("file:" + imagesFrontPath + objs[0].getId() + ".png"));
+        secretObjRight.setImage(new Image("file:" + imagesFrontPath + objs[1].getId() + ".png"));
     }
 
     public boolean addGround(Game g, Player p) throws IOException, ClassNotFoundException {
@@ -270,10 +260,6 @@ public class Controller {
         potionNum.setText(String.valueOf(map.get(Resource.POTION)));
         scrollNum.setText(String.valueOf(map.get(Resource.SCROLL)));
         plumeNum.setText(String.valueOf(map.get(Resource.PLUME)));
-    }
-
-    public boolean checkIfOver() throws IOException, ClassNotFoundException {
-        return client.receiveBooleanFromServer();
     }
 
     public void placeFirstCard(StarterCard sc, Player updatedP) throws IOException, ClassNotFoundException {

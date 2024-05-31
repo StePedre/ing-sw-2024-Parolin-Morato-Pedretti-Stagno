@@ -182,16 +182,13 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        final boolean[] flag = {false};
         Button requestButton = controller.getRequestButton();
         requestButton.setOnAction(event -> {
-            flag[0] = controller.getNumberPlayers();
-            if (flag[0]) {
-                try {
-                    switchToColorChoice(stage);
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                client.sendToServer(controller.getNumberPlayers());
+                switchToColorChoice(stage);
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
         });
     }
@@ -272,22 +269,39 @@ public class GUIsocket extends Application{
             }
         }
     }
-    /* boolean colorOK = false;
-        String color;
-        while(!colorOK){
-            out.writeObject(game);
-            color = (String) in.readObject();
-            if(game.getColors().contains(color)){
-                colorOK = game.markColor(color);
-                out.writeObject(colorOK);
+
+    public void switchToStarterChoice(Stage stage) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.setStreams(client);
+        controller.getAnchor6().getChildren().addFirst(background);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        StarterCard card = client.receiveStarterCardFromServer();
+        controller.addStarterImages(card);
+        stage.show();
+        ImageView frontStarterCard = controller.getFrontStarterCard();
+        frontStarterCard.setOnMouseClicked(mouseEvent -> {
+            try {
+                client.sendToServer(false);
+                switchToSelectSecretObj(stage, card);
+                //simulateEnd(stage);
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
-            else{
-                out.writeObject(false);
+        });
+        ImageView backStarterCard = controller.getBackStarterCard();
+        backStarterCard.setOnMouseClicked(mouseEvent -> {
+            try {
+                client.sendToServer(true);
+                switchToSelectSecretObj(stage, card);
+                //simulateEnd(stage);
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
             }
-            if(colorOK){
-                player.setColor(color);
-            }
-        }*/
+        });
+    }
 
     public void switchToSelectSecretObj(Stage stage,StarterCard starterCard) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
@@ -298,7 +312,8 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        controller.addSecretObjImages();
+        ObjectiveCard[] objs = client.receiveSecretObjsFromServer();
+        controller.addSecretObjImages(objs);
         ImageView secretObjLeft = controller.getSecretObjLeft();
         secretObjLeft.setOnMouseClicked(mouseEvent -> {
             try {
@@ -313,38 +328,6 @@ public class GUIsocket extends Application{
             try {
                 client.sendToServer(2);
                 initializePlayerGround(stage,starterCard);
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    public void switchToStarterChoice(Stage stage) throws IOException, ClassNotFoundException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
-        Parent root = loader.load();
-        Controller controller = loader.getController();
-        controller.setStreams(client);
-        controller.getAnchor6().getChildren().addFirst(background);
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        StarterCard startCard = controller.addStarterImages();
-        ImageView frontStarterCard = controller.getFrontStarterCard();
-        frontStarterCard.setOnMouseClicked(mouseEvent -> {
-            try {
-                controller.sendIfStarterFlipped(false);
-                switchToSelectSecretObj(stage, startCard);
-                //simulateEnd(stage);
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        ImageView backStarterCard = controller.getBackStarterCard();
-        backStarterCard.setOnMouseClicked(mouseEvent -> {
-            try {
-                controller.sendIfStarterFlipped(true);
-                switchToSelectSecretObj(stage, startCard);
-                //simulateEnd(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -467,7 +450,7 @@ public class GUIsocket extends Application{
         });
         Game g = client.receiveGameFromServer();
         Player p = client.receivePlayerFromServer();
-        if(!controller.checkIfOver()){
+        if(!client.receiveBooleanFromServer()){  // check if over
             showUpdatedPlayerGround(stage, g, p, controller);
         }
 
