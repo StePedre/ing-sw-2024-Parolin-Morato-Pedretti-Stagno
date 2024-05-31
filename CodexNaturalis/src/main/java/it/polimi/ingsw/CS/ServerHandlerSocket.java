@@ -249,11 +249,10 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         pc.setObjSecret(obj[((int)in.readObject())-1]);
     }
     public void colorChoose() throws IOException, ClassNotFoundException {
-
         boolean colorOK = false;
         String color;
+        out.writeObject(game.getColors());
         while(!colorOK){
-            out.writeObject(game.getColors());
             color = (String) in.readObject();
             if(game.getColors().contains(color)){
                 colorOK = game.markColor(color);
@@ -264,6 +263,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             }
             if(colorOK){
                 player.setColor(color);
+            }
+            else{
+                out.writeObject(game.getColors());
             }
         }
     }
