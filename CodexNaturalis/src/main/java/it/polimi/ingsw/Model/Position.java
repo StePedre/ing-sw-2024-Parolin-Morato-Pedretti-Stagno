@@ -74,4 +74,4 @@ public class Position implements Serializable {
         return x == position.x && y == position.y;
     }
 
-    }
+}

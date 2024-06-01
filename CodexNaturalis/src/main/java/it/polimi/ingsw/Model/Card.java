@@ -60,6 +60,11 @@ public abstract class Card implements Serializable {
      */
     public Corner[] getCorners() { return corners; }
 
+    /**
+     * The method check if the card is flipped or not and show the relatives corners
+     *
+     * @return the corners currently showed
+     */
     public Corner[] getShowedCorners() {
         if(isFlipped){
             return backCorners;

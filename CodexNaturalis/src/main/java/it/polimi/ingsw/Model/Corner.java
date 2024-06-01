@@ -69,6 +69,10 @@ import java.io.Serializable;
         this.isAvailable=availability;
         }
 
-
-        public void setResource(Resource resource) {this.cornerRes = resource;}
+    /**
+     * The method set the resource of a corner
+     *
+     * @param resource the resource of the corner
+     */
+    public void setResource(Resource resource) {this.cornerRes = resource;}
     }

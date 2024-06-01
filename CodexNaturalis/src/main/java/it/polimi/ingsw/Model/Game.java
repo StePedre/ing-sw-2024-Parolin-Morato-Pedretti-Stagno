@@ -14,7 +14,7 @@ import java.util.*;
 
 public class Game implements Serializable {
     private static final long serialVersionUID = 9L;
-    private ArrayList<Player> players;
+    private final ArrayList<Player> players;
     private Deck[] decks;
     //private Chat chat;
     //private Chat[] privChatList = new Chat[6];
@@ -22,10 +22,10 @@ public class Game implements Serializable {
     private ArrayList<Player> multiWinners = new ArrayList<>();
     private int expPlayers = -1;
     private int numPlayers;
-    private ArrayList<ObjectiveCard> otherObjs = null;
+    private final ArrayList<ObjectiveCard> otherObjs;
     private boolean isOver = false;
-    private ArrayList<StarterCard> starterCards;
-    private Set<String> colors = new HashSet<>();
+    private final ArrayList<StarterCard> starterCards;
+    private final Set<String> colors = new HashSet<>();
 
     public Game(ArrayList<Player> players, Deck[] decks, ObjectiveCard[] commonObj, ArrayList<Player> multiWinners, int expPlayers, int numPlayers, ArrayList<ObjectiveCard> otherObjs, boolean isOver, ArrayList<StarterCard> starterCards) {
         this.players = players;
@@ -52,6 +52,8 @@ public class Game implements Serializable {
      */
     public Game(ArrayList<Player> players, Deck[] decks, ObjectiveCard[] commonObj) {
         this.players = players;
+        this.starterCards = new ArrayList<>();
+        this.otherObjs = new ArrayList<>();
         this.numPlayers = players.size();
         this.decks = decks;
         this.commonObj = commonObj;
@@ -62,8 +64,10 @@ public class Game implements Serializable {
     }
 
     public Game() {
-        players = new ArrayList<>();
-        numPlayers = 0;
+        this.players = new ArrayList<>();
+        this.starterCards = new ArrayList<>();
+        this.numPlayers = 0;
+        this.otherObjs = new ArrayList<>();
         this.colors.add("red");
         this.colors.add("blue");
         this.colors.add("green");
@@ -80,6 +84,13 @@ public class Game implements Serializable {
             return players;
         }
     }
+
+    /**
+     * Return a Player in base of its nickname
+     *
+     * @param nickname the nickname of the layer
+     * @return the player
+     */
     public Player getPlayer(String nickname){
         for(Player p : players){
             if(p.getNickname().equals(nickname));
@@ -107,10 +118,21 @@ public class Game implements Serializable {
         }
     }
 
+    /**
+     * remove a player color from the pull of possible takeable color
+     *
+     * @param color the color to remove
+     * @return true if the color has been correctly removed, false otherwise
+     */
     public synchronized boolean markColor(String color){
         return colors.remove(color);
     }
 
+    /**
+     * return a Set of available player color
+     *
+     * @return the set of color
+     */
     public synchronized Set<String> getColors(){
         return colors;
     }
@@ -334,6 +356,12 @@ public class Game implements Serializable {
             return (numPlayers == 0);
         }
     }
+
+    /**
+     * pick up randomly one starter card from the set
+     *
+     * @return the starter card
+     */
     public StarterCard getOneStarterCard() {
         synchronized (starterCards) {
             Random rand = new Random();
@@ -347,16 +375,16 @@ public class Game implements Serializable {
      * @param starterCards is the list to set.
      */
     public void setStarterCards(ArrayList<StarterCard> starterCards) {
-        this.starterCards = starterCards;
+        this.starterCards.addAll(starterCards);
     }
 
     /**
      * The method sets Objective Cards that have not been already set as common objectives.
      *
-     * @objs are the Objective cart to set.
+     * @param objs are the Objective cart to set.
      */
     public void setOtherObjs(ArrayList<ObjectiveCard> objs){
-        this.otherObjs = objs;
+        this.otherObjs.addAll(objs);
     }
 
     /**
@@ -392,6 +420,12 @@ public class Game implements Serializable {
     public ArrayList<Player> getMultiWinners() {
         return multiWinners;
     }
+
+    /**
+     * remove a player from the game
+     *
+     * @param nickname the nickname of the player to be removed
+     */
     public void removePlayer(String nickname){
         players.removeIf(p -> p.getNickname().equals(nickname));
         numPlayers--;

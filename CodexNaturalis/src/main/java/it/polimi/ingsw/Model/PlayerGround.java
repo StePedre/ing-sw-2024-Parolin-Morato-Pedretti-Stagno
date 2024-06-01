@@ -76,8 +76,12 @@ public class PlayerGround implements Serializable {
         return playerScore;
     }
 
-    public void setPlayerScore(int i) { this.playerScore=i;
-    }
+    /**
+     * The method set the player score
+     *
+     * @param i the value of the score of the player to be set
+     */
+    public void setPlayerScore(int i) { this.playerScore=i;}
 
     /**
      * The method gets the map between each position and its card (if present).
@@ -107,6 +111,11 @@ public class PlayerGround implements Serializable {
         return availablePositions;
     }
 
+    /**
+     * The method return the Set of unavailable position
+     *
+     * @return the Set of unavailable position
+     */
     public Set<Position> getUnavailablePositions() {
         return unavailablePositions;
     }
@@ -120,6 +129,11 @@ public class PlayerGround implements Serializable {
         return totalResources;
     }
 
+    /**
+     * The method return the last position where the player placed a card
+     *
+     * @return the last position
+     */
     public Position getLastPosition() {
         return lastPositionPlaced;
     }
@@ -433,6 +447,14 @@ public class PlayerGround implements Serializable {
         return value == 0 ? -1 : 1;
     }
 
+    /**
+     * The method check if a position is contained in a set of position
+     *
+     * @param position the position to check
+     * @param positions the set of position
+     * @return true if the position is contained, false otherwise
+     */
+
     private boolean checkPosition(Position position, Set<Position> positions){
         for(Position p : positions){
             if(p.getX() == position.getX() && p.getY() == position.getY()){
@@ -442,6 +464,13 @@ public class PlayerGround implements Serializable {
         return false;
     }
 
+    /**
+     * The method return the exact object position contained in a set of position in base of a other given position object
+     *
+     * @param position the position given
+     * @param positions teh set of position
+     * @return the object position contained in the set
+     */
     private Position getExactPosition(Position position, Set<Position> positions){
         for(Position p : positions){
             if(position.getX() == p.getX() && position.getY() == p.getY()){
@@ -449,9 +478,14 @@ public class PlayerGround implements Serializable {
             }
 
         }
-        return position;
+        return position; //return null non è meglio?
     }
 
+    /**
+     *
+     *
+     * @param position
+     */
     private void addAvailableNumber(Position position) {
         if (availableNumbers.containsValue(getExactPosition(position,availablePositions))) {
             return;
@@ -463,7 +497,11 @@ public class PlayerGround implements Serializable {
         availableNumbers.put(lowestAvailableKey, position);
     }
 
-
+    /**
+     *
+     *
+     * @param position
+     */
     private void removeAvailableNumber(Position position) {
         Integer keyToRemove = null;
         for (Map.Entry<Integer, Position> entry : availableNumbers.entrySet()) {

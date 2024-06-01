@@ -82,6 +82,11 @@ public class Player implements Serializable {
         this.game = game;
     }
 
+    /**
+     * Set the color of the player in the game
+     *
+     * @param s the color choose by the player
+     */
     public void setColor(String s){
         this.color = s;
     }
