@@ -12,20 +12,52 @@ public class PlayerController {
         this.pg=pg;
         this.hand=hand;
     }
+
+    /**
+     * set the first card of a player
+     *
+     * @param starterCard the first card to set
+     * @throws InvalidPositionException position unavailable
+     */
     public void setFirstCard(StarterCard starterCard) throws InvalidPositionException {
         pg.placeCard(starterCard,new Position(42,42));
     }
-    public StarterCard pickCard(Game game) throws InvalidPositionException {
+
+    /**
+     * pick a random starter card from game
+     *
+     * @param game teh game which the card are picked
+     * @return the starter card
+     */
+    public StarterCard pickCard(Game game){
         return game.getOneStarterCard();
     }
+
+    /**
+     * pick 2 random objective card from game
+     *
+     * @param game the game which the card are picked
+     * @return an array contained the objective card
+     */
     public ObjectiveCard[] pickObjCard(Game game){
         return game.pickPlayerObj();
     }
 
+    /**
+     * set the secret objective card of the player
+     *
+     * @param obj the objective card to set
+     */
     public void setObjSecret(ObjectiveCard obj){
         hand.setSecretObj(obj);
     }
 
+    /**
+     * populate the hand of a player
+     *
+     * @param game the game where the card are picked
+     * @param player the player in whom hand will be populated
+     */
     public void populateHand (Game game,Player player) {
         Deck deckResource;
         Deck deckGold;
