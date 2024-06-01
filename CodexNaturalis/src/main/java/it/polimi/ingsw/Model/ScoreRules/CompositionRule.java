@@ -99,6 +99,11 @@ public class CompositionRule implements ScoreRule, Serializable {
         return gameBoard.calculateNumberOfCompositions(offSets, colors) * numberOfPointsPerComposition;
     }
 
+    /**
+     * return the colors of the resources
+     *
+     * @return an array of resources
+     */
     public Resource[] getResources(){
         return colors;
     }
