@@ -9,7 +9,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface ClientRMIInterface extends Remote {
-    void setPlayer(Player player) throws RemoteException;
     void runClient() throws IOException, InvalidPositionException, MissingResourcesException;
 
 

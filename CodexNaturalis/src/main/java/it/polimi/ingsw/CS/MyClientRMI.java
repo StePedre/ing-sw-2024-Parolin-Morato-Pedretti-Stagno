@@ -18,13 +18,9 @@ import java.util.Scanner;
 public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterface, Serializable {
 
     private final Scanner scan = new Scanner(System.in);
-    Player player;
-    Game game = null;
     TUI tui =  null;
 
     String nickname;
-
-    PlayerController playerController;
 
     String roomJoined;
     ServerRMIInterface server;
@@ -45,9 +41,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
-    public void setPlayer(Player player) throws RemoteException{
-        this.player = player;
-    }
     public void runClient() throws IOException, InvalidPositionException, MissingResourcesException {
         System.out.println("Client connected");
 
@@ -70,7 +63,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
            // roomJoined = controlRoom2( false, true);
         }
             nickname = controlNickname(true);
-            player = server.addNewPlayer(nickname, roomJoined);
+            Player player = server.addNewPlayer(nickname, roomJoined);
             tui.Welcome(player);
             waitingForPlayers = true;
             listenToPlayers();
@@ -111,49 +104,46 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     }
 
     private void startEarlyGame() throws IOException, InvalidPositionException {
-        playerController = server.getRooms().getRoom(roomJoined).getPlayerController();
-        Room room = server.getRooms().getRoom(roomJoined);
-        game = server.getRooms().getRoom(roomJoined).getGame();
-        StarterCard st = playerController.pickCard(game);
+        StarterCard st = server.getFirstCard( roomJoined);
         if(tui.showStarterCard(st)){
             st.flipCard();
         }
-        playerController.setFirstCard(st, player.getPlayerGround());
-        ObjectiveCard[] obj = playerController.pickObjCard(game);
-        playerController.setObjSecret(obj[tui.chooseObjective(obj[0],obj[1])-1], player.getHand());
-        playerController.populateHand(game,player);
+        server.setFirstCard(st, nickname, roomJoined);
+        ObjectiveCard[] obj = server.getObjCards(roomJoined);
+        server.setObjSecret(obj[tui.chooseObjective(obj[0],obj[1])-1], nickname, roomJoined);
     }
 
     private void startNormalGame() throws RemoteException, MissingResourcesException, InvalidPositionException {
 
-        RoundController roundController = server.getRooms().getRoom(roomJoined).getRoundController();
-        roundController.addPlayer(player);
-        roundController.setFirstPlayer();
-        while(!game.isOver()) {//fino a fine gioco, gestire primo turno
-            while (!(player.getNickname().equals(roundController.getCurrentPlayer().getNickname()))) {
-                if (game.isOver()) {
+        while(!server.isGameOver(roomJoined)) {//fino a fine gioco, gestire primo turno
+            while (!server.isCurrentPlayer(roomJoined, nickname)) {
+                if (server.isGameOver(roomJoined)) {
                     break;
                 }else{
-                    tui.notYourTurn(game, player);
+                    Room room = server.getRooms().getRoom(roomJoined);
+                    checkYourTurn();
+                    tui.notYourTurn(room.getGame(), room.getGame().getPlayer(nickname));
                 }
             }
-            while((player.getNickname().equals(roundController.getCurrentPlayer().getNickname()))) {
-                if (game.isOver()) {
+            while(server.isCurrentPlayer(roomJoined, nickname)) {
+                if (server.isGameOver(roomJoined)) {
                     break;
                 }else{
+                    Game game = server.getRooms().getRoom(roomJoined).getGame();
+                    Player player = game.getPlayer(nickname);
                     if(tui.yourTurnPlay(game, player)){
                         PlayableCard card = tui.inputCardToPlace(player);
-                        player.getPlayerGround().placeCard(card, tui.inputCoordinates(player));
-                        PlaceCardController.removeFromHand(card,player);
+                        server.placeCard(card, tui.inputCoordinates(player), roomJoined, nickname);
+                        game = server.getRooms().getRoom(roomJoined).getGame();
+                        player = game.getPlayer(nickname);
                         drawCardFromDeck(tui.yourTurnDraw(game, player));
-                        roundController.nextRound();
-                        System.out.println(" Questo è il nome del prossimo giocatore: " + roundController.getCurrentPlayer().getNickname());
+                        server.nextRound(roomJoined);
                     }
                 }
             }
 
         }
-        tui.winnersPrint(game.getMultiWinners());
+        tui.winnersPrint(server.getMultiWinners(roomJoined));
     }
 
     private String controlNickname(boolean choice) throws RemoteException {
@@ -183,41 +173,50 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }*/
 
+    private void checkYourTurn(){
+        Runnable myThread = () ->
+        {
+            while (true) {
+                try {
+                    if (server.isCurrentPlayer(roomJoined, nickname)) break;
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            try {
+                tui.yourTurnPlay(server.getRooms().getRoom(roomJoined).getGame(), server.getRooms().getRoom(roomJoined).getGame().getPlayer(nickname));
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        };
+        Thread run = new Thread(myThread);
+        run.start();
+    }
+
     private void drawCardFromDeck(int position){
         // 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
             try {
-                //Deck deck = (Deck) in.readObject();
-                Deck deck;
-                int card = switch (position) {
+                switch (position) {
                     case 0 -> {
-                        deck = game.getDecks()[0];
-                        yield 0;
+                        server.drawCard(0,0,roomJoined, nickname);
                     }
                     case 1 -> {
-                        deck = game.getDecks()[0];
-                        yield 1;
+                        server.drawCard(0,1,roomJoined, nickname);
                     }
                     case 2 -> {
-                        deck = game.getDecks()[0];
-                        yield 2;
+                        server.drawCard(0,2,roomJoined, nickname);
                     }
                     case 3 -> {
-                        deck = game.getDecks()[1];
-                        yield 0;
+                        server.drawCard(1,0,roomJoined, nickname);
                     }
                     case 4 -> {
-                        deck = game.getDecks()[1];
-                        yield 1;
+                        server.drawCard(1,1,roomJoined, nickname);
                     }
                     case 5 -> {
-                        deck = game.getDecks()[1];
-                        yield 2;
+                        server.drawCard(1,2,roomJoined, nickname);
                     }
                     default -> throw new Exception();
                 };
-                if(player.getHand().drawCard(deck)){//sostituire con controller
-                    player.getHand().chooseCard(deck.drawCard(card));
-                }
             } catch (IOException | ClassNotFoundException e) {
                 //gestire ecc
             } catch (Exception e) {
