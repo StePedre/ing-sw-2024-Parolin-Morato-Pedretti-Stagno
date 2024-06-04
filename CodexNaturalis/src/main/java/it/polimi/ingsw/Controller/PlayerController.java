@@ -3,9 +3,10 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Model.*;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class PlayerController {
+public class PlayerController implements Serializable {
 
 
     /**

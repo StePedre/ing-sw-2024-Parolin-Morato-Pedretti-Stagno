@@ -111,22 +111,23 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     }
 
     private void startEarlyGame() throws IOException, InvalidPositionException {
-       /* playerController = new PlayerController(player.getPlayerGround(),player.getHand());
+        playerController = server.getRooms().getRoom(roomJoined).getPlayerController();
+        Room room = server.getRooms().getRoom(roomJoined);
         game = server.getRooms().getRoom(roomJoined).getGame();
         StarterCard st = playerController.pickCard(game);
         if(tui.showStarterCard(st)){
             st.flipCard();
         }
-        playerController.setFirstCard(st);
+        playerController.setFirstCard(st, player.getPlayerGround());
         ObjectiveCard[] obj = playerController.pickObjCard(game);
-        playerController.setObjSecret(obj[tui.chooseObjective(obj[0],obj[1])-1]);
-        playerController.populateHand(game,player);*/
+        playerController.setObjSecret(obj[tui.chooseObjective(obj[0],obj[1])-1], player.getHand());
+        playerController.populateHand(game,player);
     }
 
     private void startNormalGame() throws RemoteException, MissingResourcesException, InvalidPositionException {
 
         RoundController roundController = server.getRooms().getRoom(roomJoined).getRoundController();
-        roundController.setPlayers(game.getPlayers());
+        roundController.addPlayer(player);
         roundController.setFirstPlayer();
         while(!game.isOver()) {//fino a fine gioco, gestire primo turno
             while (!(player.getNickname().equals(roundController.getCurrentPlayer().getNickname()))) {
@@ -146,6 +147,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                         PlaceCardController.removeFromHand(card,player);
                         drawCardFromDeck(tui.yourTurnDraw(game, player));
                         roundController.nextRound();
+                        System.out.println(" Questo è il nome del prossimo giocatore: " + roundController.getCurrentPlayer().getNickname());
                     }
                 }
             }

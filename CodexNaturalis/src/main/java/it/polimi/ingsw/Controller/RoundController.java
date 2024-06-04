@@ -20,6 +20,10 @@ public class RoundController implements Serializable {
     private boolean lastTurn = false;
     private boolean isEnding = false;
 
+    public RoundController() {
+        players = new ArrayList<>();
+    }
+
     /**
      * Initialize the list of player
      *
@@ -31,10 +35,10 @@ public class RoundController implements Serializable {
         }
     }
 
-    /**
-     * Set the new round and the new current player
-     *
-     */
+    public synchronized void addPlayer(Player player){
+        players.add(player);
+    }
+
     public synchronized void nextRound(){
         if(isEnding && LastPlayer.equals(players.get(round))){
             isEnding = false;
@@ -48,35 +52,15 @@ public class RoundController implements Serializable {
         }
     }
 
-    /**
-     * return the last player in the game order
-     *
-     * @return the last player
-     */
     public Player getLastPlayer() {
         return LastPlayer;
     }
 
-    /**
-     * check if is the last turn
-     *
-     * @return true if is the last turn, false otherwise
-     */
     public synchronized boolean isLastTurn() {
         return lastTurn;
     }
-
-    /**
-     * check if the game are in the pre-final round, someone has reached one condition of game ending
-     *
-     * @return true if the game is ending, false otherwise
-     */
     public synchronized boolean isEnding() {return isEnding;}
 
-    /**
-     * set the first player of a game, just if it is not already set
-     *
-     */
     public synchronized void setFirstPlayer(){
         if (round == -1) {
             round = rand.nextInt(players.size());
@@ -87,19 +71,8 @@ public class RoundController implements Serializable {
             }
         }
     }
-
-    /**
-     * return the current player
-     *
-     * @return the current player
-     */
     public synchronized Player getCurrentPlayer(){
         return players.get(round);
     }
-
-    /**
-     * set if the game is in his pre-final turn, someone has reached one condition of game ending
-     *
-     */
     public synchronized void setEnding(){isEnding = true;}
 }
