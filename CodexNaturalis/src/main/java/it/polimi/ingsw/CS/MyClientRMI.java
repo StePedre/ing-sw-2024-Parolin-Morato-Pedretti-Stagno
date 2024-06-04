@@ -63,11 +63,11 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         tui = new TUI();
         tui.showRoom(server.showRooms());
         if(tui.chooseRoom()){
-            roomJoined = controlRoom(true, true);
+          //  roomJoined = controlRoom(true, true);
             server.addRoom(roomJoined);
             server.setPlayerNumber(tui.askPlayersNo(), roomJoined);
         }else{
-            roomJoined = controlRoom2( false, true);
+           // roomJoined = controlRoom2( false, true);
         }
             nickname = controlNickname(true);
             player = server.addNewPlayer(nickname, roomJoined);
@@ -165,7 +165,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
-    private String controlRoom(boolean choice, boolean choice2) throws RemoteException{
+/*    private String controlRoom(boolean choice, boolean choice2) throws RemoteException{
         String roomName = tui.getRoomName(choice, choice2);
         if(server.getRooms().alredyExist(roomName)){
             return controlRoom(choice, false);
@@ -181,7 +181,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             return controlRoom(choice, false);
 
         }
-    }
+    }*/
 
     private void drawCardFromDeck(int position){
         // 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
