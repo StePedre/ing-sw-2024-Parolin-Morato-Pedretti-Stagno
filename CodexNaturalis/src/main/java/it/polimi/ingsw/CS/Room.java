@@ -85,16 +85,18 @@ public class Room implements Serializable {
      * @param game to be initialized.
      */
     public void parse(Game game) {
-        ParsingController pc = new ParsingController();
+        ParsingController parse = new ParsingController();
         try {
-            game.setStarterCards(pc.createStarterCardsArray());
-            ArrayList<ObjectiveCard> list = pc.createObjectiveCardsArray();
+            game.setStarterCards(parse.createStarterCardsArray());
+            ArrayList<ObjectiveCard> list = parse.createObjectiveCardsArray();
             Random rand = new Random();
             ObjectiveCard[] objs = {list.remove(rand.nextInt(list.size())),list.remove(rand.nextInt(list.size()))};
             game.setCommonObj(objs);
             game.setOtherObjs(list);
             //parsing deck
-            Deck[] decks = {pc.createResDeck(),pc.createGoldDeck()};
+            Deck[] decks = {parse.createResDeck(),parse.createGoldDeck()};
+            decks[0].shuffle();
+            decks[1].shuffle();
             game.setDecks(decks);
         } catch (IOException e) {
             throw new RuntimeException(e);
