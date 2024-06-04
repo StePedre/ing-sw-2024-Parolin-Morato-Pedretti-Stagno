@@ -6,12 +6,7 @@ import it.polimi.ingsw.Model.*;
 import java.util.Random;
 
 public class PlayerController {
-    PlayerGround pg = null;
-    Hand hand = null;
-    public PlayerController(PlayerGround pg,Hand hand) {
-        this.pg=pg;
-        this.hand=hand;
-    }
+
 
     /**
      * set the first card of a player
@@ -19,7 +14,7 @@ public class PlayerController {
      * @param starterCard the first card to set
      * @throws InvalidPositionException position unavailable
      */
-    public void setFirstCard(StarterCard starterCard) throws InvalidPositionException {
+    public void setFirstCard(StarterCard starterCard, PlayerGround pg) throws InvalidPositionException {
         pg.placeCard(starterCard,new Position(42,42));
     }
 
@@ -48,7 +43,7 @@ public class PlayerController {
      *
      * @param obj the objective card to set
      */
-    public void setObjSecret(ObjectiveCard obj){
+    public void setObjSecret(ObjectiveCard obj, Hand hand){
         hand.setSecretObj(obj);
     }
 
@@ -58,7 +53,7 @@ public class PlayerController {
      * @param game the game where the card are picked
      * @param player the player in whom hand will be populated
      */
-    public void populateHand (Game game,Player player) {
+    public synchronized void populateHand (Game game,Player player) {
         Deck deckResource;
         Deck deckGold;
         int indexRandCard1, indexRandCard2, indexRandCard3;
@@ -69,17 +64,15 @@ public class PlayerController {
 
         Random rand = new Random();
         PlayableCard[] cards = new PlayableCard[3];
-
-        indexRandCard1 = rand.nextInt(deckResource.getNumberOfCards() - 2) + 2;
-        indexRandCard2 = rand.nextInt(deckResource.getNumberOfCards() - 2) + 2;
-        indexRandCard3 = rand.nextInt(deckGold.getNumberOfCards() - 2) + 2;
+        indexRandCard1 = rand.nextInt(deckResource.getNumberOfCards());
+        indexRandCard2 = rand.nextInt(deckResource.getNumberOfCards());
+        indexRandCard3 = rand.nextInt(deckGold.getNumberOfCards());
         // +2 avoids the selection of cards that are revealed on the ground
         cards[0] = deckResource.drawCard(indexRandCard1);
         cards[1] = deckResource.drawCard(indexRandCard2);
         cards[2] = deckGold.drawCard(indexRandCard3);
         // cards in positions 0 and 1 are resources
         // card in position 2 is gold
-        hand.addHand(cards);
-        player.setHand(hand);
+        player.getHand().addHand(cards);
     }
 }

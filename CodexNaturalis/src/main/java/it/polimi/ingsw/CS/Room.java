@@ -1,10 +1,12 @@
 package it.polimi.ingsw.CS;
 
 import it.polimi.ingsw.Controller.ParsingController;
+import it.polimi.ingsw.Controller.PlayerController;
 import it.polimi.ingsw.Controller.RoundController;
 import it.polimi.ingsw.Model.Deck;
 import it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.ObjectiveCard;
+import it.polimi.ingsw.Model.Player;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class Room implements Serializable {
     private final String nameRoom;
     private final Game game;
     private final RoundController roundController;
+    private final PlayerController playerController;
 
     /**
      * Class constructor.
@@ -31,6 +34,7 @@ public class Room implements Serializable {
         this.nameRoom = nameRoom;
         game = new Game();
         roundController = new RoundController();
+        playerController = new PlayerController();
         parse(game);
     }
 
@@ -97,5 +101,8 @@ public class Room implements Serializable {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+    public PlayerController getPlayerController() {
+        return playerController;
     }
 }

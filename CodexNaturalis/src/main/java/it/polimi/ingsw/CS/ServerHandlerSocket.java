@@ -17,6 +17,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     private Player player;
     private RoundController rc;
     private final Socket socket;
+    private PlayerController pc;
     public ServerHandlerSocket(ObjectOutputStream oos, ObjectInputStream ois, RoomController rooms, Socket socket) {
         out = oos;
         in = ois;
@@ -45,8 +46,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             game.addPlayer(player);
             while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
-            out.writeObject(true);
             playerinit();
+            out.writeObject(true);
             sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
                 out.writeObject(false);  // non è il suo turno
@@ -171,6 +172,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     }
     public void start() throws IOException, ClassNotFoundException {
         Room room = roomChoice();
+        pc = room.getPlayerController();
         String nickname = nicknameChoice(room);
         out.reset();
         firstPlayer(room);
@@ -236,17 +238,17 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     public void playerinit() throws IOException, ClassNotFoundException, InvalidPositionException {
         rc.setPlayers(game.getPlayers());
         rc.setFirstPlayer();
-        PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
+        //PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
         pc.populateHand(game,player);
         StarterCard st = pc.pickCard(game);
         out.writeObject(st);
         if((boolean)in.readObject()){
             st.flipCard();
         }
-        pc.setFirstCard(st);
+        pc.setFirstCard(st,player.getPlayerGround());
         ObjectiveCard[] obj = pc.pickObjCard(game);
         out.writeObject(obj);
-        pc.setObjSecret(obj[((int)in.readObject())-1]);
+        pc.setObjSecret(obj[((int)in.readObject())-1],player.getHand());
     }
     public void colorChoice() throws IOException, ClassNotFoundException {
         boolean colorOK = false;
