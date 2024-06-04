@@ -267,14 +267,15 @@ public class GUIrmi extends Application {
         requestButton.setOnAction(event -> {
             try {
                 server.getRooms().getRoom(roomName).getGame().setExpPlayers(controller.getNumberPlayers());
-               // switchToColorChoice(stage);  to fix for rmi
+                // switchToColorChoice(stage);  to fix for rmi
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
         });
     }
+}
 
-    public void switchToStarterChoice(Stage stage, Player player) throws IOException, ClassNotFoundException, InvalidPositionException {
+  /*  public void switchToStarterChoice(Stage stage, Player player) throws IOException, ClassNotFoundException, InvalidPositionException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
         playerController = new PlayerController(player.getPlayerGround(), player.getHand());
         Parent root = loader.load();
@@ -302,9 +303,9 @@ public class GUIrmi extends Application {
                 throw new RuntimeException(e);
             }
         });
-    }
+    }*/
 
-    public void switchToSelectSecretObj(Stage stage, StarterCard starterCard, Player player) throws IOException, ClassNotFoundException {
+  /*  public void switchToSelectSecretObj(Stage stage, StarterCard starterCard, Player player) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -329,7 +330,7 @@ public class GUIrmi extends Application {
     public static void startGUI() {
         launch();
     }
-}
+}*/
 
 
   /*    public void switchToColorChoice(Stage stage) throws IOException {

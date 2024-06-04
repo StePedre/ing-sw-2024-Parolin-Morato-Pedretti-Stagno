@@ -285,7 +285,7 @@ public class GUIsocket extends Application{
         frontStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
                 client.sendToServer(false);
-                switchToSelectSecretObj(stage, card);
+                switchToSelectSecretObj(stage);
                 //simulateEnd(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -295,7 +295,7 @@ public class GUIsocket extends Application{
         backStarterCard.setOnMouseClicked(mouseEvent -> {
             try {
                 client.sendToServer(true);
-                switchToSelectSecretObj(stage, card);
+                switchToSelectSecretObj(stage);
                 //simulateEnd(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
@@ -303,7 +303,7 @@ public class GUIsocket extends Application{
         });
     }
 
-    public void switchToSelectSecretObj(Stage stage,StarterCard starterCard) throws IOException, ClassNotFoundException {
+    public void switchToSelectSecretObj(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -318,7 +318,7 @@ public class GUIsocket extends Application{
         secretObjLeft.setOnMouseClicked(mouseEvent -> {
             try {
                 client.sendToServer(1);
-                initializePlayerGround(stage,starterCard);
+                initializePlayerGround(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -327,24 +327,23 @@ public class GUIsocket extends Application{
         secretObjRight.setOnMouseClicked(mouseEvent -> {
             try {
                 client.sendToServer(2);
-                initializePlayerGround(stage,starterCard);
+                initializePlayerGround(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    public void initializePlayerGround(Stage stage, StarterCard sc) throws IOException, ClassNotFoundException {
+    public void initializePlayerGround(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.getPlayGroundHBox().getChildren().addFirst(background);
         controller.setStreams(client);
         Game g = client.receiveGameFromServer();
         Player p = client.receivePlayerFromServer();
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        controller.placeFirstCard(sc, p);
+        controller.placeFirstCard(p);
         try{
             showUpdatedPlayerGround(stage, g, p, controller);
         }
@@ -355,26 +354,22 @@ public class GUIsocket extends Application{
     }
 
     public void showUpdatedPlayerGround(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
-//        Parent root = loader.load();
-//        Controller controller = loader.getController();
-
-        controller.getPlayGroundAnchor().getChildren().addFirst(background);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
+        Parent root = loader.load();
+        Controller controllerDeck = loader.getController();
         controller.setStreams(client);
 //        Scene scene = new Scene(root);
 //        stage.setScene(scene);
-        // controller.addCards(g.getDecks());
-        // controller.updateGrounds(g.getPlayers());
+        controllerDeck.addCards(g.getDecks());
+      //  controller.updateGrounds(g.getPlayers());      updatare playerground altri giocatori
         stage.show();
-        boolean flag;
-        client.reset();
-        g = client.receiveGameFromServer();
-        p = client.receivePlayerFromServer();
-        flag = controller.addGround(g, p);
-        // controller.addCards(g.getDecks());
-        // controller.updateGrounds(g.getPlayers());
-        if(flag){ // se è il suo turno
+        controller.addGround(g, p);
+        if(client.receiveBooleanFromServer()){ // se è il suo turno
+            g = client.receiveGameFromServer();
+            p = client.receivePlayerFromServer();
             if(!client.receiveBooleanFromServer()){
+                //  controller.updateGrounds(g.getPlayers());
+                // update ground giocatore
                 switchToYourTurn(stage, p, g);
             }
             else{ // ultimo turno
@@ -382,7 +377,7 @@ public class GUIsocket extends Application{
             }
         }
         else{
-            // ...
+            // wait for turn
         }
     }
 
