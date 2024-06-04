@@ -393,7 +393,7 @@ public class Controller {
 
     public void setDropZones() {
         for (Position pos : availablePos) {
-            ImageView zone = new ImageView(new Image("file:" + emptyImagePath + "border_image.png", 150, 100, false, false));
+            ImageView zone = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
             gridPaneGround.add(zone, pos.getX() - converter, pos.getY() - converter);
             zone.setOnDragOver(e -> {
                 if (e.getDragboard().hasImage()) {
@@ -486,6 +486,8 @@ public class Controller {
     }
 
     public void showAvailablePos(PlayerGround pg){
+        System.out.println("Larghezza colonna: " + gridPaneGround.getColumnConstraints().getFirst().getPrefWidth());
+        System.out.println("Altezza riga: " + gridPaneGround.getRowConstraints().getFirst().getPrefHeight());
         int x, y;
         Card[][] matrix = pg.getGround();
         for(int i = 0; i < 84; i++) {
@@ -495,7 +497,8 @@ public class Controller {
                 Position pos = new Position(x, y);
                 Card c = matrix[i][j];
                 if (c != null && (c.getId() == -1 && !isFound(availablePos, pos))) {
-                    //gridPaneGround.add(new ImageView(voidImage), x, y);
+                    Image image = new Image("file:" + emptyImagePath, 150, 100, false, false);
+                    gridPaneGround.add((new ImageView(image)), x, y);
                     availablePos.add(new Position(x, y));
                 }
             }
