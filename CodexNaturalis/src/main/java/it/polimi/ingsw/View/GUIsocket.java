@@ -298,6 +298,11 @@ public class GUIsocket extends Application{
                 switchToSelectSecretObj(stage);
                 //simulateEnd(stage);
             } catch (IOException | ClassNotFoundException e) {
+                try {
+                    showError(stage);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 throw new RuntimeException(e);
             }
         });
@@ -320,7 +325,11 @@ public class GUIsocket extends Application{
                 client.sendToServer(1);
                 initializePlayerGround(stage);
             } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
+                try {
+                    showError(stage);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }throw new RuntimeException(e);
             }
         });
         ImageView secretObjRight = controller.getSecretObjRight();
@@ -329,6 +338,11 @@ public class GUIsocket extends Application{
                 client.sendToServer(2);
                 initializePlayerGround(stage);
             } catch (IOException | ClassNotFoundException e) {
+                try {
+                    showError(stage);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 throw new RuntimeException(e);
             }
         });
@@ -370,7 +384,26 @@ public class GUIsocket extends Application{
             if(!client.receiveBooleanFromServer()){
                 //  controller.updateGrounds(g.getPlayers());
                 // update ground giocatore
-                switchToYourTurn(stage, p, g);
+                showYourTurn(stage, p, g);
+                try {
+                    Position pos = controller.playCard(p, g);
+                    PlayableCard c = controller.returnCardPlayed();
+                    client.sendToServer(c);
+                    client.sendToServer(pos);
+                    if(client.receiveBooleanFromServer()){
+                        //  showTwentyPoints(stage);     ha vinto
+                    }
+                    else{
+                        switchToDraw(stage);
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    try {
+                        showError(stage);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    throw new RuntimeException(ex);
+                }
             }
             else{ // ultimo turno
                 switchToLastTurn(stage, p, g);
@@ -395,7 +428,7 @@ public class GUIsocket extends Application{
         stage.close();
     }
 
-    public void switchToYourTurn(Stage stage, Player player, Game game) throws IOException {
+    public void showYourTurn(Stage stage, Player player, Game game) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/yourTurn.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -406,21 +439,8 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root, 600, 200);
         stage2.setScene(scene);
         stage2.showAndWait();
-        controller.getYourTurnButton().setOnAction(e ->{
+        controller.getYourTurnButton().setOnAction(e -> {
             stage2.close();
-            try {
-                if(!controller.playCard(player, game)){
-                    if(client.receiveBooleanFromServer()){   // se ci sono carte nel deck
-                        switchToDraw(stage);
-                    }
-                    else{
-                        showZeroCards(stage);
-                        // wait(client.receivePlayerFromServer(), client.receiveGameFromServer());
-                    }
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
         });
     }
 
@@ -440,6 +460,11 @@ public class GUIsocket extends Application{
                     event.consume(); // Previene la chiusura della finestra in teoria
                 }
             } catch (IOException e) {
+                try {
+                    showError(stage);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 throw new RuntimeException(e);
             }
         });
@@ -490,22 +515,29 @@ public class GUIsocket extends Application{
 
     }
 
-    public void switchToWaitingFinish(Stage stage) throws IOException, ClassNotFoundException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingFinish.fxml"));
-        Parent root = loader.load();
-        Controller controller = loader.getController();
-        controller.setStreams(client);
-        controller.getAnchor5().getChildren().addFirst(background);
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-        ArrayList<Player> winners = controller.getWinners();
-            if(winners.size()==1){
+    public void switchToWaitingFinish(Stage stage) throws ClassNotFoundException {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingFinish.fxml"));
+            Parent root = loader.load();
+            Controller controller = loader.getController();
+            controller.setStreams(client);
+            controller.getAnchor5().getChildren().addFirst(background);
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+            ArrayList<Player> winners = controller.getWinners();
+            if (winners.size() == 1) {
                 showSingleWinner(stage, winners);
-            }
-            else{
+            } else {
                 showWinners(stage, winners);
             }
+        } catch(IOException e) {
+            try {
+                showError(stage);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 
     public void showWinners(Stage stage, ArrayList<Player> winners) throws IOException {
@@ -540,66 +572,82 @@ public class GUIsocket extends Application{
         stage.show();
     }
     // messaggio che annuncia il raggiungimento di 20 punti -> poi va a schermata waiting
-    public void showTwentyPoints(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/20points.fxml"));
-        Parent root = loader.load();
-        Controller controller = loader.getController();
-        controller.setStreams(client);
-        Stage stage2 = new Stage();
-        stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
-        stage2.initOwner(stage);
-        Scene scene = new Scene(root);
-        stage2.setScene(scene);
-        // pulsing label animation
-        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(500), controller.getLabel20p());
-        scaleUp.setToX(1.2);
-        scaleUp.setToY(1.2);
-        ScaleTransition scaleDown = new ScaleTransition(Duration.millis(500), controller.getLabel20p());
-        scaleDown.setToX(1.0);
-        scaleDown.setToY(1.0);
-        SequentialTransition pulse = new SequentialTransition(scaleUp, scaleDown);
-        pulse.setCycleCount(SequentialTransition.INDEFINITE);
-        pulse.setAutoReverse(true);
-        pulse.play();
-        stage2.showAndWait();
-        controller.getFinishButton().setOnAction(e ->{
+    public void showTwentyPoints(Stage stage){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/20points.fxml"));
+            Parent root = loader.load();
+            Controller controller = loader.getController();
+            controller.setStreams(client);
+            Stage stage2 = new Stage();
+            stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
+            stage2.initOwner(stage);
+            Scene scene = new Scene(root);
+            stage2.setScene(scene);
+            // pulsing label animation
+            ScaleTransition scaleUp = new ScaleTransition(Duration.millis(500), controller.getLabel20p());
+            scaleUp.setToX(1.2);
+            scaleUp.setToY(1.2);
+            ScaleTransition scaleDown = new ScaleTransition(Duration.millis(500), controller.getLabel20p());
+            scaleDown.setToX(1.0);
+            scaleDown.setToY(1.0);
+            SequentialTransition pulse = new SequentialTransition(scaleUp, scaleDown);
+            pulse.setCycleCount(SequentialTransition.INDEFINITE);
+            pulse.setAutoReverse(true);
+            pulse.play();
+            stage2.showAndWait();
+            controller.getFinishButton().setOnAction(e -> {
+                try {
+                    switchToWaitingFinish(stage);
+                } catch (ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+        } catch (IOException e){
             try {
-                switchToWaitingFinish(stage);
-            } catch (IOException | ClassNotFoundException ex) {
+                showError(stage);
+            } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-        });
+        }
     }
     public void showZeroCards(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/zeroCards.fxml"));
-        Parent root = loader.load();
-        Controller controller = loader.getController();
-        controller.setStreams(client);
-        Stage stage2 = new Stage();
-        stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
-        stage2.initOwner(stage);
-        Scene scene = new Scene(root);
-        stage2.setScene(scene);
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
-            double xOffset = (Math.random() - 0.5) * 10;
-            double yOffset = (Math.random() - 0.5) * 10;
-            double xOffset2 = (Math.random() - 0.5) * 10;
-            double yOffset2 = (Math.random() - 0.5) * 10;
-            controller.getSadFace().setTranslateX(xOffset);
-            controller.getSadFace().setTranslateY(yOffset);
-            controller.getSadFace2().setTranslateX(xOffset2);
-            controller.getSadFace2().setTranslateY(yOffset2);
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE); // Make the timeline run indefinitely
-        timeline.play();
-        stage2.showAndWait();
-        controller.getFinishButton2().setOnAction(e ->{
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/zeroCards.fxml"));
+            Parent root = loader.load();
+            Controller controller = loader.getController();
+            controller.setStreams(client);
+            Stage stage2 = new Stage();
+            stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
+            stage2.initOwner(stage);
+            Scene scene = new Scene(root);
+            stage2.setScene(scene);
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+                double xOffset = (Math.random() - 0.5) * 10;
+                double yOffset = (Math.random() - 0.5) * 10;
+                double xOffset2 = (Math.random() - 0.5) * 10;
+                double yOffset2 = (Math.random() - 0.5) * 10;
+                controller.getSadFace().setTranslateX(xOffset);
+                controller.getSadFace().setTranslateY(yOffset);
+                controller.getSadFace2().setTranslateX(xOffset2);
+                controller.getSadFace2().setTranslateY(yOffset2);
+            }));
+            timeline.setCycleCount(Timeline.INDEFINITE); // Make the timeline run indefinitely
+            timeline.play();
+            stage2.showAndWait();
+            controller.getFinishButton2().setOnAction(e -> {
+                try {
+                    switchToWaitingFinish(stage);
+                } catch (ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+        } catch(IOException exc){
             try {
-                switchToWaitingFinish(stage);
-            } catch (IOException | ClassNotFoundException ex) {
+                showError(stage);
+            } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-        });
+        }
     }
 
     public void switchToLastTurn(Stage stage, Player p, Game g) throws IOException {
@@ -613,7 +661,7 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root);
         stage2.setScene(scene);
         stage2.showAndWait();
-        try {
+        /*try {
             if(controller.playCard(p, g)){
                 if(client.receiveBooleanFromServer()){
                     switchToWaitingFinish(stage);
@@ -621,7 +669,7 @@ public class GUIsocket extends Application{
             }
         } catch (IOException | ClassNotFoundException ex) {
             throw new RuntimeException(ex);
-        }
+        }*/
     }
     public static void startGUI(){
         launch();
@@ -660,15 +708,17 @@ public class GUIsocket extends Application{
                 client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
                 switchToRoomChoice(stage);
             }
-            catch (ConnectException ex){
+            catch (IOException | ClassNotFoundException ex){
                 try {
                     switchToIpInput(stage);   // dovrebbe essere sostituito con valid label e permesso di reinserire l'input
                 } catch (IOException exc) {
+                    try {
+                        showError(stage);
+                    } catch (IOException exce) {
+                        throw new RuntimeException(exce);
+                    }
                     throw new RuntimeException(exc);
                 }
-            }
-            catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
             }
         });
     }
