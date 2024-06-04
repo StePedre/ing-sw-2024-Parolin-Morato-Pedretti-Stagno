@@ -174,7 +174,7 @@ public class Player implements Serializable {
         game.getChat().send(messageToSend);
     }*/
 
-    /**
+    /*/**
      * The method sends a message to a private chat, specifying the addressee as a parameter.
      * The private chat is obtained by the game instance (see proper method).
      *
@@ -186,4 +186,7 @@ public class Player implements Serializable {
         messageToSend = getMessage();
         game.getPrivateChat(this, player).send(messageToSend);
     }*/
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

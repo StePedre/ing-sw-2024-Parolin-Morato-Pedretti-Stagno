@@ -426,7 +426,7 @@ public class Game implements Serializable {
      *
      * @param nickname the nickname of the player to be removed
      */
-    public void removePlayer(String nickname){
+    public synchronized void removePlayer(String nickname){
         players.removeIf(p -> p.getNickname().equals(nickname));
         numPlayers--;
     }

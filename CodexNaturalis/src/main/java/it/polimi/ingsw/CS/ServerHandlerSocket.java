@@ -18,6 +18,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     private RoundController rc;
     private final Socket socket;
     private PlayerController pc;
+    private String nickname;
     public ServerHandlerSocket(ObjectOutputStream oos, ObjectInputStream ois, RoomController rooms, Socket socket) {
         out = oos;
         in = ois;
@@ -40,10 +41,11 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 }
             });
             start();
+            player.setNickname(nickname);
             colorChoice();
             out.writeObject(player);
             out.writeObject(false);
-            game.addPlayer(player);
+            //game.addPlayer(player);
             while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
             t.start();
@@ -174,14 +176,19 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         out.writeObject(game.getMultiWinners());
     }
     public void start() throws IOException, ClassNotFoundException {
-        Room room = roomChoice();
-        pc = room.getPlayerController();
-        String nickname = nicknameChoice(room);
-        out.reset();
-        firstPlayer(room);
-        this.player = new Player(nickname);
-        game = room.getGame();
-        rc = room.getRoundController();
+            Room room = roomChoice();
+            player = new Player("");
+        try {
+            pc = room.getPlayerController();
+            nickname = nicknameChoice(room);
+            out.reset();
+            firstPlayer(room);
+            game = room.getGame();
+            rc = room.getRoundController();
+        }
+        catch (IOException e){
+            game.removePlayer("");
+        }
     }
     public void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza
         if(room.getGame().isFirst()) {
@@ -220,6 +227,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
 
             }
         }while (b);
+        room.getGame().addPlayer(player);
         return room;
     }
     public String nicknameChoice(Room room) throws IOException, ClassNotFoundException {
