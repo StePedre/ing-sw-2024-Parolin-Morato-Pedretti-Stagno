@@ -681,23 +681,40 @@ public class TUI {
         s.nextLine();
         return n == 1;
     }
-    public String getRoomName(boolean b, boolean choice){
+    public String getRoomName(boolean b, ArrayList<Room> rooms){
         Scanner s = new Scanner(System.in);
+        boolean nameOk = true;
+        String name;
         if(b){
-            if(choice) {
+            do{
                 System.out.println("What is the name of the new room?");
-            }else{
-                System.out.println("Please, enter a name that is not already taken");
-            }
+                name = s.nextLine();
+                for(Room r : rooms){
+                    if(name.equals(r.getName())){
+                        System.out.println("Please, enter a name that is not already taken");
+                        nameOk = false;
+                        break;
+                    }
+                }
+            } while(!nameOk);
         }
         else{
-            if(choice){
+            boolean check = false;
+            do{
                 System.out.println("Which room?");
-            }else{
-                System.out.println("Please enter the name of a room that exist");
-            }
+                name = s.nextLine();
+                for(Room r : rooms){
+                    if(name.equals(r.getName())){
+                        check = true;
+                    }
+                }
+                if(!check){
+                    System.out.println("Please enter a valid room name");
+                    nameOk = false;
+                }
+            } while(!nameOk);
         }
-        return s.nextLine();
+        return name;
     }
 
     public void playerJoined(Player player){

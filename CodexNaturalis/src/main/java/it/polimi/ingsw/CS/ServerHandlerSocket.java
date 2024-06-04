@@ -112,6 +112,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             Position pos = (Position) in.readObject();
             PlaceCardController.place(card,player,pos);
             PlaceCardController.removeFromHand(card,player);
+            out.reset();
             out.writeObject(player);
             out.reset();
         }
@@ -189,7 +190,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             out.writeObject(false);// da problemi al secondo player nellaa GUIsocket
         }
     }
-    public Room roomChoice() throws IOException, ClassNotFoundException {
+    public Room roomChoice() throws IOException, ClassNotFoundException { //controllo nome room
         out.reset();
         out.writeObject(rooms.getRooms());
         Room room;

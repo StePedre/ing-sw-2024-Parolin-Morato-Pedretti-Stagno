@@ -51,10 +51,10 @@ public class MyClientSocket {
         do {
             if (tui.chooseRoom()) { //create
                 out.writeObject(true);
-                out.writeObject(tui.getRoomName(true, true));
+                out.writeObject(tui.getRoomName(true, room));
             } else { //join
                 out.writeObject(false);
-                out.writeObject(tui.getRoomName(false, true));
+                out.writeObject(tui.getRoomName(false, room));
             }
         }while((boolean)in.readObject());
         do {
