@@ -19,6 +19,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     private final Socket socket;
     private PlayerController pc;
     private String nickname;
+    private boolean removed = false;
     public ServerHandlerSocket(ObjectOutputStream oos, ObjectInputStream ois, RoomController rooms, Socket socket) {
         out = oos;
         in = ois;
@@ -103,8 +104,10 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         }
         catch (IOException | ClassNotFoundException | InvalidPositionException e){
             //creare eccezione per chiudere socket sul MyServerSocket
+            if(!removed){
             game.removePlayer(player.getNickname());
             System.out.println("il player " + player.getNickname() +" si è disconnesso" );
+            }
             //e.printStackTrace();
         }
 
@@ -188,6 +191,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         }
         catch (IOException e){
             game.removePlayer("");
+            removed = true;
+            socket.close();
         }
     }
     public void firstPlayer(Room room) throws IOException, ClassNotFoundException {// implementare nella stanza
