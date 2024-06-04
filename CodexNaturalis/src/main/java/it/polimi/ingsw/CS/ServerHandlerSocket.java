@@ -46,8 +46,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             game.addPlayer(player);
             while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
-            playerinit();
             out.writeObject(true);
+            playerinit();
             sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
                 out.writeObject(false);  // non è il suo turno

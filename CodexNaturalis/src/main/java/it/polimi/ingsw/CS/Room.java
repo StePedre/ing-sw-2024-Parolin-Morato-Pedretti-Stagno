@@ -23,7 +23,7 @@ public class Room implements Serializable {
     private final String nameRoom;
     private final Game game;
     private final RoundController roundController;
-    private final PlayerController playerController;
+    private transient final PlayerController playerController;
 
     /**
      * Class constructor.
