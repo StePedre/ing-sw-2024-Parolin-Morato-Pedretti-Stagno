@@ -111,7 +111,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     }
 
     private void startEarlyGame() throws IOException, InvalidPositionException {
-        playerController = new PlayerController(player.getPlayerGround(),player.getHand());
+       /* playerController = new PlayerController(player.getPlayerGround(),player.getHand());
         game = server.getRooms().getRoom(roomJoined).getGame();
         StarterCard st = playerController.pickCard(game);
         if(tui.showStarterCard(st)){
@@ -120,7 +120,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         playerController.setFirstCard(st);
         ObjectiveCard[] obj = playerController.pickObjCard(game);
         playerController.setObjSecret(obj[tui.chooseObjective(obj[0],obj[1])-1]);
-        playerController.populateHand(game,player);
+        playerController.populateHand(game,player);*/
     }
 
     private void startNormalGame() throws RemoteException, MissingResourcesException, InvalidPositionException {
@@ -228,7 +228,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         return server.getRooms().getRoom(roomJoined).getGame().getPlayers();
     }
     private void useGUI(){
-        GUIrmi.startGUI();
+     //   GUIrmi.startGUI();
     }
 
 

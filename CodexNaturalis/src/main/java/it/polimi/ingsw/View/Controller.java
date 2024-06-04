@@ -41,7 +41,7 @@ public class Controller {
     @FXML
     private TextField nickTextField, numberPlayersTF, textFieldRoom,IpField;
     @FXML
-    private Label nickLabel, label20p, labelRoom, validLabel, winnerName, winnersNames, startLabel, startLabel2, colorValidLabel;
+    private Label nickLabel, labelNick, label20p, labelRoom, validLabel, winnerName, winnersNames, startLabel, startLabel2, colorValidLabel;
     @FXML
     private ProgressBar waitingBar;
     @FXML
@@ -63,7 +63,7 @@ public class Controller {
     @FXML
     private Button nickButton, requestButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
-    private final String emptyImagePath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\border_image.png";
+    private final String emptyImagePath = "src/main/resources/border_image.png";
     private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
     private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
 
@@ -226,14 +226,13 @@ public class Controller {
         secretObjRight.setImage(new Image("file:" + imagesFrontPath + objs[1].getId() + ".png"));
     }
 
-    public boolean addGround(Game g, Player p) throws IOException, ClassNotFoundException {
-        labelPoints.setText("Points: "+ p.getPlayerGround().getPlayerScore());
+    public void addGround(Game g, Player p) {
+        labelNick.setText("Player: " + p.getNickname());
+        labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
         addImages(p.getHand());
         addSecretObj(p.getHand().getObjCard());
         addCommonObj(g.getCommonObj());
         setTotalResource(p.getPlayerGround().getTotalResources());
-        // show actual ground
-        return client.receiveBooleanFromServer();
     }
 
     public void addImages(Hand hand) {
@@ -262,8 +261,15 @@ public class Controller {
         plumeNum.setText(String.valueOf(map.get(Resource.PLUME)));
     }
 
-    public void placeFirstCard(StarterCard sc, Player updatedP) throws IOException, ClassNotFoundException {
-        ImageView iv = new ImageView(new Image("file:" + imagesFrontPath + sc.getId() + ".png", 150, 100, true, true));
+    public void placeFirstCard(Player updatedP){
+        Card sc = updatedP.getPlayerGround().getGround()[42][42];
+        ImageView iv;
+        if(sc.getFlip()){
+            iv = new ImageView(new Image("file:" + imagesBackPath + sc.getId() + ".png", 150, 100, true, true));
+        }
+        else{
+            iv = new ImageView(new Image("file:" + imagesFrontPath + sc.getId() + ".png", 150, 100, true, true));
+        }
         gridPaneGround.add(iv, 3, 4);
         showAvailablePos(updatedP.getPlayerGround());
     }
@@ -299,7 +305,7 @@ public class Controller {
     public void addCards(Deck[] decks) {
       //  buttonSubDraw.setVisible(false);
         resFaceUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(0).getId()));
-        resFaceUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(1).getId()));
+        resFaceUp2.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(1).getId()));
         resFaceDown.setImage(new Image("file:" + imagesBackPath + decks[0].getCards().get(2).getId()));
         goldFaceUp1.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(0).getId()));
         goldFaceUp2.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(1).getId()));

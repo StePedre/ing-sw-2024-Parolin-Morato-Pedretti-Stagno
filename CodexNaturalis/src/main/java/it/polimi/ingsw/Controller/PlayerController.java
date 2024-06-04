@@ -64,13 +64,10 @@ public class PlayerController {
 
         Random rand = new Random();
         PlayableCard[] cards = new PlayableCard[3];
-        indexRandCard1 = rand.nextInt(deckResource.getNumberOfCards());
-        indexRandCard2 = rand.nextInt(deckResource.getNumberOfCards());
-        indexRandCard3 = rand.nextInt(deckGold.getNumberOfCards());
         // +2 avoids the selection of cards that are revealed on the ground
-        cards[0] = deckResource.drawCard(indexRandCard1);
-        cards[1] = deckResource.drawCard(indexRandCard2);
-        cards[2] = deckGold.drawCard(indexRandCard3);
+        cards[0] = deckResource.drawCard(rand.nextInt(deckResource.getNumberOfCards()));
+        cards[1] = deckResource.drawCard(rand.nextInt(deckResource.getNumberOfCards()));
+        cards[2] = deckGold.drawCard(rand.nextInt(deckGold.getNumberOfCards()));
         // cards in positions 0 and 1 are resources
         // card in position 2 is gold
         player.getHand().addHand(cards);
