@@ -46,6 +46,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             game.addPlayer(player);
             while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
+            t.start();
             out.writeObject(true);
             playerinit();
             sendData();
@@ -101,7 +102,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         catch (IOException | ClassNotFoundException | InvalidPositionException e){
             //creare eccezione per chiudere socket sul MyServerSocket
             game.removePlayer(player.getNickname());
-            e.printStackTrace();
+            System.out.println("il player " + player.getNickname() +" si è disconnesso" );
+            //e.printStackTrace();
         }
 
 
