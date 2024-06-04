@@ -13,9 +13,12 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Controller {
     @FXML
@@ -59,13 +62,14 @@ public class Controller {
     private ImageView handCardLeft, handCardCenter, handCardRight, secretObj, logo;
     @FXML
     private ImageView commonObj1, commonObj2;
-    private int converter = 39; // 42 - 3 (coord iniziali matrice e gridPane)
+    private int converter = 38; // 42 - 4 (coord iniziali matrice e gridPane)
     @FXML
     private Button nickButton, requestButton, yourTurnButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
-    private final String emptyImagePath = "src/main/resources/border_image.png";
-    private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
-    private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
+    private final String emptyImagePath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\border_image.png";
+    private final String imagesFrontPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_front\\";
+    private final String imagesBackPath = "C:\\Users\\Ste\\Desktop\\Stefano\\UNI\\ANNO III\\INGEGNERIA DEL SOFTWARE\\PROGETTO_IDS\\ing-sw-2024-Parolin-Morato-Pedretti-Stagno\\CodexNaturalis\\src\\main\\resources\\CODEX_cards_gold_back\\";
+    PlayableCard currentHandLeft, currentHandCenter, currentHandRight;
 
     public AnchorPane getAnchor2() {return anchor2;}
     public Button getNickButton() {
@@ -237,8 +241,11 @@ public class Controller {
 
     public void addImages(Hand hand) {
         handCardLeft.setImage(new Image("file:" + imagesFrontPath + hand.getCard(0).getId() + ".png"));
+        currentHandLeft = hand.getCard(0);
         handCardCenter.setImage(new Image("file:" + imagesFrontPath + hand.getCard(1).getId() + ".png"));
+        currentHandCenter = hand.getCard(1);
         handCardRight.setImage(new Image("file:" + imagesFrontPath + hand.getCard(2).getId() + ".png"));
+        currentHandRight = hand.getCard(2);
     }
 
     public void addSecretObj(ObjectiveCard secretObjective) {
@@ -270,36 +277,46 @@ public class Controller {
         else{
             iv = new ImageView(new Image("file:" + imagesFrontPath + sc.getId() + ".png", 150, 100, true, true));
         }
-        gridPaneGround.add(iv, 3, 4);
-        showAvailablePos(updatedP.getPlayerGround());
+        gridPaneGround.add(iv, 4, 4);
+        showAvailablePos(updatedP.getPlayerGround().getAvailablePositions());
     }
 
-    public boolean playCard(Player p, Game g) throws IOException, ClassNotFoundException {
-      //  client.reset();
-     //   Player player = client.receivePlayerFromServer();
-      //  Game game = client.receiveGameFromServer();
-        showAvailablePos(p.getPlayerGround());
+    public Position playCard(Player p, Game g) throws IOException, ClassNotFoundException {
+        showAvailablePos(p.getPlayerGround().getAvailablePositions());
         setDragDetected(handCardLeft);
         setDragDetected(handCardCenter);
         setDragDetected(handCardRight);
-        setDropZones();
-        setDropCompleted(handCardLeft);
-        setDropCompleted(handCardCenter);
-        setDropCompleted(handCardRight);
-        // client.sendToServer(cardToPlay);
-        // client.sendToServer(cardPosition);
-        p = client.receivePlayerFromServer();  // riceve player con mano aggiornata -> vedi placeCardController per capire com'è la nuova mano e aggiorna il playground
-        client.reset();
-        if(client.receiveBooleanFromServer()){
+        Position droppedP = new Position(-1, -1);
+        for(Position pos: availablePos){
+            ImageView zone = (ImageView) getImageViewFromPos(pos.getX(), pos.getY());
+            droppedP = setDropZones(zone);
+        }
+        return droppedP;
+       // p = client.receivePlayerFromServer();  // riceve player con mano aggiornata -> vedi placeCardController per capire com'è la nuova mano e aggiorna il playground
+
+     /*   if(client.receiveBooleanFromServer()){
             // to do: cosa succede se ha vinto
             return false;
         }
         else{
             addCards(g.getDecks());
             return true;
-        }
+        }*/
     }
 
+    public PlayableCard returnCardPlayed(){
+        PlayableCard toReturn = null;
+        if(setDropCompleted(handCardLeft)){
+            toReturn = currentHandLeft;
+        }
+        if(setDropCompleted(handCardCenter)){
+            toReturn = currentHandCenter;
+        }
+        if(setDropCompleted(handCardRight)){
+            toReturn = currentHandRight;
+        }
+        return toReturn;
+    }
 
 
     public void addCards(Deck[] decks) {
@@ -391,46 +408,56 @@ public class Controller {
         });
     }
 
-    public void setDropZones() {
-        for (Position pos : availablePos) {
-            ImageView zone = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
-            gridPaneGround.add(zone, pos.getX() - converter, pos.getY() - converter);
-            zone.setOnDragOver(e -> {
-                if (e.getDragboard().hasImage()) {
-                    e.acceptTransferModes(TransferMode.MOVE);
-                    e.consume();
-                }
-            });
-            zone.setOnDragEntered(e -> {
-                ColorAdjust ca = new ColorAdjust();
-                ca.setBrightness(0.5);
-                zone.setEffect(ca);
-            });
-            zone.setOnDragExited(e -> {
-                ColorAdjust ca = new ColorAdjust();
-                ca.setBrightness(0);
-                zone.setEffect(ca);
-            });
-            zone.setOnDragDropped(e -> {
-                Dragboard db = e.getDragboard();
-                boolean success = false;
-                if (db.hasImage()) {
-                    zone.setImage(db.getImage());
-                    zone.toFront();
-                    if(GridPane.getColumnIndex(zone) == 0 || GridPane.getRowIndex(zone) == 0) {
-                        System.out.println("Top border");
-                        addColumnRowTop();
-                    }
-                    if(GridPane.getColumnIndex(zone) == (gridPaneGround.getColumnCount() - 1) || GridPane.getRowIndex(zone) ==(gridPaneGround.getRowCount() - 1)){
-                        System.out.println("Bottom border");
-                        addColumnRowBottom();
-                    }
-                    success = true;
-                }
-                e.setDropCompleted(success);
-                e.consume();
-            });
+    private Node getImageViewFromPos (int x, int y) {
+        for (Node node : gridPaneGround.getChildren()) {
+            if ((node != null) && (GridPane.getColumnIndex(node) == x && GridPane.getRowIndex(node) == y)) {
+                return node;
+            }
         }
+        return null;
+    }
+
+    public Position setDropZones(ImageView zone) {
+            //ImageView zone = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
+            //gridPaneGround.add(zone, pos.getX(), pos.getY());
+        Position[] droppedPos = new Position[1];
+        zone.setOnDragOver(e -> {
+            if (e.getDragboard().hasImage()) {
+                e.acceptTransferModes(TransferMode.MOVE);
+                e.consume();
+            }
+        });
+        zone.setOnDragEntered(e -> {
+            ColorAdjust ca = new ColorAdjust();
+            ca.setBrightness(0.5);
+            zone.setEffect(ca);
+        });
+        zone.setOnDragExited(e -> {
+            ColorAdjust ca = new ColorAdjust();
+            ca.setBrightness(0);
+            zone.setEffect(ca);
+        });
+        zone.setOnDragDropped(e -> {
+            Dragboard db = e.getDragboard();
+            boolean success = false;
+            if (db.hasImage()) {
+                zone.setImage(db.getImage());
+                zone.toFront();
+                if(GridPane.getColumnIndex(zone) == 0 || GridPane.getRowIndex(zone) == 0) {
+                    System.out.println("Top border");
+                    addColumnRowTop();
+                }
+                if(GridPane.getColumnIndex(zone) == (gridPaneGround.getColumnCount() - 1) || GridPane.getRowIndex(zone) ==(gridPaneGround.getRowCount() - 1)){
+                    System.out.println("Bottom border");
+                    addColumnRowBottom();
+                }
+                success = true;
+            }
+            droppedPos[0] = new Position(GridPane.getColumnIndex(zone), GridPane.getRowIndex(zone));
+            e.setDropCompleted(success);
+            e.consume();
+        });
+        return droppedPos[0];
     }
 
     private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
@@ -476,32 +503,26 @@ public class Controller {
         gridPaneGround.getRowConstraints().addFirst(new RowConstraints(59.29));
     }
 
-    public void setDropCompleted(ImageView iv){
+    public Boolean setDropCompleted(ImageView iv){
+        Boolean[] toReturn = new Boolean[1];
         iv.setOnDragDone(event -> {
             if (event.getTransferMode() == TransferMode.MOVE) {
                 iv.setImage(new Image("file:" + imagesBackPath + "95.png"));
             }
+            toReturn[0] = true;
             event.consume();
         });
+        return toReturn[0];
     }
 
-    public void showAvailablePos(PlayerGround pg){
-        System.out.println("Larghezza colonna: " + gridPaneGround.getColumnConstraints().getFirst().getPrefWidth());
-        System.out.println("Altezza riga: " + gridPaneGround.getRowConstraints().getFirst().getPrefHeight());
+    public void showAvailablePos(Set<Position> pos) {
         int x, y;
-        Card[][] matrix = pg.getGround();
-        for(int i = 0; i < 84; i++) {
-            for (int j = 0; j < 84; j++) {
-                x = i-converter;
-                y = j-converter;
-                Position pos = new Position(x, y);
-                Card c = matrix[i][j];
-                if (c != null && (c.getId() == -1 && !isFound(availablePos, pos))) {
-                    Image image = new Image("file:" + emptyImagePath, 150, 100, false, false);
-                    gridPaneGround.add((new ImageView(image)), x, y);
-                    availablePos.add(new Position(x, y));
-                }
-            }
+        for (Position p : pos) {
+            y = p.getX() - converter;   // maybe
+            x = p.getY() - converter;
+            Image image = new Image("file:" + emptyImagePath, 150, 100, false, false);
+            gridPaneGround.add((new ImageView(image)), x, y);
+            availablePos.add(new Position(x, y));
         }
     }
 

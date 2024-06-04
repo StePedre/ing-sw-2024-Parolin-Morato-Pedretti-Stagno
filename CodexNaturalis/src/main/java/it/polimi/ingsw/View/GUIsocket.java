@@ -370,7 +370,21 @@ public class GUIsocket extends Application{
             if(!client.receiveBooleanFromServer()){
                 //  controller.updateGrounds(g.getPlayers());
                 // update ground giocatore
-                switchToYourTurn(stage, p, g);
+                showYourTurn(stage, p, g);
+                try {
+                    Position pos = controller.playCard(p, g);
+                    PlayableCard c = controller.returnCardPlayed();
+                    client.sendToServer(c);
+                    client.sendToServer(pos);
+                    if(client.receiveBooleanFromServer()){
+                        //  showTwentyPoints(stage);     ha vinto
+                    }
+                    else{
+                        switchToDraw(stage);
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             else{ // ultimo turno
                 switchToLastTurn(stage, p, g);
@@ -395,7 +409,7 @@ public class GUIsocket extends Application{
         stage.close();
     }
 
-    public void switchToYourTurn(Stage stage, Player player, Game game) throws IOException {
+    public void showYourTurn(Stage stage, Player player, Game game) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/yourTurn.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -406,21 +420,8 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root, 600, 200);
         stage2.setScene(scene);
         stage2.showAndWait();
-        controller.getYourTurnButton().setOnAction(e ->{
+        controller.getYourTurnButton().setOnAction(e -> {
             stage2.close();
-            try {
-                if(!controller.playCard(player, game)){
-                    if(client.receiveBooleanFromServer()){   // se ci sono carte nel deck
-                        switchToDraw(stage);
-                    }
-                    else{
-                        showZeroCards(stage);
-                        // wait(client.receivePlayerFromServer(), client.receiveGameFromServer());
-                    }
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
         });
     }
 
@@ -613,7 +614,7 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root);
         stage2.setScene(scene);
         stage2.showAndWait();
-        try {
+        /*try {
             if(controller.playCard(p, g)){
                 if(client.receiveBooleanFromServer()){
                     switchToWaitingFinish(stage);
@@ -621,7 +622,7 @@ public class GUIsocket extends Application{
             }
         } catch (IOException | ClassNotFoundException ex) {
             throw new RuntimeException(ex);
-        }
+        }*/
     }
     public static void startGUI(){
         launch();
