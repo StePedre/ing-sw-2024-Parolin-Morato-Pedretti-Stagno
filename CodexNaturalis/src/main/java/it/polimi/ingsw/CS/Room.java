@@ -24,7 +24,7 @@ public class Room implements Serializable {
     private final Game game;
     private final RoundController roundController;
     private final PlayerController playerController;
-
+    private int playerInRoom;
     /**
      * Class constructor.
      *
@@ -36,6 +36,18 @@ public class Room implements Serializable {
         roundController = new RoundController();
         playerController = new PlayerController();
         parse(game);
+        playerInRoom = 0;
+    }
+
+    public int getPlayerInRoom() {
+        return playerInRoom;
+    }
+
+    public void addPlayerInRoom() {
+        this.playerInRoom++;
+    }
+    public void removePlayerInRoom() {
+        this.playerInRoom--;
     }
 
     /**

@@ -32,12 +32,9 @@ public class MyClientSocket {
             }
         }catch (IOException e) {
             close();
-            System.out.println("Client disconnected");
+            System.out.println("Client disconnection, close the app and restart");
             //throw e;
-        } catch (ClassNotFoundException e) {
-            close();
-            e.printStackTrace();
-        } catch (InterruptedException e){
+        } catch (ClassNotFoundException | InterruptedException e) {
             close();
             e.printStackTrace();
         }

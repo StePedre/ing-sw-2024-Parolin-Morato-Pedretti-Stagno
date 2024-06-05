@@ -18,6 +18,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     private RoundController rc;
     private final Socket socket;
     private PlayerController pc;
+    private Room room;
     public ServerHandlerSocket(ObjectOutputStream oos, ObjectInputStream ois, RoomController rooms, Socket socket) {
         out = oos;
         in = ois;
@@ -26,6 +27,17 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     }
     @Override
     public void run() {
+        try {
+            start();
+            colorChoice();
+            out.writeObject(player);
+            out.writeObject(false);
+            gameFlow();
+        } catch (IOException | ClassNotFoundException e) {
+            room.removePlayerInRoom();
+        }
+    }
+    public void gameFlow(){
         try {
             Thread t = new Thread(() ->{
                 while(!game.isOver()){
@@ -39,10 +51,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                     }
                 }
             });
-            start();
-            colorChoice();
-            out.writeObject(player);
-            out.writeObject(false);
             game.addPlayer(player);
             while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
@@ -174,7 +182,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         out.writeObject(game.getMultiWinners());
     }
     public void start() throws IOException, ClassNotFoundException {
-        Room room = roomChoice();
+        roomChoice();
         pc = room.getPlayerController();
         String nickname = nicknameChoice(room);
         out.reset();
@@ -189,13 +197,12 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             int n =(int) in.readObject();
             room.getGame().setExpPlayers(n);
         } else{
-            out.writeObject(false);// da problemi al secondo player nellaa GUIsocket
+            out.writeObject(false);
         }
     }
-    public Room roomChoice() throws IOException, ClassNotFoundException { //controllo nome room
+    public void roomChoice() throws IOException, ClassNotFoundException { //controllo nome room
         out.reset();
         out.writeObject(rooms.getRooms());
-        Room room;
         boolean b;
         do {
             if ((boolean) in.readObject()) {
@@ -220,7 +227,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
 
             }
         }while (b);
-        return room;
+        room.addPlayerInRoom();
     }
     public String nicknameChoice(Room room) throws IOException, ClassNotFoundException {
         String nickname;
@@ -258,9 +265,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         String color;
         out.writeObject(game.getColors());
         while(!colorOK){
-            if(game.getColors().isEmpty()){
-                socket.close();
-            }
             color = (String) in.readObject();
             if(game.getColors().contains(color)){
                 colorOK = game.markColor(color);
