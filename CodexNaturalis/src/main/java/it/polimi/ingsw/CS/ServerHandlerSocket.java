@@ -258,6 +258,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         String color;
         out.writeObject(game.getColors());
         while(!colorOK){
+            if(game.getColors().isEmpty()){
+                socket.close();
+            }
             color = (String) in.readObject();
             if(game.getColors().contains(color)){
                 colorOK = game.markColor(color);
