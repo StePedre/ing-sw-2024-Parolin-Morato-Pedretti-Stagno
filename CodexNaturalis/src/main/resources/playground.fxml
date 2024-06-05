@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="playGroundHBox" style="-fx-background-color: #E4CAA9" alignment="CENTER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" prefHeight="768" prefWidth="1366" fx:controller="it.polimi.ingsw.View.Controller">
+<HBox fx:id="playGroundHBox" style="-fx-background-color: #E4CAA9" alignment="CENTER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" prefHeight="${screenHeight}" prefWidth="${screenWidth}" fx:controller="it.polimi.ingsw.View.Controller">
     <AnchorPane fx:id="playGroundAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
         <HBox fx:id="hboxHand" layoutX="630.0" layoutY="950.0" prefHeight="100.0" prefWidth="440.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="420.0" AnchorPane.rightAnchor="420.0">
             <ImageView fx:id="handCardCenter" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">

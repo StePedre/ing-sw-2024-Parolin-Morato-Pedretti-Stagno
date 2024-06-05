@@ -358,60 +358,72 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         controller.placeFirstCard(p);
-        try{
-            showUpdatedPlayerGround(stage, g, p, controller);
-        }
-        catch (IOException e){
-            showError(stage);
-        }
-
-    }
-
-    public void showUpdatedPlayerGround(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
-        Parent root = loader.load();
-        Controller controllerDeck = loader.getController();
-        controller.setStreams(client);
-//        Scene scene = new Scene(root);
-//        stage.setScene(scene);
-        controllerDeck.addCards(g.getDecks());
-      //  controller.updateGrounds(g.getPlayers());      updatare playerground altri giocatori
-        stage.show();
-        controller.addGround(g, p);
-        if(client.receiveBooleanFromServer()){ // se è il suo turno
-            g = client.receiveGameFromServer();
-            p = client.receivePlayerFromServer();
-            if(!client.receiveBooleanFromServer()){
-                //  controller.updateGrounds(g.getPlayers());
-                // update ground giocatore
-                showYourTurn(stage, p, g);
-                try {
-                    Position pos = controller.playCard(p, g);
-                    PlayableCard c = controller.returnCardPlayed();
-                    client.sendToServer(c);
-                    client.sendToServer(pos);
-                    if(client.receiveBooleanFromServer()){
-                        //  showTwentyPoints(stage);     ha vinto
-                    }
-                    else{
-                        switchToDraw(stage);
-                    }
-                } catch (IOException | ClassNotFoundException ex) {
-                    try {
-                        showError(stage);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    throw new RuntimeException(ex);
-                }
-            }
-            else{ // ultimo turno
-                switchToLastTurn(stage, p, g);
+        if(client.receiveBooleanFromServer()) {    // se è il suo turno
+            try {
+                yourTurn(stage, g, p, controller);
+            } catch (IOException e) {
+                showError(stage);
             }
         }
         else{
-            // wait for turn
+            notYourTurn(stage, g, p, controller);
         }
+    }
+
+    public void yourTurn(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
+       /* FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
+        Parent root = loader.load();
+        Controller controllerDeck = loader.getController();
+        controllerDeck.addCards(g.getDecks());*/
+        controller.setStreams(client);
+        //controller.updateGrounds(g.getPlayers());      updatare playerground altri giocatori
+        g = client.receiveGameFromServer();
+        p = client.receivePlayerFromServer();
+        if(!client.receiveBooleanFromServer()){    // if not last turn
+            //  controller.updateGrounds(g.getPlayers());
+            controller.addGround(g, p);
+            showYourTurn(stage, p, g);
+            try {
+                Position pos = controller.playCard(p, g);
+                PlayableCard c = controller.returnCardPlayed();
+                client.sendToServer(c);
+                client.sendToServer(pos);
+                if(client.receiveBooleanFromServer()){
+                    //  showTwentyPoints(stage);     ha vinto
+                }
+                else{
+                    switchToDraw(stage);
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                try {
+                    showError(stage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                throw new RuntimeException(ex);
+            }
+        }
+        else{ // ultimo turno
+            switchToLastTurn(stage, p, g);
+        }
+    }
+
+    public void notYourTurn(Stage stage, Game g, Player p, Controller controller) {
+        controller.setStreams(client);
+        controller.addGround(g, p);
+        controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
+        Task<Integer> task = new Task<>(){
+            @Override
+            protected Integer call() throws Exception {
+                if(client.receiveBooleanFromServer()){
+                    yourTurn(stage, g, p, controller);
+                }
+                return null;
+            }
+        };
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
     }
 
     public void showError(Stage stage) throws IOException {
@@ -471,7 +483,7 @@ public class GUIsocket extends Application{
         Game g = client.receiveGameFromServer();
         Player p = client.receivePlayerFromServer();
         if(!client.receiveBooleanFromServer()){  // check if over
-            showUpdatedPlayerGround(stage, g, p, controller);
+            //showUpdatedPlayerGround(stage, g, p, controller);
         }
 
     }
