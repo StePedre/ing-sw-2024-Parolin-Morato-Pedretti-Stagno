@@ -355,6 +355,7 @@ public class GUIsocket extends Application{
         controller.setStreams(client);
         Game g = client.receiveGameFromServer();
         Player p = client.receivePlayerFromServer();
+        controller.addNames(g, p);
         Scene scene = new Scene(root);
         stage.setScene(scene);
         controller.placeFirstCard(p);
@@ -380,6 +381,7 @@ public class GUIsocket extends Application{
         //controller.updateGrounds(g.getPlayers());      updatare playerground altri giocatori
         g = client.receiveGameFromServer();
         p = client.receivePlayerFromServer();
+       //  controller.setLinkToPlayerGrounds(g, p);   TO DO: mostrare playground altri giocatori
         if(!client.receiveBooleanFromServer()){    // if not last turn
             //  controller.updateGrounds(g.getPlayers());
             controller.addGround(g, p);

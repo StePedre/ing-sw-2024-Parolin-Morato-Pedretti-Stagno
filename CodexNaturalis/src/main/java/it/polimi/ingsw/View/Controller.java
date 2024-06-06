@@ -57,7 +57,7 @@ public class Controller {
     private ImageView goldFaceDown, resFaceDown, goldFaceUp1, goldFaceUp2, resFaceUp1, resFaceUp2;
     private GUIClientSocket client; // togliere riferimenti socket al controller GUI (this)
     @FXML
-    private Label labelPoints, mushroomNum, bugNum, leafNum, foxNum, potionNum, scrollNum, plumeNum;
+    private Label labelPoints, labelPoints2, labelPoints3, labelPoints4, mushroomNum, bugNum, leafNum, foxNum, potionNum, scrollNum, plumeNum;
     @FXML
     private ImageView handCardLeft, handCardCenter, handCardRight, secretObj, logo;
     @FXML
@@ -69,8 +69,8 @@ public class Controller {
     private final String emptyImagePath = "src/main/resources/border_image.png";
     private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
     private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
-    PlayableCard currentHandLeft, currentHandCenter, currentHandRight;
-
+    private PlayableCard currentHandLeft, currentHandCenter, currentHandRight;
+    private String nick2, nick3, nick4;
     public AnchorPane getAnchor2() {return anchor2;}
     public Button getNickButton() {
         return nickButton;
@@ -154,6 +154,9 @@ public class Controller {
     public ToggleButton getBlue(){return blue;}
     public ToggleButton getGreen(){return green;}
     public ToggleButton getYellow(){return yellow;}
+    public Label getLabelPoints2(){return labelPoints2;}
+    public Label getLabelPoints3(){return labelPoints3;}
+    public Label getLabelPoints4(){return labelPoints4;}
 
     public void addRoomsMenu() throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
@@ -230,15 +233,52 @@ public class Controller {
         secretObjRight.setImage(new Image("file:" + imagesFrontPath + objs[1].getId() + ".png"));
     }
 
-    public void addGround(Game g, Player p) {
+    public void addNames(Game g, Player p){
         labelNick.setText("Player: " + p.getNickname());
+        for(Player player: g.getPlayers()){
+            if(!player.getNickname().equals(p.getNickname())){
+                if(!labelPoints2.isVisible()){
+                    labelPoints2.setText(player.getNickname());
+                    nick2 = player.getNickname();
+                    labelPoints2.setVisible(true);
+                }
+                else if(!labelPoints3.isVisible()){
+                    labelPoints3.setText(player.getNickname());
+                    nick3 = player.getNickname();
+                    labelPoints3.setVisible(true);
+                }
+                else if(!labelPoints4.isVisible()){
+                    labelPoints4.setText(player.getNickname());
+                    nick4 = player.getNickname();
+                    labelPoints4.setVisible(true);
+                }
+            }
+        }
+    }
+    public void addGround(Game g, Player p) {
         labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
+        for(Player player: g.getPlayers()){
+            if(!player.getNickname().equals(p.getNickname())){
+                if(player.getNickname().equals(nick2)){
+                    labelPoints2.setText(nick2 + ": " + player.getPlayerGround().getPlayerScore());
+                }
+                else if(player.getNickname().equals(nick3)){
+                    labelPoints3.setText(nick3 + ": " + player.getPlayerGround().getPlayerScore());
+                }
+                else if(player.getNickname().equals(nick4)){
+                    labelPoints4.setText(nick4 + ": " + player.getPlayerGround().getPlayerScore());
+                }
+            }
+        }
         addImages(p.getHand());
         addSecretObj(p.getHand().getObjCard());
         addCommonObj(g.getCommonObj());
         setTotalResource(p.getPlayerGround().getTotalResources());
     }
 
+    public void setLinkToPlayerGrounds(Game g, Player p){
+       // to do
+    }
     public void addImages(Hand hand) {
         handCardLeft.setImage(new Image("file:" + imagesFrontPath + hand.getCard(0).getId() + ".png"));
         currentHandLeft = hand.getCard(0);
