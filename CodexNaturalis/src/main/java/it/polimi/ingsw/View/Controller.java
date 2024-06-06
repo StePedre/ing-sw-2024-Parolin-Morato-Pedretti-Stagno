@@ -278,7 +278,6 @@ public class Controller {
             iv = new ImageView(new Image("file:" + imagesFrontPath + sc.getId() + ".png", 150, 100, true, true));
         }
         gridPaneGround.add(iv, 4, 4);
-        showAvailablePos(updatedP.getPlayerGround().getAvailablePositions());
     }
 
     public Position playCard(Player p, Game g) throws IOException, ClassNotFoundException {

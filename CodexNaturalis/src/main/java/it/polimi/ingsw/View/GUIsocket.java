@@ -376,6 +376,7 @@ public class GUIsocket extends Application{
         Controller controllerDeck = loader.getController();
         controllerDeck.addCards(g.getDecks());*/
         controller.setStreams(client);
+        controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
         //controller.updateGrounds(g.getPlayers());      updatare playerground altri giocatori
         g = client.receiveGameFromServer();
         p = client.receivePlayerFromServer();
