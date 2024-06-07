@@ -198,7 +198,7 @@ public class PlayerGround implements Serializable {
      * @param card needs to have its requirements checked.
      * @return true if the requirements are satisfied, false otherwise.
      */
-    private boolean checkRequirements(PlayableCard card){
+    public boolean checkRequirements(PlayableCard card){
         if(card.getRequirements() == null){
             return true;
         }

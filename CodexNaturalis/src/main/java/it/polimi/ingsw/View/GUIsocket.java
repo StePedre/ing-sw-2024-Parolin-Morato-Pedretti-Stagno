@@ -408,33 +408,39 @@ public class GUIsocket extends Application{
             for(ImageView  zone : listOfPos){
                 controller.setDropZones(zone);
             }
-            ivl.setOnDragDetected(event -> {
-                Dragboard db = ivl.startDragAndDrop(TransferMode.MOVE);
-                Image dragMiniature = new Image(ivl.getImage().getUrl(), 150, 100, true, true);
-                ClipboardContent content = new ClipboardContent();
-                content.putImage(dragMiniature);
-                db.setContent(content);
-                event.consume();
-                controller.setCardPlayed(controller.getCurrentHandLeft());
-            });
-            ivc.setOnDragDetected(event -> {
-                Dragboard db = ivc.startDragAndDrop(TransferMode.MOVE);
-                Image dragMiniature = new Image(ivc.getImage().getUrl(), 150, 100, true, true);
-                ClipboardContent content = new ClipboardContent();
-                content.putImage(dragMiniature);
-                db.setContent(content);
-                event.consume();
-                controller.setCardPlayed(controller.getCurrentHandCenter());
-            });
-            ivr.setOnDragDetected(event -> {
-                Dragboard db = ivr.startDragAndDrop(TransferMode.MOVE);
-                Image dragMiniature = new Image(ivr.getImage().getUrl(), 150, 100, true, true);
-                ClipboardContent content = new ClipboardContent();
-                content.putImage(dragMiniature);
-                db.setContent(content);
-                event.consume();
-                controller.setCardPlayed(controller.getCurrentHandRight());
-            });
+            if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandLeft())){
+                ivl.setOnDragDetected(event -> {
+                    Dragboard db = ivl.startDragAndDrop(TransferMode.MOVE);
+                    Image dragMiniature = new Image(ivl.getImage().getUrl(), 150, 100, true, true);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putImage(dragMiniature);
+                    db.setContent(content);
+                    event.consume();
+                    controller.setCardPlayed(controller.getCurrentHandLeft());
+                });
+            }
+            if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandCenter())) {
+                ivc.setOnDragDetected(event -> {
+                    Dragboard db = ivc.startDragAndDrop(TransferMode.MOVE);
+                    Image dragMiniature = new Image(ivc.getImage().getUrl(), 150, 100, true, true);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putImage(dragMiniature);
+                    db.setContent(content);
+                    event.consume();
+                    controller.setCardPlayed(controller.getCurrentHandCenter());
+                });
+            }
+            if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandRight())) {
+                ivr.setOnDragDetected(event -> {
+                    Dragboard db = ivr.startDragAndDrop(TransferMode.MOVE);
+                    Image dragMiniature = new Image(ivr.getImage().getUrl(), 150, 100, true, true);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putImage(dragMiniature);
+                    db.setContent(content);
+                    event.consume();
+                    controller.setCardPlayed(controller.getCurrentHandRight());
+                });
+            }
             ivl.setOnDragDone(event -> {
                 try {
                     if(controller.getPosPlayed()!=null){
