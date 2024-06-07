@@ -12,7 +12,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -386,25 +390,85 @@ public class GUIsocket extends Application{
             //  controller.updateGrounds(g.getPlayers());
             controller.addGround(g, p);
             showYourTurn(stage, p, g);
-            try {
-                Position pos = controller.playCard(p, g);
-                PlayableCard c = controller.returnCardPlayed();
-                client.sendToServer(c);
-                client.sendToServer(pos);
-                if(client.receiveBooleanFromServer()){
-                    //  showTwentyPoints(stage);     ha vinto
-                }
-                else{
-                    switchToDraw(stage);
-                }
-            } catch (IOException | ClassNotFoundException ex) {
+            ArrayList<ImageView> listOfPos = controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
+            ImageView ivl = controller.getHandCardLeft();
+            ImageView ivc = controller.getHandCardCenter();
+            ImageView ivr = controller.getHandCardRight();
+           // Position po = controller.playCard(p, g);
+            //PlayableCard c = controller.returnCardPlayed();
+            //client.sendToServer(c);
+           //  client.sendToServer(pos);
+            for(ImageView  zone : listOfPos){
+                controller.setDropZones(zone);
+            }
+            ivl.setOnDragDetected(event -> {
+                Dragboard db = ivl.startDragAndDrop(TransferMode.MOVE);
+                Image dragMiniature = new Image(ivl.getImage().getUrl(), 150, 100, true, true);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(dragMiniature);
+                db.setContent(content);
+                event.consume();
+                controller.setCardPlayed(controller.getCurrentHandLeft());
+            });
+            ivc.setOnDragDetected(event -> {
+                Dragboard db = ivc.startDragAndDrop(TransferMode.MOVE);
+                Image dragMiniature = new Image(ivc.getImage().getUrl(), 150, 100, true, true);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(dragMiniature);
+                db.setContent(content);
+                event.consume();
+                controller.setCardPlayed(controller.getCurrentHandCenter());
+            });
+            ivr.setOnDragDetected(event -> {
+                Dragboard db = ivr.startDragAndDrop(TransferMode.MOVE);
+                Image dragMiniature = new Image(ivr.getImage().getUrl(), 150, 100, true, true);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(dragMiniature);
+                db.setContent(content);
+                event.consume();
+                controller.setCardPlayed(controller.getCurrentHandRight());
+            });
+            ivl.setOnDragDone(event -> {
                 try {
-                    showError(stage);
-                } catch (IOException e) {
+                    client.sendToServer(controller.getCardPlayed());
+                    client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                    if(client.receiveBooleanFromServer()){
+                        //  showTwentyPoints(stage);     ha vinto
+                    }
+                    else{
+                        switchToDraw(stage);
+                    }
+                } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
-                throw new RuntimeException(ex);
-            }
+            });
+            ivc.setOnDragDone(event -> {
+                try {
+                    client.sendToServer(controller.getCardPlayed());
+                    client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                    if (client.receiveBooleanFromServer()) {
+                        //  showTwentyPoints(stage);     ha vinto
+                    } else {
+                        switchToDraw(stage);
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            ivr.setOnDragDone(event -> {
+                try {
+                    client.sendToServer(controller.getCardPlayed());
+                    client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                    if (client.receiveBooleanFromServer()) {
+                        //  showTwentyPoints(stage);     ha vinto
+                    } else {
+                        switchToDraw(stage);
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
         }
         else{ // ultimo turno
             switchToLastTurn(stage, p, g);

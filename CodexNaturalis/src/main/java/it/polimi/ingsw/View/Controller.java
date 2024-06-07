@@ -71,6 +71,44 @@ public class Controller {
     private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
     private PlayableCard currentHandLeft, currentHandCenter, currentHandRight;
     private String nick2, nick3, nick4;
+    private boolean isDragged = false;
+    private PlayableCard cardPlayed;
+    private Position posPlayed;
+
+    public PlayableCard getCurrentHandLeft(){
+        return currentHandLeft;
+    }
+    public PlayableCard getCurrentHandCenter(){
+        return currentHandCenter;
+    }
+    public PlayableCard getCurrentHandRight(){
+        return currentHandRight;
+    }
+    public Position getPosPlayed(){
+        return posPlayed;
+    }
+    public PlayableCard getCardPlayed(){
+        return cardPlayed;
+    }
+    public void setCardPlayed(PlayableCard card){
+        cardPlayed=card;
+    }
+    public ArrayList<Position> getAvailablePos(){
+        return availablePos;
+    }
+    public ImageView getHandCardCenter() {
+        return handCardCenter;
+    }
+
+    public ImageView getHandCardLeft() {
+        return handCardLeft;
+    }
+    public ImageView getHandCardRight(){
+        return handCardRight;
+    }
+    public boolean getIsDragged(){
+        return isDragged;
+    }
     public AnchorPane getAnchor2() {return anchor2;}
     public Button getNickButton() {
         return nickButton;
@@ -157,6 +195,12 @@ public class Controller {
     public Label getLabelPoints2(){return labelPoints2;}
     public Label getLabelPoints3(){return labelPoints3;}
     public Label getLabelPoints4(){return labelPoints4;}
+    public Position reconvertPosition(Position pos){
+        Position toReturn = new Position(0, 0);
+        toReturn.setX(pos.getX()+converter);
+        toReturn.setY(pos.getY()+converter);
+        return toReturn;
+    }
 
     public void addRoomsMenu() throws IOException, ClassNotFoundException {
         confirmRoom.setVisible(false);
@@ -320,7 +364,7 @@ public class Controller {
         gridPaneGround.add(iv, 4, 4);
     }
 
-    public Position playCard(Player p, Game g) throws IOException, ClassNotFoundException {
+    /*public Position playCard(Player p, Game g) throws IOException, ClassNotFoundException {
         showAvailablePos(p.getPlayerGround().getAvailablePositions());
         setDragDetected(handCardLeft);
         setDragDetected(handCardCenter);
@@ -340,8 +384,8 @@ public class Controller {
         else{
             addCards(g.getDecks());
             return true;
-        }*/
-    }
+        }
+    }*/
 
     public PlayableCard returnCardPlayed(){
         PlayableCard toReturn = null;
@@ -447,7 +491,7 @@ public class Controller {
         });
     }
 
-    private Node getImageViewFromPos (int x, int y) {
+    public Node getImageViewFromPos (int x, int y) {
         for (Node node : gridPaneGround.getChildren()) {
             if ((node != null) && (GridPane.getColumnIndex(node) == x && GridPane.getRowIndex(node) == y)) {
                 return node;
@@ -456,10 +500,8 @@ public class Controller {
         return null;
     }
 
-    public Position setDropZones(ImageView zone) {
-            //ImageView zone = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
-            //gridPaneGround.add(zone, pos.getX(), pos.getY());
-        Position[] droppedPos = new Position[1];
+    public void setDropZones(ImageView zone) {
+        isDragged = false;
         zone.setOnDragOver(e -> {
             if (e.getDragboard().hasImage()) {
                 e.acceptTransferModes(TransferMode.MOVE);
@@ -492,11 +534,11 @@ public class Controller {
                 }
                 success = true;
             }
-            droppedPos[0] = new Position(GridPane.getColumnIndex(zone), GridPane.getRowIndex(zone));
+            posPlayed = new Position(GridPane.getColumnIndex(zone), GridPane.getRowIndex(zone));
             e.setDropCompleted(success);
+            isDragged = true;
             e.consume();
         });
-        return droppedPos[0];
     }
 
     private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
@@ -554,15 +596,18 @@ public class Controller {
         return toReturn[0];
     }
 
-    public void showAvailablePos(Set<Position> pos) {
+    public ArrayList<ImageView> showAvailablePos(Set<Position> pos) {
         int x, y;
+        ArrayList<ImageView> imageViewArrayList = new ArrayList<ImageView>();
         for (Position p : pos) {
             y = p.getX() - converter;   // maybe
             x = p.getY() - converter;
-            Image image = new Image("file:" + emptyImagePath, 150, 100, false, false);
-            gridPaneGround.add((new ImageView(image)), x, y);
+            ImageView image = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
+            gridPaneGround.add(image, x, y);
+            imageViewArrayList.add(image);
             availablePos.add(new Position(x, y));
         }
+        return imageViewArrayList;
     }
 
     public boolean isFound(ArrayList<Position> list, Position pos){
