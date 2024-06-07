@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.effect.*;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -209,22 +210,30 @@ public class GUIsocket extends Application{
         String[] choice = new String[1];
         String[] choiceCurr = new String[1];
         choiceCurr[0] = "";
+        Glow highlight = new Glow(1.0);
         Set<String> colors = client.receiveColorsFromServer();
         showColor(colors, controller);
         controller.getRed().getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
+            if (newValue != null || newValue==oldValue) {
+                if(oldValue!=null){
+                    ((ToggleButton)oldValue).setEffect(null);
+                }
                 controller.getConfirmColor().setVisible(true);
                 controller.getConfirmColor().setDisable(false);
                 if (newValue.equals(controller.getRed())) {
+                    ((ToggleButton)newValue).setEffect(highlight);
                     choice[0] = "red";
                 }
                 if (newValue.equals(controller.getBlue())) {
+                    ((ToggleButton)newValue).setEffect(highlight);
                     choice[0] = "blue";
                 }
                 if (newValue.equals(controller.getGreen())) {
+                    ((ToggleButton)newValue).setEffect(highlight);
                     choice[0] = "green";
                 }
                 if (newValue.equals(controller.getYellow())) {
+                    ((ToggleButton)newValue).setEffect(highlight);
                     choice[0] = "yellow";
                 }
                 boolean[] flag = {false};
@@ -383,21 +392,19 @@ public class GUIsocket extends Application{
         controller.setStreams(client);
         controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
         //controller.updateGrounds(g.getPlayers());      updatare playerground altri giocatori
-        g = client.receiveGameFromServer();
-        p = client.receivePlayerFromServer();
+        Game[] game = new Game[1];
+        Player[] player = new Player[1];
+        game[0] = client.receiveGameFromServer();
+        player[0] = client.receivePlayerFromServer();
        //  controller.setLinkToPlayerGrounds(g, p);   TO DO: mostrare playground altri giocatori
         if(!client.receiveBooleanFromServer()){    // if not last turn
             //  controller.updateGrounds(g.getPlayers());
-            controller.addGround(g, p);
-            showYourTurn(stage, p, g);
-            ArrayList<ImageView> listOfPos = controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
+            controller.addGround(game[0], player[0]);
+            showYourTurn(stage, player[0], game[0]);
+            ArrayList<ImageView> listOfPos = controller.showAvailablePos(player[0].getPlayerGround().getAvailablePositions());
             ImageView ivl = controller.getHandCardLeft();
             ImageView ivc = controller.getHandCardCenter();
             ImageView ivr = controller.getHandCardRight();
-           // Position po = controller.playCard(p, g);
-            //PlayableCard c = controller.returnCardPlayed();
-            //client.sendToServer(c);
-           //  client.sendToServer(pos);
             for(ImageView  zone : listOfPos){
                 controller.setDropZones(zone);
             }
@@ -430,13 +437,19 @@ public class GUIsocket extends Application{
             });
             ivl.setOnDragDone(event -> {
                 try {
-                    client.sendToServer(controller.getCardPlayed());
-                    client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                    if(client.receiveBooleanFromServer()){
-                        //  showTwentyPoints(stage);     ha vinto
-                    }
-                    else{
-                        switchToDraw(stage);
+                    if(controller.getPosPlayed()!=null){
+                        client.sendToServer(controller.getCardPlayed());
+                        client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                        controller.updateAfterPlay(client.receivePlayerFromServer());
+                        if (client.receiveBooleanFromServer()) {
+                            switchToWaitingFinish(stage);
+                        } else {
+                            if (client.receiveBooleanFromServer()) {
+                                switchToDraw(stage);
+                            } else {
+                                notYourTurn(stage, game[0], player[0], controller);
+                            }
+                        }
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
@@ -444,12 +457,19 @@ public class GUIsocket extends Application{
             });
             ivc.setOnDragDone(event -> {
                 try {
-                    client.sendToServer(controller.getCardPlayed());
-                    client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                    if (client.receiveBooleanFromServer()) {
-                        //  showTwentyPoints(stage);     ha vinto
-                    } else {
-                        switchToDraw(stage);
+                    if(controller.getPosPlayed()!=null) {
+                        client.sendToServer(controller.getCardPlayed());
+                        client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                        controller.updateAfterPlay(client.receivePlayerFromServer());
+                        if (client.receiveBooleanFromServer()) {
+                            switchToWaitingFinish(stage);
+                        } else {
+                            if (client.receiveBooleanFromServer()) {
+                                switchToDraw(stage);
+                            } else {
+                                notYourTurn(stage, game[0], player[0], controller);
+                            }
+                        }
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
@@ -457,18 +477,24 @@ public class GUIsocket extends Application{
             });
             ivr.setOnDragDone(event -> {
                 try {
-                    client.sendToServer(controller.getCardPlayed());
-                    client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                    if (client.receiveBooleanFromServer()) {
-                        //  showTwentyPoints(stage);     ha vinto
-                    } else {
-                        switchToDraw(stage);
+                    if(controller.getPosPlayed()!=null) {
+                        client.sendToServer(controller.getCardPlayed());
+                        client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                        controller.updateAfterPlay(client.receivePlayerFromServer());
+                        if (client.receiveBooleanFromServer()) {
+                            switchToWaitingFinish(stage);
+                        } else {
+                            if (client.receiveBooleanFromServer()) {
+                                switchToDraw(stage);
+                            } else {
+                                notYourTurn(stage, game[0], player[0], controller);
+                            }
+                        }
                     }
                 } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             });
-
         }
         else{ // ultimo turno
             switchToLastTurn(stage, p, g);

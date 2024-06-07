@@ -152,6 +152,15 @@ public class Player implements Serializable {
     }
 
     /**
+     * The method gets the color associated with this player.
+     *
+     * @return player's color.
+     */
+    public String getColor(){
+        return color;
+    }
+
+    /**
      * The method sends a message to the global chat, where every player can read it. The global chat can be obtained
      * from the game instance.
      *

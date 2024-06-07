@@ -24,7 +24,7 @@
                   <Insets left="200.0" right="200.0" />
                </VBox.margin>
                <children>
-                  <ToggleButton fx:id="red" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #ff1f1f;" toggleGroup="$colors">
+                  <ToggleButton fx:id="red" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #a90303;" toggleGroup="$colors">
                      <toggleGroup>
                         <ToggleGroup fx:id="colors" />
                      </toggleGroup>
@@ -32,17 +32,17 @@
                         <Insets right="20.0" />
                      </HBox.margin>
                   </ToggleButton>
-                  <ToggleButton fx:id="blue" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: DODGERBLUE;" toggleGroup="$colors">
+                  <ToggleButton fx:id="blue" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #1472d2;" toggleGroup="$colors">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </ToggleButton>
-                  <ToggleButton fx:id="green" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #55e43f;" toggleGroup="$colors">
+                  <ToggleButton fx:id="green" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #338d25;" toggleGroup="$colors">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
                   </ToggleButton>
-                  <ToggleButton fx:id="yellow" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #fff11f;" toggleGroup="$colors">
+                  <ToggleButton fx:id="yellow" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #9117b0;" toggleGroup="$colors">
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>

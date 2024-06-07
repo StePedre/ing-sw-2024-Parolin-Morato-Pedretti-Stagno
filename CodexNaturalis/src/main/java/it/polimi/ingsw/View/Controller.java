@@ -279,6 +279,8 @@ public class Controller {
 
     public void addNames(Game g, Player p){
         labelNick.setText("Player: " + p.getNickname());
+        String color = colorToString(p.getColor());
+        labelNick.setStyle("-fx-text-fill: "+color);
         for(Player player: g.getPlayers()){
             if(!player.getNickname().equals(p.getNickname())){
                 if(!labelPoints2.isVisible()){
@@ -303,14 +305,20 @@ public class Controller {
         labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
         for(Player player: g.getPlayers()){
             if(!player.getNickname().equals(p.getNickname())){
-                if(player.getNickname().equals(nick2)){
+                if(player.getNickname().equals(nick2)) {
                     labelPoints2.setText(nick2 + ": " + player.getPlayerGround().getPlayerScore());
+                    String color = colorToString(player.getColor());
+                    labelPoints2.setStyle("-fx-text-fill: " + color);
                 }
                 else if(player.getNickname().equals(nick3)){
                     labelPoints3.setText(nick3 + ": " + player.getPlayerGround().getPlayerScore());
+                    String color = colorToString(player.getColor());
+                    labelPoints2.setStyle("-fx-text-fill: " + color);
                 }
                 else if(player.getNickname().equals(nick4)){
                     labelPoints4.setText(nick4 + ": " + player.getPlayerGround().getPlayerScore());
+                    String color = colorToString(player.getColor());
+                    labelPoints2.setStyle("-fx-text-fill: " + color);
                 }
             }
         }
@@ -320,16 +328,56 @@ public class Controller {
         setTotalResource(p.getPlayerGround().getTotalResources());
     }
 
+    public String colorToString(String color){
+        String c = "";
+        if(color.equals("red")){
+            c = "#a90303";
+        }
+        if(color.equals("blue")){
+            c = "#1472d2";
+        }
+        if(color.equals("green")){
+            c = "#338d25";
+        }
+        if(color.equals("yellow")){
+            c = "#9117b0";
+        }
+        return c;
+    }
+
+    public void updateAfterPlay(Player p){
+        addImages(p.getHand());
+        setTotalResource(p.getPlayerGround().getTotalResources());
+        labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
+    }
     public void setLinkToPlayerGrounds(Game g, Player p){
        // to do
     }
     public void addImages(Hand hand) {
-        handCardLeft.setImage(new Image("file:" + imagesFrontPath + hand.getCard(0).getId() + ".png"));
-        currentHandLeft = hand.getCard(0);
-        handCardCenter.setImage(new Image("file:" + imagesFrontPath + hand.getCard(1).getId() + ".png"));
-        currentHandCenter = hand.getCard(1);
-        handCardRight.setImage(new Image("file:" + imagesFrontPath + hand.getCard(2).getId() + ".png"));
-        currentHandRight = hand.getCard(2);
+        if(hand.getCard(0)==null){
+            handCardLeft.setImage(new Image("file:" + emptyImagePath));
+            currentHandLeft = null;
+        }
+        else{
+            handCardLeft.setImage(new Image("file:" + imagesFrontPath + hand.getCard(0).getId() + ".png"));
+            currentHandLeft = hand.getCard(0);
+        }
+        if(hand.getCard(1)==null){
+            handCardCenter.setImage(new Image("file:" + emptyImagePath));
+            currentHandCenter = null;
+        }
+        else{
+            handCardCenter.setImage(new Image("file:" + imagesFrontPath + hand.getCard(1).getId() + ".png"));
+            currentHandCenter = hand.getCard(1);
+        }
+        if(hand.getCard(2)==null){
+            handCardRight.setImage(new Image("file:" + emptyImagePath));
+            currentHandRight = null;
+        }
+        else{
+            handCardRight.setImage(new Image("file:" + imagesFrontPath + hand.getCard(2).getId() + ".png"));
+            currentHandRight = hand.getCard(2);
+        }
     }
 
     public void addSecretObj(ObjectiveCard secretObjective) {
