@@ -66,7 +66,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/roomChoice.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor2().getChildren().addFirst(background);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
@@ -149,7 +148,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/insertNick.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getNickAnchor().getChildren().addFirst(background);
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
@@ -182,7 +180,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/requestNoPlayers.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor3().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -202,7 +199,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/colorChoice.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor10().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -287,7 +283,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/startingCardChoice.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor6().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -325,7 +320,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/selectSecretObjs.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor7().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -365,7 +359,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         Game g = client.receiveGameFromServer();
         Player p = client.receivePlayerFromServer();
         controller.addNames(g, p);
@@ -389,7 +382,6 @@ public class GUIsocket extends Application{
         Parent root = loader.load();
         Controller controllerDeck = loader.getController();
         controllerDeck.addCards(g.getDecks());*/
-        controller.setStreams(client);
         controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
         //controller.updateGrounds(g.getPlayers());      updatare playerground altri giocatori
         Game[] game = new Game[1];
@@ -514,9 +506,8 @@ public class GUIsocket extends Application{
     }
 
     public void notYourTurn(Stage stage, Game g, Player p, Controller controller) {
-        controller.setStreams(client);
         controller.addGround(g, p);
-        controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
+        //controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
         Task<Integer> task = new Task<>(){
             @Override
             protected Integer call() throws Exception {
@@ -535,7 +526,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/errorMessageBanner.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         Stage stage2 = new Stage();
         stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
         stage2.initOwner(stage);
@@ -549,7 +539,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/yourTurn.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         Stage stage2 = new Stage();
         stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
         stage2.initOwner(stage);
@@ -572,76 +561,81 @@ public class GUIsocket extends Application{
         Controller controller = loader.getController();
         controller.addCards(game.getDecks());
         stage2.show();
-            int[] choice = new int[] { -1 };
-            DropShadow dropShadow = new DropShadow();
-            dropShadow.setRadius(5);
-            dropShadow.setColor(javafx.scene.paint.Color.BLUE);
-            controller.getResUp1().setOnMouseClicked(e -> {
-                try {
-                    controller.getResUp1().setEffect(dropShadow);
-                    client.sendToServer(0);
-                    stage2.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(5);
+        dropShadow.setColor(javafx.scene.paint.Color.BLUE);
+        controller.getResUp1().setOnMouseClicked(e -> {
+            try {
+                controller.getResUp1().setEffect(dropShadow);
+                client.sendToServer(0);
+                stage2.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        controller.getResUp2().setOnMouseClicked(e -> {
+            try {
+                controller.getResUp2().setEffect(dropShadow);
+                client.sendToServer(1);
+                stage2.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        controller.getResDeck().setOnMouseClicked(e ->{
+            try {
+                controller.getResDeck().setEffect(dropShadow);
+                client.sendToServer(2);
+                stage2.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        controller.getGoldUp1().setOnMouseClicked(e ->{
+            try {
+                controller.getGoldUp1().setEffect(dropShadow);
+                client.sendToServer(3);
+                stage2.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        controller.getGoldUp2().setOnMouseClicked(e -> {
+            try {
+                controller.getGoldUp2().setEffect(dropShadow);
+                client.sendToServer(4);
+                stage2.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        controller.getGoldDeck().setOnMouseClicked(e-> {
+            try {
+                controller.getGoldDeck().setEffect(dropShadow);
+                client.sendToServer(5);
+                stage2.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        stage2.setOnCloseRequest( e -> {
+            try {
+                Game g = client.receiveGameFromServer();
+                Player p = client.receivePlayerFromServer();
+                if(!client.receiveBooleanFromServer()){
+                    notYourTurn(stage, g, p, controller);
                 }
-            });
-            controller.getResUp2().setOnMouseClicked(e -> {
-                try {
-                    controller.getResUp2().setEffect(dropShadow);
-                    client.sendToServer(1);
-                    stage2.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-            controller.getResDeck().setOnMouseClicked(e ->{
-                try {
-                    controller.getResDeck().setEffect(dropShadow);
-                    client.sendToServer(2);
-                    stage2.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-            controller.getGoldUp1().setOnMouseClicked(e ->{
-                try {
-                    controller.getGoldUp1().setEffect(dropShadow);
-                    client.sendToServer(3);
-                    stage2.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-            controller.getGoldUp2().setOnMouseClicked(e -> {
-                try {
-                    controller.getGoldUp2().setEffect(dropShadow);
-                    client.sendToServer(4);
-                    stage2.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-            controller.getGoldDeck().setOnMouseClicked(e-> {
-                try {
-                    controller.getGoldDeck().setEffect(dropShadow);
-                    client.sendToServer(5);
-                    stage2.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-        Game g = client.receiveGameFromServer();
-        Player p = client.receivePlayerFromServer();
-        if(!client.receiveBooleanFromServer()){
-            notYourTurn(stage, g, p, controller);
-        }
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
     }
 
     public void switchToWaitingStart(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingStart.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor4().getChildren().addFirst(background);
         Player player = client.receivePlayerFromServer();
         controller.getStartLabel().setText("Please "+player.getNickname()+", wait for other players to join.");
@@ -681,17 +675,16 @@ public class GUIsocket extends Application{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingFinish.fxml"));
             Parent root = loader.load();
             Controller controller = loader.getController();
-            controller.setStreams(client);
             controller.getAnchor5().getChildren().addFirst(background);
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
-            ArrayList<Player> winners = controller.getWinners();
+            /*ArrayList<Player> winners = controller.getWinners();
             if (winners.size() == 1) {
                 showSingleWinner(stage, winners);
             } else {
                 showWinners(stage, winners);
-            }
+            }*/
         } catch(IOException e) {
             try {
                 showError(stage);
@@ -705,7 +698,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/winners.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor9().getChildren().addFirst(background);
         String x = "";
         for(Player p: winners){
@@ -725,7 +717,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/winner.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         controller.getAnchor8().getChildren().addFirst(background);
         controller.getWinnerName().setText("The winner is "+winners.getFirst().getNickname()+" !");
         Scene scene = new Scene(root);
@@ -738,7 +729,6 @@ public class GUIsocket extends Application{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/20points.fxml"));
             Parent root = loader.load();
             Controller controller = loader.getController();
-            controller.setStreams(client);
             Stage stage2 = new Stage();
             stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
             stage2.initOwner(stage);
@@ -776,7 +766,6 @@ public class GUIsocket extends Application{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/zeroCards.fxml"));
             Parent root = loader.load();
             Controller controller = loader.getController();
-            controller.setStreams(client);
             Stage stage2 = new Stage();
             stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
             stage2.initOwner(stage);
@@ -815,7 +804,6 @@ public class GUIsocket extends Application{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lastTurn.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
-        controller.setStreams(client);
         Stage stage2 = new Stage();
         stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
         stage2.initOwner(stage);
