@@ -446,7 +446,7 @@ public class GUIsocket extends Application{
                     if(controller.getPosPlayed()!=null){
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        controller.updateAfterPlay(client.receivePlayerFromServer());
+                        controller.updateAfterPlay(client.receivePlayerFromServer());  // works
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
                         } else {
@@ -481,7 +481,7 @@ public class GUIsocket extends Application{
                     throw new RuntimeException(e);
                 }
             });
-            ivr.setOnDragDone(event -> {
+           ivr.setOnDragDone(event -> {
                 try {
                     if(controller.getPosPlayed()!=null) {
                         client.sendToServer(controller.getCardPlayed());
@@ -491,7 +491,8 @@ public class GUIsocket extends Application{
                             switchToWaitingFinish(stage);
                         } else {
                             if (client.receiveBooleanFromServer()) {
-                                switchToDraw(stage);
+                               // switchToDraw(stage);
+                                switchToLogin(stage);
                             } else {
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
@@ -556,7 +557,7 @@ public class GUIsocket extends Application{
     }
 
     public void switchToDraw(Stage stage) throws IOException, ClassNotFoundException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
+      /*  FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
         Parent root = loader.load();
         Stage stage2 = new Stage();
         stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
@@ -583,7 +584,7 @@ public class GUIsocket extends Application{
         Player p = client.receivePlayerFromServer();
         if(!client.receiveBooleanFromServer()){  // check if over
             //showUpdatedPlayerGround(stage, g, p, controller);
-        }
+        }*/
 
     }
 

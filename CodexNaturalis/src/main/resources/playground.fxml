@@ -18,7 +18,7 @@
 <HBox fx:id="playGroundHBox" alignment="CENTER" prefHeight="${screenHeight}" prefWidth="${screenWidth}" style="-fx-background-color: #E4CAA9" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
     <AnchorPane fx:id="playGroundAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
         <HBox fx:id="hboxHand" layoutX="630.0" layoutY="950.0" prefHeight="100.0" prefWidth="440.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="420.0" AnchorPane.rightAnchor="420.0">
-            <ImageView fx:id="handCardCenter" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="handCardLeft" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
                 <HBox.margin>
                     <Insets top="2.5" />
                 </HBox.margin>
@@ -28,7 +28,7 @@
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></ImageView>
-            <ImageView fx:id="handCardLeft" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="handCardCenter" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
                 <HBox.margin>
                     <Insets left="10.0" top="2.5" />
                 </HBox.margin>
