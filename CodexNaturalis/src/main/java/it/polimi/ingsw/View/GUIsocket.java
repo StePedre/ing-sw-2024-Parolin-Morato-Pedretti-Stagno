@@ -451,8 +451,10 @@ public class GUIsocket extends Application{
                             switchToWaitingFinish(stage);
                         } else {
                             if (client.receiveBooleanFromServer()) {
-                                switchToDraw(stage);
+                                event.consume();
+                                switchToDraw(stage, g);
                             } else {
+                                event.consume();
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
                         }
@@ -471,8 +473,10 @@ public class GUIsocket extends Application{
                             switchToWaitingFinish(stage);
                         } else {
                             if (client.receiveBooleanFromServer()) {
-                                switchToDraw(stage);
+                                event.consume();
+                                switchToDraw(stage, g);
                             } else {
+                                event.consume();
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
                         }
@@ -491,9 +495,10 @@ public class GUIsocket extends Application{
                             switchToWaitingFinish(stage);
                         } else {
                             if (client.receiveBooleanFromServer()) {
-                               // switchToDraw(stage);
-                                switchToLogin(stage);
+                                event.consume();
+                                switchToDraw(stage, g);
                             } else {
+                                event.consume();
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
                         }
@@ -556,8 +561,8 @@ public class GUIsocket extends Application{
         });
     }
 
-    public void switchToDraw(Stage stage) throws IOException, ClassNotFoundException {
-      /*  FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
+    public void switchToDraw(Stage stage, Game game) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
         Parent root = loader.load();
         Stage stage2 = new Stage();
         stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
@@ -565,27 +570,71 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root);
         stage2.setScene(scene);
         Controller controller = loader.getController();
-        controller.setStreams(client);
-        stage2.addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, event -> {
-            try {
-                if (!controller.yourTurnDraw()) {
-                    event.consume(); // Previene la chiusura della finestra in teoria
-                }
-            } catch (IOException e) {
+        controller.addCards(game.getDecks());
+        stage2.show();
+            int[] choice = new int[] { -1 };
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setRadius(5);
+            dropShadow.setColor(javafx.scene.paint.Color.BLUE);
+            controller.getResUp1().setOnMouseClicked(e -> {
                 try {
-                    showError(stage);
+                    controller.getResUp1().setEffect(dropShadow);
+                    client.sendToServer(0);
+                    stage2.close();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-                throw new RuntimeException(e);
-            }
-        });
+            });
+            controller.getResUp2().setOnMouseClicked(e -> {
+                try {
+                    controller.getResUp2().setEffect(dropShadow);
+                    client.sendToServer(1);
+                    stage2.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            controller.getResDeck().setOnMouseClicked(e ->{
+                try {
+                    controller.getResDeck().setEffect(dropShadow);
+                    client.sendToServer(2);
+                    stage2.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            controller.getGoldUp1().setOnMouseClicked(e ->{
+                try {
+                    controller.getGoldUp1().setEffect(dropShadow);
+                    client.sendToServer(3);
+                    stage2.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            controller.getGoldUp2().setOnMouseClicked(e -> {
+                try {
+                    controller.getGoldUp2().setEffect(dropShadow);
+                    client.sendToServer(4);
+                    stage2.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            controller.getGoldDeck().setOnMouseClicked(e-> {
+                try {
+                    controller.getGoldDeck().setEffect(dropShadow);
+                    client.sendToServer(5);
+                    stage2.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
         Game g = client.receiveGameFromServer();
         Player p = client.receivePlayerFromServer();
-        if(!client.receiveBooleanFromServer()){  // check if over
-            //showUpdatedPlayerGround(stage, g, p, controller);
-        }*/
-
+        if(!client.receiveBooleanFromServer()){
+            notYourTurn(stage, g, p, controller);
+        }
     }
 
     public void switchToWaitingStart(Stage stage) throws IOException, ClassNotFoundException {

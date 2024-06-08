@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -54,7 +55,7 @@ public class Controller {
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
     @FXML
-    private ImageView goldFaceDown, resFaceDown, goldFaceUp1, goldFaceUp2, resFaceUp1, resFaceUp2;
+    private ImageView resUp1, resUp2, resDeck, goldUp1, goldUp2, goldDeck;
     private GUIClientSocket client; // togliere riferimenti socket al controller GUI (this)
     @FXML
     private Label labelPoints, labelPoints2, labelPoints3, labelPoints4, mushroomNum, bugNum, leafNum, foxNum, potionNum, scrollNum, plumeNum;
@@ -84,9 +85,13 @@ public class Controller {
     public PlayableCard getCurrentHandRight(){
         return currentHandRight;
     }
-    public Position getPosPlayed(){
-        return posPlayed;
-    }
+    public Position getPosPlayed(){ return posPlayed;}
+    public ImageView getResUp1(){return resUp1;}
+    public ImageView getResUp2(){return resUp2;}
+    public ImageView getResDeck(){return resDeck;}
+    public ImageView getGoldUp1(){return goldUp1;}
+    public ImageView getGoldUp2(){return goldUp2;}
+    public ImageView getGoldDeck(){return goldDeck;}
     public PlayableCard getCardPlayed(){
         return cardPlayed;
     }
@@ -451,58 +456,12 @@ public class Controller {
 
 
     public void addCards(Deck[] decks) {
-      //  buttonSubDraw.setVisible(false);
-        resFaceUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(0).getId()));
-        resFaceUp2.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(1).getId()));
-        resFaceDown.setImage(new Image("file:" + imagesBackPath + decks[0].getCards().get(2).getId()));
-        goldFaceUp1.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(0).getId()));
-        goldFaceUp2.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(1).getId()));
-        goldFaceDown.setImage(new Image("file:" + imagesBackPath + decks[1].getCards().get(2).getId()));
-    }
-
-
-    public boolean yourTurnDraw() throws IOException {
-        int[] choice = new int[] { -1 };
-    /*    DropShadow dropShadow = new DropShadow();
-        dropShadow.setRadius(5);
-        dropShadow.setColor(javafx.scene.paint.Color.BLUE);
-
-        resFaceDown.setOnMouseClicked(event -> {
-            choice[0] = 0;
-            resFaceDown.setEffect(dropShadow);
-        });
-        resFaceUp1.setOnMouseClicked(event -> {
-            choice[0] = 1;
-            resFaceUp1.setEffect(dropShadow);
-            buttonSubDraw.setVisible(true);
-        });
-        resFaceUp2.setOnMouseClicked(event ->{
-            choice[0] = 2;
-            resFaceUp2.setEffect(dropShadow);
-            buttonSubDraw.setVisible(true);
-        });
-        goldFaceDown.setOnMouseClicked(event ->{
-            choice[0] = 3;
-            goldFaceDown.setEffect(dropShadow);
-            buttonSubDraw.setVisible(true);
-        });
-        goldFaceUp1.setOnMouseClicked(event -> {
-            choice[0] = 4;
-            goldFaceUp1.setEffect(dropShadow);
-            buttonSubDraw.setVisible(true);
-        });
-        goldFaceUp2.setOnMouseClicked(event-> {
-            choice[0] = 5;
-            goldFaceUp2.setEffect(dropShadow);
-            buttonSubDraw.setVisible(true);
-        });
-
-        buttonSubDraw.setOnAction(event -> {
-            Stage stage = (Stage) (buttonSubDraw.getScene().getWindow());
-            stage.close();
-        });
-        client.sendToServer(choice[0]);*/
-        return true;
+        resUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(0).getId()+".png"));
+        resUp2.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(1).getId()+".png"));
+        resDeck.setImage(new Image("file:" + imagesBackPath + decks[0].getCards().get(2).getId()+".png"));
+        goldUp1.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(0).getId()+".png"));
+        goldUp2.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(1).getId()+".png"));
+        goldDeck.setImage(new Image("file:" + imagesBackPath + decks[1].getCards().get(2).getId()+".png"));
     }
 
     public void putDrawnInHand(PlayableCard card){
