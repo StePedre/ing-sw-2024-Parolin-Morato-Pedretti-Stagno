@@ -43,8 +43,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 while(!game.isOver()){
                     if(game.getNumPlayer()!=game.getExpPlayers()){
                         try {
-                            game.removePlayer(player.getNickname());
-                            System.out.println("il player " + player.getNickname() + " si è disconnesso");
                             socket.close();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
@@ -65,7 +63,10 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 out.writeObject(false);  // non è il suo turno
             }
             while(true){// start game flow
-                while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){  // finchè non è il suo turno
+                while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){// finchè non è il suo turno
+                    if(socket.isClosed()){
+                        throw new IOException();
+                    }
                 }
                 out.writeObject(true);//è il tuo turno
                 sendData();
@@ -113,7 +114,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         catch (IOException | ClassNotFoundException | InvalidPositionException e) {
             game.removePlayer(player.getNickname());
             System.out.println("il player " + player.getNickname() + " si è disconnesso");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     public void playCard() throws IOException, ClassNotFoundException {
