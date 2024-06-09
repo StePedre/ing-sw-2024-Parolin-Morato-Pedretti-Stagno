@@ -43,6 +43,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 while(!game.isOver()){
                     if(game.getNumPlayer()!=game.getExpPlayers()){
                         try {
+                            game.removePlayer(player.getNickname());
+                            System.out.println("il player " + player.getNickname() + " si è disconnesso");
                             socket.close();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
@@ -108,14 +110,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             over();
             socket.close();
         }
-        catch (IOException | ClassNotFoundException | InvalidPositionException e){
-            //creare eccezione per chiudere socket sul MyServerSocket
-            game.removePlayer(player.getNickname());
-            System.out.println("il player " + player.getNickname() +" si è disconnesso" );
-            //e.printStackTrace();
+        catch (IOException | ClassNotFoundException | InvalidPositionException e) {
+            e.printStackTrace();
         }
-
-
     }
     public void playCard() throws IOException, ClassNotFoundException {
         try {
