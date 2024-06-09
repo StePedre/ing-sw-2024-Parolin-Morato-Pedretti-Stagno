@@ -66,7 +66,7 @@ public class RoundController implements Serializable {
             }
         }
     }
-    public synchronized Player getCurrentPlayer(){
+    public Player getCurrentPlayer(){
         return players.get(round);
     }
     public synchronized void setEnding(){isEnding = true;}

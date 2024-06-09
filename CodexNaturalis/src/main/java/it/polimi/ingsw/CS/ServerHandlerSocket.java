@@ -127,10 +127,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             out.writeObject(player);
             out.reset();
         }
-        catch (MissingResourcesException e){
-            e.printStackTrace();
-        }
-        catch (InvalidPositionException e){
+        catch (MissingResourcesException | InvalidPositionException e){
             e.printStackTrace();
         }
     }
