@@ -10,23 +10,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="drawAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="${screenHeight}" prefWidth="${screenWidth}" style="-fx-background-color: #E4CAA9" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
+<AnchorPane fx:id="drawAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768" prefWidth="1366" style="-fx-background-color: #E4CAA9" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
       <children>
-         <VBox alignment="CENTER" prefHeight="694.0" prefWidth="244.0">
+         <VBox alignment="BOTTOM_CENTER" prefHeight="668.0" prefWidth="220.0">
             <children>
-               <Label prefWidth="176.0" rotate="-90.0" text="Gold cards" textAlignment="CENTER" VBox.vgrow="NEVER">
+               <Label alignment="CENTER" prefHeight="31.0" prefWidth="134.0" rotate="-90.0" text="Gold cards" textAlignment="CENTER" VBox.vgrow="NEVER">
                   <font>
-                     <Font name="Bookman Old Style" size="30.0" />
+                     <Font name="Bookman Old Style" size="24.0" />
                   </font>
                   <VBox.margin>
-                     <Insets bottom="250.0" />
+                     <Insets bottom="220.0" />
                   </VBox.margin>
                </Label>
-               <Label rotate="-90.0" text="Resource cards">
+               <Label alignment="CENTER" rotate="-90.0" text="Resource cards">
                   <font>
-                     <Font name="Bookman Old Style" size="30.0" />
+                     <Font name="Bookman Old Style" size="24.0" />
                   </font>
+                  <VBox.margin>
+                     <Insets bottom="170.0" />
+                  </VBox.margin>
                </Label>
             </children>
             <HBox.margin>
@@ -38,7 +41,22 @@
          </VBox>
          <VBox alignment="CENTER" prefHeight="668.0" prefWidth="1043.0">
             <children>
-               <HBox alignment="CENTER_LEFT" prefHeight="256.0" prefWidth="1137.0">
+               <HBox alignment="CENTER_RIGHT" prefHeight="42.0" prefWidth="999.0">
+                  <children>
+                     <Label text="First of the deck">
+                        <font>
+                           <Font name="Bookman Old Style" size="30.0" />
+                        </font>
+                        <HBox.margin>
+                           <Insets right="55.0" />
+                        </HBox.margin>
+                     </Label>
+                  </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
+               </HBox>
+               <HBox alignment="CENTER" prefHeight="256.0" prefWidth="1137.0">
                   <children>
                      <ImageView fx:id="goldUp1" fitHeight="188.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true">
                         <effect>
@@ -72,7 +90,7 @@
                      <Insets />
                   </opaqueInsets>
                </HBox>
-               <HBox alignment="CENTER_LEFT" prefHeight="256.0" prefWidth="1137.0">
+               <HBox alignment="CENTER" prefHeight="256.0" prefWidth="1137.0">
                   <children>
                      <ImageView fx:id="resUp1" fitHeight="188.0" fitWidth="282.0" pickOnBounds="true" preserveRatio="true">
                         <effect>
@@ -105,11 +123,20 @@
                </HBox>
             </children>
          </VBox>
+         <VBox alignment="CENTER" prefHeight="668.0" prefWidth="220.0">
+            <opaqueInsets>
+               <Insets />
+            </opaqueInsets>
+         </VBox>
       </children>
    </HBox>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="669.0" layoutY="48.0" text="It's time to draw, choose a card:" textAlignment="CENTER" AnchorPane.bottomAnchor="650.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="60.0">
-      <font>
-         <Font name="Bookman Old Style" size="30.0" />
-      </font>
-   </Label>
+   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="680.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="30.0">
+      <children>
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="57.0" prefWidth="526.0" text="It's time to draw, choose a card:" textAlignment="CENTER">
+            <font>
+               <Font name="Bookman Old Style" size="30.0" />
+            </font>
+         </Label>
+      </children>
+   </HBox>
 </AnchorPane>

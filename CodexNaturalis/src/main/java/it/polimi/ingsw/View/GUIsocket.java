@@ -563,10 +563,27 @@ public class GUIsocket extends Application{
         stage2.show();
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(5);
+        InnerShadow innerShadow = new InnerShadow();
+        innerShadow.setBlurType(BlurType.THREE_PASS_BOX);
+        innerShadow.setChoke(0.1);
+        innerShadow.setWidth(30.0);
+        innerShadow.setHeight(30.0);
+        innerShadow.setRadius(14.5);
         dropShadow.setColor(javafx.scene.paint.Color.BLUE);
+        controller.getResUp1().setOnMouseEntered(e -> controller.getResUp1().setEffect(dropShadow));
+        controller.getResUp2().setOnMouseEntered(e -> controller.getResUp2().setEffect(dropShadow));
+        controller.getResDeck().setOnMouseEntered(e -> controller.getResDeck().setEffect(dropShadow));
+        controller.getGoldUp1().setOnMouseEntered(e -> controller.getGoldUp1().setEffect(dropShadow));
+        controller.getGoldUp2().setOnMouseEntered(e -> controller.getGoldUp2().setEffect(dropShadow));
+        controller.getGoldDeck().setOnMouseEntered(e -> controller.getGoldDeck().setEffect(dropShadow));
+        controller.getResUp1().setOnMouseExited(e -> controller.getResUp1().setEffect(innerShadow));
+        controller.getResUp2().setOnMouseExited(e -> controller.getResUp2().setEffect(innerShadow));
+        controller.getResDeck().setOnMouseExited(e -> controller.getResDeck().setEffect(innerShadow));
+        controller.getGoldUp1().setOnMouseExited(e -> controller.getGoldUp1().setEffect(innerShadow));
+        controller.getGoldUp2().setOnMouseExited(e -> controller.getGoldUp2().setEffect(innerShadow));
+        controller.getGoldDeck().setOnMouseExited(e -> controller.getGoldDeck().setEffect(innerShadow));
         controller.getResUp1().setOnMouseClicked(e -> {
             try {
-                controller.getResUp1().setEffect(dropShadow);
                 client.sendToServer(0);
                 stage2.close();
             } catch (IOException ex) {
@@ -575,7 +592,6 @@ public class GUIsocket extends Application{
         });
         controller.getResUp2().setOnMouseClicked(e -> {
             try {
-                controller.getResUp2().setEffect(dropShadow);
                 client.sendToServer(1);
                 stage2.close();
             } catch (IOException ex) {
@@ -584,7 +600,6 @@ public class GUIsocket extends Application{
         });
         controller.getResDeck().setOnMouseClicked(e ->{
             try {
-                controller.getResDeck().setEffect(dropShadow);
                 client.sendToServer(2);
                 stage2.close();
             } catch (IOException ex) {
@@ -593,7 +608,6 @@ public class GUIsocket extends Application{
         });
         controller.getGoldUp1().setOnMouseClicked(e ->{
             try {
-                controller.getGoldUp1().setEffect(dropShadow);
                 client.sendToServer(3);
                 stage2.close();
             } catch (IOException ex) {
@@ -602,7 +616,6 @@ public class GUIsocket extends Application{
         });
         controller.getGoldUp2().setOnMouseClicked(e -> {
             try {
-                controller.getGoldUp2().setEffect(dropShadow);
                 client.sendToServer(4);
                 stage2.close();
             } catch (IOException ex) {
@@ -611,7 +624,6 @@ public class GUIsocket extends Application{
         });
         controller.getGoldDeck().setOnMouseClicked(e-> {
             try {
-                controller.getGoldDeck().setEffect(dropShadow);
                 client.sendToServer(5);
                 stage2.close();
             } catch (IOException ex) {
