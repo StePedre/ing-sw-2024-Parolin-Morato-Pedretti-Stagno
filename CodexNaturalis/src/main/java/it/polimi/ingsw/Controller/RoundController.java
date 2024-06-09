@@ -39,11 +39,10 @@ public class RoundController implements Serializable {
             isEnding = false;
             lastTurn = true;
         }
-        if(!(lastTurn && LastPlayer.equals(players.get(round)))) {
-            if (round == players.size() - 1)
-                round = 0;
-            else
-                round++;
+        if (round == players.size() - 1) {
+            round = 0;
+        }else {
+            round++;
         }
     }
 
