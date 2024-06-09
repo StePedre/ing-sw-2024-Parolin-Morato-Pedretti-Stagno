@@ -92,7 +92,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 else{
                     out.writeObject(false);
                 }
-                if(game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0){//controllo numeri carte deck
+                if(game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0 && !rc.isEnding()){//controllo numeri carte deck
                     rc.setEnding();
                 }
                 rc.nextRound();
