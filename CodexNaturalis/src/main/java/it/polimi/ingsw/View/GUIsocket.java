@@ -21,13 +21,10 @@ import javafx.scene.effect.*;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import javafx.animation.*;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -505,21 +502,29 @@ public class GUIsocket extends Application{
         }
     }
 
-    public void notYourTurn(Stage stage, Game g, Player p, Controller controller) {
+    public void notYourTurn(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
         controller.addGround(g, p);
+        /*if(client.receiveBooleanFromServer()){
+            yourTurn(stage, g, p, controller);
+        }*/
         //controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
         Task<Integer> task = new Task<>(){
             @Override
             protected Integer call() throws Exception {
-                if(client.receiveBooleanFromServer()){
-                    yourTurn(stage, g, p, controller);
-                }
+                client.receiveBooleanFromServer();
                 return null;
             }
         };
         Thread t = new Thread(task);
         t.setDaemon(true);
         t.start();
+        task.setOnSucceeded(event -> {
+            try {
+                yourTurn(stage, g, p, controller);
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public void showError(Stage stage) throws IOException {
