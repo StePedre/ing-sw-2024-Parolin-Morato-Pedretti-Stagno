@@ -77,7 +77,7 @@ public class Deck implements Serializable {
      * a negative number or a number bigger than current deck's size.
      */
     public PlayableCard drawCard(int position) {
-        if (position >= 0 && position < cards.size()) {
+        if (position >= 0 && position < 3) {
             return cards.remove(position);
         } else {
             throw new IndexOutOfBoundsException("Invalid position: " + position);
