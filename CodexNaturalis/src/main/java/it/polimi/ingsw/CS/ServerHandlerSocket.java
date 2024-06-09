@@ -111,6 +111,8 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
             socket.close();
         }
         catch (IOException | ClassNotFoundException | InvalidPositionException e) {
+            game.removePlayer(player.getNickname());
+            System.out.println("il player " + player.getNickname() + " si è disconnesso");
             e.printStackTrace();
         }
     }
