@@ -11,5 +11,6 @@ import java.rmi.RemoteException;
 public interface ClientRMIInterface extends Remote {
     void runClient() throws IOException, InvalidPositionException, MissingResourcesException;
 
+    void writeMessage(String message) throws RemoteException;
 
 }

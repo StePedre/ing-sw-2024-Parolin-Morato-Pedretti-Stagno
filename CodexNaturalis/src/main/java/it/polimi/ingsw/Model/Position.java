@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Class Position is used in every PlayerGround to identify the position of each card.
@@ -68,10 +69,17 @@ public class Position implements Serializable {
      * @return false if the object is null or from a different class,
      *         true if they have both the same coordinates.
      */
+    @Override
     public boolean equals(Object obj) {
+        if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Position position = (Position) obj;
         return x == position.x && y == position.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
 }

@@ -152,7 +152,7 @@ public class PlayerGround implements Serializable {
      * @exception InvalidPositionException arises when the desired position does not belong to available positions set.
      */
     public void placeCard(StarterCard starterCard, Position position) throws InvalidPositionException{
-        if (!checkPosition(position, availablePositions)) {
+        if (!availablePositions.contains(position)) {
             throw new InvalidPositionException("Invalid position");
         }
         if(!starterCard.getFlip()){
@@ -177,7 +177,7 @@ public class PlayerGround implements Serializable {
         if (!checkRequirements(playableCard)) {
             throw new MissingResourcesException("Required resources are missing");
         }
-        if (!checkPosition(position,availablePositions)) {
+        if (!availablePositions.contains(position)) {
             throw new InvalidPositionException("Invalid position");
         }
         // Adds the back resource if the playableCard is flipped
@@ -252,7 +252,7 @@ public class PlayerGround implements Serializable {
                 int newX = placePosition.getX() + calculateOffset(i);
                 int newY = placePosition.getY() + calculateOffset(j);
                 Card card = ground[newX][newY];
-                if (card != null) {
+                if (card != null && card.getId() != -1) {
                     // Calculates the index of the corresponding corner that is covered if you place the card in the placePosition
                     int newCornerPos = i + 2 * j;
                     int cornerPos = 3 - (i + 2 * j);
@@ -261,7 +261,10 @@ public class PlayerGround implements Serializable {
                         Resource resourceToRemove = card.getShowedCorners()[cornerPos].getCornerRes();
                         card.getShowedCorners()[cornerPos].setResource(newCard.getShowedCorners()[newCornerPos].getCornerRes());
                         updateSingleResource(-1, resourceToRemove);
+                    }else{
+                        System.out.println("\nERRORE\n");
                     }
+
                 }
 
             }
@@ -324,6 +327,10 @@ public class PlayerGround implements Serializable {
      */
     private void updatePositionsAvailability(Card card, Position placePosition) {
         removeAvailableNumber(placePosition);
+        // Removes the current position from the availablePositions
+        availablePositions.remove(placePosition);
+        unavailablePositions.add(placePosition);
+        lastPositionPlaced = placePosition;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 // Calculates one of the 4 position around the placePosition
@@ -331,7 +338,7 @@ public class PlayerGround implements Serializable {
                 int newY = placePosition.getY() + calculateOffset(j);
                 Position newPosition = new Position(newX, newY);
                 // checks if the ground is free in that position and if is not unavailable
-                if ((ground[newX][newY] == null || ground[newX][newY].getId() ==-1) && !checkPosition(newPosition, unavailablePositions)) {
+                if ((ground[newX][newY] == null || ground[newX][newY].getId() ==-1) && !unavailablePositions.contains(newPosition)) {
                     // calculates the index of the corresponding covering corner and checks its availability
                     int cornerPosition = i + 2 * j;
                     if (card.getShowedCorners()[cornerPosition].getAvailability()) {
@@ -341,7 +348,7 @@ public class PlayerGround implements Serializable {
                     } else {
                         // if the corner is not available, the newPosition becomes unavailable
                         unavailablePositions.add(newPosition);
-                        availablePositions.remove(getExactPosition(newPosition, availablePositions));
+                        availablePositions.remove(newPosition);
                         removeAvailableNumber(newPosition);
                         ground[newX][newY] = null;
                     }
@@ -349,9 +356,6 @@ public class PlayerGround implements Serializable {
 
             }
         }
-        // Removes the current position from the availablePositions
-        availablePositions.remove(getExactPosition(placePosition, availablePositions));
-        lastPositionPlaced = placePosition;
     }
 
 
@@ -412,18 +416,18 @@ public class PlayerGround implements Serializable {
         positions.forEach(p -> {
             // Checks if the current position has a card with a color equal to the first color of the composition and
             // Checks if the current position is already inside takenPositions
-            if (ground[p.getX()][p.getY()].getColor() == colors[0] && !checkPosition(p, takenPositions)) {
+            if (ground[p.getX()][p.getY()].getColor() == colors[0] && !takenPositions.contains(p)) {
                 // Calculates the nex position thanks to the offsets of the composition
                 int secondX = p.getX() + offSets[1].getX();
                 int secondY = p.getY() + offSets[1].getY();
                 Position secondPosition = new Position(secondX, secondY);
                 // Checks if the second position has a card with a color equal to the second color of the composition and
                 // Checks if the second position is already inside takenPositions
-                if (ground[secondX][secondY].getColor() == colors[1] && !checkPosition(secondPosition, takenPositions)) {
+                if (ground[secondX][secondY].getColor() == colors[1] && !takenPositions.contains(secondPosition)) {
                     int thirdX = p.getX() + offSets[2].getX();
                     int thirdY = p.getY() + offSets[2].getY();
                     Position thirdPosition = new Position(thirdX, thirdY);
-                    if (ground[thirdX][thirdY].getColor() == colors[2] && !checkPosition(thirdPosition, takenPositions)) {
+                    if (ground[thirdX][thirdY].getColor() == colors[2] && !takenPositions.contains(thirdPosition)) {
                         // Composition found; increments the atomicInteger and saves the 3 positions found into takenPositions
                         count.set(count.getAndIncrement());
                         takenPositions.add(p);
@@ -447,39 +451,6 @@ public class PlayerGround implements Serializable {
         return value == 0 ? -1 : 1;
     }
 
-    /**
-     * The method check if a position is contained in a set of position
-     *
-     * @param position the position to check
-     * @param positions the set of position
-     * @return true if the position is contained, false otherwise
-     */
-
-    private boolean checkPosition(Position position, Set<Position> positions){
-        for(Position p : positions){
-            if(p.getX() == position.getX() && p.getY() == position.getY()){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * The method return the exact object position contained in a set of position in base of a other given position object
-     *
-     * @param position the position given
-     * @param positions teh set of position
-     * @return the object position contained in the set
-     */
-    private Position getExactPosition(Position position, Set<Position> positions){
-        for(Position p : positions){
-            if(position.getX() == p.getX() && position.getY() == p.getY()){
-                return p;
-            }
-
-        }
-        return position; //return null non è meglio?
-    }
 
     /**
      *
@@ -487,7 +458,7 @@ public class PlayerGround implements Serializable {
      * @param position
      */
     private void addAvailableNumber(Position position) {
-        if (availableNumbers.containsValue(getExactPosition(position,availablePositions))) {
+        if (availableNumbers.containsValue(position)) {
             return;
         }
         int lowestAvailableKey = 1;
@@ -505,7 +476,7 @@ public class PlayerGround implements Serializable {
     private void removeAvailableNumber(Position position) {
         Integer keyToRemove = null;
         for (Map.Entry<Integer, Position> entry : availableNumbers.entrySet()) {
-            if (entry.getValue().equals(getExactPosition(position, availablePositions))) {
+            if (entry.getValue().equals(position)) {
                 keyToRemove = entry.getKey();
                 break;
             }

@@ -125,5 +125,4 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         return true;
     }
 
-
 }

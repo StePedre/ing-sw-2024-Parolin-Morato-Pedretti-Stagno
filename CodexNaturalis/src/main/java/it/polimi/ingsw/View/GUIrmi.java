@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.CS.MyClientRMI;
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.CS.ServerRMIInterface;
 import it.polimi.ingsw.Controller.PlayerController;
@@ -159,7 +160,7 @@ public class GUIrmi extends Application {
         Button nickButton = controller.getNickButton();
         nickButton.setOnAction(actionEvent -> {
             try {
-
+                MyClientRMI client = new MyClientRMI("rmi://localhost/ServerRMI", false);
                 if (server.addNewPlayer(controller.getNickname(), roomName) == null) {
                     controller.getNickLabel().setPrefWidth(800);    // eventualmente aggiungere un'altra label
                     controller.getNickLabel().setStyle("-fx-text-fill: #b20b0b");

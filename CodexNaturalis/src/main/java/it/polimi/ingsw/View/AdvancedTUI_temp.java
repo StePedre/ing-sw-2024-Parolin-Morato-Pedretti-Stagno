@@ -18,14 +18,15 @@ public class AdvancedTUI_temp {
         Card[][] ground = playerGround.getGround();
         Set<Position> availablePosition = new HashSet<>(playerGround.getAvailablePositions());
         Set<Position> unavailablePosition = new HashSet<>(playerGround.getUnavailablePositions());
-        Map<Position, Integer> positionIntegerMap = new HashMap<>();
-        int counter = 0;
-        for (Position position : availablePosition) {
-            positionIntegerMap.put(position, counter);
-            counter++;
-        }
-
         availablePosition.addAll(unavailablePosition);
+
+        Map<Integer, Position> numbers = playerGround.getAvailableNumbers();
+
+        for (Map.Entry<Integer, Position> entry : numbers.entrySet()) {
+            Integer number = entry.getKey();
+            Position position = entry.getValue();
+            System.out.println("Number: " + number + ", Position: X: " + position.getX() + " Y: " + position.getY());
+        }
 
         int maxX = availablePosition.stream()
                 .mapToInt(Position::getX)
@@ -47,41 +48,14 @@ public class AdvancedTUI_temp {
                 .min()
                 .orElse(0);
 
-        int lengthX = maxX - minX;
-        int lengthY = maxY - minY;
+        int lengthX = maxY - minY;
+        int lengthY = maxX - minX;
 
-        String topBorder = "";
         String contentLine1 =  "";
         String contentLine2 =  "";
         String contentLine3 =  "";
         String contentLine4 = "";
 
-        /* boolean state = true;
-        for(int i = lengthY, maxYOffset = maxY; i >=0; i--, maxYOffset--){
-            for(int j = 0, minXOffset = minX; j <lengthX ; j++, minXOffset++ ){
-                if(ground[minXOffset][maxY] != null) {
-                    //contentLine1.append(getGridLine1(ground[minXOffset][maxY]).append(ground[minXOffset][maxY].getId()));
-                    contentLine1.append(1);
-                }else{
-                    //contentLine1.append(getGridLine1(ground[minXOffset][maxY]));
-                    contentLine1.append(0);
-                }
-                //contentLine2.append(getGridLine2(ground[minXOffset][maxY]));
-                //contentLine3.append(getGridLine3(ground[minXOffset][maxY]));
-                if(state) {
-                    //contentLine4.append(getGridLine4(ground[minXOffset][maxY], state));
-                }else{
-                    int maxY2 = maxY--;
-                    //contentLine4.append(getGridLine4(ground[minXOffset][maxY2], state));
-                }
-                state = !state;
-            }
-            System.out.println(contentLine1);
-            //System.out.println(contentLine2);
-            //System.out.println(contentLine3);
-            //System.out.println(contentLine4);
-
-        } */
         // scrittura di una matrice 0 e 1 con 1 dove c'è una carta
         Card[][] matrixToPrint = new Card[84][84];
         for(int i = 0, maxYOffset = maxY; i <= lengthY; i++, maxYOffset--){
@@ -99,17 +73,17 @@ public class AdvancedTUI_temp {
         System.out.println("Your play ground looks like this:\n");
         System.out.println("\n");
         for (int j = lengthX; j >= 0; j--) {
-                contentLine4 += getGridLine5(matrixToPrint[j][lengthY], false);
+                contentLine4 += getGridLine5(matrixToPrint[j][0], false);
         }
         System.out.println("                       " + contentLine4 + "                       ");
         contentLine4 = "";
-        for (int i = lengthY; i >= 0; i--) {
+        for (int i = 0; i <= lengthY; i++) {
             for (int j = lengthX; j >= 0; j--) {
                 contentLine1 += getGridLine1(matrixToPrint[j][i]);
                 contentLine2 += getGridLine2(matrixToPrint[j][i],minX + i, maxY - j, playerGround);
                 contentLine3 += getGridLine3(matrixToPrint[j][i]);
-                if(matrixToPrint[j][i] == null && i-1 >= 0) {
-                        contentLine4 += getGridLine5(matrixToPrint[j][i - 1], false);
+                if(matrixToPrint[j][i] == null && i+1 <= lengthY) {
+                        contentLine4 += getGridLine5(matrixToPrint[j][i + 1], false);
                 }else{
                         contentLine4 += getGridLine4(matrixToPrint[j][i], true);
                 }
@@ -167,11 +141,11 @@ public class AdvancedTUI_temp {
         cards.getFirst().flipCard();
 
         for(int i = 0; i <= 2; i++){
-            topBorder.append(" ").append(cornerColor(cards.get(i).getShowedCorners()[1])).append(cardColor(cards.get(i))).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[3])).append(" ");
+            topBorder.append(" ").append(cornerColor(cards.get(i).getShowedCorners()[0])).append(cardColor(cards.get(i))).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[2])).append(" ");
             contentLine1.append(cardColor(cards.get(i))).append(" ▌").append(cardContent(cards.get(i))).append(cardColor(cards.get(i))).append("▌ ");
             contentLine2.append(cardColor(cards.get(i))).append(" ▌").append(cardResource(cards.get(i))).append(cardColor(cards.get(i))).append("▌ ");
             contentLine3.append(cardColor(cards.get(i))).append(" ▌").append(cardRequirements(cards.get(i))).append(cardColor(cards.get(i))).append("▌ ");
-            buttonBorder.append(" ").append(cornerColor(cards.get(i).getShowedCorners()[0])).append(cardColor(cards.get(i))).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[2])).append(" ");
+            buttonBorder.append(" ").append(cornerColor(cards.get(i).getShowedCorners()[1])).append(cardColor(cards.get(i))).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[3])).append(" ");
         }
 
         System.out.println(topBorder);
@@ -218,17 +192,17 @@ public class AdvancedTUI_temp {
         String ANSI_RESET = "\u001B[0m";
 
 
-            topBorder.append(" ").append(cornerColor(card.getCorners()[1])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ ").append(ANSI_RESET).append(cornerColor(card.getCorners()[3])).append(" ");
+            topBorder.append(" ").append(cornerColor(card.getCorners()[0])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ ").append(ANSI_RESET).append(cornerColor(card.getCorners()[2])).append(" ");
             contentLine1.append("\u001B[0m").append(" ▌").append(firstCardContent(card,1)).append("\u001B[0m").append("▌  ");
             contentLine2.append("\u001B[0m").append(" ▌").append(firstCardContent(card,2)).append("\u001B[0m").append("▌  ");
             contentLine3.append("\u001B[0m").append(" ▌").append(firstCardContent(card,3)).append("\u001B[0m").append("▌  ");
-            buttonBorder.append(" ").append(cornerColor(card.getCorners()[0])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ ").append(ANSI_RESET).append(cornerColor(card.getCorners()[2])).append(" ");
+            buttonBorder.append(" ").append(cornerColor(card.getCorners()[1])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ ").append(ANSI_RESET).append(cornerColor(card.getCorners()[3])).append(" ");
 
-        topBorder.append(" ").append(cornerColor(card.getBackCorners()[1])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(card.getBackCorners()[3])).append(" ");
+        topBorder.append(" ").append(cornerColor(card.getBackCorners()[0])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(card.getBackCorners()[2])).append(" ");
         contentLine1.append("\u001B[0m").append(" ▌").append("                    ").append("\u001B[0m").append("▌ ");
         contentLine2.append("\u001B[0m").append(" ▌").append("                    ").append("\u001B[0m").append("▌ ");
         contentLine3.append("\u001B[0m").append(" ▌").append("                    ").append("\u001B[0m").append("▌ ");
-        buttonBorder.append(" ").append(cornerColor(card.getBackCorners()[0])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(card.getBackCorners()[2])).append(" ");
+        buttonBorder.append(" ").append(cornerColor(card.getBackCorners()[1])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(card.getBackCorners()[3])).append(" ");
 
 
         System.out.println("                        " + topBorder);
@@ -271,11 +245,11 @@ public class AdvancedTUI_temp {
 
         for(int i = 0; i<cards.length; i++){
             if(cards[i] !=null) {
-                topBorder.append(" ").append(cornerColor(cards[i].getShowedCorners()[1])).append(cardColor(cards[i])).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[3])).append(" ");
+                topBorder.append(" ").append(cornerColor(cards[i].getShowedCorners()[0])).append(cardColor(cards[i])).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[2])).append(" ");
                 contentLine1.append(cardColor(cards[i])).append(" ▌").append(cardContent(cards[i])).append(cardColor(cards[i])).append("▌ ");
                 contentLine2.append(cardColor(cards[i])).append(" ▌").append(cardResource(cards[i])).append(cardColor(cards[i])).append("▌ ");
                 contentLine3.append(cardColor(cards[i])).append(" ▌").append(cardRequirements(cards[i])).append(cardColor(cards[i])).append("▌ ");
-                buttonBorder.append(" ").append(cornerColor(cards[i].getShowedCorners()[0])).append(cardColor(cards[i])).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[2])).append(" ");
+                buttonBorder.append(" ").append(cornerColor(cards[i].getShowedCorners()[1])).append(cardColor(cards[i])).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[3])).append(" ");
             }
         }
         //print Secret Objective
@@ -283,7 +257,7 @@ public class AdvancedTUI_temp {
         contentLine1.append("\u001B[33m").append(" ▌").append(firstLineObjective(objective)).append("\u001B[33m").append("▌ ");
         contentLine2.append("\u001B[33m").append(" ▌").append(secondLineObjective(objective)).append("\u001B[33m").append("▌ ");
         contentLine3.append("\u001B[33m").append(" ▌").append(thirdLineObjective(objective)).append("\u001B[33m").append("▌ ");
-        buttonBorder.append("  ").append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
+        buttonBorder.append("  ").append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append("\u001B[0m");
         // Print the card
         System.out.println(topBorder);
         System.out.println(contentLine1);
@@ -341,9 +315,9 @@ public class AdvancedTUI_temp {
 
         }
         if(state) {
-            return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
+            return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
         }
-        return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+        return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
     }
 
     private static String getGridLine5(Card card, boolean state){
@@ -355,9 +329,9 @@ public class AdvancedTUI_temp {
             return cardColor(card) + " ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + "\u001B[0m";
         }
         if(state) {
-            return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
+            return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
         }
-        return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+        return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
     }
 
 
@@ -377,10 +351,10 @@ public class AdvancedTUI_temp {
             return "█         "+ cornerColor(corner) +"        █";
         }
         if(state == 4 && !status){
-            return cornerColor(card.getShowedCorners()[1]) + "████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+            return cornerColor(card.getShowedCorners()[0]) + "████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
         }
         if(state == 4){
-            return cornerColor(card.getShowedCorners()[0]) + "████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
+            return cornerColor(card.getShowedCorners()[1]) + "████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
         }
         return "█                  █";
     }
@@ -617,22 +591,13 @@ public class AdvancedTUI_temp {
 
     public static int findPosition(Position position, PlayerGround ground) {
         for (Map.Entry<Integer, Position> entry : ground.getAvailableNumbers().entrySet()) {
-            if (entry.getValue().equals(getExactPosition(position, ground.getAvailablePositions()))) {
+            if (entry.getValue().equals(position)) {
                 return entry.getKey();
             }
         }
         return 0;
     }
 
-    private static Position getExactPosition(Position position, Set<Position> positions){
-        for(Position p : positions){
-            if(position.getX() == p.getX() && position.getY() == p.getY()){
-                return p;
-            }
-
-        }
-        return position;
-    }
 
     public static void main(String[] args) throws IOException, ParseException {
 

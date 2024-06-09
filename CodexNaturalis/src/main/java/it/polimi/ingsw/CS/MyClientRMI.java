@@ -44,7 +44,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     public void runClient() throws IOException, InvalidPositionException, MissingResourcesException {
         System.out.println("Client connected");
 
-        if(inter) {//decisione se usare TUI o GUIsocket
+        if(inter) {//decisione se usare TUI o GUI
             useTUI();
         }
         else{
@@ -52,15 +52,19 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
+    public void writeMessage(String message) throws RemoteException{
+        System.out.println(message);
+    }
+
     private void useTUI() throws IOException, InvalidPositionException, MissingResourcesException {
         tui = new TUI();
         tui.showRoom(server.showRooms());
         if(tui.chooseRoom()){
-          //  roomJoined = controlRoom(true, true);
+            roomJoined = controlRoom(true, server.getRooms().getRooms());
             server.addRoom(roomJoined);
             server.setPlayerNumber(tui.askPlayersNo(), roomJoined);
         }else{
-           // roomJoined = controlRoom2( false, true);
+            roomJoined = controlRoom2( false, server.getRooms().getRooms());
         }
             nickname = controlNickname(true);
             Player player = server.addNewPlayer(nickname, roomJoined);
@@ -121,7 +125,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                     break;
                 }else{
                     Room room = server.getRooms().getRoom(roomJoined);
-                    checkYourTurn();
+                    //checkYourTurn();
                     tui.notYourTurn(room.getGame(), room.getGame().getPlayer(nickname));
                 }
             }
@@ -155,23 +159,23 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
-/*    private String controlRoom(boolean choice, boolean choice2) throws RemoteException{
-        String roomName = tui.getRoomName(choice, choice2);
+    private String controlRoom(boolean choice, ArrayList<Room> rooms) throws RemoteException{
+        String roomName = tui.getRoomName(choice, rooms);
         if(server.getRooms().alredyExist(roomName)){
-            return controlRoom(choice, false);
+            return controlRoom(choice, rooms);
         } else {
             return roomName;
         }
     }
-    private String controlRoom2(boolean choice, boolean choice2) throws RemoteException{
-        String roomName = tui.getRoomName(choice, choice2);
+    private String controlRoom2(boolean choice, ArrayList<Room> rooms) throws RemoteException{
+        String roomName = tui.getRoomName(choice, rooms);
         if(server.getRooms().alredyExist(roomName)){
             return roomName;
         } else {
-            return controlRoom(choice, false);
+            return controlRoom(choice, rooms);
 
         }
-    }*/
+    }
 
     private void checkYourTurn(){
         Runnable myThread = () ->

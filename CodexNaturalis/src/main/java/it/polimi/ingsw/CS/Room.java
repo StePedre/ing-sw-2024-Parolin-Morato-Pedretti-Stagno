@@ -88,7 +88,7 @@ public class Room implements Serializable {
 
 
     public synchronized boolean isFull() {
-        return game.getNumPlayer() == game.getExpPlayers();
+        return game.getNumPlayer() == playerInRoom;
     }
 
     /**
