@@ -444,7 +444,7 @@ public class GUIsocket extends Application{
                         } else {
                             if (client.receiveBooleanFromServer()) {
                                 event.consume();
-                                switchToDraw(stage, g);
+                                switchToDraw(stage, g, controller);
                             } else {
                                 event.consume();
                                 notYourTurn(stage, game[0], player[0], controller);
@@ -466,7 +466,7 @@ public class GUIsocket extends Application{
                         } else {
                             if (client.receiveBooleanFromServer()) {
                                 event.consume();
-                                switchToDraw(stage, g);
+                                switchToDraw(stage, g, controller);
                             } else {
                                 event.consume();
                                 notYourTurn(stage, game[0], player[0], controller);
@@ -488,7 +488,7 @@ public class GUIsocket extends Application{
                         } else {
                             if (client.receiveBooleanFromServer()) {
                                 event.consume();
-                                switchToDraw(stage, g);
+                                switchToDraw(stage, g, controller);
                             } else {
                                 event.consume();
                                 notYourTurn(stage, game[0], player[0], controller);
@@ -550,7 +550,7 @@ public class GUIsocket extends Application{
         });
     }
 
-    public void switchToDraw(Stage stage, Game game) throws IOException, ClassNotFoundException {
+    public void switchToDraw(Stage stage, Game game, Controller playgroundController) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
         Parent root = loader.load();
         Stage stage2 = new Stage();
@@ -586,7 +586,12 @@ public class GUIsocket extends Application{
             try {
                 client.sendToServer(0);
                 stage2.close();
-            } catch (IOException ex) {
+                Game g = client.receiveGameFromServer();
+                Player p = client.receivePlayerFromServer();
+                if(!client.receiveBooleanFromServer()){
+                    notYourTurn(stage, g, p, playgroundController);
+                }
+            } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
@@ -594,7 +599,12 @@ public class GUIsocket extends Application{
             try {
                 client.sendToServer(1);
                 stage2.close();
-            } catch (IOException ex) {
+                Game g = client.receiveGameFromServer();
+                Player p = client.receivePlayerFromServer();
+                if(!client.receiveBooleanFromServer()){
+                    notYourTurn(stage, g, p, playgroundController);
+                }
+            } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
@@ -602,7 +612,12 @@ public class GUIsocket extends Application{
             try {
                 client.sendToServer(2);
                 stage2.close();
-            } catch (IOException ex) {
+                Game g = client.receiveGameFromServer();
+                Player p = client.receivePlayerFromServer();
+                if(!client.receiveBooleanFromServer()){
+                    notYourTurn(stage, g, p, playgroundController);
+                }
+            } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
@@ -610,7 +625,12 @@ public class GUIsocket extends Application{
             try {
                 client.sendToServer(3);
                 stage2.close();
-            } catch (IOException ex) {
+                Game g = client.receiveGameFromServer();
+                Player p = client.receivePlayerFromServer();
+                if(!client.receiveBooleanFromServer()){
+                    notYourTurn(stage, g, p, playgroundController);
+                }
+            } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
@@ -618,7 +638,12 @@ public class GUIsocket extends Application{
             try {
                 client.sendToServer(4);
                 stage2.close();
-            } catch (IOException ex) {
+                Game g = client.receiveGameFromServer();
+                Player p = client.receivePlayerFromServer();
+                if(!client.receiveBooleanFromServer()){
+                    notYourTurn(stage, g, p, playgroundController);
+                }
+            } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
@@ -626,23 +651,16 @@ public class GUIsocket extends Application{
             try {
                 client.sendToServer(5);
                 stage2.close();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-        stage2.setOnCloseRequest( e -> {
-            try {
                 Game g = client.receiveGameFromServer();
                 Player p = client.receivePlayerFromServer();
                 if(!client.receiveBooleanFromServer()){
-                    notYourTurn(stage, g, p, controller);
+                    notYourTurn(stage, g, p, playgroundController);
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
-
         });
-    }
+}
 
     public void switchToWaitingStart(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/waitingStart.fxml"));
