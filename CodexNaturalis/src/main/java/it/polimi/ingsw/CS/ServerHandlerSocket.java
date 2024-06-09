@@ -52,6 +52,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 }
             });
             game.addPlayer(player);
+            rc.addPlayer(player);
             while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
             }
             t.start();
@@ -246,7 +247,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         return nickname;
     }
     public void playerinit() throws IOException, ClassNotFoundException, InvalidPositionException {
-        rc.setPlayers(game.getPlayers());
         rc.setFirstPlayer();
         //PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
         pc.populateHand(game,player);
