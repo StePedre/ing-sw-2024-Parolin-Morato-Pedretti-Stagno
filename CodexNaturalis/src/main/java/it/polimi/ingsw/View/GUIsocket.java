@@ -375,11 +375,6 @@ public class GUIsocket extends Application{
     }
 
     public void yourTurn(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
-       /* FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
-        Parent root = loader.load();
-        Controller controllerDeck = loader.getController();
-        controllerDeck.addCards(g.getDecks());*/
-        controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
         //controller.updateGrounds(g.getPlayers());      updatare playerground altri giocatori
         Game[] game = new Game[1];
         Player[] player = new Player[1];
@@ -504,10 +499,6 @@ public class GUIsocket extends Application{
 
     public void notYourTurn(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
         controller.addGround(g, p);
-        /*if(client.receiveBooleanFromServer()){
-            yourTurn(stage, g, p, controller);
-        }*/
-        //controller.showAvailablePos(p.getPlayerGround().getAvailablePositions());
         Task<Integer> task = new Task<>(){
             @Override
             protected Integer call() throws Exception {

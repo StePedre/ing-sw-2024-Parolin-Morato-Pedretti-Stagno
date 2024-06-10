@@ -636,49 +636,6 @@ public class Controller {
         }
     }
 
-    public void putDrawnInHand(PlayableCard card) {
-        Image toPut = new Image("file:" + imagesFrontPath + card.getId() + ".png");
-        //       if(handCardRight.getImage() == voidImage){
-        handCardRight.setImage(toPut);
-        //      }
-        //      if(handCardCenter.getImage()==voidImage){
-        handCardCenter.setImage(toPut);
-        //       }
-        //      if(handCardLeft.getImage()==voidImage){
-        handCardLeft.setImage(toPut);
-        //     }
-    }
-
-  /*  public boolean waitForTurn(Stage stage) throws IOException, ClassNotFoundException {
-        // aspetta turno (scritta che indica turno corrente?)
-        // può vedere pg altri giocatori
-        return client.receiveBooleanFromServer();
-    }*/
-
-    /*public ArrayList<Player> getWinners() throws IOException, ClassNotFoundException {
-        return client.receiveWinnersFromServer();
-    }*/
-
-    public void setDragDetected(ImageView iv) {  //iv da dove parto (hand) iv2 dove arrivo)
-        iv.setOnDragDetected(event -> {
-            Dragboard db = iv.startDragAndDrop(TransferMode.MOVE);
-            Image dragMiniature = new Image(iv.getImage().getUrl(), 150, 100, true, true);
-            ClipboardContent content = new ClipboardContent();
-            content.putImage(dragMiniature);
-            db.setContent(content);
-            event.consume();
-        });
-    }
-
-    public Node getImageViewFromPos(int x, int y) {
-        for (Node node : gridPaneGround.getChildren()) {
-            if ((node != null) && (GridPane.getColumnIndex(node) == x && GridPane.getRowIndex(node) == y)) {
-                return node;
-            }
-        }
-        return null;
-    }
-
     public void setDropZones(ImageView zone) {
         isDragged = false;
         zone.setOnDragOver(e -> {
