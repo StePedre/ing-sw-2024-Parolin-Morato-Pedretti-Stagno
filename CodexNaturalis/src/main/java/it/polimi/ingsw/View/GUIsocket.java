@@ -690,9 +690,9 @@ public class GUIsocket extends Application{
                     if(client.receiveBooleanFromServer()){
                      //   controller.getStartLabel().setText("Every player has logged in!");
                      //   controller.getStartLabel2().setText("Press the button to continue.");
-                        controller.getWaitingBar().setVisible(false);
+                       /* controller.getWaitingBar().setVisible(false);
                         controller.getButtonStart().setDisable(false);
-                        controller.getButtonStart().setVisible(true);
+                        controller.getButtonStart().setVisible(true);*/
                     }
                 }
                 return null;
@@ -701,6 +701,13 @@ public class GUIsocket extends Application{
         Thread t = new Thread(task);
         t.setDaemon(true);
         t.start();
+        task.setOnSucceeded(event ->{
+            try {
+                switchToStarterChoice(stage);
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         controller.getButtonStart().setOnAction(e->{
             try {
                 switchToStarterChoice(stage);
