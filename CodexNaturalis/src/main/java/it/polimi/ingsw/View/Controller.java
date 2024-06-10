@@ -75,6 +75,8 @@ public class Controller {
     private PlayableCard cardPlayed;
     private Position posPlayed;
 
+    ArrayList<ImageView> imageViewArrayList = new ArrayList<ImageView>();
+    public ArrayList<ImageView> getImageViewList(){return imageViewArrayList;}
     public PlayableCard getCurrentHandLeft() {
         return currentHandLeft;
     }
@@ -565,29 +567,6 @@ public class Controller {
         gridPaneGround.add(iv, 4, 4);
     }
 
-    /*public Position playCard(Player p, Game g) throws IOException, ClassNotFoundException {
-        showAvailablePos(p.getPlayerGround().getAvailablePositions());
-        setDragDetected(handCardLeft);
-        setDragDetected(handCardCenter);
-        setDragDetected(handCardRight);
-        Position droppedP = new Position(-1, -1);
-        for(Position pos: availablePos){
-            ImageView zone = (ImageView) getImageViewFromPos(pos.getX(), pos.getY());
-            droppedP = setDropZones(zone);
-        }
-        return droppedP;
-       // p = client.receivePlayerFromServer();  // riceve player con mano aggiornata -> vedi placeCardController per capire com'è la nuova mano e aggiorna il playground
-
-     /*   if(client.receiveBooleanFromServer()){
-            // to do: cosa succede se ha vinto
-            return false;
-        }
-        else{
-            addCards(g.getDecks());
-            return true;
-        }
-    }*/
-
     public PlayableCard returnCardPlayed() {
         PlayableCard toReturn = null;
         if (setDropCompleted(handCardLeft)) {
@@ -663,6 +642,8 @@ public class Controller {
                 if (GridPane.getColumnIndex(zone) == 0 || GridPane.getRowIndex(zone) == 0) {
                     System.out.println("Top border");
                     addColumnRowTop();
+                    converter--;
+                    // bisogna aggiornare anche le posizioni available (da scalare)
                 }
                 if (GridPane.getColumnIndex(zone) == (gridPaneGround.getColumnCount() - 1) || GridPane.getRowIndex(zone) == (gridPaneGround.getRowCount() - 1)) {
                     System.out.println("Bottom border");
@@ -732,20 +713,18 @@ public class Controller {
         return toReturn[0];
     }
 
-    public ArrayList<ImageView> showAvailablePos(Set<Position> pos) {
+    public void showAvailablePos(Set<Position> pos) {
         int x, y;
-        ArrayList<ImageView> imageViewArrayList = new ArrayList<ImageView>();
         for (Position p : pos) {
             y = p.getX() - converter;   // maybe
             x = p.getY() - converter;
-            if(!availablePos.contains(new Position(x, y))){
+            if(!isFound(availablePos, new Position(x, y))){
                 ImageView image = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
                 gridPaneGround.add(image, x, y);
                 imageViewArrayList.add(image);
                 availablePos.add(new Position(x, y));
             }
         }
-        return imageViewArrayList;
     }
 
     public boolean isFound(ArrayList<Position> list, Position pos) {

@@ -385,11 +385,11 @@ public class GUIsocket extends Application{
             //  controller.updateGrounds(g.getPlayers());
             controller.addGround(game[0], player[0]);
             showYourTurn(stage, player[0], game[0]);
-            ArrayList<ImageView> listOfPos = controller.showAvailablePos(player[0].getPlayerGround().getAvailablePositions());
+            controller.showAvailablePos(player[0].getPlayerGround().getAvailablePositions());
             ImageView ivl = controller.getHandCardLeft();
             ImageView ivc = controller.getHandCardCenter();
             ImageView ivr = controller.getHandCardRight();
-            for(ImageView  zone : listOfPos){
+            for(ImageView  zone : controller.getImageViewList()){
                 controller.setDropZones(zone);
             }
             if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandLeft())){
