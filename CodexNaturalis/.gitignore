@@ -88,3 +88,6 @@ fabric.properties
 
 # .class file
 *.class
+
+# .png file
+*.png
