@@ -740,6 +740,39 @@ public class Controller {
         }
         return false;
     }
+
+    public void flipCard(Hand hand){
+        String face;
+        if(hand.getCard(0).getFlip()){
+            face = imagesBackPath;
+        }else{
+            face = imagesFrontPath;
+        }
+        if (hand.getCard(0) == null) {
+            handCardLeft.setImage(new Image("file:" + emptyImagePath));
+            currentHandLeft = null;
+        } else {
+            handCardLeft.setImage(new Image("file:" + face + hand.getCard(0).getId() + ".png"));
+            currentHandLeft = hand.getCard(0);
+            currentHandLeft.flipCard();
+        }
+        if (hand.getCard(1) == null) {
+            handCardCenter.setImage(new Image("file:" + emptyImagePath));
+            currentHandCenter = null;
+        } else {
+            handCardCenter.setImage(new Image("file:" + face + hand.getCard(1).getId() + ".png"));
+            currentHandCenter = hand.getCard(1);
+            currentHandCenter.flipCard();
+        }
+        if (hand.getCard(2) == null) {
+            handCardRight.setImage(new Image("file:" + emptyImagePath));
+            currentHandRight = null;
+        } else {
+            handCardRight.setImage(new Image("file:" + face + hand.getCard(2).getId() + ".png"));
+            currentHandRight = hand.getCard(2);
+            currentHandRight.flipCard();
+        }
+    }
 }
 
 
