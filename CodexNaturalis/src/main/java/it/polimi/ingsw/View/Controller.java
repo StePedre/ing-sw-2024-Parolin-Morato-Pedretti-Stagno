@@ -738,10 +738,12 @@ public class Controller {
         for (Position p : pos) {
             y = p.getX() - converter;   // maybe
             x = p.getY() - converter;
-            ImageView image = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
-            gridPaneGround.add(image, x, y);
-            imageViewArrayList.add(image);
-            availablePos.add(new Position(x, y));
+            if(!availablePos.contains(new Position(x, y))){
+                ImageView image = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
+                gridPaneGround.add(image, x, y);
+                imageViewArrayList.add(image);
+                availablePos.add(new Position(x, y));
+            }
         }
         return imageViewArrayList;
     }
