@@ -429,9 +429,9 @@ public class GUIsocket extends Application{
                 try {
                     if(controller.getPosPlayed()!=null){
                         client.sendToServer(controller.getCardPlayed());
-                        Position pos = controller.getPosPlayed();
+                        //Position pos = controller.getPosPlayed();
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        controller.updateAfterPlay(client.receivePlayerFromServer());  // works
+                        controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());  // works
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
                         } else {
@@ -453,7 +453,7 @@ public class GUIsocket extends Application{
                     if(controller.getPosPlayed()!=null) {
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        controller.updateAfterPlay(client.receivePlayerFromServer());
+                        controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
                         } else {
@@ -475,7 +475,7 @@ public class GUIsocket extends Application{
                     if(controller.getPosPlayed()!=null) {
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        controller.updateAfterPlay(client.receivePlayerFromServer());
+                        controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
                         } else {

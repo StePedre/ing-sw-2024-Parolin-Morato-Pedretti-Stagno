@@ -502,7 +502,22 @@ public class Controller {
         return c;
     }
 
-    public void updateAfterPlay(Player p) {
+    public void updateAfterPlay(Player p, Position pos) {
+        if (pos.getX() == 0 || pos.getY() == 0) {
+            System.out.println("Top border");
+            addColumnRowTop();
+            converter--;
+            // bisogna aggiornare anche le posizioni available (da scalare)
+            for(Position position : availablePos){
+                position.setX(position.getX()-1);
+                position.setY(position.getY()-1);
+            }
+        }
+        if (pos.getX() == (gridPaneGround.getColumnCount() - 1) || pos.getY() == (gridPaneGround.getRowCount() - 1)) {
+            System.out.println("Bottom border");
+            addColumnRowBottom();
+        }
+
         addImages(p.getHand());
         setTotalResource(p.getPlayerGround().getTotalResources());
         labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
@@ -639,16 +654,6 @@ public class Controller {
             if (db.hasImage()) {
                 zone.setImage(db.getImage());
                 zone.toFront();
-                if (GridPane.getColumnIndex(zone) == 0 || GridPane.getRowIndex(zone) == 0) {
-                    System.out.println("Top border");
-                    addColumnRowTop();
-                    converter--;
-                    // bisogna aggiornare anche le posizioni available (da scalare)
-                }
-                if (GridPane.getColumnIndex(zone) == (gridPaneGround.getColumnCount() - 1) || GridPane.getRowIndex(zone) == (gridPaneGround.getRowCount() - 1)) {
-                    System.out.println("Bottom border");
-                    addColumnRowBottom();
-                }
                 success = true;
             }
             posPlayed = new Position(GridPane.getColumnIndex(zone), GridPane.getRowIndex(zone));
@@ -673,13 +678,13 @@ public class Controller {
         gridPaneGround.setPrefWidth(widthGridPane + 117.14);
         gridPaneGround.setPrefHeight(heightGridPane + 59.29);
 
-        for (int i = 0; i < gridPaneGround.getColumnCount(); i++) {
+        /*for (int i = 0; i < gridPaneGround.getColumnCount(); i++) {
             for (int j = 0; j < gridPaneGround.getRowCount(); j++) {
                 Node node = getNodeFromGridPane(gridPaneGround, i, j);
                 GridPane.setColumnIndex(node, i + 1);
                 GridPane.setRowIndex(node, j + 1);
             }
-        }
+        }*/
         gridPaneGround.getColumnConstraints().addFirst(new ColumnConstraints(117.14));
         gridPaneGround.getRowConstraints().addFirst(new RowConstraints(59.29));
     }
@@ -690,15 +695,15 @@ public class Controller {
         gridPaneGround.setPrefWidth(widthGridPane + 117.14);
         gridPaneGround.setPrefHeight(heightGridPane + 59.29);
 
-        for (int i = 0; i < gridPaneGround.getColumnCount(); i++) {
+        /*for (int i = 0; i < gridPaneGround.getColumnCount(); i++) {
             for (int j = 0; j < gridPaneGround.getRowCount(); j++) {
                 Node node = getNodeFromGridPane(gridPaneGround, i, j);
                 GridPane.setColumnIndex(node, i + 1);
                 GridPane.setRowIndex(node, j + 1);
             }
-        }
-        gridPaneGround.getColumnConstraints().addFirst(new ColumnConstraints(117.14));
-        gridPaneGround.getRowConstraints().addFirst(new RowConstraints(59.29));
+        }*/
+        gridPaneGround.getColumnConstraints().addLast(new ColumnConstraints(117.14));
+        gridPaneGround.getRowConstraints().addLast(new RowConstraints(59.29));
     }
 
     public Boolean setDropCompleted(ImageView iv) {
