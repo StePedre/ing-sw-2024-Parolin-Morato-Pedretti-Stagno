@@ -429,6 +429,7 @@ public class GUIsocket extends Application{
                 try {
                     if(controller.getPosPlayed()!=null){
                         client.sendToServer(controller.getCardPlayed());
+                        Position pos = controller.getPosPlayed();
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
                         controller.updateAfterPlay(client.receivePlayerFromServer());  // works
                         if (client.receiveBooleanFromServer()) {

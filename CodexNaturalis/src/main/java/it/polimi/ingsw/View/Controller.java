@@ -355,8 +355,8 @@ public class Controller {
 
     public Position reconvertPosition(Position pos) {
         Position toReturn = new Position(0, 0);
-        toReturn.setX(pos.getX() + converter);
-        toReturn.setY(pos.getY() + converter);
+        toReturn.setX(pos.getY() + converter);
+        toReturn.setY(pos.getX() + converter);
         return toReturn;
     }
 
