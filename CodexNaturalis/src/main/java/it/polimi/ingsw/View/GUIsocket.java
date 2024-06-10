@@ -587,82 +587,96 @@ public class GUIsocket extends Application{
         controller.getGoldUp1().setOnMouseExited(e -> controller.getGoldUp1().setEffect(innerShadow));
         controller.getGoldUp2().setOnMouseExited(e -> controller.getGoldUp2().setEffect(innerShadow));
         controller.getGoldDeck().setOnMouseExited(e -> controller.getGoldDeck().setEffect(innerShadow));
+
         controller.getResUp1().setOnMouseClicked(e -> {
-            try {
-                client.sendToServer(0);
-                stage2.close();
-                Game g = client.receiveGameFromServer();
-                Player p = client.receivePlayerFromServer();
-                if(!client.receiveBooleanFromServer()){
-                    notYourTurn(stage, g, p, playgroundController);
+            if(game.getDecks()[0].getCards().get(0)!=null){
+                try {
+                    client.sendToServer(0);
+                    stage2.close();
+                    Game g = client.receiveGameFromServer();
+                    Player p = client.receivePlayerFromServer();
+                    if(!client.receiveBooleanFromServer()){
+                        notYourTurn(stage, g, p, playgroundController);
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
                 }
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
             }
+            // else valid label?
         });
         controller.getResUp2().setOnMouseClicked(e -> {
-            try {
-                client.sendToServer(1);
-                stage2.close();
-                Game g = client.receiveGameFromServer();
-                Player p = client.receivePlayerFromServer();
-                if(!client.receiveBooleanFromServer()){
-                    notYourTurn(stage, g, p, playgroundController);
+            if(game.getDecks()[0].getCards().get(1)!=null) {
+                try {
+                    client.sendToServer(1);
+                    stage2.close();
+                    Game g = client.receiveGameFromServer();
+                    Player p = client.receivePlayerFromServer();
+                    if (!client.receiveBooleanFromServer()) {
+                        notYourTurn(stage, g, p, playgroundController);
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
                 }
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
             }
         });
         controller.getResDeck().setOnMouseClicked(e ->{
-            try {
-                client.sendToServer(2);
-                stage2.close();
-                Game g = client.receiveGameFromServer();
-                Player p = client.receivePlayerFromServer();
-                if(!client.receiveBooleanFromServer()){
-                    notYourTurn(stage, g, p, playgroundController);
+            if(game.getDecks()[0].getCards().get(2)!=null) {
+                try {
+                    client.sendToServer(2);
+                    stage2.close();
+                    Game g = client.receiveGameFromServer();
+                    Player p = client.receivePlayerFromServer();
+                    if (!client.receiveBooleanFromServer()) {
+                        notYourTurn(stage, g, p, playgroundController);
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
                 }
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
             }
         });
         controller.getGoldUp1().setOnMouseClicked(e ->{
-            try {
-                client.sendToServer(3);
-                stage2.close();
-                Game g = client.receiveGameFromServer();
-                Player p = client.receivePlayerFromServer();
-                if(!client.receiveBooleanFromServer()){
-                    notYourTurn(stage, g, p, playgroundController);
+            if(game.getDecks()[1].getCards().get(0)!=null) {
+                try {
+                    client.sendToServer(3);
+                    stage2.close();
+                    Game g = client.receiveGameFromServer();
+                    Player p = client.receivePlayerFromServer();
+                    if (!client.receiveBooleanFromServer()) {
+                        notYourTurn(stage, g, p, playgroundController);
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
                 }
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
             }
         });
         controller.getGoldUp2().setOnMouseClicked(e -> {
-            try {
-                client.sendToServer(4);
-                stage2.close();
-                Game g = client.receiveGameFromServer();
-                Player p = client.receivePlayerFromServer();
-                if(!client.receiveBooleanFromServer()){
-                    notYourTurn(stage, g, p, playgroundController);
+            if(game.getDecks()[1].getCards().get(1)!=null) {
+                try {
+                    client.sendToServer(4);
+                    stage2.close();
+                    Game g = client.receiveGameFromServer();
+                    Player p = client.receivePlayerFromServer();
+                    if (!client.receiveBooleanFromServer()) {
+                        notYourTurn(stage, g, p, playgroundController);
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
                 }
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
             }
         });
         controller.getGoldDeck().setOnMouseClicked(e-> {
-            try {
-                client.sendToServer(5);
-                stage2.close();
-                Game g = client.receiveGameFromServer();
-                Player p = client.receivePlayerFromServer();
-                if(!client.receiveBooleanFromServer()){
-                    notYourTurn(stage, g, p, playgroundController);
+            if(game.getDecks()[1].getCards().get(2)!=null) {
+                try {
+                    client.sendToServer(5);
+                    stage2.close();
+                    Game g = client.receiveGameFromServer();
+                    Player p = client.receivePlayerFromServer();
+                    if (!client.receiveBooleanFromServer()) {
+                        notYourTurn(stage, g, p, playgroundController);
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
                 }
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
             }
         });
 }

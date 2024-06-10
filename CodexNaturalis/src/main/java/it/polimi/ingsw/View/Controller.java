@@ -604,12 +604,36 @@ public class Controller {
 
 
     public void addCards(Deck[] decks) {
-        resUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(0).getId() + ".png"));
-        resUp2.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(1).getId() + ".png"));
-        resDeck.setImage(new Image("file:" + imagesBackPath + decks[0].getCards().get(2).getId() + ".png"));
-        goldUp1.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(0).getId() + ".png"));
-        goldUp2.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(1).getId() + ".png"));
-        goldDeck.setImage(new Image("file:" + imagesBackPath + decks[1].getCards().get(2).getId() + ".png"));
+        if (decks[0].getCards().get(0) == null) {
+            resUp1.setImage(new Image("file:" + emptyImagePath));
+        } else {
+            resUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(0).getId() + ".png"));
+        }
+        if (decks[0].getCards().get(1) == null) {
+            resUp2.setImage(new Image("file:" + emptyImagePath));
+        } else {
+            resUp2.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(1).getId() + ".png"));
+        }
+        if (decks[0].getCards().get(2) == null) {
+            resDeck.setImage(new Image("file:" + emptyImagePath));
+        } else {
+            resDeck.setImage(new Image("file:" + imagesBackPath + decks[0].getCards().get(2).getId() + ".png"));
+        }
+        if (decks[1].getCards().get(0) == null) {
+            goldUp1.setImage(new Image("file:" + emptyImagePath));
+        } else {
+            goldUp1.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(0).getId() + ".png"));
+        }
+        if (decks[1].getCards().get(1) == null) {
+            goldUp2.setImage(new Image("file:" + emptyImagePath));
+        } else {
+            goldUp2.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(1).getId() + ".png"));
+        }
+        if (decks[1].getCards().get(2) == null) {
+            goldDeck.setImage(new Image("file:" + emptyImagePath));
+        } else {
+            goldDeck.setImage(new Image("file:" + imagesBackPath + decks[1].getCards().get(2).getId() + ".png"));
+        }
     }
 
     public void putDrawnInHand(PlayableCard card) {
