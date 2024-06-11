@@ -98,10 +98,10 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 if(game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0 && !rc.isEnding()){//controllo numeri carte deck
                     rc.setEnding();
                 }
-                rc.nextRound();
                 sendData();
                 out.writeObject(false);//non è più il suo turno
                 out.reset();
+                rc.nextRound();
             }
             if(rc.getLastPlayer().getNickname().equals(player.getNickname())){
                 game.finish();

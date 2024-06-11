@@ -616,10 +616,10 @@ public class Controller {
 
 
     public void addCards(Deck[] decks) {
-        if (decks[0].getCards().get(0) == null) {
+        if (decks[0].getCards().getFirst() == null) {
             resUp1.setImage(new Image("file:" + emptyImagePath));
         } else {
-            resUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(0).getId() + ".png"));
+            resUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().getFirst().getId() + ".png"));
         }
         if (decks[0].getCards().get(1) == null) {
             resUp2.setImage(new Image("file:" + emptyImagePath));
@@ -631,10 +631,10 @@ public class Controller {
         } else {
             resDeck.setImage(new Image("file:" + imagesBackPath + decks[0].getCards().get(2).getId() + ".png"));
         }
-        if (decks[1].getCards().get(0) == null) {
+        if (decks[1].getCards().getFirst() == null) {
             goldUp1.setImage(new Image("file:" + emptyImagePath));
         } else {
-            goldUp1.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(0).getId() + ".png"));
+            goldUp1.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().getFirst().getId() + ".png"));
         }
         if (decks[1].getCards().get(1) == null) {
             goldUp2.setImage(new Image("file:" + emptyImagePath));

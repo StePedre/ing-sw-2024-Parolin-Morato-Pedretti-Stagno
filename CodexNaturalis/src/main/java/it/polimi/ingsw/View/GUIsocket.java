@@ -444,7 +444,7 @@ public class GUIsocket extends Application{
                         } else {
                             if (client.receiveBooleanFromServer()) {
                                 event.consume();
-                                switchToDraw(stage, g, controller);
+                                switchToDraw(stage, game[0], controller);
                             } else {
                                 event.consume();
                                 notYourTurn(stage, game[0], player[0], controller);
@@ -467,7 +467,7 @@ public class GUIsocket extends Application{
                         } else {
                             if (client.receiveBooleanFromServer()) {
                                 event.consume();
-                                switchToDraw(stage, g, controller);
+                                switchToDraw(stage, game[0], controller);
                             } else {
                                 event.consume();
                                 notYourTurn(stage, game[0], player[0], controller);
@@ -490,7 +490,7 @@ public class GUIsocket extends Application{
                         } else {
                             if (client.receiveBooleanFromServer()) {
                                 event.consume();
-                                switchToDraw(stage, g, controller);
+                                switchToDraw(stage, game[0], controller);
                             } else {
                                 event.consume();
                                 notYourTurn(stage, game[0], player[0], controller);
