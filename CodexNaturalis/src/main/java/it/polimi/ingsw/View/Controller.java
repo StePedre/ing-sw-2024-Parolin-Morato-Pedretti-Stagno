@@ -651,15 +651,19 @@ public class Controller {
     public void setDropZones(ImageView zone) {
         //isDragged = false;
         zone.setOnDragOver(e -> {
-            if (e.getDragboard().hasImage()) {
-                e.acceptTransferModes(TransferMode.MOVE);
-                e.consume();
+            if(zone.getImage().getUrl()!=null && zone.getImage().getUrl().equals("file:" + emptyImagePath)) {
+                if (e.getDragboard().hasImage()) {
+                    e.acceptTransferModes(TransferMode.MOVE);
+                    e.consume();
+                }
             }
         });
         zone.setOnDragEntered(e -> {
-            ColorAdjust ca = new ColorAdjust();
-            ca.setBrightness(0.5);
-            zone.setEffect(ca);
+            if(zone.getImage().getUrl()!=null && zone.getImage().getUrl().equals("file:" + emptyImagePath)) {
+                ColorAdjust ca = new ColorAdjust();
+                ca.setBrightness(0.5);
+                zone.setEffect(ca);
+            }
         });
         zone.setOnDragExited(e -> {
             ColorAdjust ca = new ColorAdjust();
