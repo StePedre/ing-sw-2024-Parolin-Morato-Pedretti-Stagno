@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.effect.*;
 import javafx.stage.Modality;
@@ -25,6 +26,7 @@ import javafx.util.Duration;
 import javafx.animation.*;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -33,7 +35,7 @@ public class GUIsocket extends Application{
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
     private GUIClientSocket client;
-    private ImageView background;
+    private ImageView background,ivl,ivc,ivr;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -152,12 +154,14 @@ public class GUIsocket extends Application{
         Button nickButton = controller.getNickButton();
         nickButton.setOnAction(actionEvent -> {
             try {
-                client.sendToServer(controller.getNickname());
+                String nick = controller.getNickname();
+                client.sendToServer(nick);
                 if(client.receiveBooleanFromServer()){
                     controller.getNickLabel().setPrefWidth(800);    // eventualmente aggiungere un'altra label
                     controller.getNickLabel().setStyle("-fx-text-fill: #b20b0b");
                     controller.getNickLabel().setText("This name is already taken, choose another one:");
                     controller.getNickTextField().setText("");
+                    System.out.println(nick);
                 }
                 else{
                     if(client.receiveBooleanFromServer()){
@@ -392,9 +396,9 @@ public class GUIsocket extends Application{
             controller.getFlipButton().setOnAction(e->{
                 controller.flipCard(player[0].getHand());
             });
-            ImageView ivl = controller.getHandCardLeft();
-            ImageView ivc = controller.getHandCardCenter();
-            ImageView ivr = controller.getHandCardRight();
+            ivl = controller.getHandCardLeft();
+            ivc = controller.getHandCardCenter();
+            ivr = controller.getHandCardRight();
             if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandLeft())){
                 ivl.setOnDragDetected(event -> {
                     Dragboard db = ivl.startDragAndDrop(TransferMode.MOVE);
@@ -433,7 +437,8 @@ public class GUIsocket extends Application{
                     if(controller.getPosPlayed()!=null){
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        controller.updateAfterPlay(client.receivePlayerFromServer(), controller.getPosPlayed());  // works
+                        controller.updateAfterPlay(client.receivePlayerFromServer(), controller.getPosPlayed());
+                        controller.setPosPlayedNull();// works
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
                         } else {
@@ -456,6 +461,7 @@ public class GUIsocket extends Application{
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
                         controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
+                        controller.setPosPlayedNull();
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
                         } else {
@@ -478,6 +484,7 @@ public class GUIsocket extends Application{
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
                         controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
+                        controller.setPosPlayedNull();
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
                         } else {
@@ -501,6 +508,8 @@ public class GUIsocket extends Application{
     }
 
     public void notYourTurn(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
+
+        controller.removeAvailablePos();
         controller.addGround(g, p);
         showNotYourTurn(stage);
         Task<Integer> task = new Task<>(){
@@ -600,7 +609,7 @@ public class GUIsocket extends Application{
         controller.getGoldDeck().setOnMouseExited(e -> controller.getGoldDeck().setEffect(innerShadow));
 
         controller.getResUp1().setOnMouseClicked(e -> {
-            if(game.getDecks()[0].getCards().get(0)!=null){
+            if(game.getDecks()[0].getCards().getFirst()!=null){
                 try {
                     client.sendToServer(0);
                     stage2.close();
@@ -646,7 +655,7 @@ public class GUIsocket extends Application{
             }
         });
         controller.getGoldUp1().setOnMouseClicked(e ->{
-            if(game.getDecks()[1].getCards().get(0)!=null) {
+            if(game.getDecks()[1].getCards().getFirst()!=null) {
                 try {
                     client.sendToServer(3);
                     stage2.close();

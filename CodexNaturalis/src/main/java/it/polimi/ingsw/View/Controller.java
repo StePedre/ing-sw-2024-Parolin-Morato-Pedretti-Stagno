@@ -9,9 +9,7 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import org.jetbrains.annotations.NotNull;
@@ -530,7 +528,7 @@ public class Controller {
     }
 
     public void removePlayedPos(){
-        int index = -1;
+        /*int index = -1;
         for(Position position: availablePos){
             if(position.getX() == posPlayed.getX() && position.getY() == posPlayed.getY()){
                 index = availablePos.indexOf(position);
@@ -539,7 +537,8 @@ public class Controller {
         }
         if(index!=-1){
             availablePos.remove(index);
-        }
+        }*/
+        availablePos.remove(posPlayed);
     }
 
     public void setLinkToPlayerGrounds(Game g, Player p) {
@@ -650,7 +649,7 @@ public class Controller {
     }
 
     public void setDropZones(ImageView zone) {
-        isDragged = false;
+        //isDragged = false;
         zone.setOnDragOver(e -> {
             if (e.getDragboard().hasImage()) {
                 e.acceptTransferModes(TransferMode.MOVE);
@@ -718,23 +717,27 @@ public class Controller {
         for (Position p : pos) {
             y = p.getX() - converter;
             x = p.getY() - converter;
-            if(!isFound(availablePos, new Position(x, y))){
-                ImageView image = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
-                gridPaneGround.add(image, x, y);
-                imageViewArrayList.add(image);
-                availablePos.add(new Position(x, y));
-            }
+            //if(!isFound(availablePos, new Position(x, y))){
+            ImageView image = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
+            imageViewArrayList.add(image);
+            gridPaneGround.add(image, x, y);
+            availablePos.add(new Position(x, y));
+            //}
         }
-        for(Position p: availablePos){
+        /*for(Position p: availablePos){
             if(!isFound(pos, new Position(p.getY()+converter, p.getX()+converter))) {
                 for (Node n: gridPaneGround.getChildren()) {
                     if (GridPane.getRowIndex(n) == p.getY() && GridPane.getColumnIndex(n) == p.getX()) {
-                        ImageView iv= (ImageView) n;
-                        gridPaneGround.getChildren().remove(iv);
+                        //ImageView iv= (ImageView) n;
+                        //gridPaneGround.getChildren().remove(iv);
+                        toRemove.add(n);
                     }
                 }
+                for(Node n: toRemove){
+                    gridPaneGround.getChildren().remove(n);
+                }
             }
-        }
+        }*/
     }
 
     public boolean isFound(ArrayList<Position> list, Position pos) {
@@ -785,6 +788,37 @@ public class Controller {
             currentHandRight = hand.getCard(2);
             currentHandRight.flipCard();
         }
+    }
+    /*public void closeListener(){
+        if(handCardLeft.getOnDragDetected()!=null) {
+            handCardLeft.removeEventHandler(MouseEvent.DRAG_DETECTED, handCardLeft.getOnDragDetected());
+        }
+        if(handCardCenter.getOnDragDetected()!=null) {
+            handCardCenter.removeEventHandler(MouseEvent.DRAG_DETECTED, handCardCenter.getOnDragDetected());
+        }
+        if(handCardRight.getOnDragDetected()!=null) {
+            handCardRight.removeEventHandler(MouseEvent.DRAG_DETECTED, handCardRight.getOnDragDetected());
+        }
+    }*/
+    public void removeAvailablePos(){
+        ArrayList<Node> toRemove = new ArrayList<>();
+        ImageView iv;
+        for(Node n : gridPaneGround.getChildren()){
+            if(n!=null) {
+                iv = (ImageView) n;
+                if (iv.getImage().getUrl()!=null && iv.getImage().getUrl().equals("file:" + emptyImagePath)) {
+                    toRemove.add(n);
+                }
+            }
+        }
+        for(Node n : toRemove){
+            if(n!=null) {
+                gridPaneGround.getChildren().remove(n);
+            }
+        }
+    }
+    public void setPosPlayedNull(){
+        posPlayed = null;
     }
 }
 
