@@ -384,8 +384,11 @@ public class GUIsocket extends Application{
         if(!client.receiveBooleanFromServer()){    // if not last turn
             //  controller.updateGrounds(g.getPlayers());
             controller.addGround(game[0], player[0]);
-            showYourTurn(stage, player[0], game[0]);
+            showYourTurn(stage);
             controller.showAvailablePos(player[0].getPlayerGround().getAvailablePositions());
+            controller.getFlipButton().setOnAction(e->{
+                controller.flipCard(player[0].getHand());
+            });
             ImageView ivl = controller.getHandCardLeft();
             ImageView ivc = controller.getHandCardCenter();
             ImageView ivr = controller.getHandCardRight();
@@ -429,7 +432,6 @@ public class GUIsocket extends Application{
                 try {
                     if(controller.getPosPlayed()!=null){
                         client.sendToServer(controller.getCardPlayed());
-                        //Position pos = controller.getPosPlayed();
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
                         controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());  // works
                         if (client.receiveBooleanFromServer()) {
@@ -453,6 +455,11 @@ public class GUIsocket extends Application{
                     if(controller.getPosPlayed()!=null) {
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                        for(Position pos: controller.getAvailablePos()){
+                            if(pos.getX() == controller.getPosPlayed().getX() && pos.getY() == controller.getPosPlayed().getY()){
+                                controller.getAvailablePos().remove(pos);
+                            }
+                        }
                         controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
@@ -475,6 +482,11 @@ public class GUIsocket extends Application{
                     if(controller.getPosPlayed()!=null) {
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                        for(Position pos: controller.getAvailablePos()){
+                            if(pos.getX() == controller.getPosPlayed().getX() && pos.getY() == controller.getPosPlayed().getY()){
+                                controller.getAvailablePos().remove(pos);
+                            }
+                        }
                         controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
@@ -500,6 +512,7 @@ public class GUIsocket extends Application{
 
     public void notYourTurn(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
         controller.addGround(g, p);
+        showNotYourTurn(stage);
         Task<Integer> task = new Task<>(){
             @Override
             protected Integer call() throws Exception {
@@ -532,7 +545,7 @@ public class GUIsocket extends Application{
         stage.close();
     }
 
-    public void showYourTurn(Stage stage, Player player, Game game) throws IOException {
+    public void showYourTurn(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/yourTurn.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -543,6 +556,21 @@ public class GUIsocket extends Application{
         stage2.setScene(scene);
         stage2.showAndWait();
         controller.getYourTurnButton().setOnAction(e -> {
+            stage2.close();
+        });
+    }
+
+    public void showNotYourTurn(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/notYourTurn.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        Stage stage2 = new Stage();
+        stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
+        stage2.initOwner(stage);
+        Scene scene = new Scene(root, 600, 200);
+        stage2.setScene(scene);
+        stage2.showAndWait();
+        controller.getNotYourTurnButton().setOnAction(e -> {
             stage2.close();
         });
     }

@@ -41,7 +41,7 @@ public class Controller {
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV, sadFace, sadFace2;
     @FXML
-    private Button finishButton, finishButton2, buttonStart, confirmRoom, confirmColor, IpButton;
+    private Button finishButton, finishButton2, buttonStart, confirmRoom, confirmColor, IpButton, flipButton, yourTurnButton, notYourTurnButton;
     @FXML
     private TextField nickTextField, numberPlayersTF, textFieldRoom, IpField;
     @FXML
@@ -64,7 +64,7 @@ public class Controller {
     private ImageView commonObj1, commonObj2;
     private int converter = 38; // 42 - 4 (coord iniziali matrice e gridPane)
     @FXML
-    private Button nickButton, requestButton, yourTurnButton;
+    private Button nickButton, requestButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
     private final String emptyImagePath = "src/main/resources/border_image.png";
     private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
@@ -152,9 +152,15 @@ public class Controller {
     public Button getNickButton() {
         return nickButton;
     }
+    public Button getFlipButton() {
+        return flipButton;
+    }
 
     public Button getYourTurnButton() {
         return yourTurnButton;
+    }
+    public Button getNotYourTurnButton() {
+        return notYourTurnButton;
     }
 
     public Button getRequestButton() {
@@ -521,6 +527,11 @@ public class Controller {
         addImages(p.getHand());
         setTotalResource(p.getPlayerGround().getTotalResources());
         labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
+        for(Position position: availablePos){
+            if(position.getX() == posPlayed.getX() && position.getY() == posPlayed.getY()){
+                availablePos.remove(position);
+            }
+        }
     }
 
     public void setLinkToPlayerGrounds(Game g, Player p) {
@@ -719,7 +730,8 @@ public class Controller {
     }
 
     public void showAvailablePos(Set<Position> pos) {
-        int x, y;
+        imageViewArrayList.clear();
+        int x=0, y=0;
         for (Position p : pos) {
             y = p.getX() - converter;   // maybe
             x = p.getY() - converter;
@@ -730,9 +742,27 @@ public class Controller {
                 availablePos.add(new Position(x, y));
             }
         }
+        for(Position p: availablePos){
+            if(!isFound(pos, new Position(p.getY()+converter, p.getX()+converter))) {
+                for (Node n: gridPaneGround.getChildren()) {
+                    if (GridPane.getRowIndex(n) == p.getY() && GridPane.getColumnIndex(n) == p.getX()) {
+                        ImageView iv= (ImageView) n;
+                        gridPaneGround.getChildren().remove(iv);
+                    }
+                }
+            }
+        }
     }
 
     public boolean isFound(ArrayList<Position> list, Position pos) {
+        for (Position p : list) {
+            if (p.getX() == pos.getX() && p.getY() == pos.getY()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean isFound(Set<Position> list, Position pos) {
         for (Position p : list) {
             if (p.getX() == pos.getX() && p.getY() == pos.getY()) {
                 return true;

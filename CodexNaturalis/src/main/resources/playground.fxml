@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.effect.InnerShadow?>
@@ -17,7 +18,7 @@
 <?import javafx.scene.image.Image?>
 <HBox fx:id="playGroundHBox" alignment="CENTER" prefHeight="${screenHeight}" prefWidth="${screenWidth}" style="-fx-background-color: #E4CAA9" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
     <AnchorPane fx:id="playGroundAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
-        <HBox fx:id="hboxHand" layoutX="630.0" layoutY="950.0" prefHeight="100.0" prefWidth="440.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="420.0" AnchorPane.rightAnchor="420.0">
+        <HBox fx:id="hboxHand" layoutX="630.0" layoutY="950.0" prefHeight="100.0" prefWidth="440.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="380.0" AnchorPane.rightAnchor="380.0" AnchorPane.topAnchor="603.3333333333334">
             <ImageView fx:id="handCardLeft" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
                 <HBox.margin>
                     <Insets top="2.5" />
@@ -50,6 +51,14 @@
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </ImageView>
+         <Button fx:id="flipButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="93.0" text="Flip!" textAlignment="CENTER">
+            <HBox.margin>
+               <Insets bottom="30.0" left="20.0" top="30.0" />
+            </HBox.margin>
+            <font>
+               <Font name="Bookman Old Style" size="16.0" />
+            </font>
+         </Button>
         </HBox>
         <VBox layoutX="46.0" layoutY="42.0" prefHeight="554.0" prefWidth="140.0" AnchorPane.leftAnchor="34.0" AnchorPane.topAnchor="34.0">
             <Label fx:id="labelNick" alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="Nickname">
@@ -190,21 +199,21 @@
                 </VBox.margin>
             </Label>
             <HBox alignment="CENTER" spacing="4.5">
-            <ImageView fx:id="mushroomRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="mushroomRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="Mushroom.png" />
+                    </image></ImageView>
+                <ImageView fx:id="bugRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="Insect.png" />
+                    </image></ImageView>
+                <ImageView fx:id="leafRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="Leaf.png" />
+                    </image></ImageView>
+                <ImageView fx:id="foxRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="Mushroom.png" />
-                </image></ImageView>
-            <ImageView fx:id="bugRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="Insect.png" />
-                </image></ImageView>
-            <ImageView fx:id="leafRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="Leaf.png" />
-                </image></ImageView>
-            <ImageView fx:id="foxRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="Animal.png" />
+                <Image url="Animal.png"/>
                 </image></ImageView>
                 <ImageView fx:id="potionRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
                     <image>
