@@ -527,10 +527,18 @@ public class Controller {
         addImages(p.getHand());
         setTotalResource(p.getPlayerGround().getTotalResources());
         labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
+    }
+
+    public void removePlayedPos(){
+        int index = -1;
         for(Position position: availablePos){
             if(position.getX() == posPlayed.getX() && position.getY() == posPlayed.getY()){
-                availablePos.remove(position);
+                index = availablePos.indexOf(position);
+                break;
             }
+        }
+        if(index!=-1){
+            availablePos.remove(index);
         }
     }
 
@@ -674,28 +682,11 @@ public class Controller {
         });
     }
 
-    private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
-        for (Node node : gridPane.getChildren()) {
-            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
-                return node;
-            }
-        }
-        return null;
-    }
-
     public void addColumnRowTop() {
         double widthGridPane = gridPaneGround.getWidth();
         double heightGridPane = gridPaneGround.getHeight();
         gridPaneGround.setPrefWidth(widthGridPane + 117.14);
         gridPaneGround.setPrefHeight(heightGridPane + 59.29);
-
-        /*for (int i = 0; i < gridPaneGround.getColumnCount(); i++) {
-            for (int j = 0; j < gridPaneGround.getRowCount(); j++) {
-                Node node = getNodeFromGridPane(gridPaneGround, i, j);
-                GridPane.setColumnIndex(node, i + 1);
-                GridPane.setRowIndex(node, j + 1);
-            }
-        }*/
         gridPaneGround.getColumnConstraints().addFirst(new ColumnConstraints(117.14));
         gridPaneGround.getRowConstraints().addFirst(new RowConstraints(59.29));
     }
@@ -705,14 +696,6 @@ public class Controller {
         double heightGridPane = gridPaneGround.getHeight();
         gridPaneGround.setPrefWidth(widthGridPane + 117.14);
         gridPaneGround.setPrefHeight(heightGridPane + 59.29);
-
-        /*for (int i = 0; i < gridPaneGround.getColumnCount(); i++) {
-            for (int j = 0; j < gridPaneGround.getRowCount(); j++) {
-                Node node = getNodeFromGridPane(gridPaneGround, i, j);
-                GridPane.setColumnIndex(node, i + 1);
-                GridPane.setRowIndex(node, j + 1);
-            }
-        }*/
         gridPaneGround.getColumnConstraints().addLast(new ColumnConstraints(117.14));
         gridPaneGround.getRowConstraints().addLast(new RowConstraints(59.29));
     }
@@ -733,7 +716,7 @@ public class Controller {
         imageViewArrayList.clear();
         int x=0, y=0;
         for (Position p : pos) {
-            y = p.getX() - converter;   // maybe
+            y = p.getX() - converter;
             x = p.getY() - converter;
             if(!isFound(availablePos, new Position(x, y))){
                 ImageView image = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
@@ -774,9 +757,9 @@ public class Controller {
     public void flipCard(Hand hand){
         String face;
         if(hand.getCard(0).getFlip()){
-            face = imagesBackPath;
-        }else{
             face = imagesFrontPath;
+        }else{
+            face = imagesBackPath;
         }
         if (hand.getCard(0) == null) {
             handCardLeft.setImage(new Image("file:" + emptyImagePath));

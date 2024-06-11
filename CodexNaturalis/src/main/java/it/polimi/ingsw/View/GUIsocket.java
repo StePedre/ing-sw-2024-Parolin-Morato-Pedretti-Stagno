@@ -380,21 +380,21 @@ public class GUIsocket extends Application{
         Player[] player = new Player[1];
         game[0] = client.receiveGameFromServer();
         player[0] = client.receivePlayerFromServer();
+        controller.showAvailablePos(player[0].getPlayerGround().getAvailablePositions());
+        controller.addGround(game[0], player[0]);
+        for(ImageView  zone : controller.getImageViewList()){
+            controller.setDropZones(zone);
+        }
        //  controller.setLinkToPlayerGrounds(g, p);   TO DO: mostrare playground altri giocatori
         if(!client.receiveBooleanFromServer()){    // if not last turn
             //  controller.updateGrounds(g.getPlayers());
-            controller.addGround(game[0], player[0]);
             showYourTurn(stage);
-            controller.showAvailablePos(player[0].getPlayerGround().getAvailablePositions());
             controller.getFlipButton().setOnAction(e->{
                 controller.flipCard(player[0].getHand());
             });
             ImageView ivl = controller.getHandCardLeft();
             ImageView ivc = controller.getHandCardCenter();
             ImageView ivr = controller.getHandCardRight();
-            for(ImageView  zone : controller.getImageViewList()){
-                controller.setDropZones(zone);
-            }
             if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandLeft())){
                 ivl.setOnDragDetected(event -> {
                     Dragboard db = ivl.startDragAndDrop(TransferMode.MOVE);
@@ -433,7 +433,7 @@ public class GUIsocket extends Application{
                     if(controller.getPosPlayed()!=null){
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());  // works
+                        controller.updateAfterPlay(client.receivePlayerFromServer(), controller.getPosPlayed());  // works
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
                         } else {
@@ -455,11 +455,6 @@ public class GUIsocket extends Application{
                     if(controller.getPosPlayed()!=null) {
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        for(Position pos: controller.getAvailablePos()){
-                            if(pos.getX() == controller.getPosPlayed().getX() && pos.getY() == controller.getPosPlayed().getY()){
-                                controller.getAvailablePos().remove(pos);
-                            }
-                        }
                         controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
@@ -482,11 +477,6 @@ public class GUIsocket extends Application{
                     if(controller.getPosPlayed()!=null) {
                         client.sendToServer(controller.getCardPlayed());
                         client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        for(Position pos: controller.getAvailablePos()){
-                            if(pos.getX() == controller.getPosPlayed().getX() && pos.getY() == controller.getPosPlayed().getY()){
-                                controller.getAvailablePos().remove(pos);
-                            }
-                        }
                         controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
                         if (client.receiveBooleanFromServer()) {
                             switchToWaitingFinish(stage);
@@ -576,6 +566,7 @@ public class GUIsocket extends Application{
     }
 
     public void switchToDraw(Stage stage, Game game, Controller playgroundController) throws IOException, ClassNotFoundException {
+        playgroundController.removePlayedPos();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
         Parent root = loader.load();
         Stage stage2 = new Stage();
