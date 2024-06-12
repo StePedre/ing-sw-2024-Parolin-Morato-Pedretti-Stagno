@@ -48,46 +48,35 @@ public class AdvancedTUI_temp {
                 .min()
                 .orElse(0);
 
-        int lengthX = maxY - minY;
-        int lengthY = maxX - minX;
-
-        String contentLine1 =  "";
-        String contentLine2 =  "";
-        String contentLine3 =  "";
-        String contentLine4 = "";
-
-        // scrittura di una matrice 0 e 1 con 1 dove c'è una carta
-        Card[][] matrixToPrint = new Card[84][84];
-        for(int i = 0, maxYOffset = maxY; i <= lengthY; i++, maxYOffset--){
-            for(int j = 0, minXOffset = minX; j <= lengthX; j++, minXOffset++){
-                if(ground[minXOffset][maxYOffset]==null){
-                    matrixToPrint[i][j] = null;
-                }
-                else {
-                    matrixToPrint[i][j] = ground[minXOffset][maxYOffset];
-                }
-            }
-        }
-
+        int lengthX = maxX - minX;
+        int lengthY = maxY - minY;
         System.out.println("\n");
         System.out.println("Your play ground looks like this:\n");
         System.out.println("\n");
-        for (int j = lengthX; j >= 0; j--) {
-                contentLine4 += getGridLine5(matrixToPrint[j][0], false);
+
+        String contentLine1 = "";
+        String contentLine2 = "";
+        String contentLine3 = "";
+        String contentLine4 = "";
+
+        for (int i = 0; i <= lengthX; i++) {
+            contentLine4 += getGridLine5(ground[minX + i][maxY - lengthY], false);
         }
         System.out.println("                       " + contentLine4 + "                       ");
         contentLine4 = "";
-        for (int i = 0; i <= lengthY; i++) {
-            for (int j = lengthX; j >= 0; j--) {
-                contentLine1 += getGridLine1(matrixToPrint[j][i]);
-                contentLine2 += getGridLine2(matrixToPrint[j][i],minX + i, maxY - j, playerGround);
-                contentLine3 += getGridLine3(matrixToPrint[j][i]);
-                if(matrixToPrint[j][i] == null && i+1 <= lengthY) {
-                        contentLine4 += getGridLine5(matrixToPrint[j][i + 1], false);
-                }else{
-                        contentLine4 += getGridLine4(matrixToPrint[j][i], true);
-                }
 
+        for (int i = 0; i <= lengthX; i++) {
+            for (int j = lengthY; j >= 0; j--) {
+                Card currentCard = ground[minX + i][maxY - j];
+                contentLine1 += getGridLine1(currentCard);
+                contentLine2 += getGridLine2(currentCard, minX + i, maxY - j, playerGround);
+                contentLine3 += getGridLine3(currentCard);
+
+                if (currentCard == null && i+1 <=  lengthX) {
+                    contentLine4 += getGridLine5(ground[minX + i + 1][maxY - j], false);
+                } else {
+                    contentLine4 += getGridLine4(currentCard, true);
+                }
             }
             System.out.println("                       " + contentLine1 + "                       ");
             System.out.println("                       " + contentLine2 + "                       ");
@@ -100,7 +89,6 @@ public class AdvancedTUI_temp {
         }
 
         System.out.println("\n");
-
     }
 
     public static void printResources(HashMap<Resource, Integer> totalResources){
