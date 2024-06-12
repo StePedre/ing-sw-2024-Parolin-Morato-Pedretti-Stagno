@@ -370,7 +370,7 @@ public class GUIsocket extends Application{
         controller.placeFirstCard(p);
         if(client.receiveBooleanFromServer()) {    // se è il suo turno
             try {
-                yourTurn(stage, g, p, controller);
+                yourTurn(stage, controller);
             } catch (IOException e) {
                 showError(stage);
             }
@@ -380,8 +380,7 @@ public class GUIsocket extends Application{
         }
     }
 
-    public void yourTurn(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
-        //controller.updateGrounds(g.getPlayers());      updatare playerground altri giocatori
+    public void yourTurn(Stage stage, Controller controller) throws IOException, ClassNotFoundException {
         Game[] game = new Game[1];
         Player[] player = new Player[1];
         game[0] = client.receiveGameFromServer();
@@ -391,9 +390,8 @@ public class GUIsocket extends Application{
         for(ImageView  zone : controller.getImageViewList()){
             controller.setDropZones(zone);
         }
-       //  controller.setLinkToPlayerGrounds(g, p);   TO DO: mostrare playground altri giocatori
+        setLinkToPlayerGrounds(game[0],controller, stage);
         if(!client.receiveBooleanFromServer()) {    // if not last turn
-            //  controller.updateGrounds(g.getPlayers());
             showYourTurn(stage);
         }
         else{ // ultimo turno
@@ -512,6 +510,36 @@ public class GUIsocket extends Application{
         });
     }
 
+    public void setLinkToPlayerGrounds(Game g, Controller controller, Stage s) {
+    if (controller.getLabelPoints2().isVisible()) {
+        controller.getLabelPoints2().setOnMouseClicked(e->{
+            try {
+                showGround(g.getPlayer(controller.getNick2()), s);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+    if (controller.getLabelPoints3().isVisible()) {
+        controller.getLabelPoints3().setOnMouseClicked(e->{
+            try {
+                showGround(g.getPlayer(controller.getNick3()), s);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+    if (controller.getLabelPoints4().isVisible()) {
+        controller.getLabelPoints4().setOnMouseClicked(e->{
+            try {
+                showGround(g.getPlayer(controller.getNick4()), s);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+    }
+
     public void notYourTurn(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
 
         controller.removeAvailablePos();
@@ -529,7 +557,7 @@ public class GUIsocket extends Application{
         t.start();
         task.setOnSucceeded(event -> {
             try {
-                yourTurn(stage, g, p, controller);
+                yourTurn(stage, controller);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -560,7 +588,7 @@ public class GUIsocket extends Application{
         stage2.setScene(scene);
         stage2.showAndWait();
         controller.getYourTurnButton().setOnAction(e -> {
-            stage2.close();
+            stage2.hide();
         });
     }
 
@@ -575,7 +603,7 @@ public class GUIsocket extends Application{
         stage2.setScene(scene);
         stage2.showAndWait();
         controller.getNotYourTurnButton().setOnAction(e -> {
-            stage2.close();
+            stage2.hide();
         });
     }
 
@@ -917,6 +945,18 @@ public class GUIsocket extends Application{
                 }
             }
         });
+    }
+    public void showGround(Player pg, Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/otherPlayground.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        Stage stage2 = new Stage();
+        stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
+        stage2.initOwner(stage);
+        Scene scene = new Scene(root);
+        stage2.setScene(scene);
+        controller.addOtherPlayerground(pg);
+        stage2.showAndWait();
     }
 }
 

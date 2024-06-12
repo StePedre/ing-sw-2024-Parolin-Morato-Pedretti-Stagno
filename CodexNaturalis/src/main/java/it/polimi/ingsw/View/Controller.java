@@ -29,7 +29,7 @@ public class Controller {
     @FXML
     private HBox playGroundHBox;
     @FXML
-    private GridPane gridPaneGround;
+    private GridPane gridPaneGroundOther, gridPaneGround;
     @FXML
     private AnchorPane anchor2, anchor3, anchor4, anchor5, anchor6, anchor7, anchor8, anchor9, nickAnchorPane, anchor10;
     @FXML
@@ -43,7 +43,7 @@ public class Controller {
     @FXML
     private TextField nickTextField, numberPlayersTF, textFieldRoom, IpField;
     @FXML
-    private Label nickLabel, labelNick, label20p, labelRoom, validLabel, winnerName, winnersNames, startLabel, startLabel2, colorValidLabel;
+    private Label score,name, nickLabel, labelNick, label20p, labelRoom, validLabel, winnerName, winnersNames, startLabel, startLabel2, colorValidLabel;
     @FXML
     private ProgressBar waitingBar;
     @FXML
@@ -357,6 +357,18 @@ public class Controller {
         return labelPoints4;
     }
 
+    public String getNick3() {
+        return nick3;
+    }
+
+    public String getNick4() {
+        return nick4;
+    }
+
+    public String getNick2() {
+        return nick2;
+    }
+
     public Position reconvertPosition(Position pos) {
         Position toReturn = new Position(0, 0);
         toReturn.setX(pos.getY() + converter);
@@ -475,11 +487,11 @@ public class Controller {
                 } else if (player.getNickname().equals(nick3)) {
                     labelPoints3.setText(nick3 + ": " + player.getPlayerGround().getPlayerScore());
                     String color = colorToString(player.getColor());
-                    labelPoints2.setStyle("-fx-text-fill: " + color);
+                    labelPoints3.setStyle("-fx-text-fill: " + color);
                 } else if (player.getNickname().equals(nick4)) {
                     labelPoints4.setText(nick4 + ": " + player.getPlayerGround().getPlayerScore());
                     String color = colorToString(player.getColor());
-                    labelPoints2.setStyle("-fx-text-fill: " + color);
+                    labelPoints4.setStyle("-fx-text-fill: " + color);
                 }
             }
         }
@@ -511,7 +523,6 @@ public class Controller {
             System.out.println("Top border");
             addColumnRowTop();
             converter--;
-            // bisogna aggiornare anche le posizioni available (da scalare)
             for(Position position : availablePos){
                 position.setX(position.getX()-1);
                 position.setY(position.getY()-1);
@@ -527,22 +538,8 @@ public class Controller {
         labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
     }
 
-    public void removePlayedPos(){
-        /*int index = -1;
-        for(Position position: availablePos){
-            if(position.getX() == posPlayed.getX() && position.getY() == posPlayed.getY()){
-                index = availablePos.indexOf(position);
-                break;
-            }
-        }
-        if(index!=-1){
-            availablePos.remove(index);
-        }*/
+    public void removePlayedPos() {
         availablePos.remove(posPlayed);
-    }
-
-    public void setLinkToPlayerGrounds(Game g, Player p) {
-        // to do
     }
 
     public void addImages(Hand hand) {
@@ -823,6 +820,24 @@ public class Controller {
     }
     public void setPosPlayedNull(){
         posPlayed = null;
+    }
+    public void addOtherPlayerground(Player pg){
+        name.setText("Nickname : \n"+ pg.getNickname());
+        score.setText("Points : " + pg.getPlayerGround().getPlayerScore());
+        ImageView iv;
+        for(int i = 0;i<84;i++){
+            for(int j = 0;j<84;j++){
+                if(pg.getPlayerGround().getGround()[i][j]!=null){
+                    if(pg.getPlayerGround().getGround()[i][j].getFlip()) {
+                        iv = new ImageView(new Image("file:" + imagesBackPath + pg.getPlayerGround().getGround()[i][j].getId() + ".png", 150, 100, false, false));
+                    }
+                    else{
+                        iv = new ImageView(new Image("file:" + imagesFrontPath + pg.getPlayerGround().getGround()[i][j].getId() + ".png", 150, 100, false, false));
+                    }
+                    gridPaneGroundOther.add(iv,j,i);
+                }
+            }
+        }
     }
 }
 
