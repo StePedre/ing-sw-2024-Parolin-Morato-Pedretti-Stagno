@@ -395,7 +395,7 @@ public class Controller {
     public void addRoomCreationInput(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
         menu.setDisable(true);
         menu.setVisible(false);
-        confirmRoom.setVisible(false);
+        confirmRoom.setVisible(!textFieldRoom.getText().isEmpty());
         labelRoom.setVisible(true);
         textFieldRoom.setVisible(true);
         labelRoom.setDisable(false);
@@ -825,18 +825,13 @@ public class Controller {
         name.setText("Nickname : \n"+ pg.getNickname());
         score.setText("Points : " + pg.getPlayerGround().getPlayerScore());
         ImageView iv;
-        for(int i = 0;i<84;i++){
-            for(int j = 0;j<84;j++){
-                if(pg.getPlayerGround().getGround()[i][j]!=null){
-                    if(pg.getPlayerGround().getGround()[i][j].getFlip()) {
-                        iv = new ImageView(new Image("file:" + imagesBackPath + pg.getPlayerGround().getGround()[i][j].getId() + ".png", 150, 100, false, false));
-                    }
-                    else{
-                        iv = new ImageView(new Image("file:" + imagesFrontPath + pg.getPlayerGround().getGround()[i][j].getId() + ".png", 150, 100, false, false));
-                    }
-                    gridPaneGroundOther.add(iv,j,i);
-                }
+        for(Move move : pg.getPlayerGround().getMoves()){
+            if (pg.getPlayerGround().getGround()[move.getPos().getX()][move.getPos().getY()].getFlip()) {
+                iv = new ImageView(new Image("file:" + imagesBackPath + pg.getPlayerGround().getGround()[move.getPos().getX()][move.getPos().getY()].getId() + ".png", 150, 100, false, false));
+            } else {
+                iv = new ImageView(new Image("file:" + imagesFrontPath + pg.getPlayerGround().getGround()[move.getPos().getX()][move.getPos().getY()].getId() + ".png", 150, 100, false, false));
             }
+            gridPaneGroundOther.add(iv,move.getPos().getY(),move.getPos().getX());
         }
     }
 }

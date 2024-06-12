@@ -27,6 +27,8 @@ public class PlayerGround implements Serializable {
     private Position lastPositionPlaced;
     private Card availabilityCard;
 
+    private ArrayList<Move> moves = new ArrayList<Move>();
+
     // TO DO: the size of the ground should adjust based on the number of players (?)
 
     /**
@@ -159,6 +161,7 @@ public class PlayerGround implements Serializable {
             updateMultipleResources(starterCard.getBackRes());
         }
         addCard(starterCard, position);
+        moves.add(new Move(starterCard,position));
 
     }
 
@@ -186,6 +189,7 @@ public class PlayerGround implements Serializable {
         updateSingleResource(1, playableCard.getColor());
         }
         addCard(playableCard, position);
+        moves.add(new Move(playableCard,position));
     }
 
     /**
@@ -481,6 +485,9 @@ public class PlayerGround implements Serializable {
         if (keyToRemove != null) {
             availableNumbers.remove(keyToRemove);
         }
+    }
+    public ArrayList<Move> getMoves(){
+        return moves;
     }
 
 }

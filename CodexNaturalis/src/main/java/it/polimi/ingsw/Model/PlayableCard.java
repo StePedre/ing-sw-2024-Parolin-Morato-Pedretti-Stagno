@@ -16,6 +16,8 @@ public class PlayableCard extends Card implements Serializable {
     private static final long serialVersionUID = 6L;
     private HashMap<Resource, Integer> requirements;
 
+
+
     /**
      * Class constructor. All parameters except the last one are described in Card class
      * and set using the super class constructor.
