@@ -19,6 +19,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.effect.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -390,121 +391,124 @@ public class GUIsocket extends Application{
             controller.setDropZones(zone);
         }
        //  controller.setLinkToPlayerGrounds(g, p);   TO DO: mostrare playground altri giocatori
-        if(!client.receiveBooleanFromServer()){    // if not last turn
+        if(!client.receiveBooleanFromServer()) {    // if not last turn
             //  controller.updateGrounds(g.getPlayers());
             showYourTurn(stage);
-            controller.getFlipButton().setOnAction(e->{
-                controller.flipCard(player[0].getHand());
-            });
-            ivl = controller.getHandCardLeft();
-            ivc = controller.getHandCardCenter();
-            ivr = controller.getHandCardRight();
-            if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandLeft())){
-                ivl.setOnDragDetected(event -> {
-                    Dragboard db = ivl.startDragAndDrop(TransferMode.MOVE);
-                    Image dragMiniature = new Image(ivl.getImage().getUrl(), 150, 100, true, true);
-                    ClipboardContent content = new ClipboardContent();
-                    content.putImage(dragMiniature);
-                    db.setContent(content);
-                    event.consume();
-                    controller.setCardPlayed(controller.getCurrentHandLeft());
-                });
-            }
-            if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandCenter())) {
-                ivc.setOnDragDetected(event -> {
-                    Dragboard db = ivc.startDragAndDrop(TransferMode.MOVE);
-                    Image dragMiniature = new Image(ivc.getImage().getUrl(), 150, 100, true, true);
-                    ClipboardContent content = new ClipboardContent();
-                    content.putImage(dragMiniature);
-                    db.setContent(content);
-                    event.consume();
-                    controller.setCardPlayed(controller.getCurrentHandCenter());
-                });
-            }
-            if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandRight())) {
-                ivr.setOnDragDetected(event -> {
-                    Dragboard db = ivr.startDragAndDrop(TransferMode.MOVE);
-                    Image dragMiniature = new Image(ivr.getImage().getUrl(), 150, 100, true, true);
-                    ClipboardContent content = new ClipboardContent();
-                    content.putImage(dragMiniature);
-                    db.setContent(content);
-                    event.consume();
-                    controller.setCardPlayed(controller.getCurrentHandRight());
-                });
-            }
-            ivl.setOnDragDone(event -> {
-                try {
-                    if(controller.getPosPlayed()!=null){
-                        client.sendToServer(controller.getCardPlayed());
-                        client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        controller.updateAfterPlay(client.receivePlayerFromServer(), controller.getPosPlayed());
-                        controller.setPosPlayedNull();// works
-                        if (client.receiveBooleanFromServer()) {
-                            switchToWaitingFinish(stage);
-                        } else {
-                            if (client.receiveBooleanFromServer()) {
-                                event.consume();
-                                switchToDraw(stage, game[0], controller);
-                            } else {
-                                event.consume();
-                                notYourTurn(stage, game[0], player[0], controller);
-                            }
-                        }
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            ivc.setOnDragDone(event -> {
-                try {
-                    if(controller.getPosPlayed()!=null) {
-                        client.sendToServer(controller.getCardPlayed());
-                        client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
-                        controller.setPosPlayedNull();
-                        if (client.receiveBooleanFromServer()) {
-                            switchToWaitingFinish(stage);
-                        } else {
-                            if (client.receiveBooleanFromServer()) {
-                                event.consume();
-                                switchToDraw(stage, game[0], controller);
-                            } else {
-                                event.consume();
-                                notYourTurn(stage, game[0], player[0], controller);
-                            }
-                        }
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-           ivr.setOnDragDone(event -> {
-                try {
-                    if(controller.getPosPlayed()!=null) {
-                        client.sendToServer(controller.getCardPlayed());
-                        client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                        controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
-                        controller.setPosPlayedNull();
-                        if (client.receiveBooleanFromServer()) {
-                            switchToWaitingFinish(stage);
-                        } else {
-                            if (client.receiveBooleanFromServer()) {
-                                event.consume();
-                                switchToDraw(stage, game[0], controller);
-                            } else {
-                                event.consume();
-                                notYourTurn(stage, game[0], player[0], controller);
-                            }
-                        }
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            });
         }
         else{ // ultimo turno
-            switchToLastTurn(stage, p, g);
+            showLastTurn(stage);
         }
+        controller.getFlipButton().setOnAction(e->{
+            controller.flipCard(player[0].getHand());
+        });
+        ivl = controller.getHandCardLeft();
+        ivc = controller.getHandCardCenter();
+        ivr = controller.getHandCardRight();
+        if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandLeft())){
+            ivl.setOnDragDetected(event -> {
+                Dragboard db = ivl.startDragAndDrop(TransferMode.MOVE);
+                Image dragMiniature = new Image(ivl.getImage().getUrl(), 150, 100, true, true);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(dragMiniature);
+                db.setContent(content);
+                event.consume();
+                controller.setCardPlayed(controller.getCurrentHandLeft());
+            });
+        }
+        if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandCenter())) {
+            ivc.setOnDragDetected(event -> {
+                Dragboard db = ivc.startDragAndDrop(TransferMode.MOVE);
+                Image dragMiniature = new Image(ivc.getImage().getUrl(), 150, 100, true, true);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(dragMiniature);
+                db.setContent(content);
+                event.consume();
+                controller.setCardPlayed(controller.getCurrentHandCenter());
+            });
+        }
+        if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandRight())) {
+            ivr.setOnDragDetected(event -> {
+                Dragboard db = ivr.startDragAndDrop(TransferMode.MOVE);
+                Image dragMiniature = new Image(ivr.getImage().getUrl(), 150, 100, true, true);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(dragMiniature);
+                db.setContent(content);
+                event.consume();
+                controller.setCardPlayed(controller.getCurrentHandRight());
+            });
+        }
+        ivl.setOnDragDone(event -> {
+            try {
+                if(controller.getPosPlayed()!=null){
+                    client.sendToServer(controller.getCardPlayed());
+                    client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                    controller.updateAfterPlay(client.receivePlayerFromServer(), controller.getPosPlayed());
+                    controller.setPosPlayedNull();// works
+                    if (client.receiveBooleanFromServer()) {
+                        switchToWaitingFinish(stage);
+                    } else {
+                        if (client.receiveBooleanFromServer()) {
+                            event.consume();
+                            switchToDraw(stage, game[0], controller);
+                        } else {
+                            event.consume();
+                            showZeroCards(stage);
+                            notYourTurn(stage, game[0], player[0], controller);
+                        }
+                    }
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        ivc.setOnDragDone(event -> {
+            try {
+                if(controller.getPosPlayed()!=null) {
+                    client.sendToServer(controller.getCardPlayed());
+                    client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                    controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
+                    controller.setPosPlayedNull();
+                    if (client.receiveBooleanFromServer()) {
+                        switchToWaitingFinish(stage);
+                    } else {
+                        if (client.receiveBooleanFromServer()) {
+                            event.consume();
+                            switchToDraw(stage, game[0], controller);
+                        } else {
+                            event.consume();
+                            showZeroCards(stage);
+                            notYourTurn(stage, game[0], player[0], controller);
+                        }
+                    }
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
+       ivr.setOnDragDone(event -> {
+            try {
+                if(controller.getPosPlayed()!=null) {
+                    client.sendToServer(controller.getCardPlayed());
+                    client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
+                    controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
+                    controller.setPosPlayedNull();
+                    if (client.receiveBooleanFromServer()) {
+                        switchToWaitingFinish(stage);
+                    } else {
+                        if (client.receiveBooleanFromServer()) {
+                            event.consume();
+                            switchToDraw(stage, game[0], controller);
+                        } else {
+                            event.consume();
+                            showZeroCards(stage);
+                            notYourTurn(stage, game[0], player[0], controller);
+                        }
+                    }
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public void notYourTurn(Stage stage, Game g, Player p, Controller controller) throws IOException, ClassNotFoundException {
@@ -594,7 +598,7 @@ public class GUIsocket extends Application{
         innerShadow.setWidth(30.0);
         innerShadow.setHeight(30.0);
         innerShadow.setRadius(14.5);
-        dropShadow.setColor(javafx.scene.paint.Color.BLUE);
+        dropShadow.setColor(Color.BLUE);
         controller.getResUp1().setOnMouseEntered(e -> controller.getResUp1().setEffect(dropShadow));
         controller.getResUp2().setOnMouseEntered(e -> controller.getResUp2().setEffect(dropShadow));
         controller.getResDeck().setOnMouseEntered(e -> controller.getResDeck().setEffect(dropShadow));
@@ -716,11 +720,6 @@ public class GUIsocket extends Application{
             protected Integer call() throws Exception {
                 if(!client.receiveBooleanFromServer()){
                     if(client.receiveBooleanFromServer()){
-                     //   controller.getStartLabel().setText("Every player has logged in!");
-                     //   controller.getStartLabel2().setText("Press the button to continue.");
-                       /* controller.getWaitingBar().setVisible(false);
-                        controller.getButtonStart().setDisable(false);
-                        controller.getButtonStart().setVisible(true);*/
                     }
                 }
                 return null;
@@ -755,12 +754,33 @@ public class GUIsocket extends Application{
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
-            /*ArrayList<Player> winners = controller.getWinners();
-            if (winners.size() == 1) {
-                showSingleWinner(stage, winners);
-            } else {
-                showWinners(stage, winners);
-            }*/
+            ArrayList<Player>[] winners = new ArrayList[1];
+            Task<Integer> task = new Task<>(){
+                @Override
+                protected Integer call() throws Exception {
+                    winners[0] = client.receiveWinnersFromServer();
+                    return null;
+                }
+            };
+            Thread t = new Thread(task);
+            t.setDaemon(true);
+            t.start();
+            task.setOnSucceeded(event ->{
+                if(winners[0].size()==1){
+                    try {
+                        showSingleWinner(stage, winners[0]);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                else{
+                    try {
+                        showWinners(stage, winners[0]);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
         } catch(IOException e) {
             try {
                 showError(stage);
@@ -799,18 +819,7 @@ public class GUIsocket extends Application{
         stage.setScene(scene);
         stage.show();
     }
-    // messaggio che annuncia il raggiungimento di 20 punti -> poi va a schermata waiting
-    public void showTwentyPoints(Stage stage){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/20points.fxml"));
-            Parent root = loader.load();
-            Controller controller = loader.getController();
-            Stage stage2 = new Stage();
-            stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
-            stage2.initOwner(stage);
-            Scene scene = new Scene(root);
-            stage2.setScene(scene);
-            // pulsing label animation
+    /*animazione che pulsa
             ScaleTransition scaleUp = new ScaleTransition(Duration.millis(500), controller.getLabel20p());
             scaleUp.setToX(1.2);
             scaleUp.setToY(1.2);
@@ -822,21 +831,8 @@ public class GUIsocket extends Application{
             pulse.setAutoReverse(true);
             pulse.play();
             stage2.showAndWait();
-            controller.getFinishButton().setOnAction(e -> {
-                try {
-                    switchToWaitingFinish(stage);
-                } catch (ClassNotFoundException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-        } catch (IOException e){
-            try {
-                showError(stage);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-    }
+          */
+
     public void showZeroCards(Stage stage) throws IOException {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/zeroCards.fxml"));
@@ -876,7 +872,7 @@ public class GUIsocket extends Application{
         }
     }
 
-    public void switchToLastTurn(Stage stage, Player p, Game g) throws IOException {
+    public void showLastTurn(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lastTurn.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -886,38 +882,11 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root);
         stage2.setScene(scene);
         stage2.showAndWait();
-        /*try {
-            if(controller.playCard(p, g)){
-                if(client.receiveBooleanFromServer()){
-                    switchToWaitingFinish(stage);
-                }
-            }
-        } catch (IOException | ClassNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }*/
     }
     public static void startGUI(){
         launch();
     }
-    /*
-    public void simulateEnd(Stage stage) throws IOException {
-        boolean flag = true;
-        if(flag){ // se è il suo turno
-            if(!flag){
-                switchToYourTurn(stage);
-            }
-            else{ // ultimo turno
-                //showTwentyPoints(stage);
-                showZeroCards(stage);
-            }
-        }
-        ArrayList<Player> winners = new ArrayList<>();
-        winners.add(new Player("silvia"));
-      //  showSingleWinner(stage, winners);
-        winners.add(new Player("matteo"));
-        showWinners(stage, winners);
-    }
-    */
+
     public void switchToIpInput(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/IpInputScene.fxml"));
         Parent root = loader.load();
