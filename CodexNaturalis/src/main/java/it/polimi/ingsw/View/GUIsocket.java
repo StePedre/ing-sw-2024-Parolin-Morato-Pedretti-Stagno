@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.*;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
@@ -898,12 +899,13 @@ public class GUIsocket extends Application{
         controller.getIpButton().setOnAction(e -> {
             try{
                 String host = controller.getIpField().getText();
-                Socket socket = new Socket(host, 59090);
+                Socket socket = new Socket(InetAddress.getByName(host), 59090);
                 client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
                 switchToRoomChoice(stage);
             }
             catch (IOException | ClassNotFoundException ex){
                 try {
+                    ex.printStackTrace();
                     switchToIpInput(stage);   // dovrebbe essere sostituito con valid label e permesso di reinserire l'input
                 } catch (IOException exc) {
                     try {

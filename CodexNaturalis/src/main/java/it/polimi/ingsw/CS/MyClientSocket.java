@@ -1,5 +1,6 @@
 package it.polimi.ingsw.CS;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.View.*;
@@ -41,7 +42,7 @@ public class MyClientSocket {
     }
     public void useTUI(int port, String host) throws IOException, ClassNotFoundException, InterruptedException {
         tui= new TUI();
-        socket = new Socket(host, port);
+        socket = new Socket(InetAddress.getByName(host), port);
         in = new ObjectInputStream(socket.getInputStream());
         out = new ObjectOutputStream(socket.getOutputStream());
         ArrayList<Room> room = (ArrayList<Room>) in.readObject();
