@@ -51,7 +51,6 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.setMaximized(true);
-        stage.setFullScreen(false);
         stage.show();
         scene.setOnKeyReleased(keyEvent -> {
             try {
@@ -366,6 +365,7 @@ public class GUIsocket extends Application{
         controller.addNames(g, p);
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.show();
         controller.placeFirstCard(p);
         if(client.receiveBooleanFromServer()) {    // se è il suo turno
             try {
@@ -922,6 +922,7 @@ public class GUIsocket extends Application{
         controller.getAnchor10().getChildren().addFirst(background);
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
         controller.getIpButton().setOnAction(e -> {
             try{
