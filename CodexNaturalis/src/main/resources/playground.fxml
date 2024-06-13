@@ -17,7 +17,7 @@
 
 <?import javafx.scene.image.Image?>
 <HBox fx:id="playGroundHBox" alignment="CENTER" prefHeight="${screenHeight}" prefWidth="${screenWidth}" style="-fx-background-color: #E4CAA9" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
-    <AnchorPane fx:id="playGroundAnchor" prefHeight="${screenHeight}" prefWidth="${screenWidth}" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+    <AnchorPane fx:id="playGroundAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
         <HBox fx:id="hboxHand" layoutX="630.0" layoutY="950.0" prefHeight="100.0" prefWidth="440.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="380.0" AnchorPane.rightAnchor="380.0" AnchorPane.topAnchor="603.3333333333334">
             <ImageView fx:id="handCardLeft" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
                 <HBox.margin>
