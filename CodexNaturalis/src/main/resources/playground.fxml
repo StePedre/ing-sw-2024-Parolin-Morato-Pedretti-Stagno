@@ -97,6 +97,9 @@
                   <font>
                      <Font name="Bookman Old Style" size="16.0" />
                   </font>
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
                </Label>
             </children>
          </HBox>
@@ -107,6 +110,9 @@
                   <font>
                      <Font name="Bookman Old Style" size="16.0" />
                   </font>
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
                </Label>
             </children>
          </HBox>
@@ -117,6 +123,9 @@
                   <font>
                      <Font name="Bookman Old Style" size="16.0" />
                   </font>
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
                </Label>
             </children>
          </HBox>
