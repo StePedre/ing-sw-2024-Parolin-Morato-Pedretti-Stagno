@@ -40,7 +40,10 @@ public class Client {
                         GUIrmi.startGUI();
                     }
                     else{
-                        ClientRMIInterface myClientRMI = new MyClientRMI("rmi://localhost/ServerRMI");
+                        System.out.println("Insert the correct ip address of the server you want to connect to:");
+                        Scanner scanner = new Scanner(System.in);
+                        String ip = scanner.nextLine();
+                        ClientRMIInterface myClientRMI = new MyClientRMI("rmi://"+ip+"/ServerRMI");
                         myClientRMI.runClient();
                     }
                     flag=true;
