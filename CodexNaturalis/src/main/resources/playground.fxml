@@ -60,12 +60,20 @@
             </font>
          </Button>
         </HBox>
-        <VBox layoutX="46.0" layoutY="42.0" prefHeight="554.0" prefWidth="140.0" AnchorPane.leftAnchor="34.0" AnchorPane.topAnchor="34.0">
-            <Label fx:id="labelNick" alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="Nickname">
-                <font>
-                    <Font name="Bookman Old Style" size="18.0" />
-                </font>
-            </Label>
+        <VBox alignment="CENTER" layoutX="10.0" layoutY="42.0" prefHeight="605.0" prefWidth="205.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="34.0">
+         <HBox>
+            <children>
+               <ImageView fx:id="yourPawn" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="labelNick" alignment="CENTER" prefHeight="21.0" prefWidth="177.0" text="Nickname">
+                      <font>
+                          <Font name="Bookman Old Style" size="18.0" />
+                      </font>
+                  <HBox.margin>
+                     <Insets right="20.0" />
+                  </HBox.margin>
+                  </Label>
+            </children>
+         </HBox>
             <Label fx:id="labelPoints" alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="Points:">
                 <font>
                     <Font name="Bookman Old Style" size="18.0" />
@@ -74,7 +82,7 @@
                <Insets top="10.0" />
             </VBox.margin>
             </Label>
-         <Label alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="Players' points:">
+         <Label alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="Others' points:">
             <font>
                <Font name="Bookman Old Style" size="18.0" />
             </font>
@@ -82,25 +90,43 @@
                <Insets top="20.0" />
             </VBox.margin>
          </Label>
-         <Label fx:id="labelPoints2" alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="name1" visible="false">
-            <font>
-               <Font name="Bookman Old Style" size="18.0" />
-            </font>
-         </Label>
-         <Label fx:id="labelPoints3" alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="name2" visible="false">
-            <font>
-               <Font name="Bookman Old Style" size="18.0" />
-            </font>
-         </Label>
-         <Label fx:id="labelPoints4" alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="name3" visible="false">
-            <font>
-               <Font name="Bookman Old Style" size="18.0" />
-            </font>
-         </Label>
+         <HBox>
+            <children>
+               <ImageView fx:id="pawn2" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+               <Label fx:id="labelPoints2" alignment="CENTER" prefHeight="21.0" prefWidth="191.0" text="name1" visible="false">
+                  <font>
+                     <Font name="Bookman Old Style" size="16.0" />
+                  </font>
+               </Label>
+            </children>
+         </HBox>
+         <HBox>
+            <children>
+               <ImageView fx:id="pawn3" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+               <Label fx:id="labelPoints3" alignment="CENTER" prefHeight="21.0" prefWidth="190.0" text="name2" visible="false">
+                  <font>
+                     <Font name="Bookman Old Style" size="16.0" />
+                  </font>
+               </Label>
+            </children>
+         </HBox>
+         <HBox>
+            <children>
+               <ImageView fx:id="pawn4" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+               <Label fx:id="labelPoints4" alignment="CENTER" prefHeight="21.0" prefWidth="191.0" text="name3" visible="false">
+                  <font>
+                     <Font name="Bookman Old Style" size="16.0" />
+                  </font>
+               </Label>
+            </children>
+         </HBox>
          <Label alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="Click on their">
             <font>
                <Font name="Bookman Old Style" size="18.0" />
             </font>
+            <padding>
+               <Insets top="20.0" />
+            </padding>
          </Label>
          <Label alignment="CENTER" prefHeight="47.0" prefWidth="140.0" text="names to see">
             <font>
@@ -117,7 +143,7 @@
                     <Font name="Bookman Old Style" size="16.0" />
                 </font>
                 <padding>
-                    <Insets top="270.0" />
+                    <Insets top="250.0" />
                 </padding>
             </Label>
             <ImageView fx:id="secretObj" fitHeight="94.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
@@ -207,14 +233,15 @@
                     <image>
                         <Image url="Insect.png" />
                     </image></ImageView>
+
                 <ImageView fx:id="leafRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="Leaf.png" />
                     </image></ImageView>
                 <ImageView fx:id="foxRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
-                <image>
-                <Image url="Animal.png"/>
-                </image></ImageView>
+                    <image>
+                        <Image url="Animal.png"/>
+                    </image></ImageView>
                 <ImageView fx:id="potionRes" fitHeight="20.0" fitWidth="23.8" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="Potion.png" />
@@ -227,6 +254,7 @@
                     <image>
                         <Image url="Plume.png" />
                     </image></ImageView>
+
             </HBox>
             <HBox>
                 <Label fx:id="mushroomNum" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" text="0">

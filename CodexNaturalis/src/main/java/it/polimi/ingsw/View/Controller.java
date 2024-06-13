@@ -53,7 +53,7 @@ public class Controller {
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
     @FXML
-    private ImageView resUp1, resUp2, resDeck, goldUp1, goldUp2, goldDeck;
+    private ImageView resUp1, resUp2, resDeck, goldUp1, goldUp2, goldDeck, yourPawn, pawn2, pawn3, pawn4;
     @FXML
     private Label labelPoints, labelPoints2, labelPoints3, labelPoints4, mushroomNum, bugNum, leafNum, foxNum, potionNum, scrollNum, plumeNum;
     @FXML
@@ -455,20 +455,19 @@ public class Controller {
 
     public void addNames(Game g, Player p) {
         labelNick.setText("Player: " + p.getNickname());
-        String color = colorToString(p.getColor());
-        labelNick.setStyle("-fx-text-fill: " + color);
+        colorToPawn(p.getColor(), yourPawn);
         for (Player player : g.getPlayers()) {
             if (!player.getNickname().equals(p.getNickname())) {
                 if (!labelPoints2.isVisible()) {
-                    labelPoints2.setText(player.getNickname());
+                    labelPoints2.setText(player.getNickname()+ ": 0");
                     nick2 = player.getNickname();
                     labelPoints2.setVisible(true);
                 } else if (!labelPoints3.isVisible()) {
-                    labelPoints3.setText(player.getNickname());
+                    labelPoints3.setText(player.getNickname()+ ": 0");
                     nick3 = player.getNickname();
                     labelPoints3.setVisible(true);
                 } else if (!labelPoints4.isVisible()) {
-                    labelPoints4.setText(player.getNickname());
+                    labelPoints4.setText(player.getNickname()+ ": 0");
                     nick4 = player.getNickname();
                     labelPoints4.setVisible(true);
                 }
@@ -482,16 +481,13 @@ public class Controller {
             if (!player.getNickname().equals(p.getNickname())) {
                 if (player.getNickname().equals(nick2)) {
                     labelPoints2.setText(nick2 + ": " + player.getPlayerGround().getPlayerScore());
-                    String color = colorToString(player.getColor());
-                    labelPoints2.setStyle("-fx-text-fill: " + color);
+                    colorToPawn(player.getColor(), pawn2);
                 } else if (player.getNickname().equals(nick3)) {
                     labelPoints3.setText(nick3 + ": " + player.getPlayerGround().getPlayerScore());
-                    String color = colorToString(player.getColor());
-                    labelPoints3.setStyle("-fx-text-fill: " + color);
+                    colorToPawn(player.getColor(), pawn3);
                 } else if (player.getNickname().equals(nick4)) {
                     labelPoints4.setText(nick4 + ": " + player.getPlayerGround().getPlayerScore());
-                    String color = colorToString(player.getColor());
-                    labelPoints4.setStyle("-fx-text-fill: " + color);
+                    colorToPawn(player.getColor(), pawn4);
                 }
             }
         }
@@ -501,21 +497,19 @@ public class Controller {
         setTotalResource(p.getPlayerGround().getTotalResources());
     }
 
-    public String colorToString(String color) {
-        String c = "";
+    public void colorToPawn(String color, ImageView iv) {
         if (color.equals("red")) {
-            c = "#a90303";
+            iv.setImage(new Image("CODEX_pion_rouge.png", 20, 20, false, false));
         }
         if (color.equals("blue")) {
-            c = "#1472d2";
+            iv.setImage(new Image("CODEX_pion_bleu.png", 20, 20, false, false));
         }
         if (color.equals("green")) {
-            c = "#338d25";
+            iv.setImage(new Image("CODEX_pion_vert.png", 20, 20, false, false));
         }
         if (color.equals("yellow")) {
-            c = "#9117b0";
+            iv.setImage(new Image("CODEX_pion_jaune.png", 20, 20, false, false));
         }
-        return c;
     }
 
     public void updateAfterPlay(Player p, Position pos) {
