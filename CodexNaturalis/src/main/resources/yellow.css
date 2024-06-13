@@ -1,0 +1,5 @@
+.yellow {
+    -fx-background-image:url(CODEX_pion_jaune.png);
+    -fx-background-size: contain;
+    -fx-background-position: center;
+}

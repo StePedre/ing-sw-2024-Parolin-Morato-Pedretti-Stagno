@@ -1,0 +1,5 @@
+.red {
+    -fx-background-image:url(CODEX_pion_rouge.png);
+    -fx-background-size: contain;
+    -fx-background-position: center;
+}

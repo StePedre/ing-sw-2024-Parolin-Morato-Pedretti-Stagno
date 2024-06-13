@@ -1,0 +1,5 @@
+.green {
+    -fx-background-image:url(CODEX_pion_vert.png);
+    -fx-background-size: contain;
+    -fx-background-position: center;
+}

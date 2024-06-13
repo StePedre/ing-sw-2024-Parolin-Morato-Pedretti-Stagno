@@ -1,0 +1,5 @@
+.blue {
+    -fx-background-image:url(CODEX_pion_bleu.png);
+    -fx-background-size: contain;
+    -fx-background-position: center;
+}

@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import java.net.URL?>
 <AnchorPane fx:id="anchor10" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <children>
       <VBox alignment="CENTER" layoutX="590.0" layoutY="260.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -24,7 +25,10 @@
                   <Insets left="200.0" right="200.0" />
                </VBox.margin>
                <children>
-                  <ToggleButton fx:id="red" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #a90303;" toggleGroup="$colors">
+                  <ToggleButton fx:id="red" disable="true" visible="false" mnemonicParsing="false" style="-fx-background-color: #E4CAA9" prefHeight="140.0" prefWidth="140.0" styleClass="red" toggleGroup="$colors">
+                     <stylesheets>
+                        <URL value="@red.css" />
+                     </stylesheets>
                      <toggleGroup>
                         <ToggleGroup fx:id="colors" />
                      </toggleGroup>
@@ -32,17 +36,26 @@
                         <Insets right="20.0" />
                      </HBox.margin>
                   </ToggleButton>
-                  <ToggleButton fx:id="blue" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #1472d2;" toggleGroup="$colors">
+                  <ToggleButton fx:id="blue" style="-fx-background-color: #E4CAA9" styleClass="blue" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" toggleGroup="$colors">
+                     <stylesheets>
+                        <URL value="@blue.css" />
+                     </stylesheets>
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </ToggleButton>
-                  <ToggleButton fx:id="green" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #338d25;" toggleGroup="$colors">
+                  <ToggleButton fx:id="green" style="-fx-background-color: #E4CAA9" styleClass="green" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" toggleGroup="$colors">
+                     <stylesheets>
+                        <URL value="@green.css" />
+                     </stylesheets>
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
                   </ToggleButton>
-                  <ToggleButton fx:id="yellow" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" style="-fx-background-color: #9117b0;" toggleGroup="$colors">
+                  <ToggleButton fx:id="yellow" style="-fx-background-color: #E4CAA9" styleClass="yellow" disable="true" visible="false" mnemonicParsing="false" prefHeight="140.0" prefWidth="140.0" toggleGroup="$colors">
+                     <stylesheets>
+                        <URL value="@yellow.css" />
+                     </stylesheets>
                      <HBox.margin>
                         <Insets left="20.0" />
                      </HBox.margin>
