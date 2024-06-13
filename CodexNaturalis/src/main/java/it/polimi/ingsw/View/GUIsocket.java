@@ -56,7 +56,6 @@ public class GUIsocket extends Application{
         scene.setOnKeyReleased(keyEvent -> {
             try {
                 switchToIpInput(stage);
-                //switchToRoomChoice(stage);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

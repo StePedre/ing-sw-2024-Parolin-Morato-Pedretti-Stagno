@@ -26,6 +26,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -33,25 +34,22 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static javafx.application.Application.launch;
+
 public class GUIrmi extends Application {
 
     private final Screen screen = Screen.getPrimary();
     private final double screenHeight = screen.getBounds().getHeight();
     private final double screenWidth = screen.getBounds().getWidth();
     private ImageView background;
-
-    private ServerRMIInterface server;
-
     private PlayerController playerController;
+    private GUIClientRMI guiClientRMI;
+    public static void startGUI() {
+        launch();
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
-        try {
-            server = (ServerRMIInterface) Naming.lookup("rmi://localhost/ServerRMI");
-        } catch (Exception e) {
-            System.err.println("Client exception: " + e.toString());
-            e.printStackTrace();
-        }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/loadingScene.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
@@ -73,6 +71,36 @@ public class GUIrmi extends Application {
         });
     }
 
+    public void switchToIpInput(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/IpInputScene.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+        controller.getAnchor10().getChildren().addFirst(background);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        controller.getIpButton().setOnAction(e -> {
+            try{
+                String host = controller.getIpField().getText();
+               // guiClientRMI = new GUIClientRMI(nome dell'host dall'IP?????);
+                switchToRoomChoice(stage);
+            }
+            catch (IOException | ClassNotFoundException ex){
+                try {
+                    ex.printStackTrace();
+                    switchToIpInput(stage);   // dovrebbe essere sostituito con valid label e permesso di reinserire l'input
+                } catch (IOException exc) {
+                   /* try {
+                        showError(stage);
+                    } catch (IOException exce) {
+                        throw new RuntimeException(exce);
+                    }
+                    throw new RuntimeException(exc);*/
+                }
+            }
+        });
+    }
+
     public void switchToRoomChoice(Stage stage) throws IOException, ClassNotFoundException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/roomChoice.fxml"));
         Parent root = loader.load();
@@ -81,7 +109,7 @@ public class GUIrmi extends Application {
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
-        ArrayList<Room> rooms = server.getRooms().getRooms();
+        ArrayList<Room> rooms = guiClientRMI.getRooms();
         for (Room r : rooms) {
             Label elem = new Label(r.getName());
             controller.getMenu().getItems().add(elem);
@@ -112,7 +140,7 @@ public class GUIrmi extends Application {
                             }
                             if (!found) {
                                 String roomName = controller.getTfRoom().getText();
-                                if (!server.addRoom(roomName)) {
+                                if (!guiClientRMI.addRoom(roomName)) {    // chiedere se ok al server
                                     controller.getTfRoom().setText("");
                                     controller.getLabelRoom().setText("Too late! Someone else has just created a room with this name! Please input another one:");
                                 } else {
@@ -131,7 +159,7 @@ public class GUIrmi extends Application {
                     controller.addRoomsMenu();
                     controller.getConfirmRoom().setOnAction(e2 -> {
                         try {
-                            Room roomJoined = server.getRooms().getRoom(controller.getMenu().getSelectionModel().getSelectedItem().getText());
+                            Room roomJoined = guiClientRMI.getRoom(controller.getMenu().getSelectionModel().getSelectedItem().getText());
                             if (roomJoined.isFull()) {
                                 controller.getTfRoom().setText("");
                                 controller.getLabelRoom().setText("Too late! The room is full!");
@@ -160,14 +188,13 @@ public class GUIrmi extends Application {
         Button nickButton = controller.getNickButton();
         nickButton.setOnAction(actionEvent -> {
             try {
-                MyClientRMI client = new MyClientRMI("rmi://localhost/ServerRMI", false);
-                if (server.addNewPlayer(controller.getNickname(), roomName) == null) {
+                if (guiClientRMI.addPlayer(controller.getNickname(), roomName) == null) {
                     controller.getNickLabel().setPrefWidth(800);    // eventualmente aggiungere un'altra label
                     controller.getNickLabel().setStyle("-fx-text-fill: #b20b0b");
                     controller.getNickLabel().setText("This name is already taken, choose another one:");
                     controller.getNickTextField().setText("");
                 } else {
-                    if (server.getRooms().getRoom(roomName).getGame().getNumPlayer() == 1) {
+                    if (guiClientRMI.isFirst(roomName)) {
                         switchToNumberPlayers(stage, roomName);
                     } else {
                         // switchToColorChoice(stage);
@@ -267,7 +294,7 @@ public class GUIrmi extends Application {
         Button requestButton = controller.getRequestButton();
         requestButton.setOnAction(event -> {
             try {
-                server.getRooms().getRoom(roomName).getGame().setExpPlayers(controller.getNumberPlayers());
+                guiClientRMI.getRoom(roomName).getGame().setExpPlayers(controller.getNumberPlayers());
                 // switchToColorChoice(stage);  to fix for rmi
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
@@ -326,12 +353,7 @@ public class GUIrmi extends Application {
             playerController.setObjSecret(obj[1]);
             //initializePlayground(stage);
         });
-    }
-
-    public static void startGUI() {
-        launch();
-    }
-}*/
+    }*/
 
 
   /*    public void switchToColorChoice(Stage stage) throws IOException {

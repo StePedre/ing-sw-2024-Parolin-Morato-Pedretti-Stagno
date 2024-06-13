@@ -24,14 +24,12 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
 
     String roomJoined;
     ServerRMIInterface server;
-    boolean inter;
 
     boolean waitingForPlayers = false;
 
 
-    public MyClientRMI( String address ,boolean inter) throws RemoteException {
+    public MyClientRMI(String address) throws RemoteException {
         super();
-        this.inter = inter;
         try {
             server = (ServerRMIInterface) Naming.lookup(address);
             System.out.println("Connected to RMI server.");
@@ -43,13 +41,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
 
     public void runClient() throws IOException, InvalidPositionException, MissingResourcesException {
         System.out.println("Client connected");
-
-        if(inter) {//decisione se usare TUI o GUI
-            useTUI();
-        }
-        else{
-            useGUI();
-        }
+        useTUI();
     }
 
     public void writeMessage(String message) throws RemoteException{
@@ -232,9 +224,5 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     private ArrayList<Player> getPlayers() throws RemoteException {
         return server.getRooms().getRoom(roomJoined).getGame().getPlayers();
     }
-    private void useGUI(){
-     //   GUIrmi.startGUI();
-    }
-
 
 }

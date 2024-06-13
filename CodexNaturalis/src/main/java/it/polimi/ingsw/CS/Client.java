@@ -2,6 +2,8 @@ package it.polimi.ingsw.CS;
 
 import it.polimi.ingsw.Model.InvalidPositionException;
 import it.polimi.ingsw.Model.MissingResourcesException;
+import it.polimi.ingsw.View.GUIClientRMI;
+import it.polimi.ingsw.View.GUIrmi;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -34,8 +36,13 @@ public class Client {
             do {
                 choice = s.nextLine();
                 if (choice.equalsIgnoreCase("RMI")) {
-                    ClientRMIInterface myClientRMI = new MyClientRMI("rmi://localhost/ServerRMI",chooseInterface);
-                    myClientRMI.runClient();
+                    if(!chooseInterface){
+                        GUIrmi.startGUI();
+                    }
+                    else{
+                        ClientRMIInterface myClientRMI = new MyClientRMI("rmi://localhost/ServerRMI");
+                        myClientRMI.runClient();
+                    }
                     flag=true;
                 } else if(choice.equalsIgnoreCase("socket")){
                     MyClientSocket myClientSocket = new MyClientSocket(chooseInterface);
