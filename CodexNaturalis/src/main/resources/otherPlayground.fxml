@@ -28,9 +28,9 @@
                </Label>
             </children>
          </VBox>
-           <ScrollPane pannable="true" prefHeight="560.0" prefWidth="840.0">
+           <ScrollPane hbarPolicy="ALWAYS" hvalue="0.5" pannable="true" prefHeight="560.0" prefWidth="840.0" vbarPolicy="ALWAYS" vvalue="0.5">
                <content>
-                   <GridPane fx:id="gridPaneGroundOther" alignment="CENTER" translateX="-4600.0" translateY="-2250.0">
+                   <GridPane fx:id="gridPaneGroundOther" alignment="CENTER">
                        <columnConstraints>
                            <ColumnConstraints minWidth="10.0" prefWidth="117.143" />
                            <ColumnConstraints minWidth="10.0" prefWidth="117.143" />
