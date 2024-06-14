@@ -16,6 +16,18 @@ public class CoveredCornersRule implements ScoreRule, Serializable {
     private final String name = "CCR";
 
     /**
+     * This method only multiplies the number of covered corners of the card by 2 (this is always the number of points).
+     * To find out how many covered corners are there, a method from class PlayerGround is called.
+     *
+     * @param gameBoard is the instance of the player's play ground, where the card is looked for.
+     * @return the total score from the rule.
+     */
+    @Override
+    public int calculatePoints(PlayerGround gameBoard) {
+        return gameBoard.calculateNumberOfCoveredCorners()*2;
+    }
+
+    /**
      * This method returns the name (initials) of the rule.
      *
      * @return class name (in short).
@@ -31,18 +43,6 @@ public class CoveredCornersRule implements ScoreRule, Serializable {
      */
     public int getPoints() {
         return 2;
-    }
-
-    /**
-     * This method only multiplies the number of covered corners of the card by 2 (this is always the number of points).
-     * To find out how many covered corners are there, a method from class PlayerGround is called.
-     *
-     * @param gameBoard is the instance of the player's play ground, where the card is looked for.
-     * @return the total score from the rule.
-     */
-    @Override
-    public int calculatePoints(PlayerGround gameBoard) {
-        return gameBoard.calculateNumberOfCoveredCorners()*2;
     }
 
 }

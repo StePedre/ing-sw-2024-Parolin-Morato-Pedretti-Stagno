@@ -38,6 +38,34 @@ public class CompositionRule implements ScoreRule, Serializable {
     }
 
     /**
+     * This method only multiplies the number of compositions of the same type (described by offsets and colours)
+     * by the points given by that composition. To find out how many compositions of the same type are there,
+     * a method from class PlayerGround is called.
+     *
+     * @param gameBoard is the instance of the player's play ground, where compositions are looked for.
+     * @return the total score from that objective.
+     */
+    @Override
+    public int calculatePoints(PlayerGround gameBoard) {
+
+        return gameBoard.calculateNumberOfCompositions(offSets, colors) * numberOfPointsPerComposition;
+    }
+
+    /**
+     * This method returns the string of the colors of the cards of the composition in this format
+     * "colorCard1, colorCard2, colorCard3".
+     *
+     * @return string of colors.
+     */
+    public String getColors(){
+        String compositionColors = "";
+        for(Resource color: colors){
+            compositionColors = compositionColors.concat(", ").concat(color.name());
+        }
+        return compositionColors;
+    }
+
+    /**
      * This method returns the name (initials) of the rule.
      *
      * @return class name (in short).
@@ -63,40 +91,12 @@ public class CompositionRule implements ScoreRule, Serializable {
     }
 
     /**
-     * This method returns the coordinates of the second and third card of the composition.
-     *
-     * @return array of 4 coordinates, 2 per card.
-     */
-    public String getColors(){
-        String compositionColors = "";
-        for(Resource color: colors){
-            compositionColors = compositionColors.concat(", ").concat(color.name());
-        }
-        return compositionColors;
-    }
-
-
-    /**
      * This method returns the points given for each composition placed on the ground.
      *
      * @return card points.
      */
     public int getPoints() {
         return this.numberOfPointsPerComposition;
-    }
-
-    /**
-     * This method only multiplies the number of compositions of the same type (described by offsets and colours)
-     * by the points given by that composition. To find out how many compositions of the same type are there,
-     * a method from class PlayerGround is called.
-     *
-     * @param gameBoard is the instance of the player's play ground, where compositions are looked for.
-     * @return the total score from that objective.
-     */
-    @Override
-    public int calculatePoints(PlayerGround gameBoard) {
-
-        return gameBoard.calculateNumberOfCompositions(offSets, colors) * numberOfPointsPerComposition;
     }
 
     /**

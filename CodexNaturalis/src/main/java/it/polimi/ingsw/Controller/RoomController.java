@@ -7,8 +7,22 @@ import it.polimi.ingsw.Model.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * The class RoomController implements the controller in charge of managing the selection and creation of rooms in order
+ * to play a game. Every method is synchronized, which means each thread calling the method needs to wait
+ *  * for another invocation (if existing) to finish.
+ * There is a list of Room that contains all the rooms created.
+ * The controller needs to add or remove a room to the list, check if a room with the same name already exists and check
+ * if in a room already exist a player with a specified nickname.
+ */
+
 public class RoomController implements Serializable {
     ArrayList<Room> rooms;
+
+    /**
+     * Class constructor.
+     * It initializes the rooms.
+     */
     public RoomController() {
         this.rooms = new ArrayList<Room>();
     }

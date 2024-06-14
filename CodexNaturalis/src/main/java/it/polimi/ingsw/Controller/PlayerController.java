@@ -8,21 +8,10 @@ import java.util.Random;
 
 public class PlayerController implements Serializable {
 
-
-    /**
-     * set the first card of a player
-     *
-     * @param starterCard the first card to set
-     * @throws InvalidPositionException position unavailable
-     */
-    public void setFirstCard(StarterCard starterCard, PlayerGround pg) throws InvalidPositionException {
-        pg.placeCard(starterCard,new Position(42,42));
-    }
-
     /**
      * pick a random starter card from game
      *
-     * @param game teh game which the card are picked
+     * @param game the game from which the cards are picked
      * @return the starter card
      */
     public StarterCard pickCard(Game game){
@@ -40,18 +29,9 @@ public class PlayerController implements Serializable {
     }
 
     /**
-     * set the secret objective card of the player
-     *
-     * @param obj the objective card to set
-     */
-    public void setObjSecret(ObjectiveCard obj, Hand hand){
-        hand.setSecretObj(obj);
-    }
-
-    /**
      * populate the hand of a player
      *
-     * @param game the game where the card are picked
+     * @param game the game from which the cards are picked
      * @param player the player in whom hand will be populated
      */
     public synchronized void populateHand (Game game,Player player) {
@@ -65,7 +45,6 @@ public class PlayerController implements Serializable {
 
         Random rand = new Random();
         PlayableCard[] cards = new PlayableCard[3];
-        // +2 avoids the selection of cards that are revealed on the ground
         cards[0] = deckResource.drawCard(rand.nextInt(deckResource.getNumberOfCards()));
         cards[1] = deckResource.drawCard(rand.nextInt(deckResource.getNumberOfCards()));
         cards[2] = deckGold.drawCard(rand.nextInt(deckGold.getNumberOfCards()));
@@ -73,4 +52,24 @@ public class PlayerController implements Serializable {
         // card in position 2 is gold
         player.getHand().addHand(cards);
     }
+
+    /**
+     * place the first card of a player
+     *
+     * @param starterCard the first card to place
+     * @throws InvalidPositionException if the position is unavailable
+     */
+    public void setFirstCard(StarterCard starterCard, PlayerGround pg) throws InvalidPositionException {
+        pg.placeCard(starterCard,new Position(42,42));
+    }
+
+    /**
+     * set the secret objective card of the player
+     *
+     * @param obj the objective card to set
+     */
+    public void setObjSecret(ObjectiveCard obj, Hand hand){
+        hand.setSecretObj(obj);
+    }
+
 }

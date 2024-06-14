@@ -22,21 +22,12 @@ public class PlayableCard extends Card implements Serializable {
      * Class constructor. All parameters except the last one are described in Card class
      * and set using the super class constructor.
      *
-     * @param req describes number and type of each requirements needed to play the card.
+     * @param req describes number and type of each requirement needed to play the card.
      *            May be zero.
      */
     public PlayableCard(int id, ScoreRule rule, Corner[] corners, Corner[] backCorners, Resource color, HashMap<Resource, Integer> req) {
         super(id, rule, corners, backCorners, color);
         this.requirements=req;
-    }
-
-    /**
-     * The method gets the full set of resources and the amount of each one of them.
-     *
-     * @return hash map of each resource and its amount.
-     */
-    public HashMap<Resource, Integer> getRequirements() {
-        return requirements;
     }
 
     /**
@@ -48,4 +39,14 @@ public class PlayableCard extends Card implements Serializable {
         PlayableCard card = new PlayableCard(this.getId(),this.getRule(),this.getCorners(),this.getBackCorners(), this.getColor(), this.requirements);
         return card;
     }
+
+    /**
+     * The method gets the full set of resources and the amount of each one of them.
+     *
+     * @return hash map of each resource and its amount.
+     */
+    public HashMap<Resource, Integer> getRequirements() {
+        return requirements;
+    }
+
 }

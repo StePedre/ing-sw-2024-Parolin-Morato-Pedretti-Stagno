@@ -26,16 +26,6 @@ public class StarterCard extends Card implements Serializable {
     }
 
     /**
-     * The method gets the list of resources displayed on the back of the card.
-     *
-     * @return a list of resources that appears on the back of the card.
-     *         May be just one.
-     */
-    public ArrayList<Resource> getBackRes() {
-        return backRes;
-    }
-
-    /**
      * The method clones the current card with all its attributes' value.
      *
      * @return an object of type PlayableCard which is exactly like the caller.
@@ -44,5 +34,14 @@ public class StarterCard extends Card implements Serializable {
         return new StarterCard(this.getId(),this.getRule(),this.getCorners(),this.getBackCorners(),this.getColor(),this.backRes);
     }
 
+    /**
+     * The method gets the list of resources displayed on the back of the card.
+     *
+     * @return a list of resources that appears on the back of the card.
+     *         May be just one.
+     */
+    public ArrayList<Resource> getBackRes() {
+        return backRes;
+    }
 
 }

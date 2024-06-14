@@ -2,10 +2,16 @@ package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.Model.*;
 
+/**
+ * The class PlaceCardController implements the controller in charge of managing the positioning of a card on the player
+ * ground.
+ * This means that a Card needs to be placed onto the player ground and then needs to be removed from the hand of
+ * the player that played that card.
+ */
 
 public class PlaceCardController {
     /**
-     * This method take a player, a card and his position and place it in his playground
+     * This method takes a player, a card and his position and place it in his playground
      *
      * @param card the card to place
      * @param player the player who play the card

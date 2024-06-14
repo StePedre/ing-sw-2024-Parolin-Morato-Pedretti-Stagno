@@ -37,6 +37,42 @@ public class Hand implements Serializable {
     }
 
     /**
+     * The method sets an array of PlayableCard passed as a parameter as the Player's hand.
+     *
+     * @param cards is the Player's hand.
+     */
+    public void addHand(PlayableCard[] cards){
+        this.cards=cards;
+    }
+
+    /**
+     * The method, given it is possible to draw from a deck, adds the chosen card (passed as a parameter) to the hand.
+     * The method firstly finds the position i of the card previously played (cards[i] is null),
+     * that should be the third position of the array. Then the new card is added to the position i, and this should
+     * guarantee a Hand with the correct number of cards.
+     *
+     * @param card needs to be added to the hand.
+     */
+    public void chooseCard(PlayableCard card) {
+        int nullIndex = 0;
+        for (int i = 0; i < maxNumberOfCards; i++) {
+            if (this.cards[i] == null)
+                nullIndex = i;
+        }
+        cards[nullIndex] = card;
+    }
+
+    /**
+     * The method check if a given deck is empty or not through its number of cards.
+     *
+     * @param deck gets checked if it's empty or not.
+     * @return true if it's possible to draw from the deck passed as a parameter (so it's not empty), false otherwise.
+     */
+    public boolean drawCard(Deck deck) {
+        return !deck.getCards().isEmpty();
+    }
+
+    /**
      * The method gets from the hand the card at the position passed as a parameter.
      *
      * @param position is the position of the requested card.
@@ -65,59 +101,36 @@ public class Hand implements Serializable {
     }
 
     /**
-     * The method sets the secret objective card of the player's hand.
+     * The method removes a Card from the hand and set to null its value. This is made to keep the number of cards in
+     * hand always fixed to 3.
      *
-     * @param secretObj is the secret objective card to set.
+     * @param card is the card to remove from the hand.
      */
-    public void setSecretObj(ObjectiveCard secretObj) {
-        this.secretObj = secretObj;
-    }
-
-    /**
-     * The method check if a given deck is empty or not through its number of cards.
-     *
-     * @param deck gets checked if it's empty or not.
-     * @return true if it's possible to draw from the deck passed as a parameter (so it's not empty), false otherwise.
-     */
-    public boolean drawCard(Deck deck) {
-        return !deck.getCards().isEmpty();
-    }
-
-    /**
-     * The method, given it is possible to draw from a deck, adds the chosen card (passed as a parameter) to the hand.
-     * The method firstly finds the position i of the card previously played (cards[i] is null),
-     * that should be the third position of the array. Then the new card is added to the position i, and this should
-     * guarantee a Hand with the correct number of cards.
-     *
-     * @param card needs to be added to the hand.
-     */
-    public void chooseCard(PlayableCard card) {
-        int nullIndex = 0;
-        for (int i = 0; i < maxNumberOfCards; i++) {
-            if (this.cards[i] == null)
-                nullIndex = i;
-        }
-        cards[nullIndex] = card;
-    }
-
-    /**
-     * The method choose the secret objective card to keep in the hand. The choice should be made between
-     * two different cards and should be done nly once for each player at the beginning of the game.
-     *
-     * @param objective is the chosen ObjectiveCard.
-     */
-    public void selectObj(ObjectiveCard objective) {
-        this.secretObj = objective;
-    }
-    public void addHand(PlayableCard[] cards){
-        this.cards=cards;
-    }
     public void removeCard(PlayableCard card){
         for(int i = 0; i<maxNumberOfCards;i++){
             if(cards[i].getId()==card.getId()){
                 cards[i]=null;
             }
         }
+    }
+
+    /**
+     * The method choose the secret objective card to keep in hand. The choice should be made between
+     * two different cards and should be done only once for each player at the beginning of the game.
+     *
+     * @param objective is the chosen ObjectiveCard.
+     */
+    public void selectObj(ObjectiveCard objective) {
+        this.secretObj = objective;
+    }
+
+    /**
+     * The method sets the secret objective card of the player's hand.
+     *
+     * @param secretObj is the secret objective card to set.
+     */
+    public void setSecretObj(ObjectiveCard secretObj) {
+        this.secretObj = secretObj;
     }
 
 }

@@ -14,6 +14,21 @@ public class OneOfEachRule implements ScoreRule, Serializable {
     private final String name = "OER";
 
     /**
+     * This method finds the minimal number between the total amount of plume appearances, potion appearances and
+     * scroll appearances. This gives the number of sets where all three are visible and it's finally multiplied by 3.
+     *
+     * @param gameBoard is the instance of the player's play ground, where sets are looked for.
+     * @return the total score from that objective.
+     */
+    @Override
+    public int calculatePoints(PlayerGround gameBoard) {
+
+        HashMap<Resource, Integer> resources = gameBoard.getTotalResources();
+
+        return Math.min(Math.min(resources.get(Resource.PLUME), resources.get(Resource.POTION)), resources.get(Resource.SCROLL)) * 3;
+    }
+
+    /**
      * This method returns the name (initials) of the rule.
      *
      * @return class name (in short).
@@ -31,18 +46,4 @@ public class OneOfEachRule implements ScoreRule, Serializable {
         return 3;
     }
 
-    /**
-     * This method finds the minimal number between the total amount of plume appearances, potion appearances and
-     * scroll appearances. This gives the number of sets where all three are visible and it's finally multiplied by 3.
-     *
-     * @param gameBoard is the instance of the player's play ground, where sets are looked for.
-     * @return the total score from that objective.
-     */
-    @Override
-    public int calculatePoints(PlayerGround gameBoard) {
-
-        HashMap<Resource, Integer> resources = gameBoard.getTotalResources();
-
-        return Math.min(Math.min(resources.get(Resource.PLUME), resources.get(Resource.POTION)), resources.get(Resource.SCROLL)) * 3;
-    }
 }

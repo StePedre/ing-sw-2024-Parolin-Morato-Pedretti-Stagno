@@ -31,21 +31,25 @@ public class NSymbolsRule implements ScoreRule, Serializable {
     }
 
     /**
+     * This method gets the total number of time a resource of the given type is present on the ground.
+     * It calculates then how many times the group of X resources appears, where X stands for numberOfResources.
+     * Finally, it multiplies the obtained result for the number of points given each time the group appears.
+     *
+     * @param gameBoard is the instance of the player's play ground, where required resource is looked for.
+     * @return the total score from the rule.
+     */
+    @Override
+    public int calculatePoints(PlayerGround gameBoard) {
+        return (gameBoard.getTotalResources().get(symbol) / numberOfResources) * numberOfPointsPerResources;
+    }
+
+    /**
      * This method returns the name (initials) of the rule.
      *
      * @return class name (in short).
      */
     public String getName(){
         return this.name;
-    }
-
-    /**
-     * This method returns the required symbol.
-     *
-     * @return rule symbol.
-     */
-    public Resource getSymbol(){
-        return this.symbol;
     }
 
     /**
@@ -58,15 +62,12 @@ public class NSymbolsRule implements ScoreRule, Serializable {
     }
 
     /**
-     * This method gets the total number of time a resource of the given type is present on the ground.
-     * It calculates then how many times the group of X resources appears, where X stands for numberOfResources.
-     * Finally, it multiplies the obtained result for the number of points given each time the group appears.
+     * This method returns the required symbol.
      *
-     * @param gameBoard is the instance of the player's play ground, where required resource is looked for.
-     * @return the total score from the rule.
+     * @return rule symbol.
      */
-    @Override
-    public int calculatePoints(PlayerGround gameBoard) {
-        return (gameBoard.getTotalResources().get(symbol) / numberOfResources) * numberOfPointsPerResources;
+    public Resource getSymbol(){
+        return this.symbol;
     }
+
 }

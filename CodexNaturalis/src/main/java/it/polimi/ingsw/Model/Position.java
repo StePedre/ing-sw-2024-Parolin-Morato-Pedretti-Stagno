@@ -27,6 +27,26 @@ public class Position implements Serializable {
     }
 
     /**
+     * The method compares an object to the caller, to see if they are equivalent.
+     *
+     * @param obj is the object to be compared.
+     * @return false if the object is null or from a different class,
+     *         true if they have both the same coordinates.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Position position = (Position) obj;
+        return x == position.x && y == position.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
+    /**
      * The method gets the numeric value of the x coordinate.
      *
      * @return x value.
@@ -60,26 +80,6 @@ public class Position implements Serializable {
      */
     public void setY(int y) {
         this.y = y;
-    }
-
-    /**
-     * The method compares an object to the caller, to see if they are equivalent.
-     *
-     * @param obj is the object to be compared.
-     * @return false if the object is null or from a different class,
-     *         true if they have both the same coordinates.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Position position = (Position) obj;
-        return x == position.x && y == position.y;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
     }
 
 }

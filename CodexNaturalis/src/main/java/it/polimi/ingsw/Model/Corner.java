@@ -13,59 +13,62 @@ import java.io.Serializable;
 
     public class Corner implements Serializable {
     private static final long serialVersionUID = 11L;
-        private String pos;
-        private Resource cornerRes;
-        private boolean isAvailable;
+    private String pos;
+    private Resource cornerRes;
+    private boolean isAvailable;
 
-        /**
-         * Class constructor.
-         *
-         * @param pos is the position of the corner between four possibilities:
-         *            top left/right, bottom left/right
-         * @param res indicates the resource displayed on the corner.
-         *            May be nothing.
-         * @param availability indicates whether the corner is available or not.ù
-         *                     Possible values: true or false.
-         */
-        public Corner(String pos, Resource res, boolean availability){
-            this.pos=pos;
-            this.cornerRes=res;
-            this.isAvailable=availability;
-        }
+    /**
+     * Class constructor.
+     *
+     * @param pos is the position of the corner between four possibilities:
+     *            top left/right, bottom left/right
+     * @param res indicates the resource displayed on the corner.
+     *            May be nothing.
+     * @param availability indicates whether the corner is available or not.
+     *                     This means either the corner does not exist on the card, or a card has been
+     *                     placed over the corner.
+     *                     Possible values: true or false.
+     */
+    public Corner(String pos, Resource res, boolean availability){
+        this.pos=pos;
+        this.cornerRes=res;
+        this.isAvailable=availability;
+    }
 
-        /**
-         * The method gets the position of a corner as a string.
-         *
-         * @return corner position.
-         */
-        public String getPos(){
-            return pos;
-        }
+    /**
+     * The method gets the status of a corner's availability.
+     *
+     * @return true if the corner is available, false otherwise.
+     */
+    public boolean getAvailability(){
+        return isAvailable;
+    }
 
-        /**
-         * The method gets the Resource of a corner.
-         *
-         * @return corner resource from class Resource. May be null.
-         */
-        public Resource getCornerRes() {
-            return cornerRes;
-        }
+    /**
+     * The method gets the Resource of a corner.
+     *
+     * @return corner resource from class Resource. May be blank if there is no resource in that corner
+     *         or none if thare is no corner in that position of the card.
+     */
 
-        /**
-         * The method gets the status of a corner's availability.
-         *
-         * @return true if the corner is available, false otherwise.
-         */
-        public boolean getAvailability(){
-            return isAvailable;
-        }
+    public Resource getCornerRes() {
+        return cornerRes;
+    }
+    /**
+     * The method gets the position of a corner as a string.
+     *
+     * @return corner position.
+     */
+    public String getPos(){
+        return pos;
+    }
 
-        /**
-         * The method sets the availability or non-availability of a corner.
-         *
-         * @param availability is the availability value (true or false) to be set.
-         */
-        public void setAvailable(boolean availability){
+    /**
+     * The method sets the availability or non-availability of a corner.
+     *
+     * @param availability is the availability value (true or false) to be set.
+     */
+    public void setAvailable(boolean availability){
         this.isAvailable=availability;
         }
 
@@ -75,4 +78,5 @@ import java.io.Serializable;
      * @param resource the resource of the corner
      */
     public void setResource(Resource resource) {this.cornerRes = resource;}
-    }
+
+}

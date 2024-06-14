@@ -6,8 +6,9 @@ import java.util.*;
 
 /**
  * Each instance of Game class is a game session. Objects of class Game must have: a list of players and their number,
- * identity of the first player, two Decks (lists of Cards), one array of ObjectiveCard, one global Chat object and
- * one array of Chat objects (all the private chats).
+ * identity of the first player, two Decks (lists of Cards), one array of ObjectiveCard, a list of ObjectiveCard,
+ * the expected number of players, a boolean isOver, a list of StarterCard, a Set of strings colours that contains
+ * the four colours that a Player can pick at the start of its Game.
  * A list of strings is initialized as empty: it will contain the nicknames of multiple winners, if there is more than
  * one winner.
  */
@@ -16,8 +17,6 @@ public class Game implements Serializable {
     private static final long serialVersionUID = 9L;
     private final ArrayList<Player> players;
     private Deck[] decks;
-    //private Chat chat;
-    //private Chat[] privChatList = new Chat[6];
     private ObjectiveCard[] commonObj;
     private ArrayList<Player> multiWinners = new ArrayList<>();
     private int expPlayers = -1;
@@ -27,6 +26,19 @@ public class Game implements Serializable {
     private final ArrayList<StarterCard> starterCards;
     private final Set<String> colors = new HashSet<>();
 
+    /**
+     * Class constructor.
+     *
+     * @param players   is the list of Players attending the game.
+     * @param decks     decks used in the game (must be 2).
+     * @param commonObj is the set of common objective cards.
+     * @param multiWinners  is the list of the players that have won.
+     * @param expPlayers    is the number of players expected for this game.
+     * @param numPlayers    is the number of players.
+     * @param otherObjs     is the list of ObjectiveCard that are not common objective.
+     * @param isOver    is the boolean that tells if the game is over or not.
+     * @param starterCards  is the list of StarterCard of each Player.
+     */
     public Game(ArrayList<Player> players, Deck[] decks, ObjectiveCard[] commonObj, ArrayList<Player> multiWinners, int expPlayers, int numPlayers, ArrayList<ObjectiveCard> otherObjs, boolean isOver, ArrayList<StarterCard> starterCards) {
         this.players = players;
         this.decks = decks;
@@ -63,6 +75,10 @@ public class Game implements Serializable {
         this.colors.add("yellow");
     }
 
+    /**
+     * Class constructor with no parameters.
+     * numPlayers is initialized to 0, the colours are added manually, others list are initialized to default.
+     */
     public Game() {
         this.players = new ArrayList<>();
         this.starterCards = new ArrayList<>();
@@ -75,134 +91,19 @@ public class Game implements Serializable {
     }
 
     /**
-     * The method gets the list of players attending the game.
+     * The method adds a player to the game and increments the total number of players. This can only happen
+     * until the total number of players is 4.
      *
-     * @return the list of players.
+     * @param player is the player to add.
      */
-    public ArrayList<Player> getPlayers() {
+    public synchronized void addPlayer(Player player) {
         synchronized (players) {
-            return players;
-        }
-    }
-
-    /**
-     * Return a Player in base of its nickname
-     *
-     * @param nickname the nickname of the layer
-     * @return the player
-     */
-    public Player getPlayer(String nickname){
-        for(Player p : players){
-            if(p.getNickname().equals(nickname)){
-             return p;
+            if (numPlayers < 4 && numPlayers <= expPlayers) {
+                players.add(player);
+                numPlayers++;
             }
         }
-        return null;
     }
-
-    /**
-     * The method gets the decks used in the game session.
-     *
-     * @return the decks array.
-     */
-    public Deck[] getDecks() {
-        return decks;
-    }
-
-    /**
-     * The method gets the number of players attending the game.
-     *
-     * @return the number of participant in the game.
-     */
-    public synchronized int getNumPlayer() {
-        synchronized (players) {
-            return numPlayers;
-        }
-    }
-
-    /**
-     * remove a player color from the pull of possible takeable color
-     *
-     * @param color the color to remove
-     * @return true if the color has been correctly removed, false otherwise
-     */
-    public synchronized boolean markColor(String color){
-        return colors.remove(color);
-    }
-
-    /**
-     * return a Set of available player color
-     *
-     * @return the set of color
-     */
-    public synchronized Set<String> getColors(){
-        return colors;
-    }
-
-    /**
-     * The method gets the global chat, where all the players are participating.
-     *
-     * @return the global Chat.
-     */
-    /*public Chat getChat() {
-        return chat;
-    }*/
-
-    /**
-     * The method gets the full list of private chats, where each one of them is between two players.
-     *
-     * @return the private Chats list.
-     */
-    /*public Chat[] getPrivChatList() {
-        return privChatList;
-    }*/
-
-    /**
-     * The method gets a specific private chat from the list of all chat between two players, checking each time
-     * the two participants' nickname.
-     *
-     * @return the requested private Chat.
-     * @throws RemoteException          because Chat class extends UnicastRemoteObject.
-     * @throws NotExistingChatException because requested chat may not exist.
-     */
-    /*public Chat getPrivateChat(Player player1, Player player2) throws RemoteException, NotExistingChatException {
-        int i = 0;
-        Chat toReturn = null;
-        for (Chat value : privChatList) {
-            if(value==null){
-                break;
-            } else if ((value.getPlayer(0) == player1 && value.getPlayer(1) == player2) || (value.getPlayer(1) == player1 && value.getPlayer(0) == player2)) {
-                toReturn = value;
-                break;
-            }
-        }
-        if(toReturn!=null){
-            return toReturn;
-        }
-        else{
-            throw new NotExistingChatException("Error: chat do not exist");
-        }
-    }*/
-
-    /**
-     * The method gets the array of common objective cards.
-     *
-     * @return ObjectiveCards array.
-     */
-    public ObjectiveCard[] getCommonObj() {
-        return commonObj;
-    }
-
-
-    /**
-     * The method initializes the game by calling other methods to create the global chat and the private ones.
-     *
-     * @throws RemoteException because Chat class extends UnicastRemoteObject.
-     */
-    /*public void start() throws RemoteException {
-        createGlobalChat();
-        createPrivateChats();
-    }*/
 
     /**
      * The method is invoked when the game is finished. The final routine consists of checking each player's score:
@@ -263,71 +164,30 @@ public class Game implements Serializable {
     }
 
     /**
-     * The method creates a new global chat through the Chat constructor: the number of players in the chat is the same
-     * as the game one.
+     * return a Set of available player colors
      *
-     * @throws RemoteException because Chat class extends UnicastRemoteObject.
+     * @return the set of colors
      */
-    /*public void createGlobalChat() throws RemoteException {
-        String name = "Global Chat";
-        int PlayersNo = this.numPlayers;
-        chat = new Chat(name, PlayersNo);
-    }*/
-
-    /**
-     * The method creates an array of new private chats through the Chat constructor: each chat has two participants.
-     * For each player, a private chat is created with all the others player, one at a time, skipping the creation
-     * when the two players are already paired.
-     *
-     * @throws RemoteException because Chat class extends UnicastRemoteObject.
-     */
-    /*public void createPrivateChats() throws RemoteException {
-        int k = 0;
-        for (int i = 0; i < (numPlayers - 1); i++) {
-            String name1 = players.get(i).getNickname();
-            for (int j = i + 1; j < numPlayers; j++) {
-                String name2 = players.get(j).getNickname();
-                String name = name1 + " and " + name2 + " Private Chat";
-                privChatList[k] = new Chat(name, 2);
-                privChatList[k].getPlayersList()[0] = players.get(i);
-                privChatList[k].getPlayersList()[1] = players.get(j);
-                k++;
-            }
-        }
-    }*/
-
-    /**
-     * The method adds a player to the game and increments the total number of players. This can only happen
-     * until the total number of players is 4.
-     *
-     * @param player is the player to add.
-     */
-    public synchronized void addPlayer(Player player) {
-        synchronized (players) {
-            if (numPlayers < 4 && numPlayers <= expPlayers) {
-                players.add(player);
-                numPlayers++;
-            }
-        }
+    public synchronized Set<String> getColors(){
+        return colors;
     }
 
     /**
-     * The method sets the decks of the game.
+     * The method gets the array of common objective cards.
      *
-     * @param decks is the array of decks that will be used in the game.
+     * @return ObjectiveCards array.
      */
-    public void setDecks(Deck[] decks) {
-        this.decks = decks;
+    public ObjectiveCard[] getCommonObj() {
+        return commonObj;
     }
 
     /**
-     * The method sets the common objectives shared by all players. There are two of them, gathered in an array of
-     * Objective Card.
+     * The method gets the decks used in the game session.
      *
-     * @param commonObj is the array of two common objectives.
+     * @return the decks array.
      */
-    public void setCommonObj(ObjectiveCard[] commonObj) {
-        this.commonObj = commonObj;
+    public Deck[] getDecks() {
+        return decks;
     }
 
     /**
@@ -340,22 +200,23 @@ public class Game implements Serializable {
     }
 
     /**
-     * The method sets the number of expected players in the game.
+     * The method gets the list of winners, which may be of size 1 in case of a single winner, but may also be of size
+     * greater than 1 (see finish() method for conditions).
      *
-     * @param n is the number of expected players.
+     * @return list of Player objects representing player(s) who win(s) the game.
      */
-    public void setExpPlayers(int n) {
-        expPlayers = n;
+    public ArrayList<Player> getMultiWinners() {
+        return multiWinners;
     }
 
     /**
-     * The method checks if the number of player is zero (in other words, if a player is the first to enter the game).
+     * The method gets the number of players attending the game.
      *
-     * @return true if there are no other players, false otherwise.
+     * @return the number of participant in the game.
      */
-    public boolean isFirst() {
+    public synchronized int getNumPlayer() {
         synchronized (players) {
-            return (numPlayers == 0);
+            return numPlayers;
         }
     }
 
@@ -372,21 +233,60 @@ public class Game implements Serializable {
     }
 
     /**
-     * The method sets the list of starter cards used in the game
+     * Return a Player from its nickname
      *
-     * @param starterCards is the list to set.
+     * @param nickname the nickname of the layer
+     * @return the player
      */
-    public void setStarterCards(ArrayList<StarterCard> starterCards) {
-        this.starterCards.addAll(starterCards);
+    public Player getPlayer(String nickname){
+        for(Player p : players){
+            if(p.getNickname().equals(nickname)){
+                return p;
+            }
+        }
+        return null;
     }
 
     /**
-     * The method sets Objective Cards that have not been already set as common objectives.
+     * The method gets the list of players attending the game.
      *
-     * @param objs are the Objective cart to set.
+     * @return the list of players.
      */
-    public void setOtherObjs(ArrayList<ObjectiveCard> objs){
-        this.otherObjs.addAll(objs);
+    public ArrayList<Player> getPlayers() {
+        synchronized (players) {
+            return players;
+        }
+    }
+
+    /**
+     * The method checks if the number of player is zero (in other words, if a player is the first to enter the game).
+     *
+     * @return true if there are no other players, false otherwise.
+     */
+    public boolean isFirst() {
+        synchronized (players) {
+            return (numPlayers == 0);
+        }
+    }
+
+    /**
+     * The method gets the boolean value of attribute isOver, which is initialized as false and should be set to true
+     * whenever the game is over, e.g. one player reaches 20 points.
+     *
+     * @return true if the game is over, false otherwise.
+     */
+    public boolean isOver() {
+        return isOver;
+    }
+
+    /**
+     * remove a player color from the pull of possible takeable color
+     *
+     * @param color the color to remove
+     * @return true if the color has been correctly removed, false otherwise
+     */
+    public synchronized boolean markColor(String color){
+        return colors.remove(color);
     }
 
     /**
@@ -404,26 +304,6 @@ public class Game implements Serializable {
     }
 
     /**
-     * The method gets the boolean value of attribute isOver, which is initialized as false and should be set to true
-     * whenever the game is over, e.g. one player reaches 20 points.
-     *
-     * @return true if the game is over, false otherwise.
-     */
-    public boolean isOver() {
-        return isOver;
-    }
-
-    /**
-     * The method gets the list of winners, which may be of size 1 in case of a single winner, but may also be of size
-     * greater than 1 (see finish() method for conditions).
-     *
-     * @return list of Player objects representing player(s) who win(s) the game.
-     */
-    public ArrayList<Player> getMultiWinners() {
-        return multiWinners;
-    }
-
-    /**
      * remove a player from the game
      *
      * @param nickname the nickname of the player to be removed
@@ -432,4 +312,51 @@ public class Game implements Serializable {
         players.removeIf(p -> p.getNickname().equals(nickname));
         numPlayers--;
     }
+
+    /**
+     * The method sets the common objectives shared by all players. There are two of them, gathered in an array of
+     * Objective Card.
+     *
+     * @param commonObj is the array of two common objectives.
+     */
+    public void setCommonObj(ObjectiveCard[] commonObj) {
+        this.commonObj = commonObj;
+    }
+
+    /**
+     * The method sets the decks of the game.
+     *
+     * @param decks is the array of decks that will be used in the game.
+     */
+    public void setDecks(Deck[] decks) {
+        this.decks = decks;
+    }
+
+    /**
+     * The method sets the number of expected players in the game.
+     *
+     * @param n is the number of expected players.
+     */
+    public void setExpPlayers(int n) {
+        expPlayers = n;
+    }
+
+    /**
+     * The method sets Objective Cards that have not been already set as common objectives.
+     *
+     * @param objs are the Objective cards to set.
+     */
+    public void setOtherObjs(ArrayList<ObjectiveCard> objs){
+        this.otherObjs.addAll(objs);
+    }
+
+    /**
+     * The method sets the list of starter cards used in the game
+     *
+     * @param starterCards is the list to set.
+     */
+    public void setStarterCards(ArrayList<StarterCard> starterCards) {
+        this.starterCards.addAll(starterCards);
+    }
+
 }

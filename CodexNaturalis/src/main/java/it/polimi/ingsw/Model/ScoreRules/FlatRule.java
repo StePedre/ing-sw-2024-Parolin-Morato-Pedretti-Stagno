@@ -23,6 +23,17 @@ public class FlatRule implements ScoreRule, Serializable {
     }
 
     /**
+     * This method only returns the number of points that are always given by placing the card on the ground.
+     *
+     * @param gameBoard is the instance of the player's play ground, where the card has been placed in.
+     * @return the points given by the card.
+     */
+    @Override
+    public int calculatePoints(PlayerGround gameBoard) {
+        return flatPoints;
+    }
+
+    /**
      * This method returns the name (initials) of the rule.
      *
      * @return class name (in short).
@@ -40,15 +51,4 @@ public class FlatRule implements ScoreRule, Serializable {
         return this.flatPoints;
     }
 
-
-    /**
-     * This method only returns the number of points that are always given by placing the card on the ground.
-     *
-     * @param gameBoard is the instance of the player's play ground, where the card has been placed in.
-     * @return the points given by the card.
-     */
-    @Override
-    public int calculatePoints(PlayerGround gameBoard) {
-        return flatPoints;
-    }
 }
