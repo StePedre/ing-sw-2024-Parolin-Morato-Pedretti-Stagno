@@ -87,7 +87,9 @@ public class PlayerGround implements Serializable {
         removeCornersResources(position, newCard);
         addCornersResources(newCard);
         updatePositionsAvailability(newCard,position);
+        if(!newCard.getFlip()){
         raiseScore(newCard.getRule());
+        }
         ground[position.getX()][position.getY()] = newCard;
         cardPosition.put(position, newCard);
     }
