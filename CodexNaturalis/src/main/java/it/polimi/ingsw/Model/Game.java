@@ -137,10 +137,9 @@ public class Game implements Serializable {
             scores[i] = p.getPlayerGround().getPlayerScore();
             i++;
         }
-        i--;
         Arrays.sort(scores);
         for(Player p  : players){
-            if(p.getPlayerGround().getPlayerScore()==scores[i]){
+            if(p.getPlayerGround().getPlayerScore()==scores[scores.length-1]){
                 multiWinners.add(p);
             }
         }
@@ -151,16 +150,15 @@ public class Game implements Serializable {
                 ObjNo[i] = p.getReachedObjNo();
                 i++;
             }
-            i--;
             Arrays.sort(ObjNo);
             for(Player p: multiWinners){
-                if(p.getReachedObjNo()==ObjNo[i]){
+                if(p.getReachedObjNo()==ObjNo[ObjNo.length-1]){
                     multi2.add(p);
                 }
             }
             multiWinners = multi2;
-            isOver = true;
         }
+        isOver = true;
     }
 
     /**
