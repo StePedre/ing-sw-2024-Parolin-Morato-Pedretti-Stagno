@@ -509,7 +509,7 @@ public class Controller {
     }
 
     public void updateAfterPlay(Player p, Position pos) {
-        if (pos.getX() == 0 || pos.getY() == 0) {
+        if (pos.getX() == 0 || pos.getY() == 0 ) {
             System.out.println("Top border");
             for (Node node : gridPaneGround.getChildren()) {
 

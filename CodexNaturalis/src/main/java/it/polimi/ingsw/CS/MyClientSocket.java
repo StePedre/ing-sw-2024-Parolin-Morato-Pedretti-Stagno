@@ -43,6 +43,7 @@ public class MyClientSocket {
     public void useTUI(int port, String host) throws IOException, ClassNotFoundException, InterruptedException {
         tui= new TUI();
         socket = new Socket(InetAddress.getByName(host), port);
+        socket.setSoTimeout(0);
         in = new ObjectInputStream(socket.getInputStream());
         out = new ObjectOutputStream(socket.getOutputStream());
         ArrayList<Room> room = (ArrayList<Room>) in.readObject();

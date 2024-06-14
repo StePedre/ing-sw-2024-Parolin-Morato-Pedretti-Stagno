@@ -349,7 +349,7 @@ public class PlayerGround implements Serializable {
      * @exception MissingResourcesException arises when trying to place a card without fulfilling its requirements.
      */
     public void placeCard(PlayableCard playableCard, Position position) throws MissingResourcesException, InvalidPositionException {
-        if (!checkRequirements(playableCard)) {
+        if (!checkRequirements(playableCard) && !playableCard.getFlip()) {
             throw new MissingResourcesException("Required resources are missing");
         }
         if (!availablePositions.contains(position)) {

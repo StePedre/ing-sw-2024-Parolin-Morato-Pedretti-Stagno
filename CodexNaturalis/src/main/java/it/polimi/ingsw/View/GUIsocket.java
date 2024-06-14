@@ -402,8 +402,8 @@ public class GUIsocket extends Application{
         ivl = controller.getHandCardLeft();
         ivc = controller.getHandCardCenter();
         ivr = controller.getHandCardRight();
-        if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandLeft())){
-            ivl.setOnDragDetected(event -> {
+        ivl.setOnDragDetected(event -> {
+            if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandLeft()) || controller.getCurrentHandLeft().getFlip()) {
                 Dragboard db = ivl.startDragAndDrop(TransferMode.MOVE);
                 Image dragMiniature = new Image(ivl.getImage().getUrl(), 150, 100, true, true);
                 ClipboardContent content = new ClipboardContent();
@@ -411,10 +411,10 @@ public class GUIsocket extends Application{
                 db.setContent(content);
                 event.consume();
                 controller.setCardPlayed(controller.getCurrentHandLeft());
-            });
-        }
-        if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandCenter())) {
-            ivc.setOnDragDetected(event -> {
+            }
+        });
+        ivc.setOnDragDetected(event -> {
+            if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandCenter()) || controller.getCurrentHandCenter().getFlip()) {
                 Dragboard db = ivc.startDragAndDrop(TransferMode.MOVE);
                 Image dragMiniature = new Image(ivc.getImage().getUrl(), 150, 100, true, true);
                 ClipboardContent content = new ClipboardContent();
@@ -422,10 +422,10 @@ public class GUIsocket extends Application{
                 db.setContent(content);
                 event.consume();
                 controller.setCardPlayed(controller.getCurrentHandCenter());
-            });
-        }
-        if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandRight())) {
-            ivr.setOnDragDetected(event -> {
+            }
+        });
+        ivr.setOnDragDetected(event -> {
+            if(player[0].getPlayerGround().checkRequirements(controller.getCurrentHandRight()) || controller.getCurrentHandRight().getFlip()) {
                 Dragboard db = ivr.startDragAndDrop(TransferMode.MOVE);
                 Image dragMiniature = new Image(ivr.getImage().getUrl(), 150, 100, true, true);
                 ClipboardContent content = new ClipboardContent();
@@ -433,8 +433,8 @@ public class GUIsocket extends Application{
                 db.setContent(content);
                 event.consume();
                 controller.setCardPlayed(controller.getCurrentHandRight());
-            });
-        }
+            }
+        });
         ivl.setOnDragDone(event -> {
             try {
                 if(controller.getPosPlayed()!=null){
@@ -928,6 +928,7 @@ public class GUIsocket extends Application{
             try{
                 String host = controller.getIpField().getText();
                 Socket socket = new Socket(InetAddress.getByName(host), 59090);
+                socket.setSoTimeout(0);
                 client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
                 switchToRoomChoice(stage);
             }

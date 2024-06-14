@@ -40,7 +40,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
     public void gameFlow(){
         try {
             Thread t = new Thread(() ->{
-                while(!game.isOver()){
+                while(true){
                     if(game.getNumPlayer()!=game.getExpPlayers()){
                         try {
                             socket.close();
@@ -103,6 +103,7 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 out.reset();
                 rc.nextRound();
             }
+            t.interrupt();
             if(rc.getLastPlayer().getNickname().equals(player.getNickname())){
                 game.finish();
             }
