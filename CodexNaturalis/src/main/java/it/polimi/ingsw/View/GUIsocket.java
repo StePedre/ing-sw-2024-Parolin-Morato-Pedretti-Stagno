@@ -440,7 +440,7 @@ public class GUIsocket extends Application{
                 if(controller.getPosPlayed()!=null){
                     client.sendToServer(controller.getCardPlayed());
                     client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                    controller.updateAfterPlay(client.receivePlayerFromServer(), controller.getPosPlayed());
+                    controller.updateAfterPlay(client.receivePlayerFromServer());
                     controller.setPosPlayedNull();// works
                     if (client.receiveBooleanFromServer()) {
                         switchToWaitingFinish(stage);
@@ -464,7 +464,7 @@ public class GUIsocket extends Application{
                 if(controller.getPosPlayed()!=null) {
                     client.sendToServer(controller.getCardPlayed());
                     client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                    controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
+                    controller.updateAfterPlay(client.receivePlayerFromServer());
                     controller.setPosPlayedNull();
                     if (client.receiveBooleanFromServer()) {
                         switchToWaitingFinish(stage);
@@ -488,7 +488,7 @@ public class GUIsocket extends Application{
                 if(controller.getPosPlayed()!=null) {
                     client.sendToServer(controller.getCardPlayed());
                     client.sendToServer(controller.reconvertPosition(controller.getPosPlayed()));
-                    controller.updateAfterPlay(client.receivePlayerFromServer(),controller.getPosPlayed());
+                    controller.updateAfterPlay(client.receivePlayerFromServer());
                     controller.setPosPlayedNull();
                     if (client.receiveBooleanFromServer()) {
                         switchToWaitingFinish(stage);

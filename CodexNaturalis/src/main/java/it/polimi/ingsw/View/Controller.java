@@ -60,7 +60,6 @@ public class Controller {
     private ImageView handCardLeft, handCardCenter, handCardRight, secretObj, logo;
     @FXML
     private ImageView commonObj1, commonObj2;
-    private int converter = 38; // 42 - 4 (coord iniziali matrice e gridPane)
     @FXML
     private Button nickButton, requestButton;
     private ArrayList<Position> availablePos = new ArrayList<>();
@@ -367,8 +366,8 @@ public class Controller {
 
     public Position reconvertPosition(Position pos) {
         Position toReturn = new Position(0, 0);
-        toReturn.setX(pos.getY() + converter);
-        toReturn.setY(pos.getX() + converter);
+        toReturn.setX(pos.getY());
+        toReturn.setY(pos.getX());
         return toReturn;
     }
 
@@ -508,29 +507,7 @@ public class Controller {
         }
     }
 
-    public void updateAfterPlay(Player p, Position pos) {
-        if (pos.getX() == 0 || pos.getY() == 0 ) {
-            System.out.println("Top border");
-            for (Node node : gridPaneGround.getChildren()) {
-
-                if (GridPane.getRowIndex(node) != null) {
-                    GridPane.setRowIndex(node, GridPane.getRowIndex(node) + 1);
-                }
-                if (GridPane.getColumnIndex(node) != null) {
-                    GridPane.setColumnIndex(node, GridPane.getColumnIndex(node) + 1);
-                }
-            }
-            addColumnRowTop();
-            converter--;
-            for(Position position : availablePos){
-                position.setX(position.getX()-1);
-                position.setY(position.getY()-1);
-            }
-        }
-        if (pos.getX() == (gridPaneGround.getColumnCount() - 1) || pos.getY() == (gridPaneGround.getRowCount() - 1)) {
-            System.out.println("Bottom border");
-            addColumnRowBottom();
-        }
+    public void updateAfterPlay(Player p) {
         addImages(p.getHand());
         setTotalResource(p.getPlayerGround().getTotalResources());
         labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
@@ -592,7 +569,7 @@ public class Controller {
         } else {
             iv = new ImageView(new Image("file:" + imagesFrontPath + sc.getId() + ".png", 150, 100, true, true));
         }
-        gridPaneGround.add(iv, 4, 4);
+        gridPaneGround.add(iv, 42, 42);
     }
 
     public PlayableCard returnCardPlayed() {
@@ -712,8 +689,8 @@ public class Controller {
         imageViewArrayList.clear();
         int x=0, y=0;
         for (Position p : pos) {
-            y = p.getX() - converter;
-            x = p.getY() - converter;
+            y = p.getX();
+            x = p.getY();
             //if(!isFound(availablePos, new Position(x, y))){
             ImageView image = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
             imageViewArrayList.add(image);
