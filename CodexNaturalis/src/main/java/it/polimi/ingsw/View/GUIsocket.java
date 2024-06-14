@@ -207,7 +207,7 @@ public class GUIsocket extends Application{
         String[] choice = new String[1];
         String[] choiceCurr = new String[1];
         choiceCurr[0] = "";
-        Glow highlight = new Glow(1.0);
+        Glow highlight = new Glow(0.5);
         Set<String> colors = client.receiveColorsFromServer();
         showColor(colors, controller);
         controller.getRed().getToggleGroup().selectedToggleProperty().addListener((observable, oldValue, newValue) -> {

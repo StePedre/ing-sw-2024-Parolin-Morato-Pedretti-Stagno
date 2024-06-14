@@ -515,6 +515,15 @@ public class Controller {
     public void updateAfterPlay(Player p, Position pos) {
         if (pos.getX() == 0 || pos.getY() == 0) {
             System.out.println("Top border");
+            for (Node node : gridPaneGround.getChildren()) {
+
+                if (GridPane.getRowIndex(node) != null) {
+                    GridPane.setRowIndex(node, GridPane.getRowIndex(node) + 1);
+                }
+                if (GridPane.getColumnIndex(node) != null) {
+                    GridPane.setColumnIndex(node, GridPane.getColumnIndex(node) + 1);
+                }
+            }
             addColumnRowTop();
             converter--;
             for(Position position : availablePos){
@@ -526,7 +535,6 @@ public class Controller {
             System.out.println("Bottom border");
             addColumnRowBottom();
         }
-
         addImages(p.getHand());
         setTotalResource(p.getPlayerGround().getTotalResources());
         labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
