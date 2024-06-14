@@ -108,14 +108,17 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
                 game.finish();
             }
             while(!game.isOver()){
+                Thread.sleep(1000);
             }
-            over();
+            out.writeObject(game.getMultiWinners());
             socket.close();
         }
         catch (IOException | ClassNotFoundException | InvalidPositionException e) {
             game.removePlayer(player.getNickname());
             System.out.println("il player " + player.getNickname() + " si è disconnesso");
             //e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
     public void playCard() throws IOException, ClassNotFoundException {
@@ -176,9 +179,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-    public void over() throws IOException {
-        out.writeObject(game.getMultiWinners());
     }
     public void start() throws IOException, ClassNotFoundException {
         roomChoice();
