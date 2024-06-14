@@ -69,7 +69,6 @@ public class Controller {
     private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
     private PlayableCard currentHandLeft, currentHandCenter, currentHandRight;
     private String nick2, nick3, nick4;
-    private boolean isDragged = false;
     private PlayableCard cardPlayed;
     private Position posPlayed;
 
@@ -139,9 +138,6 @@ public class Controller {
         return handCardRight;
     }
 
-    public boolean getIsDragged() {
-        return isDragged;
-    }
 
     public AnchorPane getAnchor2() {
         return anchor2;
@@ -648,7 +644,6 @@ public class Controller {
     }
 
     public void setDropZones(ImageView zone) {
-        //isDragged = false;
         zone.setOnDragOver(e -> {
             if(zone.getImage().getUrl()!=null && zone.getImage().getUrl().equals("file:" + emptyImagePath)) {
                 if (e.getDragboard().hasImage()) {
@@ -679,7 +674,6 @@ public class Controller {
             }
             posPlayed = new Position(GridPane.getColumnIndex(zone), GridPane.getRowIndex(zone));
             e.setDropCompleted(success);
-            isDragged = true;
             e.consume();
         });
     }
