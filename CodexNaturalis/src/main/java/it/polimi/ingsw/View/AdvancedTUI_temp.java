@@ -20,13 +20,13 @@ public class AdvancedTUI_temp {
         Set<Position> unavailablePosition = new HashSet<>(playerGround.getUnavailablePositions());
         availablePosition.addAll(unavailablePosition);
 
-        Map<Integer, Position> numbers = playerGround.getAvailableNumbers();
+        /*Map<Integer, Position> numbers = playerGround.getAvailableNumbers();
 
         for (Map.Entry<Integer, Position> entry : numbers.entrySet()) {
             Integer number = entry.getKey();
             Position position = entry.getValue();
             System.out.println("Number: " + number + ", Position: X: " + position.getX() + " Y: " + position.getY());
-        }
+        }*/
 
         int maxX = availablePosition.stream()
                 .mapToInt(Position::getX)
@@ -50,9 +50,6 @@ public class AdvancedTUI_temp {
 
         int lengthX = maxX - minX;
         int lengthY = maxY - minY;
-        System.out.println("\n");
-        System.out.println("Your play ground looks like this:\n");
-        System.out.println("\n");
 
         String contentLine1 = "";
         String contentLine2 = "";
@@ -87,8 +84,6 @@ public class AdvancedTUI_temp {
             contentLine3 = "";
             contentLine4 = "";
         }
-
-        System.out.println("\n");
     }
 
     public static void printResources(HashMap<Resource, Integer> totalResources){
@@ -109,7 +104,7 @@ public class AdvancedTUI_temp {
                     }
                 }
             }
-        System.out.println("                                     RESOURCES:\n");
+        System.out.println("                                       RESOURCES:\n");
         System.out.println("    " + resourceLine1 + "\n");
         System.out.println("             " + resourceLine2);
     }
@@ -129,11 +124,11 @@ public class AdvancedTUI_temp {
         cards.getFirst().flipCard();
 
         for(int i = 0; i <= 2; i++){
-            topBorder.append(" ").append(cornerColor(cards.get(i).getShowedCorners()[0])).append(cardColor(cards.get(i))).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[2])).append(" ");
-            contentLine1.append(cardColor(cards.get(i))).append(" ▌").append(cardContent(cards.get(i))).append(cardColor(cards.get(i))).append("▌ ");
-            contentLine2.append(cardColor(cards.get(i))).append(" ▌").append(cardResource(cards.get(i))).append(cardColor(cards.get(i))).append("▌ ");
-            contentLine3.append(cardColor(cards.get(i))).append(" ▌").append(cardRequirements(cards.get(i))).append(cardColor(cards.get(i))).append("▌ ");
-            buttonBorder.append(" ").append(cornerColor(cards.get(i).getShowedCorners()[1])).append(cardColor(cards.get(i))).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[3])).append(" ");
+            topBorder.append(cornerColor(cards.get(i).getShowedCorners()[0])).append(cardColor(cards.get(i))).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[2]));
+            contentLine1.append(cardColor(cards.get(i))).append("█").append(cardContent(cards.get(i))).append(cardColor(cards.get(i))).append("█");
+            contentLine2.append(cardColor(cards.get(i))).append("█").append(cardResource(cards.get(i))).append(cardColor(cards.get(i))).append("█");
+            contentLine3.append(cardColor(cards.get(i))).append("█").append(cardRequirements(cards.get(i))).append(cardColor(cards.get(i))).append("█");
+            buttonBorder.append(cornerColor(cards.get(i).getShowedCorners()[1])).append(cardColor(cards.get(i))).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards.get(i).getShowedCorners()[3]));
         }
 
         System.out.println(topBorder);
@@ -154,11 +149,11 @@ public class AdvancedTUI_temp {
         StringBuilder buttonBorder =  new StringBuilder();
 
         for(int i = 0; i< objectiveCards.length; i++) {
-            topBorder.append("  ").append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀");
-            contentLine1.append("\u001B[33m").append(" ▌").append(firstLineObjective(objectiveCards[i])).append("\u001B[33m").append("▌ ");
-            contentLine2.append("\u001B[33m").append(" ▌").append(secondLineObjective(objectiveCards[i])).append("\u001B[33m").append("▌ ");
-            contentLine3.append("\u001B[33m").append(" ▌").append(thirdLineObjective(objectiveCards[i])).append("\u001B[33m").append("▌ ");
-            buttonBorder.append("  ").append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
+            topBorder.append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  ");
+            contentLine1.append("\u001B[33m").append("█").append(firstLineObjective(objectiveCards[i])).append("\u001B[33m").append("█  ");
+            contentLine2.append("\u001B[33m").append("█").append(secondLineObjective(objectiveCards[i])).append("\u001B[33m").append("█  ");
+            contentLine3.append("\u001B[33m").append("█").append(thirdLineObjective(objectiveCards[i])).append("\u001B[33m").append("█  ");
+            buttonBorder.append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄  ").append("\u001B[0m");
 
         }
 
@@ -178,21 +173,15 @@ public class AdvancedTUI_temp {
         StringBuilder buttonBorder =  new StringBuilder();
 
         String ANSI_RESET = "\u001B[0m";
-
-
-            topBorder.append(" ").append(cornerColor(card.getCorners()[0])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ ").append(ANSI_RESET).append(cornerColor(card.getCorners()[2])).append(" ");
-            contentLine1.append("\u001B[0m").append(" ▌").append(firstCardContent(card,1)).append("\u001B[0m").append("▌  ");
-            contentLine2.append("\u001B[0m").append(" ▌").append(firstCardContent(card,2)).append("\u001B[0m").append("▌  ");
-            contentLine3.append("\u001B[0m").append(" ▌").append(firstCardContent(card,3)).append("\u001B[0m").append("▌  ");
-            buttonBorder.append(" ").append(cornerColor(card.getCorners()[1])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ ").append(ANSI_RESET).append(cornerColor(card.getCorners()[3])).append(" ");
-
-        topBorder.append(" ").append(cornerColor(card.getBackCorners()[0])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(card.getBackCorners()[2])).append(" ");
-        contentLine1.append("\u001B[0m").append(" ▌").append("                    ").append("\u001B[0m").append("▌ ");
-        contentLine2.append("\u001B[0m").append(" ▌").append("                    ").append("\u001B[0m").append("▌ ");
-        contentLine3.append("\u001B[0m").append(" ▌").append("                    ").append("\u001B[0m").append("▌ ");
-        buttonBorder.append(" ").append(cornerColor(card.getBackCorners()[1])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(card.getBackCorners()[3])).append(" ");
-
-
+        for(int i =0; i<2; i++) {
+            topBorder.append(cornerColor(card.getShowedCorners()[0])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(card.getShowedCorners()[2])).append("  ");
+            contentLine1.append("\u001B[0m").append("█").append(firstCardContent(card, 1)).append("\u001B[0m").append("█  ");
+            contentLine2.append("\u001B[0m").append("█").append(firstCardContent(card, 2)).append("\u001B[0m").append("█  ");
+            contentLine3.append("\u001B[0m").append("█").append(firstCardContent(card, 3)).append("\u001B[0m").append("█  ");
+            buttonBorder.append(cornerColor(card.getShowedCorners()[1])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(card.getShowedCorners()[3])).append("  ");
+            card.flipCard();
+        }
+        card.flipCard();
         System.out.println("                        " + topBorder);
         System.out.println("                        " + contentLine1);
         System.out.println("                        " + contentLine2);
@@ -202,16 +191,16 @@ public class AdvancedTUI_temp {
     private static String firstCardContent(StarterCard starterCard, int state){
         if(state == 1){
             Corner corner = new Corner("top",starterCard.getBackRes().getFirst(), true);
-            return "         "+ "\u200A" + "\u200A" + "\u200A" + "\u200A" +cornerColor(corner) + "\u200A" + "\u200A" + "\u200A" + "\u200A" +"        ";
+            return "          " +cornerColor(corner) + "         ";
         }
         if(state == 2 && !starterCard.getBackRes().get(1).equals(BLANK)){
             //return "█    first card    █
             Corner corner = new Corner("top",starterCard.getBackRes().get(1), true);
-            return "         "+ "\u200A" + "\u200A" + "\u200A" + "\u200A" +cornerColor(corner) + "\u200A" + "\u200A" + "\u200A" + "\u200A" +"        ";
+            return "          " +cornerColor(corner) + "         ";
         }
         if(state == 3 && !starterCard.getBackRes().get(2).equals(BLANK)){
             Corner corner = new Corner("top",starterCard.getBackRes().get(2), true);
-            return "         "+ "\u200A" + "\u200A" + "\u200A" + "\u200A" +cornerColor(corner) + "\u200A" + "\u200A" + "\u200A" + "\u200A" +"        ";
+            return "         " +cornerColor(corner) + "         ";
         }
         else{
             return "                    ";
@@ -233,19 +222,19 @@ public class AdvancedTUI_temp {
 
         for(int i = 0; i<cards.length; i++){
             if(cards[i] !=null) {
-                topBorder.append(" ").append(cornerColor(cards[i].getShowedCorners()[0])).append(cardColor(cards[i])).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[2])).append(" ");
-                contentLine1.append(cardColor(cards[i])).append(" ▌").append(cardContent(cards[i])).append(cardColor(cards[i])).append("▌ ");
-                contentLine2.append(cardColor(cards[i])).append(" ▌").append(cardResource(cards[i])).append(cardColor(cards[i])).append("▌ ");
-                contentLine3.append(cardColor(cards[i])).append(" ▌").append(cardRequirements(cards[i])).append(cardColor(cards[i])).append("▌ ");
-                buttonBorder.append(" ").append(cornerColor(cards[i].getShowedCorners()[1])).append(cardColor(cards[i])).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[3])).append(" ");
+                topBorder.append(cornerColor(cards[i].getShowedCorners()[0])).append(cardColor(cards[i])).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[2])).append(" ");
+                contentLine1.append(cardColor(cards[i])).append("█").append(cardContent(cards[i])).append(cardColor(cards[i])).append("█ ");
+                contentLine2.append(cardColor(cards[i])).append("█").append(cardResource(cards[i])).append(cardColor(cards[i])).append("█ ");
+                contentLine3.append(cardColor(cards[i])).append("█").append(cardRequirements(cards[i])).append(cardColor(cards[i])).append("█ ");
+                buttonBorder.append(cornerColor(cards[i].getShowedCorners()[1])).append(cardColor(cards[i])).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[3])).append(" ");
             }
         }
         //print Secret Objective
-        topBorder.append("  ").append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀");
-        contentLine1.append("\u001B[33m").append(" ▌").append(firstLineObjective(objective)).append("\u001B[33m").append("▌ ");
-        contentLine2.append("\u001B[33m").append(" ▌").append(secondLineObjective(objective)).append("\u001B[33m").append("▌ ");
-        contentLine3.append("\u001B[33m").append(" ▌").append(thirdLineObjective(objective)).append("\u001B[33m").append("▌ ");
-        buttonBorder.append("  ").append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append("\u001B[0m");
+        topBorder.append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀  ");
+        contentLine1.append("\u001B[33m").append("█").append(firstLineObjective(objective)).append("\u001B[33m").append("█ ");
+        contentLine2.append("\u001B[33m").append("█").append(secondLineObjective(objective)).append("\u001B[33m").append("█ ");
+        contentLine3.append("\u001B[33m").append("█").append(thirdLineObjective(objective)).append("\u001B[33m").append("█ ");
+        buttonBorder.append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄  ").append("\u001B[0m");
         // Print the card
         System.out.println(topBorder);
         System.out.println(contentLine1);
@@ -391,7 +380,7 @@ public class AdvancedTUI_temp {
                 Corner corner = new Corner("top", symbol, true);
                 String resource = cornerColor(corner);
                 if(symbol == PLUME || symbol ==  SCROLL || symbol ==  POTION){
-                    return "       " + resource + " " + "\u200A" + "\u200A" + "\u200A" +"  " + resource + "       ";
+                    return "       " + resource + "   " + resource + "       ";
                 }
                 return "      " + resource + "  " + resource + "  " + resource + "      ";
             }
@@ -441,17 +430,17 @@ public class AdvancedTUI_temp {
         }
     }
     private static String cardContent(Card card){
-        if(card.getFlip()) return "                    ";
+        if(card.getFlip()) return "                   ";
         switch (card.getRule().getName()){
             case "FR" -> {
                 int points = card.getRule().getPoints();
                 if(points == 0){
-                    return "                    ";
+                    return "                   ";
                 }
-                return "     Points: "+ card.getRule().getPoints() +"      ";
+                return "     Points: "+ card.getRule().getPoints() +"     ";
             }
             case "CCR" -> {
-                return " Covered corners: "+ card.getRule().getPoints() +" ";
+                return " Covered corners: "+ card.getRule().getPoints() ;
             }
 
             case "NSR" -> {
@@ -462,10 +451,10 @@ public class AdvancedTUI_temp {
                     case PLUME ->  resource = "P";
                     case POTION -> resource = "T";
                 }
-                return "  Points per "+ resource + ": " + rule.getPoints()+"   ";
+                return "  Points per "+ resource + ": " + rule.getPoints()+"  ";
             }
             case null, default -> {
-                return "                    ";
+                return "                   ";
             }
         }
 
@@ -475,37 +464,37 @@ public class AdvancedTUI_temp {
         HashMap<Resource, Integer> map = card.getRequirements();
         StringBuilder result = new StringBuilder();
         int times = 0;
-        if(card.getFlip()) return  "                    ";
+        if(card.getFlip()) return  "                   ";
         if(map != null){
             for (Map.Entry<Resource, Integer> entry : map.entrySet()) {
                 Resource resource = entry.getKey();
                 Corner corner = new Corner("top",resource,true);
                 Integer value = entry.getValue();
                 if(value != 0) {
-                    result.append(cornerColor(corner)).append(" : ").append(value).append("  ");
+                    result.append(cornerColor(corner)).append(" : ").append(value).append(" ");
                     times++;
                 }
             }
             if(times ==1){
-                return "       "+ result.toString() + "     " + "\u200A" + "\u200A" + "\u200A";
+                return "       "+ result.toString() + "     ";
             }
             else if(times == 2){
-                return "   "+ result.toString() + "  " + "\u200A";
+                return "   "+ result.toString() + "  ";
             }
         }
-        return "                    ";
+        return "                   ";
     }
 
     private static String cardResource(Card card){
         if(card.getFlip()){
             Corner corner = new Corner("top", card.getColor(), true);
-            return "         " + cornerColor(corner) + "         " + "\u200A" + "\u200A" + "\u200A";
+            return "         " + cornerColor(corner) + "         ";
         }
-        return "                    ";
+        return "                   ";
     }
 
     private static String cardColor(Card card){
-        if(card.getId() == -1) return "\u001B[37m";
+        if(card.getId() == -1) return "\u001B[90m";
         switch(card.getColor()){
             case LEAF -> {
                 return "\u001B[32m";
@@ -549,32 +538,32 @@ public class AdvancedTUI_temp {
         if(corner.getAvailability()) {
             switch (corner.getCornerRes()) {
                 case LEAF -> {
-                    return "\u001B[32m"+"◙" + "\u001B[0m";
+                    return "\u001B[32m"+"@" + "\u001B[0m";
                 }
                 case BUG -> {
-                    return "\u001B[35m"+"◙" + "\u001B[0m";
+                    return "\u001B[35m"+"@" + "\u001B[0m";
                 }
                 case FOX -> {
-                    return "\u001B[34m"+"◙" + "\u001B[0m";
+                    return "\u001B[34m"+"@" + "\u001B[0m";
                 }
                 case MUSHROOM -> {
-                    return "\u001B[31m"+"◙" + "\u001B[0m";
+                    return "\u001B[31m"+"@" + "\u001B[0m";
                 }
                 case PLUME -> {
-                    return "\u001B[0m"+"P" + "\u200A";
+                    return "\u001B[0m"+"P";
                 }
                 case POTION -> {
-                    return "\u001B[0m"+"T" + "\u200A";
+                    return "\u001B[0m"+"T";
                 }
                 case SCROLL -> {
-                    return "\u001B[0m"+"S" + "\u200A";
+                    return "\u001B[0m"+"S";
                 }
                 case null, default -> {
-                    return "\u001B[0m"+"◙" + "\u001B[0m";
+                    return "\u001B[0m"+"@" + "\u001B[0m";
                 }
             }
         }
-        return "\u001B[30m"+"◙"+ "\u001B[0m";
+        return "\u001B[30m"+"@"+ "\u001B[0m";
     }
 
     public static int findPosition(Position position, PlayerGround ground) {

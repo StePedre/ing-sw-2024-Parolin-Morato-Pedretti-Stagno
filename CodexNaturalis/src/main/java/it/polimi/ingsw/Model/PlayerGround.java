@@ -132,18 +132,18 @@ public class PlayerGround implements Serializable {
         positions.forEach(p -> {
             // Checks if the current position has a card with a color equal to the first color of the composition and
             // Checks if the current position is already inside takenPositions
-            if (ground[p.getX()][p.getY()].getColor() == colors[0] && !takenPositions.contains(p)) {
+            if (ground[p.getX()][p.getY()] != null && ground[p.getX()][p.getY()].getColor() == colors[0] && !takenPositions.contains(p)) {
                 // Calculates the nex position thanks to the offsets of the composition
                 int secondX = p.getX() + offSets[0].getX();
                 int secondY = p.getY() + offSets[0].getY();
                 Position secondPosition = new Position(secondX, secondY);
                 // Checks if the second position has a card with a color equal to the second color of the composition and
                 // Checks if the second position is already inside takenPositions
-                if (ground[secondX][secondY].getColor() == colors[1] && !takenPositions.contains(secondPosition)) {
+                if (ground[secondX][secondY] != null && ground[secondX][secondY].getColor() == colors[1] && !takenPositions.contains(secondPosition)) {
                     int thirdX = p.getX() + offSets[1].getX();
                     int thirdY = p.getY() + offSets[1].getY();
                     Position thirdPosition = new Position(thirdX, thirdY);
-                    if (ground[thirdX][thirdY].getColor() == colors[2] && !takenPositions.contains(thirdPosition)) {
+                    if (ground[thirdX][thirdY] != null && ground[thirdX][thirdY].getColor() == colors[2] && !takenPositions.contains(thirdPosition)) {
                         // Composition found; increments the atomicInteger and saves the 3 positions found into takenPositions
                         count.set(count.getAndIncrement());
                         takenPositions.add(p);

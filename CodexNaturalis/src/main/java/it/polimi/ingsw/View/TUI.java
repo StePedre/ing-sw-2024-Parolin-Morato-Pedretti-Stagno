@@ -90,11 +90,12 @@ public class TUI {
      * @return true if the player wants to place the starter card face down, false otherwise.
      */
     public boolean showStarterCard(StarterCard startcard){
-        System.out.println("Your first card it's this:\n");
+        System.out.println("\n                                   Your first card it's this:\n");
         /*showCard(startcard);
         System.out.println(toStringBackCorners(startcard));*/
+        System.out.println("                                    1                       2");
         AdvancedTUI_temp.printStartingCard(startcard);
-        System.out.println("\nDo you want to place it flipped or not? Input 0 for not flipped, 1 for flipped.\n");
+        System.out.println("\n                    Do you want to place it to the front (1) or flipped (2)?\n");
         Scanner scanner = new Scanner(System.in);
         int choice;
         boolean flag = false;
@@ -104,7 +105,7 @@ public class TUI {
                 flag = true;
             }
             scanner.nextLine();
-        } while(!(choice == 0 || choice == 1));
+        } while(!(choice == 1 || choice == 2));
         return flag;
     }
 
@@ -117,10 +118,10 @@ public class TUI {
      * @param obj2 is the second proposed secret objective.
      * @return the number corresponding to the player's choice (1 for the first objective, 2 for the second).
      */
-    public int chooseObjective(ObjectiveCard obj1, ObjectiveCard obj2) throws IOException {
+    public int chooseObjective(ObjectiveCard obj1, ObjectiveCard obj2) {
         int choice;
-        /*System.out.println("Choose between two secret objectives:\n1- " + toStringRule(obj1) + "\n2- " + toStringRule(obj2));*/
-        System.out.println("Choose between two secret objectives: ");
+        System.out.println("\n                            Choose between two secret objectives:\n");
+        System.out.println("                                    1                       2");
         AdvancedTUI_temp.printObjectives(new ObjectiveCard[]{obj1, obj2});
         Scanner scanner = new Scanner(System.in);
         do {
@@ -201,14 +202,13 @@ public class TUI {
         AdvancedTUI_temp.printObjectives(game.getCommonObj());
         System.out.println("\n");
         AdvancedTUI_temp.printDeck(game.getDecks()[0]);
+        System.out.println("\n");
         AdvancedTUI_temp.printDeck(game.getDecks()[1]);
+        System.out.println("\n");
         AdvancedTUI_temp.printGround(player.getPlayerGround());
+        System.out.println("\n");
         AdvancedTUI_temp.printResources(player.getPlayerGround().getTotalResources());
         System.out.println("\n");
-        System.out.println("This is the list of positions where it is possible to place a card:\n");
-        for (Position pos: player.getPlayerGround().getAvailablePositions()) {
-            System.out.println("(" + pos.getX()+", " + pos.getY() + ") ");
-        }
         return true;
         /*
         System.out.println("It's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n 4- Play card\n\n");
@@ -600,25 +600,10 @@ public class TUI {
         AdvancedTUI_temp.printGround(player.getPlayerGround());
         System.out.println("This is your hand: ");
         AdvancedTUI_temp.printHand(player.getHand());
-/*
-        Card deck1card1 = deck1.getFirst();
-        Card deck1card2 = deck1.get(1);
-        Card deck2card1 = deck2.getFirst();
-        Card deck2card2 = deck2.get(1); */
 
         System.out.println("\nHere you are the game decks." +
                "\n" + deck1name + " deck (0, 1, 2 to choose):\n");
-        /*
-        showCard((PlayableCard) deck1card1);
-        System.out.println("\nSecond card of the " + deck1name + " (1 to choose):\n");
-        showCard((PlayableCard) deck1card2);
-        System.out.println("\nAlternatively, you can input 2 to choose the hidden card at the top of the " + deck1name +".\n");
-        System.out.println("First card of the " + deck2name + " (3 to choose):\n");
-        showCard((PlayableCard) deck2card1);
-        System.out.println("\nSecond card of the " + deck2name + " (4 to choose):\n");
-        showCard((PlayableCard) deck2card2);
-        System.out.println("\nAlternatively, you can input 5 to choose the hidden card at the top of the " + deck2name + "deck.\n");
-        System.out.println("Which card do you choose? Input the number corresponding to your choice:\n"); */
+
         AdvancedTUI_temp.printDeck(decks[0]);
         System.out.println( "\n" + deck2name + " deck (3, 4, 5 to choose):\n");
         AdvancedTUI_temp.printDeck(decks[1]);
@@ -631,37 +616,7 @@ public class TUI {
         return choice;
     }
 
-    // methods equivalent to yourturndraw + choosefromdeck
-    public int yourTurnDraw2(Game game, Player player){
-        System.out.println("You placed one card. Now it's time to draw." +
-                "These are the card facing up from " + game.getDecks()[0].getKindOfDeck() +":");
-        showCard((PlayableCard) game.getDecks()[0].getCards().getFirst());
-        showCard((PlayableCard) game.getDecks()[0].getCards().get(1));
-        System.out.println("And these are the cards facing up from " + game.getDecks()[1].getKindOfDeck()+":");
-        showCard((PlayableCard) game.getDecks()[1].getCards().getFirst());
-        showCard((PlayableCard) game.getDecks()[1].getCards().get(1));
-        System.out.println("Otherwise you can draw from the top of one deck, where the card are facing down. " +
-                "Which deck do you want to draw a card from? 0 for " + game.getDecks()[0].getKindOfDeck() +
-                ", 1 for " + game.getDecks()[1].getKindOfDeck());
-        Scanner scanner = new Scanner(System.in);
-        int choice;
-        do{
-            choice = scanner.nextInt();
-            scanner.nextLine();
-        } while(!(choice >=0 && choice<2));
-        return choice;
-    }
-    public int drawnCard(Deck deck){
-        System.out.println("You chose "+deck.getKindOfDeck()+". Which card do you want to draw? 0 for first card facing up, " +
-                "1 for second card facing up, 2 for card at the top of the facing down deck.");
-        Scanner scanner = new Scanner(System.in);
-        int choice;
-        do{
-            choice = scanner.nextInt();
-            scanner.nextLine();
-        } while(!(choice >=0 && choice<=2));
-        return choice;
-    }
+
     public void showRoom(ArrayList<Room> rooms){
         String s ="These are the available room to play:";
         if(rooms.isEmpty()){
@@ -720,19 +675,7 @@ public class TUI {
     public void playerJoined(Player player){
         System.out.println("Player " + player.getNickname() + " has joined the room");
     }
-    public boolean refreshRoom(){
-        System.out.println("Do you want to update rooms list or not?\n1-yes\nother-no");
-        Scanner s = new Scanner(System.in);
-        return (s.nextInt()==1) ? true : false;
-    }
 
-    public static void cleanDebugLog() throws IOException {
-        File file = new File(LOG_FILE_PATH);
-        if (file.exists()) {
-            file.delete();
-            file.createNewFile();
-        }
-    }
     public String chooseColor(Set<String> colors){
         System.out.println("Choose a color: ");
         for(String s : colors){
