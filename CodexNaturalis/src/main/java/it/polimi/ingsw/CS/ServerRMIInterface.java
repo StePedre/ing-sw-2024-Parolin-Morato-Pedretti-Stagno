@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Set;
 
 public interface ServerRMIInterface extends Remote {
 
@@ -21,6 +22,8 @@ public interface ServerRMIInterface extends Remote {
 
     boolean isGameOver(String roomName) throws RemoteException;
 
+    Set<String> getRemainingColors(String roomName) throws RemoteException;
+    void setPlayerColor(String color, String nickname, String roomName) throws RemoteException;
     boolean isCurrentPlayer(String nickname, String roomName) throws RemoteException;
     void placeCard(PlayableCard card, Position position, String roomName, String nickname) throws RemoteException, MissingResourcesException, InvalidPositionException;
     Player addNewPlayer(String nickname, String room) throws RemoteException;

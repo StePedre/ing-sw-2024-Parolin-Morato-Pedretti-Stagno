@@ -1,10 +1,6 @@
 package it.polimi.ingsw.CS;
 
-import it.polimi.ingsw.Controller.PlaceCardController;
-import it.polimi.ingsw.Controller.PlayerController;
-import it.polimi.ingsw.Controller.RoundController;
 import it.polimi.ingsw.Model.*;
-import it.polimi.ingsw.View.GUIrmi;
 import it.polimi.ingsw.View.TUI;
 
 import java.io.IOException;
@@ -59,6 +55,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             roomJoined = controlRoom2( false, server.getRooms().getRooms());
         }
             nickname = controlNickname(true);
+            server.setPlayerColor(tui.chooseColor(server.getRemainingColors(roomJoined)), nickname, roomJoined);
             Player player = server.addNewPlayer(nickname, roomJoined);
             tui.Welcome(player);
             waitingForPlayers = true;

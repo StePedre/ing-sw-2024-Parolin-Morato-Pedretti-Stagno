@@ -13,6 +13,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Set;
 
 public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterface {
 
@@ -27,6 +28,7 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         registry.rebind("ServerRMI", this);
         System.out.println("Server RMI started.");
     }
+
 
     public void runServer() throws RemoteException{
 
@@ -80,6 +82,14 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
     }
     public ArrayList<Room> showRooms() throws RemoteException{
         return rooms.getRooms();
+    }
+
+    public void setPlayerColor(String color, String nickname, String roomName) throws RemoteException{
+        rooms.getRoom(roomName).getGame().getPlayer(nickname).setColor(color);
+    }
+
+    public Set<String> getRemainingColors(String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getGame().getColors();
     }
 
     public void setPlayerNumber(int number, String room) throws RemoteException{
