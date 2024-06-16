@@ -127,8 +127,7 @@ public class PlayerGround implements Serializable {
         // takenPosition is needed to save every position of a composition that was already found
         // count is an AtomicInteger because it's accessed inside a lambda function
         Set<Position> takenPositions = new HashSet<>(){};
-        AtomicInteger count = new AtomicInteger();
-        count.set(0);
+        int[] count = {0};
         Set<Position> positions = cardPosition.keySet();
         // For each position occupied by cards, do the following:
         positions.forEach(p -> {
@@ -147,7 +146,7 @@ public class PlayerGround implements Serializable {
                     Position thirdPosition = new Position(thirdX, thirdY);
                     if (ground[thirdX][thirdY] != null && ground[thirdX][thirdY].getColor() == colors[2] && !takenPositions.contains(thirdPosition)) {
                         // Composition found; increments the atomicInteger and saves the 3 positions found into takenPositions
-                        count.set(count.getAndIncrement());
+                        count[0]+=1;
                         takenPositions.add(p);
                         takenPositions.add(secondPosition);
                         takenPositions.add(thirdPosition);
@@ -155,7 +154,7 @@ public class PlayerGround implements Serializable {
                 }
             }
         });
-        return count.get();
+        return count[0];
     }
 
     /** The method calculates the number of corners covered by placing a card in the lastPositionPlaced. This method is
