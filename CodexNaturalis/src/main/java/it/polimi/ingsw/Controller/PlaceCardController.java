@@ -35,4 +35,37 @@ public class PlaceCardController {
         Hand hand = player.getHand();
         hand.removeCard(card);
     }
+    public static void draw(int i,Game game,Player player){
+        Deck deck;
+        int card = switch (i) {
+            case 0 -> {
+                deck = game.getDecks()[0];
+                yield 0;
+            }
+            case 1 -> {
+                deck = game.getDecks()[0];
+                yield 1;
+            }
+            case 2 -> {
+                deck = game.getDecks()[0];
+                yield 2;
+            }
+            case 3 -> {
+                deck = game.getDecks()[1];
+                yield 0;
+            }
+            case 4 -> {
+                deck = game.getDecks()[1];
+                yield 1;
+            }
+            case 5 -> {
+                deck = game.getDecks()[1];
+                yield 2;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + i);
+        };
+        if(player.getHand().drawCard(deck)){
+            player.getHand().chooseCard(deck.drawCard(card));
+        }
+    }
 }

@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
-public class ServerHandlerSocket implements ServerHandlerInterface {
+public class ServerHandlerSocket{
     private final ObjectOutputStream out;
     private final ObjectInputStream in;
     private Game game;
@@ -25,7 +25,6 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         this.rooms=rooms;
         this.socket = socket;
     }
-    @Override
     public void run() {
         try {
             start();
@@ -140,45 +139,9 @@ public class ServerHandlerSocket implements ServerHandlerInterface {
         out.writeObject(game);
         out.writeObject(player);
     }
-    public void drawCard(){// 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
-        try {
-            int i =(int) in.readObject();
-            Deck deck;
-            int card = switch (i) {
-                case 0 -> {
-                    deck = game.getDecks()[0];
-                    yield 0;
-                }
-                case 1 -> {
-                    deck = game.getDecks()[0];
-                    yield 1;
-                }
-                case 2 -> {
-                    deck = game.getDecks()[0];
-                    yield 2;
-                }
-                case 3 -> {
-                    deck = game.getDecks()[1];
-                    yield 0;
-                }
-                case 4 -> {
-                    deck = game.getDecks()[1];
-                    yield 1;
-                }
-                case 5 -> {
-                    deck = game.getDecks()[1];
-                    yield 2;
-                }
-                default -> throw new Exception();
-            };
-            if(player.getHand().drawCard(deck)){
-                player.getHand().chooseCard(deck.drawCard(card));
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public void drawCard() throws IOException, ClassNotFoundException {// 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
+        int i =(int) in.readObject();
+        PlaceCardController.draw(i,game,player);
     }
     public void start() throws IOException, ClassNotFoundException {
         roomChoice();
