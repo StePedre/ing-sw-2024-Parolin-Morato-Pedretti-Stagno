@@ -170,7 +170,7 @@ public class PlayerGround implements Serializable {
                 int newX = lastPositionPlaced.getX() + calculateOffset(i);
                 int newY = lastPositionPlaced.getY() + calculateOffset(j);
                 Card card = ground[newX][newY];
-                if (card != null) {
+                if (card != null && card.getId()!=-1) {
                     count++;
                 }
 
