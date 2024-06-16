@@ -12,7 +12,7 @@
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label prefHeight="121.0" prefWidth="362.0" text="error message" wrapText="true">
+            <Label prefHeight="121.0" prefWidth="362.0" text="Other player disconnection occurred, close the game to play again" wrapText="true">
                <font>
                   <Font size="16.0" />
                </font>
