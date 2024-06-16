@@ -7,13 +7,11 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.stage.Screen?>
+
 <AnchorPane fx:id="anchor2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.View.Controller">
    <children>
       <VBox fx:id="vboxRoom" alignment="CENTER" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="50.0">
@@ -56,13 +54,16 @@
                <children>
                   <VBox fx:id="vbox" alignment="TOP_CENTER" prefHeight="87.0" prefWidth="232.0">
                      <children>
-                        <ComboBox fx:id="menu" prefHeight="25.0" prefWidth="235.0" promptText="Choose a room:" visible="false" />
+                        <ComboBox fx:id="menu" prefHeight="25.0" prefWidth="235.0" promptText="Choose a room:" visible="false"/>
                         <Label fx:id="labelRoom" alignment="CENTER" text="Insert new room's name:" visible="false">
                            <font>
                               <Font name="Bookman Old Style" size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="textFieldRoom" alignment="CENTER" disable="true" prefHeight="25.0" prefWidth="232.0" visible="false" />
+                        <TextField fx:id="textFieldRoom" alignment="CENTER" disable="true" prefHeight="25.0" prefWidth="232.0" visible="false">
+                           <font>
+                              <Font name="Bookman Old Style" size="12.0" />
+                           </font></TextField>
                         <Button fx:id="confirmRoom" disable="true" mnemonicParsing="false" style="-fx-background-color: #1560BD;" text="Submit" textFill="WHITE" visible="false">
                            <VBox.margin>
                               <Insets top="100.0" />

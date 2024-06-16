@@ -18,6 +18,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.effect.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Set;
 
 public class GUIsocket extends Application{
@@ -69,6 +71,7 @@ public class GUIsocket extends Application{
         ArrayList<Room> rooms = client.receiveRoomsFromServer();
         for (Room r: rooms){
             Label elem = new Label(r.getName());
+            elem.setFont(Font.font("Bookman Old Style"));
             controller.getMenu().getItems().add(elem);
         }
         RadioButton buttonL = controller.getButtonL();
