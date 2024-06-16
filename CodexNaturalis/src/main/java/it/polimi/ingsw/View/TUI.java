@@ -153,7 +153,7 @@ public class TUI {
         do {
             choice = scanner.nextInt();
             scanner.nextLine();
-        } while(!(choice>0 && choice<4));
+        } while(!(choice>0 && choice<5));
         switch (choice) {
             case 1 -> {
                 showGround(game, player);
@@ -181,6 +181,7 @@ public class TUI {
                 return true;
             }
             case 4 -> {
+                System.out.println("Wait your turn");
                 return false;
             }
         }

@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
-public class ServerHandlerSocket{
+public class ServerHandlerSocket implements Runnable{
     private final ObjectOutputStream out;
     private final ObjectInputStream in;
     private Game game;
@@ -25,6 +25,7 @@ public class ServerHandlerSocket{
         this.rooms=rooms;
         this.socket = socket;
     }
+    @Override
     public void run() {
         try {
             start();

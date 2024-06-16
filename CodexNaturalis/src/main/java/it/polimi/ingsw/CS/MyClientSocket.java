@@ -106,7 +106,7 @@ public class MyClientSocket {
                 b=(boolean) in.readObject();
             }
             else{
-                out.writeObject(tui.notYourTurn(game,player));//aggiungere possibilità di aspettare e basta
+                out.writeObject(tui.notYourTurn(game,player));//Problemi problemi
                 b=(boolean)in.readObject();
             }
         }
