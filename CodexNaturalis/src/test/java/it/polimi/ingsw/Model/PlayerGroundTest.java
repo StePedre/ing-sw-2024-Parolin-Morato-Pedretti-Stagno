@@ -53,9 +53,6 @@ class PlayerGroundTest {
         pg.placeCard(card1, pos);
         tui.showGround(game, player);
 
-        tui.showCard(card0);
-        tui.showCard(card1);
-
     }
 
     @Test

@@ -55,8 +55,8 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             roomJoined = controlRoom2( false, server.getRooms().getRooms());
         }
             nickname = controlNickname(true);
-            server.setPlayerColor(tui.chooseColor(server.getRemainingColors(roomJoined)), nickname, roomJoined);
             Player player = server.addNewPlayer(nickname, roomJoined);
+            server.setPlayerColor(tui.chooseColor(server.getRemainingColors(roomJoined)), nickname, roomJoined);
             tui.Welcome(player);
             waitingForPlayers = true;
             listenToPlayers();
@@ -125,7 +125,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                     Game game = server.getRooms().getRoom(roomJoined).getGame();
                     Player player = game.getPlayer(nickname);
                     if(tui.yourTurnPlay(game, player)){
-                        PlayableCard card = tui.inputCardToPlace(player);
+                        PlayableCard card = tui.inputCardToPlace(game, player);
                         server.placeCard(card, tui.inputCoordinates(player), roomJoined, nickname);
                         game = server.getRooms().getRoom(roomJoined).getGame();
                         player = game.getPlayer(nickname);
@@ -190,22 +190,22 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         // 0: scoperta resource 1: scoperta resource 2: top deck resource 4...
             try {
                 switch (position) {
-                    case 0 -> {
+                    case 1 -> {
                         server.drawCard(0,0,roomJoined, nickname);
                     }
-                    case 1 -> {
+                    case 2 -> {
                         server.drawCard(0,1,roomJoined, nickname);
                     }
-                    case 2 -> {
+                    case 3 -> {
                         server.drawCard(0,2,roomJoined, nickname);
                     }
-                    case 3 -> {
+                    case 4 -> {
                         server.drawCard(1,0,roomJoined, nickname);
                     }
-                    case 4 -> {
+                    case 5 -> {
                         server.drawCard(1,1,roomJoined, nickname);
                     }
-                    case 5 -> {
+                    case 6 -> {
                         server.drawCard(1,2,roomJoined, nickname);
                     }
                     default -> throw new Exception();

@@ -90,12 +90,10 @@ public class TUI {
      * @return true if the player wants to place the starter card face down, false otherwise.
      */
     public boolean showStarterCard(StarterCard startcard){
-        System.out.println("\n                                   Your first card it's this:\n");
-        /*showCard(startcard);
-        System.out.println(toStringBackCorners(startcard));*/
-        System.out.println("                                    1                       2");
+        System.out.println("\n                                                                                        Your first card it's this:\n");
+        System.out.println("                                                                                           1                        2");
         AdvancedTUI_temp.printStartingCard(startcard);
-        System.out.println("\n                    Do you want to place it to the front (1) or flipped (2)?\n");
+        System.out.println("\n                                                                           Do you want to place it to the front (1) or flipped (2)?\n");
         Scanner scanner = new Scanner(System.in);
         int choice;
         boolean flag = false;
@@ -120,8 +118,8 @@ public class TUI {
      */
     public int chooseObjective(ObjectiveCard obj1, ObjectiveCard obj2) {
         int choice;
-        System.out.println("\n                            Choose between two secret objectives:\n");
-        System.out.println("                                    1                       2");
+        System.out.println("\n                                                                                     Choose between two secret objectives:\n");
+        System.out.println("                                                                                           1                        2");
         AdvancedTUI_temp.printObjectives(new ObjectiveCard[]{obj1, obj2});
         Scanner scanner = new Scanner(System.in);
         do {
@@ -147,44 +145,20 @@ public class TUI {
      * @param player is the instance of the player who's waiting.
      */
     public boolean notYourTurn(Game game, Player  player){
-        System.out.println("\nYou have to wait other players.\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground (and common objectives)\n2- Show hand\n3- Show card on ground\n4- wait your turn\n\n");
+        Deck[] decks = game.getDecks();
+        System.out.println("\n");
+        System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
+        AdvancedTUI_temp.printDecks(decks[0], decks[1], "                        ");
+        System.out.println("\n");
+        AdvancedTUI_temp.printGround(player.getPlayerGround());
+        System.out.println("\n");
+        System.out.println("                                                                                                    SECRET                                                  ");
+        System.out.println("                                                    YOUR HAND:                                     OBJECTIVE                                                         COMMON OBJECTIVES:");
+
+        AdvancedTUI_temp.printHand(player.getHand(), game.getCommonObj());
+        System.out.println("\n                                                                   Its TIZIO's turn. You can check other players boards in the meantime:\n");
         Scanner scanner = new Scanner(System.in);
-        int choice;
-        do {
-            choice = scanner.nextInt();
-            scanner.nextLine();
-        } while(!(choice>0 && choice<5));
-        switch (choice) {
-            case 1 -> {
-                showGround(game, player);
-                return true;
-            }
-            case 2 -> {
-                showHand(player);
-                return true;
-            }
-            case 3 -> {
-                System.out.println("Which card do you want to see? Insert coordinates (x first):\n");
-                int coordX = scanner.nextInt();
-                scanner.nextLine();
-                int coordY = scanner.nextInt();
-                scanner.nextLine();
-                Card cardToShow = player.getPlayerGround().getGround()[coordX][coordY]; // prende carta (x,y) dal ground del player
-                if(coordX == 42 && coordY ==42){
-                    StarterCard starterCardToShow = (StarterCard) cardToShow;
-                    showCard(starterCardToShow);
-                }
-                else{
-                    PlayableCard CardToShow = (PlayableCard) cardToShow;
-                    showCard(CardToShow);
-                }
-                return true;
-            }
-            case 4 -> {
-                System.out.println("Wait your turn");
-                return false;
-            }
-        }
+        String name = scanner.nextLine();
         return false;
     }
 
@@ -199,58 +173,15 @@ public class TUI {
      * @exception IllegalStateException arises when an input error occurs.
      */
     public boolean yourTurnPlay(Game game, Player player){
+
+        Deck[] decks = game.getDecks();
         System.out.println("\n");
-        AdvancedTUI_temp.printObjectives(game.getCommonObj());
-        System.out.println("\n");
-        AdvancedTUI_temp.printDeck(game.getDecks()[0]);
-        System.out.println("\n");
-        AdvancedTUI_temp.printDeck(game.getDecks()[1]);
+        System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
+        AdvancedTUI_temp.printDecks(decks[0], decks[1], "                        ");
         System.out.println("\n");
         AdvancedTUI_temp.printGround(player.getPlayerGround());
         System.out.println("\n");
-        AdvancedTUI_temp.printResources(player.getPlayerGround().getTotalResources());
-        System.out.println("\n");
         return true;
-        /*
-        System.out.println("It's your turn!\nWhat do you want to do? Select the number corresponding to your choice:\n1- Show play ground\n2- Show hand\n3- Show card on ground\n 4- Play card\n\n");
-        int choice;
-        Scanner scanner = new Scanner(System.in);
-            do {
-                choice = scanner.nextInt();
-                scanner.nextLine();
-            } while (!(choice > 0 && choice < 5));
-            switch (choice) {
-                case 1 -> {
-                    showGround(game, player);
-                    return false;
-                }
-                case 2 -> {
-                    showHand(player);
-                    return false;
-                }
-                case 3 -> {
-                    System.out.println("Which card do you want to see? Insert coordinates (x first):\n");
-                    int coordX = scanner.nextInt();
-                    scanner.nextLine();
-                    int coordY = scanner.nextInt();
-                    scanner.nextLine();
-                    Card cardToShow = player.getPlayerGround().getGround()[coordX][coordY]; // prende carta (x,y) dal ground del player
-                    if (coordX == 42 && coordY == 42) {
-                        StarterCard starterCardToShow = (StarterCard) cardToShow;
-                        showCard(starterCardToShow);
-                    } else {
-                        PlayableCard CardToShow = (PlayableCard) cardToShow;
-                        showCard(CardToShow);
-                    }
-                    return false;
-                }
-                case 4 -> {
-                    return true;
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + choice);
-            }
-
-         */
     }
 
     /**
@@ -259,20 +190,31 @@ public class TUI {
      *
      * @return desired position where to place the card.
      */
-    public Position inputCoordinates(Player player){
-        System.out.println("Where do you want to place the card? Insert the number of the corresponding position:\n");
-        int position = -1;
-        Scanner scanner = new Scanner(System.in);
-        position = scanner.nextInt();
-        while(position > player.getPlayerGround().getAvailablePositions().size() || position <= 0){
-            System.out.println("Please insert a valid number:\n");
-            position = scanner.nextInt();
-        }
-        Map<Integer, Position> numbers = player.getPlayerGround().getAvailableNumbers();
-        Position position1 = numbers.get(position);
-        return (new Position(position1.getX(), position1.getY()));
-    }
 
+    public Position inputCoordinates(Player player) {
+        AdvancedTUI_temp.printGround(player.getPlayerGround());
+        System.out.println("\n                                                              Where do you want to place the card? Insert the number of the corresponding position:\n");
+        Scanner scanner = new Scanner(System.in);
+        int position = -1;
+
+        while (true) {
+            try {
+                position = Integer.parseInt(scanner.nextLine().trim());
+
+                if (position > 0 && position <= player.getPlayerGround().getAvailablePositions().size()) {
+                    break; // Valid position entered, exit loop
+                } else {
+                    System.out.println("                                                                                   Please enter a valid position number.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("                                                                                     Invalid input. Please enter a valid number.");
+            }
+        }
+
+        // Retrieve and return the corresponding Position object
+        Map<Integer, Position> availableNumbers = player.getPlayerGround().getAvailableNumbers();
+        return new Position(availableNumbers.get(position).getX(), availableNumbers.get(position).getY());
+    }
 
     /**
      * The method asks the player which of the three cards in their hand they want to play, and show them the hand.
@@ -282,40 +224,45 @@ public class TUI {
      * @param player is the instance of the player who's playing.
      * @return the Playable Card to be placed, which is chosen from the player's hand.
      */
-    public PlayableCard inputCardToPlace(Player player){
-        System.out.println("Which card do you want to play? 1, 2 or 3? This is your hand:\n");
-        showHand(player);
+
+    public PlayableCard inputCardToPlace(Game game, Player player) {
+        showHand(game, player);
         PlayableCard cardToPlay = null;
-        int card = 0;
         Scanner scanner = new Scanner(System.in);
-        while(card!=1 && card!=2 && card!=3) {
-            card = scanner.nextInt();
-            scanner.nextLine();
-            if (card == 1) {
-                cardToPlay = (PlayableCard) player.getHand().getCard(0);
-            } else if (card == 2) {
-                cardToPlay = (PlayableCard) player.getHand().getCard(1);
-            } else if (card == 3) {
-                cardToPlay = (PlayableCard) player.getHand().getCard(2);
-            } else {
-                System.out.println("Invalid choice. Choose between 1, 2 and 3:\n");
-            }
-            if(cardToPlay!=null && !player.getPlayerGround().checkRequirements(cardToPlay)){
-                System.out.println("requirements not satisfied, choose another card");
-                card=0;
+        while (cardToPlay == null) {
+            try {
+                int card = Integer.parseInt(scanner.nextLine().trim());
+                if (card >= 1 && card <= 3) {
+                    cardToPlay = (PlayableCard) player.getHand().getCard(card - 1);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("                                                                              Invalid input. Please enter a number between 1 and 3");
             }
         }
-        System.out.println("Flipped (input 1) or not (input 0)?\n");
-        int flip = -1;
-        while(flip!=1 && flip!=0) {
-            flip = scanner.nextInt();
-            scanner.nextLine();
+
+        System.out.println("                                                                                           1                      2");
+        AdvancedTUI_temp.printCard(cardToPlay);
+        System.out.println("\n                                                                                       To the front (1) or flipped (2)?");
+
+        while (true) {
+            try {
+                int flip = Integer.parseInt(scanner.nextLine().trim());
+                if (flip == 1 || flip == 2) {
+                    if (flip == 2) {
+                        cardToPlay.flipCard();
+                    }
+                    break;
+                } else {
+                    System.out.println("\n                                                                            Invalid choice. Please enter 1 or 2.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("\n                                                                                Invalid input. Please enter 1 or 2.");
+            }
         }
-        if (flip ==1) {
-            cardToPlay.flipCard();
-        }
+
         return cardToPlay;
     }
+
 
     /**
      * The method implements the second part of a player's turn: the drawing section. The player can see the hand how
@@ -328,20 +275,6 @@ public class TUI {
      * @return numeric choice corresponding to Playable Card drawn from Resource deck or Golden deck.
      */
     public int yourTurnDraw(Game game, Player player){
-        /*System.out.println("You placed one card. Now it's time to draw. What do you want to do? Select the number corresponding to your choice:\n1- Show hand\n2- Show decks and draw a card\n\n");
-        int choice2 = 0;
-        Scanner scanner = new Scanner(System.in);
-        while(choice2!=2) {
-            do {
-                choice2 = scanner.nextInt();
-                scanner.nextLine();
-            } while (!(choice2 > 0 && choice2 < 3));
-            switch ((choice2)) {
-                case 1 -> showHand(player);
-                case 2 -> {
-                }
-            }
-        }*/
         return chooseFromDecks(game, player);
     }
 
@@ -351,190 +284,16 @@ public class TUI {
      *
      * @param player is the instance of the player who's waiting or playing.
      */
-    public void showHand(Player player){
-        AdvancedTUI_temp.printHand(player.getHand());
-       /*Hand hand = player.getHand();
-       ObjectiveCard secretObj = hand.getObjCard();
+    public void showHand(Game game, Player player){
+        System.out.println("                                                     YOUR HAND:                                     SECRET                                                  ");
+        System.out.println("                                  1                      2                      3                  OBJECTIVE                                                         COMMON OBJECTIVES:");
 
-       int i = 1;
-
-       System.out.println("\nThis is your hand:\n");
-       System.out.println("Secret objective: " + toStringRule(secretObj));
-
-       for(Card card: hand.getCards()){
-           System.out.println("Card " + i + "-> ");
-           showCard((PlayableCard) card);
-           i++;
-       }
-
-        System.out.println("""
-                Score rules (legend):
-                - FR 'Flat Rule'. Card gives the indicated amount of points each time it is played.
-                - CCR 'Covered Corners Rule'. Card gives 2 points for each of its covered corners.
-                - NSR 'N symbols Rule'. Card gives the indicated amount of points for each time the group of N indicated symbols appears on the ground.
-                - CR 'Composition Rule'. Card gives the indicated amount of points for each time the indicated composition appears on the ground.
-                - OER 'One of Each Rule'. Card gives 3 points each time there is a set of plume, potion and scroll.
-                """);
-                */
-
-    }
-
-    /**
-     * The method gets all the information about the scoring rule of a Card object. There is a complementary method
-     * called in the same way that only accepts ObjectiveCard objects. See such method.
-     * From the type of rule, the method is able to know how many and which other parameters are related to the rule.
-     * All the information is gathered into a single string.
-     *
-     * @param card is (typically) a playable card.
-     * @return a single string describing the scoring rule of the card passed as a parameter.
-     */
-    public String toStringRule(Card card){
-        String y = null;
-        if(card.getRule().getName().equals("FR")){
-            int p = card.getRule().getPoints();
-            y = "FR, " + p + " points";
-        }
-        if(card.getRule().getName().equals("CCR")){
-            int p = card.getRule().getPoints();
-            y = "CCR, " + p + " points";
-        }
-        if(card.getRule().getName().equals("NSR")){
-            int p = card.getRule().getPoints();
-            NSymbolsRule rule = (NSymbolsRule) card.getRule();
-            y = "NSR, " + p + " points, required " + rule.getPoints() + " " + rule.getSymbol().name().toLowerCase() + "(s)"; //Matteo?????
-        }
-        if(card.getRule().getName().equals("CR")){
-            int p = card.getRule().getPoints();
-            CompositionRule rule = (CompositionRule) card.getRule();
-            y = "CR, " + p + " points, required colors and offsets: " + rule.getColors() + " " + Arrays.toString(rule.getOffsets());
-        }
-        if(card.getRule().getName().equals("OER")){
-            int p = card.getRule().getPoints();
-            y = "OER, " + p + " points";
-        }
-        return y;
-    }
-
-    /**
-     * The function of this method has been described in the homonym one that accepts Card objects as parameter.
-     *
-     * @param card is an Objective Card.
-     * @return a single string describing the scoring rule of the objective card passed as a parameter.
-     */
-    public String toStringRule(ObjectiveCard card){  // stampa la rule di una carta obiettivo
-        String y = null;
-        if(card.getRule().getName().equals("FR")){
-            int p = card.getRule().getPoints();
-            y = "FR, " + p + " points";
-        }
-        if(card.getRule().getName().equals("CCR")){
-            int p = card.getRule().getPoints();
-            y = "CCR, " + p + " points";
-        }
-        if(card.getRule().getName().equals("NSR")){
-            int p = card.getRule().getPoints();
-            NSymbolsRule rule = (NSymbolsRule) card.getRule();
-            y = "NSR, " + p + " points, required " + rule.getPoints() + " " + rule.getSymbol().name().toLowerCase() + "(s)"; //Matteo?????
-        }
-        if(card.getRule().getName().equals("CR")){
-            int p = card.getRule().getPoints();
-            CompositionRule rule = (CompositionRule) card.getRule();
-            y = "CR, " + p + " points, required colors and offsets: " + rule.getColors() + " " + Arrays.toString(rule.getOffsets());
-        }
-        if(card.getRule().getName().equals("OER")){
-            int p = card.getRule().getPoints();
-            y = "OER, " + p + " points";
-        }
-        return y;
+        AdvancedTUI_temp.printHand(player.getHand(), game.getCommonObj());
+        System.out.println("\n                                                                                     Choose a card in your hand to play (1 to 3):\n");
     }
 
 
-    /**
-     * The method gets all the information (position, resource, availability) about each of the four corners
-     * on the front of the card. The information is gathered in a single string.
-     *
-     * @param card is the Card object whose front corners need to be displayed.
-     * @return a single string describing all the four corners of the card passed as a parameter.
-     */
-    public String toStringFrontCorners(Card card) {
-        String z = "Front corners:\n";
-        Corner[] cornersF = card.getCorners();
-        for (int i = 0; i < 4; i++) {
-            z = z.concat("- ").concat(cornersF[i].getPos()).concat(" ").concat(cornersF[i].getCornerRes().name().toLowerCase()).concat(" ").concat(Boolean.toString(cornersF[i].getAvailability())).concat("\n");
-        }
-        return z;
-    }
 
-    /**
-     * The method gets all the information (position, resource, availability) about each of the four corners
-     * on the back of the card. The information is gathered in a single string.
-     *
-     * @param card is the Card object whose back corners need to be displayed.
-     * @return a single string describing all the four back corners of the card passed as a parameter.
-     */
-    public String toStringBackCorners(Card card){
-        Corner[] cornersB = card.getBackCorners();
-        String z = "Back corners:\n";
-            for (int i = 0; i < 4; i++) {
-                z = z.concat("- ").concat(cornersB[i].getPos()).concat(" ").concat(cornersB[i].getCornerRes().name().toLowerCase()).concat(" ").concat(Boolean.toString(cornersB[i].getAvailability())).concat("\n");
-            }
-            return z;
-    }
-
-    /**
-     * The method gather in a single string the information about the requirements to play a card passed as parameter.
-     *
-     * @param card is the PlayableCard object whose requirements are being examined.
-     * @return a single string describing how many occurrences are required of each type of resource.
-     */
-    public String toStringReq(PlayableCard card){
-        String w  = "Requirements: ";
-        HashMap<Resource, Integer> reqMap = card.getRequirements();
-        int fox = reqMap.get(Resource.FOX);
-        int leaf = reqMap.get(Resource.LEAF);
-        int mushroom = reqMap.get(Resource.MUSHROOM);
-        int bug = reqMap.get(Resource.BUG);
-        w = w.concat(fox + " foxes," + leaf + " leaves," + mushroom + " mushrooms," + bug + " bugs.");
-        return w;
-    }
-
-    /**
-     * The method shows the card (of class PlayableCard) passed as a parameter. To do that, the method invokes other
-     * methods to convert card's features into strings: toStringRule, toStringCorners, toStringBackCorners, toStringReq.
-     * The combination of their results is printed to describe the whole card.
-     *
-     * @param card is the Playable Card to be displayed.
-     */
-    public void showCard(PlayableCard card){
-        String y,z,w;
-        y = toStringRule(card);
-        if(card.getFlip()){
-            z = toStringBackCorners(card);
-        }
-        else{
-            z = toStringFrontCorners(card);
-        }
-        w = toStringReq(card);
-        System.out.println("Color: " + card.getColor() + ", rule: " + y + "\n" + z + "\n" + w + "\n");
-    }
-
-    /**
-     * The function of this method has been described in the homonym one that accepts StarterCard objects as parameter.
-     * The only difference is that starter cards don't have any requirements.
-     *
-     * @param card is the StarterCard to be displayed.
-     */
-    public void showCard(StarterCard card){
-        String y,z;
-        y = toStringRule(card);
-        if(card.getFlip()){
-            z = toStringBackCorners(card);
-        }
-        else{
-            z = toStringFrontCorners(card);
-        }
-        System.out.println("Color: " + card.getColor() + ", rule: " + y + "\n" + z + "\n");
-    }
 
     /**
      * The method builds and shows the player's ground as a matrix of 1 and 0: 1 if there is a card in the position
@@ -545,10 +304,7 @@ public class TUI {
      */
     public void showGround(Game game, Player player){
         ObjectiveCard[] commonObjs = game.getCommonObj();
-        System.out.println("\nThese are all players' common objectives:\n");
-        /* for(ObjectiveCard obj: commonObjs){
-            System.out.println(toStringRule(obj));
-        } */
+        System.out.println("                                                                                                       COMMON OBJECTIVES:");
         AdvancedTUI_temp.printObjectives(commonObjs);
 
         /*
@@ -600,24 +356,32 @@ public class TUI {
      */
     public int chooseFromDecks(Game game, Player player){
         Deck[] decks = game.getDecks();
-        String deck1name = decks[0].getKindOfDeck();
-        String deck2name = decks[1].getKindOfDeck();
         AdvancedTUI_temp.printGround(player.getPlayerGround());
-        System.out.println("This is your hand: ");
-        AdvancedTUI_temp.printHand(player.getHand());
-
-        System.out.println("\nHere you are the game decks." +
-               "\n" + deck1name + " deck (0, 1, 2 to choose):\n");
-
-        AdvancedTUI_temp.printDeck(decks[0]);
-        System.out.println( "\n" + deck2name + " deck (3, 4, 5 to choose):\n");
-        AdvancedTUI_temp.printDeck(decks[1]);
+        System.out.println("                                                                             SECRET");
+        System.out.println("                                         YOUR HAND:                         OBJECTIVE                                                         COMMON OBJECTIVES:");
+        AdvancedTUI_temp.printHand(player.getHand(), game.getCommonObj());
+        System.out.println("\n");
+        System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
+        System.out.println("                                  1                      2                      3                                              4                      5                      6");
+        AdvancedTUI_temp.printDecks(decks[0], decks[1], "                        ");
+        System.out.println("\n                                                                                 Choose a card to draw from the decks (1 to 6)\n");
         Scanner scanner = new Scanner(System.in);
-        int choice;
-        do{
-            choice = scanner.nextInt();
-            scanner.nextLine();
-        } while(!(choice >=0 && choice<6));
+        int choice = 0;
+        boolean valid = false;
+
+        do {
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+                if (choice >= 1 && choice <= 6) {
+                    valid = true;
+                } else {
+                    System.out.println("                                                                            Invalid input. Please enter a number between 1 and 6.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("                                                                                Invalid input. Please enter a number between 1 and 6.");
+            }
+        } while (!valid);
+
         return choice;
     }
 
@@ -625,7 +389,7 @@ public class TUI {
     public void showRoom(ArrayList<Room> rooms){
         String s ="These are the available room to play:";
         if(rooms.isEmpty()){
-            s+=" no room available";
+            s+="\n no room available";
         }
         else{
             for(Room r: rooms){
@@ -634,12 +398,29 @@ public class TUI {
         }
         System.out.println(s);
     }
-    public boolean chooseRoom(){
-        System.out.println("Do you want to create a room: 1 or to join one : other");
-        Scanner s = new Scanner(System.in);
-        int n = s.nextInt();
-        s.nextLine();
-        return n == 1;
+    public boolean chooseRoom() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("1. Create a room");
+        System.out.println("2. Join an existing room");
+        System.out.print("Enter your choice (1 or 2): ");
+
+        int choice = 0;
+        while (true) {
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+                if (choice == 1 || choice == 2) {
+                    break; // Valid choice entered, exit loop
+                } else {
+                    System.out.println("Invalid choice. Please enter 1 or 2.");
+                    System.out.print("Enter your choice (1 or 2): ");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter 1 or 2.");
+                System.out.print("Enter your choice (1 or 2): ");
+            }
+        }
+
+        return choice == 1;
     }
     public String getRoomName(boolean b, ArrayList<Room> rooms){
         Scanner s = new Scanner(System.in);
@@ -687,6 +468,11 @@ public class TUI {
             System.out.println(s);
         }
         Scanner s = new Scanner(System.in);
-        return s.nextLine();
+        String color = s.nextLine();
+        while (!colors.contains(color)){
+            System.out.println("Wrong color. Type a valid color");
+            color = s.nextLine();
+        }
+        return color;
     }
 }
