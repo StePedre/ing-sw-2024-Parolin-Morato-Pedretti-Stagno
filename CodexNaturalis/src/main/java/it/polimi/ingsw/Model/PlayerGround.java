@@ -74,6 +74,32 @@ public class PlayerGround implements Serializable {
         availableNumbers.put(lowestAvailableKey, position);
     }
 
+
+    private void updateNumbers() {
+        if (availableNumbers == null || availableNumbers.isEmpty()) {
+            return;
+        }
+
+        List<Integer> keys = new ArrayList<>(availableNumbers.keySet());
+        Collections.sort(keys);
+
+        int maxKey = keys.getLast();
+
+        int missingNumber = -1;
+        for (int i = 1; i < maxKey; i++) {
+            if (!availableNumbers.containsKey(i)) {
+                missingNumber = i;
+                break;
+            }
+        }
+
+        if (missingNumber != -1) {
+            availableNumbers.put(missingNumber, availableNumbers.get(maxKey));
+
+            availableNumbers.remove(maxKey);
+        }
+    }
+
     /**
      * The method is used for everything regarding adding a card. By invoking specific methods, it removes the resources
      * of the covered corners, adds the resources from the corners of the new card, updates the availablePositions and
@@ -489,6 +515,7 @@ public class PlayerGround implements Serializable {
 
             }
         }
+        updateNumbers();
     }
 
     /**

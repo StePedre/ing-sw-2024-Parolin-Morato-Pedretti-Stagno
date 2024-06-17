@@ -64,7 +64,7 @@ public class AdvancedTUI_temp {
             }
         }
         for (int j = lengthY; j >= 0; j--) {
-            contentLine4 += getGridLine5(ground[minX][maxY - j], false);
+            contentLine4 += getGridLine5(ground[minX][maxY - j], false, true);
         }
         System.out.println("                   " + space + contentLine4 );
 
@@ -84,10 +84,20 @@ public class AdvancedTUI_temp {
                 contentLine3 += getGridLine3(currentCard);
 
                 if (currentCard == null && i+1 <=  lengthX) {
-                        contentLine4 += getGridLine5(ground[minX + i + 1][maxY - j], false);
+                    if(ground[minX + i][maxY - j - 1] == null ||
+                            (ground[minX + i][maxY - j - 1] != null && ground[minX + i][maxY - j - 1].getId() == -1)) {
+                        contentLine4 += getGridLine5(ground[minX + i + 1][maxY - j], false, true);
+                    }else{
+                        contentLine4 += getGridLine5(ground[minX + i + 1][maxY - j], false, false);
+                    }
 
                 } else {
-                        contentLine4 += getGridLine4(currentCard, true);
+                    if(ground[minX + i + 1][maxY - j + 1] == null ||
+                            (ground[minX + i + 1][maxY - j + 1] != null && ground[minX + i + 1][maxY - j + 1].getId() == -1)) {
+                        contentLine4 += getGridLine4(currentCard, true, true);
+                    }else{
+                        contentLine4 += getGridLine4(currentCard, true, false);
+                    }
                 }
             }
                 System.out.println(printResourceLegend((lengthX-i+1)*4, playerGround.getTotalResources()) + space + contentLine1);
@@ -357,17 +367,14 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
     }
 
     private static String getGridLine1(Card card){
-        if(card == null) return "                  ";
+        if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
             return getFirstGridLine(card, 1, true);
-        }
-        if(card.getId() == -1){
-            return cardColor(card) + "█                 █" + "\u001B[0m";
         }
         return cardColor(card) + "█                 █" + "\u001B[0m";
     }
     private static String getGridLine2(Card card, int positionX, int positionY, PlayerGround ground){
-        if(card == null) return "                  ";
+        if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
             return getFirstGridLine(card, 2, true);
         }
@@ -386,7 +393,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         return cardColor(card) + "█                 █" + "\u001B[0m";
     }
     private static String getGridLine3(Card card){
-        if(card == null) return "                  ";
+        if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
             return getFirstGridLine(card, 3, true);
         }
@@ -395,8 +402,8 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         }
         return cardColor(card) + "█                 █" + "\u001B[0m";
     }
-    private static String getGridLine4(Card card, boolean state){
-        if(card == null) return "                  ";
+    private static String getGridLine4(Card card, boolean state, boolean showRightCorner){
+        if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
             return getFirstGridLine(card, 4, state);
         }
@@ -404,26 +411,38 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             return cardColor(card) + " ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ " + "\u001B[0m";
 
         }
-        if (state) {
-            return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+        if(showRightCorner) {
+            if (state) {
+                return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+            }
+            return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
         }
-        return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
+        if (state) {
+            return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ " + "\u001B[0m";
+        }
+        return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ " + "\u001B[0m";
+
 
     }
 
-    private static String getGridLine5(Card card, boolean state){
-        if(card == null) return "                  ";
+    private static String getGridLine5(Card card, boolean state, boolean showRightCorner){
+        if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
             return getFirstGridLine(card, 4, state);
         }
         if(card.getId() == -1){
             return cardColor(card) + " ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + "\u001B[0m";
         }
-        if (state) {
-            return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+        if(showRightCorner) {
+            if (state) {
+                return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+            }
+            return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
         }
-        return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
-
+        if (state) {
+            return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + "\u001B[0m";
+        }
+        return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + "\u001B[0m";
 
     }
 
@@ -432,24 +451,24 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         StarterCard starterCard = (StarterCard) card;
         if(state == 1 && !starterCard.getFlip()){
             Corner corner = new Corner("top",starterCard.getBackRes().getFirst(), true);
-            return " █        "+ cornerColor(corner) +"       █";
+            return "█        "+ cornerColor(corner) +"        █";
         }
         if(state == 2 && !starterCard.getFlip() && !starterCard.getBackRes().get(1).equals(BLANK)){
             //return "█    first card    █
             Corner corner = new Corner("top",starterCard.getBackRes().get(1), true);
-            return " █        "+ cornerColor(corner) +"       █";
+            return "█        "+ cornerColor(corner) +"        █";
         }
         if(state == 3 && !starterCard.getFlip() && !starterCard.getBackRes().get(2).equals(BLANK)){
             Corner corner = new Corner("top",starterCard.getBackRes().get(2), true);
-            return " █        "+ cornerColor(corner) +"       █";
+            return "█        "+ cornerColor(corner) +"        █";
         }
         if(state == 4 && !status){
-            return cornerColor(card.getShowedCorners()[0]) + "████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
+            return cornerColor(card.getShowedCorners()[0]) + "█████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
         }
         if(state == 4){
-            return cornerColor(card.getShowedCorners()[1]) + "████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+            return cornerColor(card.getShowedCorners()[1]) + "█████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
         }
-        return " █                █";
+        return "█                 █";
     }
 
     private static String firstLineObjective(ObjectiveCard objectiveCard){
@@ -464,19 +483,13 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
                 int sumX = compositionRule.getOffsets()[0] + compositionRule.getOffsets()[2];
                 Resource resource = compositionRule.getResources()[0];
                 Corner corner = new Corner("top", resource, true);
-                if( sumX == -3){
+                if( (sumX == 3 && sumY == -3) || sumY == -2){
                     return "       " + cornerColor(corner) + "\u001B[33m" + "  " + compositionRule.getPoints() + " points ";
                 }
-                else if( sumX == -1 || sumX == 1){
+                else if( sumX == 5){
                     return "    " + cornerColor(corner) + "\u001B[33m" + "     " + compositionRule.getPoints() + " points ";
                 }
-                else if( sumX == 3){
-                    return " " + cornerColor(corner) + "\u001B[33m" + "        "+ compositionRule.getPoints() + " points ";
-                }
-                else if(compositionRule.getOffsets()[0] ==-1){
-                    return "       " + cornerColor(corner) + "\u001B[33m" + "  " + compositionRule.getPoints() + " points ";
-                }
-                else if(compositionRule.getOffsets()[2] == 1){
+                else if( (sumX == 3 && sumY == 3 )|| sumY == 2){
                     return " " + cornerColor(corner) + "\u001B[33m" + "        "+ compositionRule.getPoints() + " points ";
                 }
             }
@@ -531,10 +544,10 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
                 int sumX = compositionRule.getOffsets()[0] + compositionRule.getOffsets()[2];
                 Resource resource = compositionRule.getResources()[2];
                 Corner corner = new Corner("top", resource, true);
-                if( sumX == -3 || sumX == -1){
+                if( sumY == -3 || sumY == -1){
                     return " " + cornerColor(corner) + "\u001B[33m" + "           comp  ";
                 }
-                else if( sumX == 3 || sumX == 1){
+                else if( sumY == 3 || sumY == 1){
                     return "       " + cornerColor(corner) + "\u001B[33m" + "     comp  ";
 
                 }else{
