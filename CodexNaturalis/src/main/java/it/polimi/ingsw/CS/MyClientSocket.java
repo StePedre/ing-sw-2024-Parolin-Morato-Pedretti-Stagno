@@ -106,7 +106,11 @@ public class MyClientSocket {
                 b=(boolean) in.readObject();
             }
             else{
-                out.writeObject(tui.notYourTurn(game,player));//Problemi problemi
+                do {
+                    if(socket.isClosed()){
+                        throw new IOException();
+                    }
+                }while(tui.notYourTurn(game,player));
                 b=(boolean)in.readObject();
             }
         }

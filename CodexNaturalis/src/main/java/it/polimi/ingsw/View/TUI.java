@@ -300,6 +300,10 @@ public class TUI {
             } else {
                 System.out.println("Invalid choice. Choose between 1, 2 and 3:\n");
             }
+            if(cardToPlay!=null && !player.getPlayerGround().checkRequirements(cardToPlay)){
+                System.out.println("requirements not satisfied, choose another card");
+                card=0;
+            }
         }
         System.out.println("Flipped (input 1) or not (input 0)?\n");
         int flip = -1;
