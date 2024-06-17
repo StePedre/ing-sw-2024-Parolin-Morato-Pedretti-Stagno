@@ -8,9 +8,19 @@ import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface ClientRMIInterface extends Remote {
-    void runClient() throws IOException, InvalidPositionException, MissingResourcesException;
+/**
+ * The interface ServerRMIInterface extends remote, and it is implemented by class MyServerRMI.
+ */
 
-    void writeMessage(String message) throws RemoteException;
+public interface ClientRMIInterface extends Remote {
+
+    /**
+     * This method starts the client and calls the method that start the TUI.
+     *
+     * @throws IOException if there has been problems regarding input or output.
+     * @throws InvalidPositionException if the position of the card does not belong to available positions set.
+     * @throws MissingResourcesException if there are not the available resources to play that card.
+     */
+    void runClient() throws IOException, InvalidPositionException, MissingResourcesException;
 
 }

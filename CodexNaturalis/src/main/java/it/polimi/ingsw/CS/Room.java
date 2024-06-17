@@ -19,12 +19,14 @@ import java.util.Random;
  *  are managed by a RoundController.
  *  This class implements Serializable interface.
  */
+
 public class Room implements Serializable {
     private final String nameRoom;
     private final Game game;
     private final RoundController roundController;
     private final PlayerController playerController;
     private int playerInRoom;
+
     /**
      * Class constructor.
      *
@@ -39,15 +41,11 @@ public class Room implements Serializable {
         playerInRoom = 0;
     }
 
-    public int getPlayerInRoom() {
-        return playerInRoom;
-    }
-
+    /**
+     * This method increases the number of players in the room.
+     */
     public void addPlayerInRoom() {
         this.playerInRoom++;
-    }
-    public void removePlayerInRoom() {
-        this.playerInRoom--;
     }
 
     /**
@@ -69,6 +67,24 @@ public class Room implements Serializable {
     }
 
     /**
+     * This method gets the player controller associated to a player in the room.
+     *
+     * @return such player controller.
+     */
+    public PlayerController getPlayerController() {
+        return playerController;
+    }
+
+    /**
+     * This method gets the number of players in the room.
+     *
+     * @return such Integer.
+     */
+    public int getPlayerInRoom() {
+        return playerInRoom;
+    }
+
+    /**
      * The method gets the room instance itself.
      *
      * @return this instance.
@@ -86,7 +102,12 @@ public class Room implements Serializable {
         return roundController;
     }
 
-
+    /**
+     * This method tells if the room is full or not.
+     * It is synchronized.
+     *
+     * @return such boolean.
+     */
     public synchronized boolean isFull() {
         return game.getNumPlayer() == playerInRoom;
     }
@@ -116,7 +137,12 @@ public class Room implements Serializable {
             throw new RuntimeException(e);
         }
     }
-    public PlayerController getPlayerController() {
-        return playerController;
+
+    /**
+     * This method decreases the number of players in the room.
+     */
+    public void removePlayerInRoom() {
+        this.playerInRoom--;
     }
+
 }

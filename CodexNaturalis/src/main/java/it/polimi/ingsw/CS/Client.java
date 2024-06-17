@@ -11,7 +11,19 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * The class Client only contains the main method which is called whenever a user wants to play the game.
+ */
+
 public class Client {
+
+    /**
+     * This method asks the user through which type of interface they want to play the game, and which type of connection
+     * between socket and RMI. If the TUI is chosen, it also asks the user to insert the IP address pf the server. Then
+     * it calls the chosen interface start methods.
+     *
+     * @param args are the arguments passed from the command line
+     */
     public static void main(String[] args) {
         try{//chiedere Gui/Tui e tipo di connesione
             System.out.println(InetAddress.getLocalHost().getHostAddress());
