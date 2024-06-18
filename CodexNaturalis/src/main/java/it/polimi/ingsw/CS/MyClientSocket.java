@@ -9,6 +9,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Set;
 
+/**
+ * The class MyClientSocket manages all the action of a player in a Socket connection.
+ * It has a Socket object for the connection, an ObjectOutputStream and an ObjectInputStream to send and receive to and
+ * from server. It also has an instance of the Player, Game and TUI and a boolean inter that tells which interface the
+ * user has choosen.
+ */
 
 public class MyClientSocket {
     private  Socket socket;
@@ -18,9 +24,32 @@ public class MyClientSocket {
     Game game = null;
     TUI tui =  null;
     boolean inter;
+
+    /**
+     * Class constructor.
+     * It sets the interface boolean.
+     *
+     * @param inter is the boolean to set.
+     */
     public MyClientSocket(boolean inter) {
         this.inter = inter;
     }
+
+    /**
+     * This method closes the socket connection.
+     *
+     * @throws IOException if there has been problems regarding input or output.
+     */
+    public void close() throws IOException {
+        socket.close();
+    }
+
+    /**
+     * This method calls the starting methods of the interface chosen. If the TUI was selected, it asks to insert the IP
+     * address of the server in order to establish the connection.
+     *
+     * @throws IOException if there has been problems regarding input or output.
+     */
     public void runClient() throws IOException {// per test println
         try {
             System.out.println("Client connected");
@@ -40,6 +69,41 @@ public class MyClientSocket {
             e.printStackTrace();
         }
     }
+
+    /**
+     * This method updates instances of Game and Player after receiving the updated objects from the server.
+     *
+     * @throws IOException if there has been problems regarding input or output.
+     * @throws ClassNotFoundException if there has been problems regarding casting an object.
+     */
+    public void updateData() throws IOException, ClassNotFoundException {
+        game = (Game) in.readObject();
+        player = (Player) in.readObject();
+    }
+
+    /**
+     * This method starts the GUI.
+     */
+    public void useGUI(){
+        GUIsocket.startGUI();
+    }
+
+    /**
+     * This method manages the game flow when using the TUI.
+     * It sets up the connection, creates or joins a room, gets the player's nickname, asks the number of players expected
+     * in the room if the player that has joined was the first one, chooses the color, sets the starter card and the
+     * secret objective card, shows the player ground and manages the turn of a player by placing the selected card and
+     * drawing another one from the decks selected, till there is the final turn.
+     * After that, it prints the players that have won the game.
+     * Every Object (boolean, Game, Player, Cards) are sent and received to and from the server using the ObjectOutputStream
+     * and ObjectInputStream.
+     *
+     * @param port is the port number of the server.
+     * @param host is the IP address of the server.
+     * @throws IOException if there has been problems regarding input or output.
+     * @throws ClassNotFoundException if there has been problems regarding the cast of an Object.
+     * @throws InterruptedException if there has been problems during the activity of a thread.
+     */
     public void useTUI(int port, String host) throws IOException, ClassNotFoundException, InterruptedException {
         tui= new TUI();
         socket = new Socket(InetAddress.getByName(host), port);
@@ -114,14 +178,4 @@ public class MyClientSocket {
         close();
     }
 
-    public void close() throws IOException {
-        socket.close();
-    }
-    public void updateData() throws IOException, ClassNotFoundException {
-        game = (Game) in.readObject();
-        player = (Player) in.readObject();
-    }
-    public void useGUI(){
-        GUIsocket.startGUI();
-    }
 }
