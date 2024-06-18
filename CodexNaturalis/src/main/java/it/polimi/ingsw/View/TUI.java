@@ -156,7 +156,7 @@ public class TUI {
         System.out.println("                                                    YOUR HAND:                                     OBJECTIVE                                                         COMMON OBJECTIVES:");
 
         AdvancedTUI_temp.printHand(player.getHand(), game.getCommonObj());
-        System.out.println("\n                                                                   Its not turn. You have to wait until other players doesn't finish to play:\n");
+        System.out.println("\n                                                                   It's not your turn. You have to wait until the other players finish to play.\n");
         Scanner scanner = new Scanner(System.in);
         //String name = scanner.nextLine();
         return false;
@@ -391,7 +391,7 @@ public class TUI {
 
 
     public void showRoom(ArrayList<Room> rooms){
-        String s ="These are the available room to play:";
+        String s ="These are the available rooms to play in:\n";
         if(rooms.isEmpty()){
             s+="\n no room available";
         }
