@@ -235,6 +235,10 @@ public class TUI {
                 if (card >= 1 && card <= 3) {
                     cardToPlay = (PlayableCard) player.getHand().getCard(card - 1);
                 }
+                if(cardToPlay!= null && !player.getPlayerGround().checkRequirements(cardToPlay)){
+                    System.out.println("Requirements not satisfied, choose another card");
+                    cardToPlay=null;
+                }
             } catch (NumberFormatException e) {
                 System.out.println("                                                                              Invalid input. Please enter a number between 1 and 3");
             }
