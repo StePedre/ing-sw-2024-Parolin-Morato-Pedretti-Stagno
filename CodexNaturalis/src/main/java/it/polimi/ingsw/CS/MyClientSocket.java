@@ -77,7 +77,7 @@ public class MyClientSocket {
         in.readObject();//legge false per non numero di player
         tui.Welcome(player);
         in.readObject();//legge true per raggiungimento numero player
-        out.writeObject(tui.showStarterCard((StarterCard) in.readObject()));
+        out.writeObject(!tui.showStarterCard((StarterCard) in.readObject()));
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         updateData();
