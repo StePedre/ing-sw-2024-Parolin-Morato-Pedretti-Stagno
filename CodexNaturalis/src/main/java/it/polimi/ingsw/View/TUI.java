@@ -156,9 +156,9 @@ public class TUI {
         System.out.println("                                                    YOUR HAND:                                     OBJECTIVE                                                         COMMON OBJECTIVES:");
 
         AdvancedTUI_temp.printHand(player.getHand(), game.getCommonObj());
-        System.out.println("\n                                                                   Its TIZIO's turn. You can check other players boards in the meantime:\n");
+        System.out.println("\n                                                                   Its not turn. You have to wait until other players doesn't finish to play:\n");
         Scanner scanner = new Scanner(System.in);
-        String name = scanner.nextLine();
+        //String name = scanner.nextLine();
         return false;
     }
 
