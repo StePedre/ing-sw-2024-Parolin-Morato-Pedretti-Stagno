@@ -214,7 +214,7 @@ public class ServerHandlerSocket implements Runnable{
         pc.populateHand(game,player);
         StarterCard st = pc.pickCard(game);
         out.writeObject(st);
-        if((boolean)in.readObject()){
+        if(!(boolean)in.readObject()){
             st.flipCard();
         }
         pc.setFirstCard(st,player.getPlayerGround());
