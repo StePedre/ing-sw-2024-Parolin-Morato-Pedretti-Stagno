@@ -100,7 +100,7 @@ public class MyClientSocket {
                     break;
                 }
                 if((boolean)in.readObject()) {
-                    out.writeObject(tui.yourTurnDraw(game, player));
+                    out.writeObject((tui.yourTurnDraw(game, player))-1);
                 }
                 updateData();
                 b=(boolean) in.readObject();
