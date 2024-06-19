@@ -28,9 +28,9 @@ public class RoomController implements Serializable {
     }
 
     /**
-     * return the list of the active rooms
+     * The method returns the list of the active rooms.
      *
-     * @return the available rooms
+     * @return the available rooms.
      */
     public synchronized ArrayList<Room> getRooms() {
         ArrayList<Room> availableRoom= new ArrayList<Room>();
@@ -43,28 +43,28 @@ public class RoomController implements Serializable {
     }
 
     /**
-     * add a new room on the list of the available rooms
+     * The method adds a new room to the list of the available rooms.
      *
-     * @param room the new room
+     * @param room is the new room.
      */
     public synchronized void addRoom(Room room) {
         this.rooms.add(room);
     }
 
     /**
-     * remove a room from the list of room
+     * The method removes a room from the list of rooms.
      *
-     * @param room the room to remove
+     * @param room is the room to remove.
      */
     public synchronized void removeRoom(Room room) {
         this.rooms.remove(room);
     }
 
     /**
-     * return a room based on his name
+     * The method returns a room based on its name.
      *
-     * @param roomName the name of the room
-     * @return the room
+     * @param roomName is the name of the room.
+     * @return the room object.
      */
     public synchronized Room getRoom(String roomName) {
         for (Room room : rooms) {
@@ -76,12 +76,12 @@ public class RoomController implements Serializable {
     }
 
     /**
-     * Check if already exist a room with the same name
+     * The method checks if a room with the same name already exists.
      *
-     * @param s the name of the room
-     * @return true if the name already exist, false otherwise
+     * @param s is the name of the room.
+     * @return true if the name already exists, false otherwise.
      */
-    public synchronized boolean alredyExist(String s){// return false if not alredy exist
+    public synchronized boolean alredyExist(String s){
         boolean flag = false;
         for(Room r : rooms){
             if(r.getName().equals(s)){
@@ -93,11 +93,11 @@ public class RoomController implements Serializable {
     }
 
     /**
-     * Check if in a room already exist a player with a specified nickname
+     * The method checks if a player with a specified nickname already exist in a room.
      *
-     * @param game the game to check
-     * @param s the nickname of the player
-     * @return true if the nickname already exist, false otherwise
+     * @param game is the game to check.
+     * @param s is the nickname of the player.
+     * @return true if the nickname already exists, false otherwise.
      */
     public synchronized boolean alredyInGame(Game game, String s){
         boolean flag = false;
