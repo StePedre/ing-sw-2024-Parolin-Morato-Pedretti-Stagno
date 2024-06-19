@@ -34,6 +34,17 @@ public interface ServerRMIInterface extends Remote {
     boolean addRoom(String roomName) throws RemoteException;
 
     /**
+     * This method gets the boolean that tells if a player has the available requirements to place a card or not.
+     *
+     * @param card is the card to place.
+     * @param nickname is the name of the player.
+     * @param roomName is the name of the room.
+     * @return such boolean.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    boolean checkCardRequirements(PlayableCard card, String nickname, String roomName) throws RemoteException;
+
+    /**
      * This method draws a card for a player.
      *
      * @param int1 is the type of deck from which the card is drawn. (0 is the resource deck, 1 is the gold one)
@@ -100,6 +111,15 @@ public interface ServerRMIInterface extends Remote {
     boolean isCurrentPlayer(String nickname, String roomName) throws RemoteException;
 
     /**
+     * This method gets the boolean that tells if a deck is empty or not.
+     *
+     * @param roomName is the name of the room.
+     * @return such boolean.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    boolean isDeckEmpty(String roomName) throws RemoteException;
+
+    /**
      * This method tells if a player is the first one or not.
      *
      * @param room is the name of the room in which to find the game.
@@ -116,6 +136,15 @@ public interface ServerRMIInterface extends Remote {
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     boolean isGameOver(String roomName) throws RemoteException;
+
+    /**
+     * This method gets the boolean that tells if it is the last turn or not.
+     *
+     * @param roomName is the name of the room.
+     * @return such boolean.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    boolean isLastTurn(String roomName) throws RemoteException;
 
     /**
      * This method advances to the next round of the round controller.
@@ -192,11 +221,5 @@ public interface ServerRMIInterface extends Remote {
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     ArrayList<Room> showRooms() throws RemoteException;
-
-    boolean isLastTurn(String roomName) throws RemoteException;
-
-    boolean isDeckEmpty(String roomName) throws RemoteException;
-
-    boolean checkCardRequirements(PlayableCard card, String nickname, String roomName) throws RemoteException;
 
 }

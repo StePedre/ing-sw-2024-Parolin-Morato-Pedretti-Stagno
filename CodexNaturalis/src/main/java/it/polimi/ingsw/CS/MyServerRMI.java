@@ -75,6 +75,19 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
     /**
      * See ServerRMIInterface for more details.
      *
+     * @param card is the card to place.
+     * @param nickname is the name of the player.
+     * @param roomName is the name of the room.
+     * @return such boolean.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    public boolean checkCardRequirements(PlayableCard card, String nickname, String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getGame().getPlayer(nickname).getPlayerGround().checkRequirements(card);
+    }
+
+    /**
+     * See ServerRMIInterface for more details.
+     *
      * @param int1 is the type of deck from which the card is drawn.
      * @param int2 is the position of the card drawn (0 and 1 are the two cards faced up, 2 is the first of the deck
      *             faced down)
@@ -159,6 +172,17 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
     /**
      * See ServerRMIInterface for more details.
      *
+     * @param roomName is the name of the room.
+     * @return such boolean.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    public boolean isDeckEmpty(String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getGame().getDecks()[0].getCards().isEmpty() || rooms.getRoom(roomName).getGame().getDecks()[1].getCards().isEmpty();
+    }
+
+    /**
+     * See ServerRMIInterface for more details.
+     *
      * @param room is the name of the room in which to find the game.
      * @return such boolean.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
@@ -176,6 +200,17 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      */
     public boolean isGameOver(String roomName) throws RemoteException{
         return rooms.getRoom(roomName).getGame().isOver();
+    }
+
+    /**
+     * See ServerRMIInterface for more details.
+     *
+     * @param roomName is the name of the room.
+     * @return such boolean.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    public boolean isLastTurn(String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getRoundController().isLastTurn();
     }
 
     /**
@@ -284,18 +319,6 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      */
     public ArrayList<Room> showRooms() throws RemoteException{
         return rooms.getRooms();
-    }
-
-    public boolean isLastTurn(String roomName) throws RemoteException{
-        return rooms.getRoom(roomName).getRoundController().isLastTurn();
-    }
-
-    public boolean isDeckEmpty(String roomName) throws RemoteException{
-        return rooms.getRoom(roomName).getGame().getDecks()[0].getCards().isEmpty() || rooms.getRoom(roomName).getGame().getDecks()[1].getCards().isEmpty();
-    }
-
-    public boolean checkCardRequirements(PlayableCard card, String nickname, String roomName) throws RemoteException{
-        return rooms.getRoom(roomName).getGame().getPlayer(nickname).getPlayerGround().checkRequirements(card);
     }
 
 }
