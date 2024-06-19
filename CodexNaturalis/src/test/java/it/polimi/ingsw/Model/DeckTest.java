@@ -22,16 +22,17 @@ class DeckTest {
         cards.add(card3);
         cards.add(card4);
         cards.add(card5);
-
         return new Deck(5, "ResourceDeck", cards);
     }
-
 
     @Test
     void drawCard() {
         Deck deck = deckCreation();
-        int expectedID = deck.getCards().get(1).getId();  // necessary to save because drawcard also removes card
+        int initSize = deck.getNumberOfCards();
+        int expectedID = deck.getCards().get(1).getId();
         Card drawn = deck.drawCard(1);
+        int finSize = deck.getNumberOfCards();
         assertEquals(drawn.getId(), expectedID);
+        assertEquals(initSize-1, finSize);
     }
 }
