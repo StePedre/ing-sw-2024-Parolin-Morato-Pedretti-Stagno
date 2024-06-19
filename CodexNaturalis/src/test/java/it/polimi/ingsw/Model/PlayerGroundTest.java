@@ -1,10 +1,14 @@
 package it.polimi.ingsw.Model;
 
+import it.polimi.ingsw.Controller.ParsingController;
+import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
 import it.polimi.ingsw.Model.ScoreRules.FlatRule;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 import it.polimi.ingsw.View.TUI;
+import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,57 +18,66 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlayerGroundTest {
     Game game = new Game();
     Player player = new Player("Silvia");
-    Corner[] corners = new Corner[4];
-    Corner[] backCorners = new Corner[4];
-    Resource color = Resource.FOX;
-    Resource color0 = Resource.BLANK;
-    ArrayList<Resource> backres = new ArrayList<>();
-    HashMap<Resource, Integer> req = new HashMap<>();
-    FlatRule rule = new FlatRule(1);
-    FlatRule rule0 = new FlatRule(0);
-    PlayableCard card1 = new PlayableCard(1, rule, corners, backCorners, color, req);
+
+    ParsingController pc = new ParsingController();
+
+    PlayerGround pg = new PlayerGround();
+    StarterCard card0 = pc.createStarterCardsArray().getFirst();
+    PlayableCard card1 = pc.parsingPlayableCards().getFirst();
+    ObjectiveCard card2 = pc.createObjectiveCardsArray().getFirst();
+    ObjectiveCard card3 = pc.createObjectiveCardsArray().get(2);
+
+    PlayerGroundTest() throws IOException, ParseException {
+    }
+
     @Test
-    void placeCard() throws InvalidPositionException, MissingResourcesException {  //tests lots of methods
-        PlayerGround pg = new PlayerGround();
-        corners[0] = new Corner("TLF", Resource.LEAF, true);
-        corners[1] = new Corner("TRF", Resource.LEAF, true);
-        corners[2] = new Corner("BLF", Resource.BLANK, true);
-        corners[3] = new Corner("BRF", Resource.NOTVISIBLE, false);
-        backCorners[0] = new Corner("TLB", Resource.BLANK, true);
-        backCorners[1] = new Corner("TRB", Resource.BLANK, true);
-        backCorners[2] = new Corner("BLB", Resource.BLANK, true);
-        backCorners[3] = new Corner("BRB", Resource.BLANK, true);
-        /* PLACING STARTER CARD TEST*/
-        StarterCard card0 = new StarterCard(0, rule0, corners, backCorners, color0, backres);
+    void placeAndAddCard() throws InvalidPositionException, MissingResourcesException {
         Position centralPos = new Position(42, 42);
         card0.getBackRes().add(Resource.FOX);
         card0.flipCard();
         pg.placeCard(card0, centralPos);
         player.setPlayerGround(pg);
         game.getPlayers().add(player);
-        FlatRule rule = new FlatRule(1);
-        ObjectiveCard[] commoObj = new ObjectiveCard[2];
-        commoObj[0] = new ObjectiveCard(12, rule);
-        commoObj[1] = new ObjectiveCard(13, rule);
-        game.setCommonObj(commoObj);
-        TUI tui = new TUI();
-        tui.showGround(game, player);
+        game.setCommonObj(new ObjectiveCard[]{card2, card3});
         Position pos = new Position(41, 43);
         pg.placeCard(card1, pos);
+        TUI tui = new TUI();
         tui.showGround(game, player);
+    }
 
+    /* Through visualization in the textual interface, the following method tests
+    all the private methods inside addCard(), which is private as well and invoked by placeCard();
+     */
+    @Test
+    void addCard() throws MissingResourcesException, InvalidPositionException {
+        pg.placeCard(card0, new Position(42, 42));
+        game.setCommonObj(new ObjectiveCard[]{card2, card3});
+        for(Position pos: player.getPlayerGround().getAvailablePositions()){
+            player.getPlayerGround().placeCard(card1, pos);
+            break;
+        }
+        System.out.println(card1.getRule().getName());
+        assertEquals(player.getPlayerGround().getPlayerScore(), card1.getRule().getPoints());
+        for(Corner c: card1.getCorners()){
+            System.out.println(c.getPos() + " " + c.getAvailability() + " " + c.getCornerRes());
+        }
+        System.out.println(card1.getRequirements());
+        TUI tui = new TUI();
+        tui.showGround(game, player);
     }
 
     @Test
-    void raiseScore() {
-
+    void checkRequirements() throws IOException, ParseException {
+        assertFalse(pg.checkRequirements(pc.createGoldDeck().drawCard(7)));
+        assertTrue(pg.checkRequirements(pc.createResDeck().drawCard(3)));
     }
 
     @Test
     void calculateNumberOfCoveredCorners() {
+
     }
 
     @Test
-    void calculateNumberOfCompositions() {
+    void calculateNumberOfCompositions() throws IOException, ParseException, MissingResourcesException, InvalidPositionException {
     }
 }
