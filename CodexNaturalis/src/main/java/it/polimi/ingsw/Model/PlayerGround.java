@@ -75,31 +75,6 @@ public class PlayerGround implements Serializable {
     }
 
 
-    private void updateNumbers() {
-        if (availableNumbers == null || availableNumbers.isEmpty()) {
-            return;
-        }
-
-        List<Integer> keys = new ArrayList<>(availableNumbers.keySet());
-        Collections.sort(keys);
-
-        int maxKey = keys.getLast();
-
-        int missingNumber = -1;
-        for (int i = 1; i < maxKey; i++) {
-            if (!availableNumbers.containsKey(i)) {
-                missingNumber = i;
-                break;
-            }
-        }
-
-        if (missingNumber != -1) {
-            availableNumbers.put(missingNumber, availableNumbers.get(maxKey));
-
-            availableNumbers.remove(maxKey);
-        }
-    }
-
     /**
      * The method is used for everything regarding adding a card. By invoking specific methods, it removes the resources
      * of the covered corners, adds the resources from the corners of the new card, updates the availablePositions and
@@ -421,6 +396,35 @@ public class PlayerGround implements Serializable {
         }
     }
 
+    public void updateMissingNumbers() {
+        if (availableNumbers == null || availableNumbers.isEmpty()) {
+            return;
+        }
+        boolean missingNumbersExist = true;
+
+        while (missingNumbersExist) {
+            missingNumbersExist = false;
+            List<Integer> keys = new ArrayList<>(availableNumbers.keySet());
+            Collections.sort(keys);
+            int missingNumber = -1;
+            for (int i = 0; i < keys.size() - 1; i++) {
+                if (keys.get(i + 1) != keys.get(i) + 1) {
+                    missingNumber = keys.get(i) + 1;
+                    break;
+                }
+            }
+            if (missingNumber != -1) {
+                int highestNumber = keys.get(keys.size() - 1);
+                Position highestPosition = availableNumbers.get(highestNumber);
+                availableNumbers.put(missingNumber, highestPosition);
+                availableNumbers.remove(highestNumber);
+                missingNumbersExist = true;
+            }
+        }
+    }
+
+
+
     /**
      * The method is used to remove from the total resource count the resource on a card's corner (previously placed)
      * covered by a card added in the position passed as a parameter. For each of the four possible positions around
@@ -515,7 +519,7 @@ public class PlayerGround implements Serializable {
 
             }
         }
-        updateNumbers();
+        updateMissingNumbers();
     }
 
     /**

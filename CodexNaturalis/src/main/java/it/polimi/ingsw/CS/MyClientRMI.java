@@ -43,29 +43,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
-    /**
-     * This method keeps checking if it is the turn of a specific player.
-     * Once the player is the current player in the room, it calls the yourTurnPlay method.
-     */
-    private void checkYourTurn(){
-        Runnable myThread = () ->
-        {
-            while (true) {
-                try {
-                    if (server.isCurrentPlayer(roomJoined, nickname)) break;
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            try {
-                tui.yourTurnPlay(server.getRooms().getRoom(roomJoined).getGame(), server.getRooms().getRoom(roomJoined).getGame().getPlayer(nickname));
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        };
-        Thread run = new Thread(myThread);
-        run.start();
-    }
 
     /**
      * This method checks if a player's nickname is already in the game or not.
@@ -116,7 +93,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      */
     private String controlRoom2(boolean choice, ArrayList<Room> rooms) throws RemoteException{
         String roomName = tui.getRoomName(choice, rooms);
-        if(server.getRooms().alredyExist(roomName)){
+        if(server.getRooms().alredyExist(roomName) || server.getRooms().getRoom(roomName).isFull()){
             return roomName;
         } else {
             return controlRoom(choice, rooms);
@@ -257,6 +234,10 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                     Room room = server.getRooms().getRoom(roomJoined);
                     //checkYourTurn();
                     tui.notYourTurn(room.getGame(), room.getGame().getPlayer(nickname));
+                    int i = 0;
+                    while(!server.isCurrentPlayer(roomJoined, nickname)){
+                        i++;
+                    }
                 }
             }
             while(server.isCurrentPlayer(roomJoined, nickname)) {
@@ -266,12 +247,19 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                     Game game = server.getRooms().getRoom(roomJoined).getGame();
                     Player player = game.getPlayer(nickname);
                     if(tui.yourTurnPlay(game, player)){
-                        PlayableCard card = tui.inputCardToPlace(game, player);
-                        server.placeCard(card, tui.inputCoordinates(player), roomJoined, nickname);
-                        game = server.getRooms().getRoom(roomJoined).getGame();
-                        player = game.getPlayer(nickname);
-                        drawCardFromDeck(tui.yourTurnDraw(game, player));
-                        server.nextRound(roomJoined);
+                        boolean status = true;
+                        while(status) {
+                            PlayableCard card = null;
+                            while(card == null) {
+                                card = tui.inputCardToPlace(game, player);
+                            }
+                                server.placeCard(card, tui.inputCoordinates(player), roomJoined, nickname);
+                                game = server.getRooms().getRoom(roomJoined).getGame();
+                                player = game.getPlayer(nickname);
+                                drawCardFromDeck(tui.yourTurnDraw(game, player));
+                                server.nextRound(roomJoined);
+                                status = false;
+                        }
                     }
                 }
             }
@@ -301,7 +289,9 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
             nickname = controlNickname(true);
             Player player = server.addNewPlayer(nickname, roomJoined);
-            server.setPlayerColor(tui.chooseColor(server.getRemainingColors(roomJoined)), nickname, roomJoined);
+            while(server.setPlayerColor(tui.chooseColor(server.getRemainingColors(roomJoined)), nickname, roomJoined)){
+                System.out.println("Wrong color");
+            };
             tui.Welcome(player);
             waitingForPlayers = true;
             listenToPlayers();

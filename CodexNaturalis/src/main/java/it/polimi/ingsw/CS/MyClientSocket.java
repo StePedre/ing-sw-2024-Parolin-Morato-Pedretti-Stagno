@@ -156,7 +156,11 @@ public class MyClientSocket {
                 if((boolean) in.readObject()){
                     System.out.println("è l'ultimo turno");// Aggiungere a tui
                 }
-                out.writeObject(tui.inputCardToPlace(game,player));
+                PlayableCard card =null;
+                while(card == null){
+                    card = tui.inputCardToPlace(game,player);
+                }
+                out.writeObject(card);
                 out.writeObject(tui.inputCoordinates(player));
                 out.reset();
                 player = (Player) in.readObject();

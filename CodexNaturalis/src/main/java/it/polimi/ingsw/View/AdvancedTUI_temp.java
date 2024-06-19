@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Controller.ParsingController;
 import it.polimi.ingsw.Model.*;
 import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
@@ -56,7 +57,6 @@ public class AdvancedTUI_temp {
         String contentLine3 = "";
         String contentLine4 = "";
 
-
         String space = "";
         if(lengthY <=11) {
             for (int i = 0; i <= 3 - lengthY / 2; i++) {
@@ -64,7 +64,7 @@ public class AdvancedTUI_temp {
             }
         }
         for (int j = lengthY; j >= 0; j--) {
-            contentLine4 += getGridLine5(ground[minX][maxY - j], false, true);
+            contentLine4 += getGridLine5(ground[minX][maxY - j], false);
         }
         System.out.println("                   " + space + contentLine4 );
 
@@ -84,20 +84,12 @@ public class AdvancedTUI_temp {
                 contentLine3 += getGridLine3(currentCard);
 
                 if (currentCard == null && i+1 <=  lengthX) {
-                    if(ground[minX + i][maxY - j - 1] == null ||
-                            (ground[minX + i][maxY - j - 1] != null && ground[minX + i][maxY - j - 1].getId() == -1)) {
-                        contentLine4 += getGridLine5(ground[minX + i + 1][maxY - j], false, true);
-                    }else{
-                        contentLine4 += getGridLine5(ground[minX + i + 1][maxY - j], false, false);
-                    }
+                        contentLine4 += getGridLine5(ground[minX + i + 1][maxY - j], false);
 
                 } else {
-                    if(ground[minX + i + 1][maxY - j + 1] == null ||
-                            (ground[minX + i + 1][maxY - j + 1] != null && ground[minX + i + 1][maxY - j + 1].getId() == -1)) {
-                        contentLine4 += getGridLine4(currentCard, true, true);
-                    }else{
-                        contentLine4 += getGridLine4(currentCard, true, false);
-                    }
+
+                        contentLine4 += getGridLine4(currentCard, true);
+
                 }
             }
                 System.out.println(printResourceLegend((lengthX-i+1)*4, playerGround.getTotalResources()) + space + contentLine1);
@@ -152,7 +144,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case 5:{
                 int value = totalResources.get(PLUME);
-                String string = resourceColor(PLUME) +"   Plumes:  " + value + "      " + "\u001B[0m";
+                String string = resourceColor(PLUME) +"   Plumes (P):  " + value + "  " + "\u001B[0m";
                 if (value >= 10) {
                     return  string;
                 }
@@ -160,7 +152,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case 3:{
                 int value = totalResources.get(SCROLL);
-                String string = resourceColor(SCROLL) +"   Scrolls:  " + value + "    " + "\u001B[0m";
+                String string = resourceColor(SCROLL) +"   Scrolls (S):  " + value + "\u001B[0m";
                 if (value >= 10) {
                     return  string;
                 }
@@ -168,7 +160,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case 1:{
                 int value = totalResources.get(POTION);
-                String string = resourceColor(POTION) +"   Potions:  " + value +"    " + "\u001B[0m";
+                String string = resourceColor(POTION) +"   Potions (T):  " + value + "\u001B[0m";
                 if (value >= 10) {
                     return string;
                 }
@@ -242,6 +234,30 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         System.out.println("                        "+ contentLine2);
         System.out.println("                        "+ contentLine3);
         System.out.println("                        "+ buttonBorder);
+    }
+
+
+
+    public static void printRoomsTable(ArrayList<Room> rooms) {
+        int maxNameLength = "Room Name".length();
+        int maxParticipantsDisplayLength = "Participants".length();
+
+        for (Room room : rooms) {
+            if (room.getName().length() > maxNameLength) {
+                maxNameLength = room.getName().length();
+            }
+            String participantsDisplay = room.getGame().getPlayers().size() + "/" + room.getGame().getExpPlayers();
+            if (participantsDisplay.length() > maxParticipantsDisplayLength) {
+                maxParticipantsDisplayLength = participantsDisplay.length();
+            }
+        }
+        System.out.printf("%-" + maxNameLength + "s | %" + maxParticipantsDisplayLength + "s%n", "Room Name", "Participants");
+        System.out.println("-".repeat(maxNameLength) + "-+-" + "-".repeat(maxParticipantsDisplayLength));
+        for (Room room : rooms) {
+            String participantsDisplay = room.getGame().getPlayers().size() + "/" + room.getGame().getExpPlayers();
+            System.out.printf("%-" + maxNameLength + "s | %" + maxParticipantsDisplayLength + "s%n", room.getName(), participantsDisplay);
+        }
+        System.out.println("\n");
     }
 
 
@@ -402,7 +418,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         }
         return cardColor(card) + "█                 █" + "\u001B[0m";
     }
-    private static String getGridLine4(Card card, boolean state, boolean showRightCorner){
+    private static String getGridLine4(Card card, boolean state){
         if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
             return getFirstGridLine(card, 4, state);
@@ -411,21 +427,15 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             return cardColor(card) + " ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ " + "\u001B[0m";
 
         }
-        if(showRightCorner) {
             if (state) {
                 return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
             }
             return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
-        }
-        if (state) {
-            return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ " + "\u001B[0m";
-        }
-        return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ " + "\u001B[0m";
 
 
     }
 
-    private static String getGridLine5(Card card, boolean state, boolean showRightCorner){
+    private static String getGridLine5(Card card, boolean state){
         if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
             return getFirstGridLine(card, 4, state);
@@ -433,16 +443,11 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         if(card.getId() == -1){
             return cardColor(card) + " ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + "\u001B[0m";
         }
-        if(showRightCorner) {
             if (state) {
                 return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
             }
             return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
-        }
-        if (state) {
-            return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + "\u001B[0m";
-        }
-        return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + "\u001B[0m";
+
 
     }
 
@@ -519,8 +524,6 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case "CR" -> {
                 CompositionRule compositionRule = (CompositionRule) rule;
-                int sumY = compositionRule.getOffsets()[1] + compositionRule.getOffsets()[3];
-                int sumX = compositionRule.getOffsets()[0] + compositionRule.getOffsets()[2];
                 Resource resource = compositionRule.getResources()[1];
                 Corner corner = new Corner("top", resource, true);
 
@@ -541,7 +544,6 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             case "CR" -> {
                 CompositionRule compositionRule = (CompositionRule) rule;
                 int sumY = compositionRule.getOffsets()[1] + compositionRule.getOffsets()[3];
-                int sumX = compositionRule.getOffsets()[0] + compositionRule.getOffsets()[2];
                 Resource resource = compositionRule.getResources()[2];
                 Corner corner = new Corner("top", resource, true);
                 if( sumY == -3 || sumY == -1){

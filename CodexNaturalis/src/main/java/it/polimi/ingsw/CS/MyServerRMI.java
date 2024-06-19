@@ -3,16 +3,11 @@ package it.polimi.ingsw.CS;
 import it.polimi.ingsw.Controller.PlaceCardController;
 import it.polimi.ingsw.Controller.PlayerController;
 import it.polimi.ingsw.Controller.RoomController;
-import it.polimi.ingsw.Controller.RoundController;
 import it.polimi.ingsw.Model.*;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -52,6 +47,7 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         Player newPlayer = new Player(nickname);
         Game game = rooms.getRoom(roomName).getGame();
         if(game.getPlayer(nickname) == null) {
+            rooms.getRoom(roomName).addPlayerInRoom();
             game.addPlayer(newPlayer);
             return newPlayer;
         }
@@ -260,8 +256,13 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      * @param roomName is the name of the room in which to find the game.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    public void setPlayerColor(String color, String nickname, String roomName) throws RemoteException{
-        rooms.getRoom(roomName).getGame().getPlayer(nickname).setColor(color);
+    public boolean setPlayerColor(String color, String nickname, String roomName) throws RemoteException{
+        Set<String> remainingColors = getRemainingColors(roomName);
+        if(remainingColors.contains(color)) {
+            rooms.getRoom(roomName).getGame().getPlayer(nickname).setColor(color);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -283,6 +284,18 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      */
     public ArrayList<Room> showRooms() throws RemoteException{
         return rooms.getRooms();
+    }
+
+    public boolean isLastTurn(String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getRoundController().isLastTurn();
+    }
+
+    public boolean isDeckEmpty(String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getGame().getDecks()[0].getCards().isEmpty() || rooms.getRoom(roomName).getGame().getDecks()[1].getCards().isEmpty();
+    }
+
+    public boolean checkCardRequirements(PlayableCard card, String nickname, String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getGame().getPlayer(nickname).getPlayerGround().checkRequirements(card);
     }
 
 }

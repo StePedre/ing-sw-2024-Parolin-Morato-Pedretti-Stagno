@@ -2,13 +2,11 @@ package it.polimi.ingsw.CS;
 
 import it.polimi.ingsw.Model.InvalidPositionException;
 import it.polimi.ingsw.Model.MissingResourcesException;
-import it.polimi.ingsw.View.GUIClientRMI;
 import it.polimi.ingsw.View.GUIrmi;
 
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.InetAddress;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**

@@ -174,7 +174,7 @@ public interface ServerRMIInterface extends Remote {
      * @param roomName is the name of the room in which to find the game.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    void setPlayerColor(String color, String nickname, String roomName) throws RemoteException;
+    boolean setPlayerColor(String color, String nickname, String roomName) throws RemoteException;
 
     /**
      * This method sets the number of expected players in the room.
@@ -192,5 +192,11 @@ public interface ServerRMIInterface extends Remote {
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     ArrayList<Room> showRooms() throws RemoteException;
+
+    boolean isLastTurn(String roomName) throws RemoteException;
+
+    boolean isDeckEmpty(String roomName) throws RemoteException;
+
+    boolean checkCardRequirements(PlayableCard card, String nickname, String roomName) throws RemoteException;
 
 }

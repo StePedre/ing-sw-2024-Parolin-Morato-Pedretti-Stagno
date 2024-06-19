@@ -369,6 +369,7 @@ public class GUIsocket extends Application{
         }
     }
 
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/loadingScene.fxml"));

@@ -38,27 +38,27 @@ public class PlaceCardController {
     public static void draw(int i,Game game,Player player){
         Deck deck;
         int card = switch (i) {
-            case 0 -> {
-                deck = game.getDecks()[0];
-                yield 0;
-            }
             case 1 -> {
                 deck = game.getDecks()[0];
-                yield 1;
+                yield 0;
             }
             case 2 -> {
                 deck = game.getDecks()[0];
-                yield 2;
+                yield 1;
             }
             case 3 -> {
-                deck = game.getDecks()[1];
-                yield 0;
+                deck = game.getDecks()[0];
+                yield 2;
             }
             case 4 -> {
                 deck = game.getDecks()[1];
-                yield 1;
+                yield 0;
             }
             case 5 -> {
+                deck = game.getDecks()[1];
+                yield 1;
+            }
+            case 6 -> {
                 deck = game.getDecks()[1];
                 yield 2;
             }

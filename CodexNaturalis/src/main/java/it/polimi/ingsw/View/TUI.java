@@ -1,11 +1,7 @@
 package it.polimi.ingsw.View;
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
-import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
-import it.polimi.ingsw.Model.ScoreRules.NSymbolsRule;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -90,7 +86,7 @@ public class TUI {
      * @return true if the player wants to place the starter card face down, false otherwise.
      */
     public boolean showStarterCard(StarterCard startcard){
-        System.out.println("\n                                                                                        Your first card it's this:\n");
+        System.out.println("\n                                                                                           Your first card is this:\n");
         System.out.println("                                                                                           1                        2");
         AdvancedTUI_temp.printStartingCard(startcard);
         System.out.println("\n                                                                           Do you want to place it to the front (1) or flipped (2)?\n");
@@ -130,6 +126,15 @@ public class TUI {
         return choice;
     }
 
+    public void printOtherGrounds(Game game, Player  player){
+        for(Player player1 : game.getPlayers()){
+            if(!Objects.equals(player1.getNickname(), player.getNickname())){
+                System.out.println("\n                                                                               " + player1.getNickname() +" has " + player1.getPlayerGround().getPlayerScore() + " points. This is it's board:\n");
+                AdvancedTUI_temp.printGround(player1.getPlayerGround());
+            }
+        }
+    }
+
 
  // aggiungere un while (nel client) che lo fa andare finchè non è il proprio turno
 
@@ -141,10 +146,10 @@ public class TUI {
      * - see playground: showGround(game, player);
      * - see a card on the ground: showCard(card).
      *
-     * @param game is the instance of the game that is being played.
+     * @param game   is the instance of the game that is being played.
      * @param player is the instance of the player who's waiting.
      */
-    public boolean notYourTurn(Game game, Player  player){
+    public void notYourTurn(Game game, Player  player){
         Deck[] decks = game.getDecks();
         System.out.println("\n");
         System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
@@ -157,9 +162,6 @@ public class TUI {
 
         AdvancedTUI_temp.printHand(player.getHand(), game.getCommonObj());
         System.out.println("\n                                                                   It's not your turn. You have to wait until the other players finish to play.\n");
-        Scanner scanner = new Scanner(System.in);
-        //String name = scanner.nextLine();
-        return false;
     }
 
     /**
@@ -179,6 +181,7 @@ public class TUI {
         System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
         AdvancedTUI_temp.printDecks(decks[0], decks[1], "                        ");
         System.out.println("\n");
+        System.out.println("\n                                                                                                YOU HAVE " + player.getPlayerGround().getPlayerScore() + " POINTS!\n");
         AdvancedTUI_temp.printGround(player.getPlayerGround());
         System.out.println("\n");
         return true;
@@ -235,10 +238,6 @@ public class TUI {
                 if (card >= 1 && card <= 3) {
                     cardToPlay = (PlayableCard) player.getHand().getCard(card - 1);
                 }
-                if(cardToPlay!= null && !player.getPlayerGround().checkRequirements(cardToPlay)){
-                    System.out.println("Requirements not satisfied, choose another card");
-                    cardToPlay=null;
-                }
             } catch (NumberFormatException e) {
                 System.out.println("                                                                              Invalid input. Please enter a number between 1 and 3");
             }
@@ -254,6 +253,11 @@ public class TUI {
                 if (flip == 1 || flip == 2) {
                     if (flip == 2) {
                         cardToPlay.flipCard();
+                    }else{
+                        if(!player.getPlayerGround().checkRequirements(cardToPlay)){
+                            System.out.println("\n                                                                You don't have enough resources, choose another card or play that card flipped\n");
+                            return null;
+                        }
                     }
                     break;
                 } else {
@@ -368,16 +372,19 @@ public class TUI {
         System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
         System.out.println("                                  1                      2                      3                                              4                      5                      6");
         AdvancedTUI_temp.printDecks(decks[0], decks[1], "                        ");
-        System.out.println("\n                                                                                 Choose a card to draw from the decks (1 to 6)\n");
+        System.out.println("\n                                                              Choose a card to draw from the decks (1 to 6) or check other player's boards (7)\n");
         Scanner scanner = new Scanner(System.in);
         int choice = 0;
         boolean valid = false;
 
         do {
             try {
-                choice = Integer.parseInt(scanner.nextLine().trim());
+                choice = Integer.parseInt(scanner.nextLine());
                 if (choice >= 1 && choice <= 6) {
                     valid = true;
+                } else if(choice == 7){
+                    printOtherGrounds(game, player);
+                    chooseFromDecks(game, player);
                 } else {
                     System.out.println("                                                                            Invalid input. Please enter a number between 1 and 6.");
                 }
@@ -391,16 +398,13 @@ public class TUI {
 
 
     public void showRoom(ArrayList<Room> rooms){
-        String s ="These are the available rooms to play in:\n";
         if(rooms.isEmpty()){
-            s+="\n no room available";
+            System.out.println("\nNo room is available!:\n");
         }
         else{
-            for(Room r: rooms){
-                s+=r.getName()+"\n";
-            }
+            System.out.println("These are the available rooms to play in:\n");
+            AdvancedTUI_temp.printRoomsTable(rooms);
         }
-        System.out.println(s);
     }
     public boolean chooseRoom() {
         Scanner scanner = new Scanner(System.in);
