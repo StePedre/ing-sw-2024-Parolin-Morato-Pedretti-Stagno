@@ -9,30 +9,30 @@ import java.util.Random;
 public class PlayerController implements Serializable {
 
     /**
-     * pick a random starter card from game
+     * The method picks a random starter card from the game.
      *
-     * @param game the game from which the cards are picked
-     * @return the starter card
+     * @param game is the game the cards are picked from.
+     * @return the starter card.
      */
     public StarterCard pickCard(Game game){
         return game.getOneStarterCard();
     }
 
     /**
-     * pick 2 random objective card from game
+     * The method picks 2 random objective cards from game.
      *
-     * @param game the game which the card are picked
-     * @return an array contained the objective card
+     * @param game is the game the card are picked from.
+     * @return an array containing the objective card.
      */
     public ObjectiveCard[] pickObjCard(Game game){
         return game.pickPlayerObj();
     }
 
     /**
-     * populate the hand of a player
+     * The method populates the hand of a player.
      *
-     * @param game the game from which the cards are picked
-     * @param player the player in whom hand will be populated
+     * @param game is the game the cards are picked from.
+     * @param player is the player whom hand will be populated.
      */
     public synchronized void populateHand (Game game,Player player) {
         Deck deckResource;
@@ -54,19 +54,19 @@ public class PlayerController implements Serializable {
     }
 
     /**
-     * place the first card of a player
+     * The method places the first card of a player.
      *
-     * @param starterCard the first card to place
-     * @throws InvalidPositionException if the position is unavailable
+     * @param starterCard is the first card to place.
+     * @throws InvalidPositionException if the position is unavailable.
      */
     public void setFirstCard(StarterCard starterCard, PlayerGround pg) throws InvalidPositionException {
         pg.placeCard(starterCard,new Position(42,42));
     }
 
     /**
-     * set the secret objective card of the player
+     * The method sets the secret objective card of the player.
      *
-     * @param obj the objective card to set
+     * @param obj is the objective card to set.
      */
     public void setObjSecret(ObjectiveCard obj, Hand hand){
         hand.setSecretObj(obj);

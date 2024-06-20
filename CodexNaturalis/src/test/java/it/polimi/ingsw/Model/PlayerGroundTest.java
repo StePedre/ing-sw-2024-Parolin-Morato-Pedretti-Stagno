@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model;
 
 import it.polimi.ingsw.Controller.ParsingController;
 import it.polimi.ingsw.Model.ScoreRules.CompositionRule;
+import it.polimi.ingsw.Model.ScoreRules.CoveredCornersRule;
 import it.polimi.ingsw.Model.ScoreRules.FlatRule;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 import it.polimi.ingsw.View.TUI;
@@ -73,11 +74,38 @@ class PlayerGroundTest {
     }
 
     @Test
-    void calculateNumberOfCoveredCorners() {
-
+    void calculateNumberOfCoveredCorners() throws MissingResourcesException, InvalidPositionException {
+        Corner[] frontCorners = {new Corner("TLF", Resource.BUG, true),new Corner("BLF", Resource.MUSHROOM, true),new Corner("TRF", Resource.MUSHROOM, true),new Corner("BRF", Resource.MUSHROOM, true)};
+        PlayableCard card = new PlayableCard(0, new FlatRule(0), frontCorners, new Corner[4], Resource.FOX, null);
+        PlayableCard card2 = new PlayableCard(0, new CoveredCornersRule(), frontCorners, new Corner[4], Resource.FOX, null);
+        Player p = new Player("silvia");
+        p.getPlayerGround().getAvailablePositions().add(new Position(42, 44));
+        p.getPlayerGround().getAvailablePositions().add(new Position(44, 42));
+        p.getPlayerGround().getAvailablePositions().add(new Position(43, 43));
+        p.getPlayerGround().placeCard(card, new Position(42, 42));
+        p.getPlayerGround().placeCard(card, new Position(44, 42));
+        p.getPlayerGround().placeCard(card, new Position(42, 44));
+        p.getPlayerGround().placeCard(card2, new Position(43, 43));
+        assertEquals(p.getPlayerGround().calculateNumberOfCoveredCorners(), 3);
     }
 
     @Test
     void calculateNumberOfCompositions() throws IOException, ParseException, MissingResourcesException, InvalidPositionException {
+        Corner[] frontCorners = {new Corner("TLF", Resource.BUG, true),new Corner("BLF", Resource.MUSHROOM, true),new Corner("TRF", Resource.MUSHROOM, true),new Corner("BRF", Resource.MUSHROOM, true)};
+        PlayableCard card = new PlayableCard(0, new FlatRule(0), frontCorners, new Corner[4], Resource.FOX, null);
+        PlayableCard card2 = new PlayableCard(0, new CompositionRule(new Position[]{new Position(1,1), new Position(2, 2)}, new Resource[]{Resource.FOX, Resource.FOX, Resource.FOX}, 2), frontCorners, new Corner[4], Resource.FOX, null);
+        Player p = new Player("silvia");
+        p.getPlayerGround().getAvailablePositions().add(new Position(44, 44));
+        p.getPlayerGround().getAvailablePositions().add(new Position(43, 43));
+        p.getPlayerGround().getAvailablePositions().add(new Position(37, 37));
+        p.getPlayerGround().getAvailablePositions().add(new Position(38, 38));
+        p.getPlayerGround().getAvailablePositions().add(new Position(39, 39));
+        p.getPlayerGround().placeCard(card, new Position(42, 42));
+        p.getPlayerGround().placeCard(card, new Position(43, 43));
+        p.getPlayerGround().placeCard(card, new Position(44, 44));
+        p.getPlayerGround().placeCard(card, new Position(37, 37));
+        p.getPlayerGround().placeCard(card, new Position(38, 38));
+        p.getPlayerGround().placeCard(card, new Position(39, 39));
+        assertEquals(p.getPlayerGround().calculateNumberOfCompositions(new Position[]{new Position(1,1), new Position(2, 2)}, new Resource[]{Resource.FOX, Resource.FOX, Resource.FOX}), 2);
     }
 }
