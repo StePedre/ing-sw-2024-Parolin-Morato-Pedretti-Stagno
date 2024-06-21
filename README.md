@@ -13,7 +13,7 @@ It includes two types of different connection: Remote Method Invocation and Sock
 It also includes one advanced functionality, which is specific for the software version: the possibility to create multiple rooms and therefore handle multiple games.
 ### Jar instructions
 In order to make the project work through .jar files these are the steps to follow:
-1) Make sure to have a Java JRE installed on the computer.
+1) Setup your computer: make sure to have a Java JRE installed, deactivate every firewall and conncect to a private network.
 2) Launch *Server.jar* from command line so that it can print its IP address. Each client must connect to this specific address.
      Note: the command used to launch jar files from cmd is: java -jar *filename*.
 3) Launch *Client.jar* from command line. Choose between the two possible interfaces and the two possible connection types.
