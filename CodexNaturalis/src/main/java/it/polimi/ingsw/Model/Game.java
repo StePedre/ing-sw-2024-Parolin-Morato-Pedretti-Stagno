@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.*;
 
 /**
@@ -14,6 +14,7 @@ import java.util.*;
  */
 
 public class Game implements Serializable {
+    @Serial
     private static final long serialVersionUID = 9L;
     private final ArrayList<Player> players;
     private Deck[] decks;
@@ -162,9 +163,9 @@ public class Game implements Serializable {
     }
 
     /**
-     * return a Set of available player colors
+     * The method returns the Set of available colors.
      *
-     * @return the set of colors
+     * @return the set of colors.
      */
     public synchronized Set<String> getColors(){
         return colors;
@@ -219,9 +220,9 @@ public class Game implements Serializable {
     }
 
     /**
-     * pick up randomly one starter card from the set
+     * The method picks up randomly one starter card from the set.
      *
-     * @return the starter card
+     * @return the starter card.
      */
     public StarterCard getOneStarterCard() {
         synchronized (starterCards) {
@@ -231,10 +232,10 @@ public class Game implements Serializable {
     }
 
     /**
-     * Return a Player from its nickname
+     * The method returns a Player based on its nickname.
      *
-     * @param nickname the nickname of the layer
-     * @return the player
+     * @param nickname is the nickname of the player.
+     * @return the desired player.
      */
     public Player getPlayer(String nickname){
         for(Player p : players){
@@ -278,10 +279,10 @@ public class Game implements Serializable {
     }
 
     /**
-     * remove a player color from the pull of possible takeable color
+     * The method removes a player color from the pool of takeable colour.
      *
-     * @param color the color to remove
-     * @return true if the color has been correctly removed, false otherwise
+     * @param color is the color to remove.
+     * @return true if the color has been correctly removed, false otherwise.
      */
     public synchronized boolean markColor(String color){
         return colors.remove(color);
@@ -296,15 +297,14 @@ public class Game implements Serializable {
     public ObjectiveCard[] pickPlayerObj(){
         synchronized (otherObjs) {
             Random rand = new Random();
-            ObjectiveCard[] objs = {otherObjs.remove(rand.nextInt(otherObjs.size())), otherObjs.remove(rand.nextInt(otherObjs.size()))};
-            return objs;
+            return new ObjectiveCard[]{otherObjs.remove(rand.nextInt(otherObjs.size())), otherObjs.remove(rand.nextInt(otherObjs.size()))};
         }
     }
 
     /**
-     * remove a player from the game
+     * The method removes a player from the game.
      *
-     * @param nickname the nickname of the player to be removed
+     * @param nickname is the nickname of the player to be removed.
      */
     public synchronized void removePlayer(String nickname){
         players.removeIf(p -> p.getNickname().equals(nickname));

@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Model.ScoreRules;
 
-import it.polimi.ingsw.Model.Card;
 import it.polimi.ingsw.Model.PlayerGround;
-import it.polimi.ingsw.Model.Position;
-import it.polimi.ingsw.Model.Resource;
-
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,6 +9,7 @@ import java.io.Serializable;
  * This type of rule is applied when the card gives points for each corner that is covered by other cards.
  */
 public class CoveredCornersRule implements ScoreRule, Serializable {
+    @Serial
     private static final long serialVersionUID = 14L;
     private final String name = "CCR";
 

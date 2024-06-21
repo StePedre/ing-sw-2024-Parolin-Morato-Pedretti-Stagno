@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * The Hand class implements a player's hand during a game session. Each Player is associated with one Hand.
@@ -12,6 +12,7 @@ import java.util.Arrays;
  */
 
 public class Hand implements Serializable {
+    @Serial
     private static final long serialVersionUID = 8L;
     private PlayableCard[] cards;
     private ObjectiveCard secretObj;
@@ -112,16 +113,6 @@ public class Hand implements Serializable {
                 cards[i]=null;
             }
         }
-    }
-
-    /**
-     * The method choose the secret objective card to keep in hand. The choice should be made between
-     * two different cards and should be done only once for each player at the beginning of the game.
-     *
-     * @param objective is the chosen ObjectiveCard.
-     */
-    public void selectObj(ObjectiveCard objective) {
-        this.secretObj = objective;
     }
 
     /**

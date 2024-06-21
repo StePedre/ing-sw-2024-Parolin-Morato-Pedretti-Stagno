@@ -1,9 +1,9 @@
 package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The PlayerGround class represents the table of a player in a game session. In Player class, each player is
@@ -17,19 +17,20 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 public class PlayerGround implements Serializable {
+    @Serial
     private static final long serialVersionUID = 2L;
     private int playerScore;
-    private Map<Position, Card> cardPosition;
+    private final Map<Position, Card> cardPosition;
 
-    private Map<Integer, Position> availableNumbers;
-    private Card[][] ground;
-    private Set<Position> availablePositions;
-    private Set<Position> unavailablePositions;
-    private HashMap<Resource, Integer> totalResources;
+    private final Map<Integer, Position> availableNumbers;
+    private final Card[][] ground;
+    private final Set<Position> availablePositions;
+    private final Set<Position> unavailablePositions;
+    private final HashMap<Resource, Integer> totalResources;
     private Position lastPositionPlaced;
-    private Card availabilityCard;
+    private final Card availabilityCard;
 
-    private ArrayList<Move> moves = new ArrayList<Move>();
+    private final ArrayList<Move> moves = new ArrayList<>();
 
     /**
      * Class constructor without parameters.
@@ -236,15 +237,6 @@ public class PlayerGround implements Serializable {
     }
 
     /**
-     * The method gets the map between each position and its card (if present).
-     *
-     * @return map between Position and Card.
-     */
-    public Map<Position, Card> getCardPosition() {
-        return cardPosition;
-    }
-
-    /**
      * The method gets the whole ground, which is a matrix of Cards. Some cells may be without a value if there is no element
      * of the Position-Card map that matches cell coordinates with a card.
      *
@@ -252,15 +244,6 @@ public class PlayerGround implements Serializable {
      */
     public Card[][] getGround() {
         return ground;
-    }
-
-    /**
-     * The method return the last position where the player placed a card
-     *
-     * @return the last position
-     */
-    public Position getLastPosition() {
-        return lastPositionPlaced;
     }
 
     /**
@@ -417,7 +400,7 @@ public class PlayerGround implements Serializable {
                 }
             }
             if (missingNumber != -1) {
-                int highestNumber = keys.get(keys.size() - 1);
+                int highestNumber = keys.getLast();
                 Position highestPosition = availableNumbers.get(highestNumber);
                 availableNumbers.put(missingNumber, highestPosition);
                 availableNumbers.remove(highestNumber);
@@ -474,9 +457,7 @@ public class PlayerGround implements Serializable {
      * @param resources is the list of resources that needs to be incremented.
      */
     private void updateMultipleResources(ArrayList<Resource> resources){
-        resources.forEach(r ->{
-            updateSingleResource(1,r);
-        });
+        resources.forEach(r -> updateSingleResource(1,r));
     }
 
     /**

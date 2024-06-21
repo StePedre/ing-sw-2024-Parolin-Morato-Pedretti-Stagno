@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -11,8 +12,9 @@ import java.util.ArrayList;
  * One method is added in this extending class: the clone method.
  */
 public class StarterCard extends Card implements Serializable {
+    @Serial
     private static final long serialVersionUID = 5L;
-    private ArrayList<Resource> backRes;
+    private final ArrayList<Resource> backRes;
 
     /**
      * Class constructor. All parameters except the last one are described in Card class

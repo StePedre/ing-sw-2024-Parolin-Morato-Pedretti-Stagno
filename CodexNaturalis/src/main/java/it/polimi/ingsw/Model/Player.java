@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Model;
 
-import it.polimi.ingsw.View.TUI;
-
+import java.io.Serial;
 import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.util.Scanner;
 
 /**
  * The Player class implements a player attending a game session.
@@ -13,6 +10,7 @@ import java.util.Scanner;
  */
 
 public class Player implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private String nickname;
     private Hand hand;

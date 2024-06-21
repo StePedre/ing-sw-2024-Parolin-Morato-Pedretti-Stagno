@@ -12,7 +12,7 @@ import java.io.Serializable;
 public enum Resource implements Serializable {
 
     PLUME("gold"),POTION("gold"),SCROLL("gold"),FOX("blue"),MUSHROOM("red"),LEAF("green"),BUG("violet"), BLANK("blank"), NOTVISIBLE("none");
-    private String color;
+    private final String color;
     private static final long serialVersionUID = 4L;
     /**
      * Class constructor.

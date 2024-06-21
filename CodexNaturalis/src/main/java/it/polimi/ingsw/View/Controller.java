@@ -6,13 +6,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,7 +70,7 @@ public class Controller {
     private ImageView commonObj1, commonObj2;
     @FXML
     private Button nickButton, requestButton;
-    private ArrayList<Position> availablePos = new ArrayList<>();
+    private final ArrayList<Position> availablePos = new ArrayList<>();
     private final String emptyImagePath = "src/main/resources/border_image.png";
     private final String imagesFrontPath = "src/main/resources/CODEX_cards_gold_front/";
     private final String imagesBackPath = "src/main/resources/CODEX_cards_gold_back/";
@@ -80,7 +78,7 @@ public class Controller {
     private String nick2, nick3, nick4;
     private PlayableCard cardPlayed;
     private Position posPlayed;
-    ArrayList<ImageView> imageViewArrayList = new ArrayList<ImageView>();
+    ArrayList<ImageView> imageViewArrayList = new ArrayList<>();
 
     /**
      * This method sets the Images of the cards to be drawn in the draw panel.
@@ -241,11 +239,10 @@ public class Controller {
     /**
      * This method sets visible the creation of the room.
      *
-     * @param rooms is the list of rooms.
      * @throws IOException if there has been problems regarding input or output.
      * @throws ClassNotFoundException if there has been problems regarding the cast of an Object.
      */
-    public void addRoomCreationInput(ArrayList<Room> rooms) throws IOException, ClassNotFoundException {
+    public void addRoomCreationInput() throws IOException, ClassNotFoundException {
         menu.setDisable(true);
         menu.setVisible(false);
         confirmRoom.setVisible(!textFieldRoom.getText().isEmpty());
@@ -405,10 +402,6 @@ public class Controller {
         return anchor10;
     }
 
-    public ArrayList<Position> getAvailablePos() {
-        return availablePos;
-    }
-
     public ImageView getBackgroundIV() {
         return backgroundIV;
     }
@@ -427,10 +420,6 @@ public class Controller {
 
     public RadioButton getButtonR() {
         return buttonR;
-    }
-
-    public Button getButtonStart() {
-        return buttonStart;
     }
 
     public PlayableCard getCardPlayed() {
@@ -459,10 +448,6 @@ public class Controller {
 
     public PlayableCard getCurrentHandRight() {
         return currentHandRight;
-    }
-
-    public Button getFinishButton() {
-        return finishButton;
     }
 
     public Button getFinishButton2() {
@@ -519,10 +504,6 @@ public class Controller {
         return IpField;
     }
 
-    public Label getLabel20p() {
-        return label20p;
-    }
-
     public Label getLabelPoints2() {
         return labelPoints2;
     }
@@ -537,18 +518,6 @@ public class Controller {
 
     public Label getLabelRoom() {
         return labelRoom;
-    }
-
-    /**
-     * This method prints a message that says it is selected the left secret object.
-     */
-    public void getLeftSecretObj() {
-        ObjectiveCard secretObj;
-        System.out.println("Chosen left secret objective");
-    }
-
-    public ImageView getLogo() {
-        return logo;
     }
 
     public ComboBox<Label> getMenu() {
@@ -626,14 +595,6 @@ public class Controller {
         return numberOfPlayers;
     }
 
-    public AnchorPane getPlayGroundAnchor() {
-        return playGroundAnchor;
-    }
-
-    public HBox getPlayGroundHBox() {
-        return playGroundHBox;
-    }
-
     public Position getPosPlayed() {
         return posPlayed;
     }
@@ -658,14 +619,6 @@ public class Controller {
         return requestButton;
     }
 
-    /**
-     * This method prints a message that says it is selected the right secret object.
-     */
-    public void getRightSecretObj() {
-        ObjectiveCard secretObj;
-        System.out.println("Chosen right secret objective");
-    }
-
     public ImageView getSadFace() {
         return sadFace;
     }
@@ -686,16 +639,8 @@ public class Controller {
         return startLabel;
     }
 
-    public Label getStartLabel2() {
-        return startLabel2;
-    }
-
     public TextField getTfRoom() {
         return textFieldRoom;
-    }
-
-    public ProgressBar getWaitingBar() {
-        return waitingBar;
     }
 
     public Label getWinnerName() {
@@ -851,7 +796,7 @@ public class Controller {
      */
     public void showAvailablePos(Set<Position> pos) {
         imageViewArrayList.clear();
-        int x=0, y=0;
+        int x, y;
         for (Position p : pos) {
             y = p.getX();
             x = p.getY();

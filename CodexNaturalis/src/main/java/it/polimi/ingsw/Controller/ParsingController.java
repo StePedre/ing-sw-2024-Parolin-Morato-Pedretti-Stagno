@@ -86,8 +86,6 @@ public class ParsingController {
      */
     public Deck createGoldDeck () throws IOException, ParseException {
         Deck goldDeck;
-        int numberOfCards = 40;
-        String typeOfDeck = "Gold";
         ArrayList<PlayableCard> playableCards = parsingPlayableCards();
         ArrayList<PlayableCard> goldCards = new ArrayList<>();
 
@@ -96,7 +94,7 @@ public class ParsingController {
                 goldCards.add(pc);
         }
 
-        goldDeck = new Deck(numberOfCards, typeOfDeck, goldCards);
+        goldDeck = new Deck(goldCards);
         return goldDeck;
     }
 
@@ -119,8 +117,6 @@ public class ParsingController {
      */
     public Deck createResDeck () throws IOException, ParseException {
         Deck resDeck;
-        int numberOfCards = 40;
-        String typeOfDeck = "Resource";
         ArrayList<PlayableCard> playableCards = parsingPlayableCards();
         ArrayList<PlayableCard> resCards = new ArrayList<>();
         for (PlayableCard pc : playableCards) {
@@ -128,7 +124,7 @@ public class ParsingController {
                 resCards.add(pc);
         }
 
-        resDeck = new Deck(numberOfCards, typeOfDeck, resCards);
+        resDeck = new Deck(resCards);
         return resDeck;
     }
 

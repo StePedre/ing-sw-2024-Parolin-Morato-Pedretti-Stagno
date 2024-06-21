@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Model;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,21 +12,16 @@ import java.util.Collections;
  */
 
 public class Deck implements Serializable {
+    @Serial
     private static final long serialVersionUID = 10L;
-    private int numberOfCards;
-    private final String kindOfDeck;
-    private ArrayList<PlayableCard> cards;
+    private final ArrayList<PlayableCard> cards;
 
     /**
      * Class constructor.
      *
-     * @param numberOfCards is the number of cards in the deck.
-     * @param kindOfDeck is the type of deck.
      * @param cards is the full list of cards the deck is made of.
      */
-    public Deck(int numberOfCards, String kindOfDeck, ArrayList<PlayableCard> cards) {
-        this.numberOfCards = numberOfCards;
-        this.kindOfDeck = kindOfDeck;
+    public Deck(ArrayList<PlayableCard> cards) {
         this.cards = cards;
     }
 
@@ -57,15 +53,6 @@ public class Deck implements Serializable {
      */
     public ArrayList<PlayableCard> getCards() {
         return cards;
-    }
-
-    /**
-     * The method gets the type of deck as a string.
-     *
-     * @return deck type.
-     */
-    public String getKindOfDeck() {
-        return kindOfDeck;
     }
 
     /**

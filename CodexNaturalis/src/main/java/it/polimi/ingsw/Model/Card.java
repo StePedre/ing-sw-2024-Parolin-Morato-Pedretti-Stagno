@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -9,12 +10,13 @@ import java.io.Serializable;
  * and four back corners. It can be positioned with the front visible, or flipped.
  */
 public abstract class Card implements Serializable {
+    @Serial
     private static final long serialVersionUID = 12L;
-    private int id;
-    private ScoreRule rule;
-    private Resource color;
-    private Corner[] corners;
-    private Corner[] backCorners;
+    private final int id;
+    private final ScoreRule rule;
+    private final Resource color;
+    private final Corner[] corners;
+    private final Corner[] backCorners;
     private boolean isFlipped;
 
     /**

@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -49,7 +48,7 @@ public class GUIsocket extends Application{
     /**
      * This method displays the initialize player ground scene, where the starter card is placed in the center of the
      * board and the names of the other players are added.
-     * Depending on whether it is the turn of the player, the next method called is the your turn one.
+     * Depending on whether it is the turn of the player, the next method called is your turn one.
      * Otherwise, the not your turn one.
      *
      * @param stage is the original stage on which the application is displayed.
@@ -80,7 +79,7 @@ public class GUIsocket extends Application{
 
     /**
      * This method manages the player when it is not their turn to play.
-     * Once the server sends back the boolean that tells it is now the turn to play, it calls the your turn method.
+     * Once the server sends back the boolean that tells it is now the turn to play, it calls your turn method.
      * If any problem occurs, an error banner is displayed.
      *
      * @param stage is the original stage on which the application is displayed.
@@ -103,12 +102,8 @@ public class GUIsocket extends Application{
             Thread t = new Thread(task);
             t.setDaemon(true);
             t.start();
-            task.setOnSucceeded(event -> {
-                yourTurn(stage, controller);
-            });
-            task.setOnFailed(event ->{
-                showError(stage);
-            });
+            task.setOnSucceeded(event -> yourTurn(stage, controller));
+            task.setOnFailed(event ->showError(stage));
         }catch (IOException e){
             showError(stage);
         }
@@ -189,7 +184,6 @@ public class GUIsocket extends Application{
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/errorMessageBanner.fxml"));
             Parent root = loader.load();
-            Controller controller = loader.getController();
             Stage stage2 = new Stage();
             stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
             stage2.initOwner(stage);
@@ -231,7 +225,6 @@ public class GUIsocket extends Application{
     public void showLastTurn(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lastTurn.fxml"));
         Parent root = loader.load();
-        Controller controller = loader.getController();
         Stage stage2 = new Stage();
         stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
         stage2.initOwner(stage);
@@ -256,9 +249,7 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root, 600, 200);
         stage2.setScene(scene);
         stage2.showAndWait();
-        controller.getNotYourTurnButton().setOnAction(e -> {
-            stage2.close();
-        });
+        controller.getNotYourTurnButton().setOnAction(e -> stage2.close());
     }
 
     /**
@@ -322,9 +313,7 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root, 600, 200);
         stage2.setScene(scene);
         stage2.showAndWait();
-        controller.getYourTurnButton().setOnAction(e -> {
-            stage2.close();
-        });
+        controller.getYourTurnButton().setOnAction(e -> stage2.close());
     }
 
     /**
@@ -417,8 +406,6 @@ public class GUIsocket extends Application{
         stage.setScene(scene);
         stage.show();
         String[] choice = new String[1];
-        String[] choiceCurr = new String[1];
-        choiceCurr[0] = "";
         Glow highlight = new Glow(0.5);
         Set<String> colors = client.receiveColorsFromServer();
         showColor(colors, controller);
@@ -515,7 +502,7 @@ public class GUIsocket extends Application{
             controller.getResUp1().setOnMouseClicked(e -> {
                 if (game.getDecks()[0].getCards().getFirst() != null) {
                     try {
-                        client.sendToServer(0);
+                        client.sendToServer(1);
                         stage2.close();
                         Game g = client.receiveGameFromServer();
                         Player p = client.receivePlayerFromServer();
@@ -530,7 +517,7 @@ public class GUIsocket extends Application{
             controller.getResUp2().setOnMouseClicked(e -> {
                 if (game.getDecks()[0].getCards().get(1) != null) {
                     try {
-                        client.sendToServer(1);
+                        client.sendToServer(2);
                         stage2.close();
                         Game g = client.receiveGameFromServer();
                         Player p = client.receivePlayerFromServer();
@@ -545,7 +532,7 @@ public class GUIsocket extends Application{
             controller.getResDeck().setOnMouseClicked(e -> {
                 if (game.getDecks()[0].getCards().get(2) != null) {
                     try {
-                        client.sendToServer(2);
+                        client.sendToServer(3);
                         stage2.close();
                         Game g = client.receiveGameFromServer();
                         Player p = client.receivePlayerFromServer();
@@ -560,7 +547,7 @@ public class GUIsocket extends Application{
             controller.getGoldUp1().setOnMouseClicked(e -> {
                 if (game.getDecks()[1].getCards().getFirst() != null) {
                     try {
-                        client.sendToServer(3);
+                        client.sendToServer(4);
                         stage2.close();
                         Game g = client.receiveGameFromServer();
                         Player p = client.receivePlayerFromServer();
@@ -575,7 +562,7 @@ public class GUIsocket extends Application{
             controller.getGoldUp2().setOnMouseClicked(e -> {
                 if (game.getDecks()[1].getCards().get(1) != null) {
                     try {
-                        client.sendToServer(4);
+                        client.sendToServer(5);
                         stage2.close();
                         Game g = client.receiveGameFromServer();
                         Player p = client.receivePlayerFromServer();
@@ -590,7 +577,7 @@ public class GUIsocket extends Application{
             controller.getGoldDeck().setOnMouseClicked(e -> {
                 if (game.getDecks()[1].getCards().get(2) != null) {
                     try {
-                        client.sendToServer(5);
+                        client.sendToServer(6);
                         stage2.close();
                         Game g = client.receiveGameFromServer();
                         Player p = client.receivePlayerFromServer();
@@ -747,7 +734,7 @@ public class GUIsocket extends Application{
             }
             if (newValue.equals(buttonR)) {
                 try {
-                    controller.addRoomCreationInput(rooms);
+                    controller.addRoomCreationInput();
                     controller.getConfirmRoom().setOnAction(e -> {
                         boolean found, flag;
                         try {
@@ -967,8 +954,7 @@ public class GUIsocket extends Application{
                 @Override
                 protected Integer call() throws Exception {
                     if (!client.receiveBooleanFromServer()) {
-                        if (client.receiveBooleanFromServer()) {
-                        }
+                        client.receiveBooleanFromServer();
                     }
                     return null;
                 }
@@ -976,12 +962,8 @@ public class GUIsocket extends Application{
             Thread t = new Thread(task);
             t.setDaemon(true);
             t.start();
-            task.setOnSucceeded(event -> {
-                switchToStarterChoice(stage);
-            });
-            task.setOnFailed(event ->{
-                showError(stage);
-            });
+            task.setOnSucceeded(event -> switchToStarterChoice(stage));
+            task.setOnFailed(event ->showError(stage));
         }
         catch (IOException | ClassNotFoundException e){
             showError(stage);
@@ -1019,9 +1001,7 @@ public class GUIsocket extends Application{
             } else { // ultimo turno
                 showLastTurn(stage);
             }
-            controller.getFlipButton().setOnAction(e -> {
-                controller.flipCard(player[0].getHand());
-            });
+            controller.getFlipButton().setOnAction(e -> controller.flipCard(player[0].getHand()));
             ivl = controller.getHandCardLeft();
             ivc = controller.getHandCardCenter();
             ivr = controller.getHandCardRight();

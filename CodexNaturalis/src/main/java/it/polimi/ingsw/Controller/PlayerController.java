@@ -37,8 +37,6 @@ public class PlayerController implements Serializable {
     public synchronized void populateHand (Game game,Player player) {
         Deck deckResource;
         Deck deckGold;
-        int indexRandCard1, indexRandCard2, indexRandCard3;
-        // these are the index of the random cards to add to each hand
 
         deckResource = game.getDecks()[0];
         deckGold = game.getDecks()[1];

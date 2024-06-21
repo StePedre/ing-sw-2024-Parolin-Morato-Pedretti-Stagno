@@ -236,7 +236,7 @@ public class TUI {
             try {
                 int card = Integer.parseInt(scanner.nextLine().trim());
                 if (card >= 1 && card <= 3) {
-                    cardToPlay = (PlayableCard) player.getHand().getCard(card - 1);
+                    cardToPlay = player.getHand().getCard(card - 1);
                 }
             } catch (NumberFormatException e) {
                 System.out.println("                                                                              Invalid input. Please enter a number between 1 and 3");
@@ -384,7 +384,8 @@ public class TUI {
                     valid = true;
                 } else if(choice == 7){
                     printOtherGrounds(game, player);
-                    chooseFromDecks(game, player);
+                    choice = chooseFromDecks(game, player);
+                    valid = true;
                 } else {
                     System.out.println("                                                                            Invalid input. Please enter a number between 1 and 6.");
                 }

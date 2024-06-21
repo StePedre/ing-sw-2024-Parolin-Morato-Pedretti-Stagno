@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ import java.util.Objects;
  */
 
 public class Position implements Serializable {
+    @Serial
     private static final long serialVersionUID = 3L;
         private int x;
         private int y;

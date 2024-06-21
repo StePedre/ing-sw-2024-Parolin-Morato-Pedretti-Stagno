@@ -44,7 +44,6 @@ public class MyServerSocket {
              while (true) {
                  System.out.println("Waiting for player\n");
                  connection = serverSocket.accept();
-                 connection.setSoTimeout(0);
                  oos = new ObjectOutputStream(connection.getOutputStream());
                  ois = new ObjectInputStream(connection.getInputStream());
                  ServerHandlerSocket client = new ServerHandlerSocket(oos, ois, rooms, connection);

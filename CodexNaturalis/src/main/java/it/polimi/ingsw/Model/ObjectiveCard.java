@@ -2,6 +2,7 @@ package it.polimi.ingsw.Model;
 
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 
 public class ObjectiveCard implements Serializable {
+    @Serial
     private static final long serialVersionUID = 7L;
         private final int id;
         private final ScoreRule rule;

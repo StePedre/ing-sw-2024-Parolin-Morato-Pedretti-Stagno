@@ -24,7 +24,7 @@ public class RoomController implements Serializable {
      * It initializes the rooms.
      */
     public RoomController() {
-        this.rooms = new ArrayList<Room>();
+        this.rooms = new ArrayList<>();
     }
 
     /**
@@ -33,7 +33,7 @@ public class RoomController implements Serializable {
      * @return the available rooms.
      */
     public synchronized ArrayList<Room> getRooms() {
-        ArrayList<Room> availableRoom= new ArrayList<Room>();
+        ArrayList<Room> availableRoom= new ArrayList<>();
         for(Room room : rooms) {
             if(room.getPlayerInRoom() != room.getGame().getExpPlayers()){
                 availableRoom.add(room);

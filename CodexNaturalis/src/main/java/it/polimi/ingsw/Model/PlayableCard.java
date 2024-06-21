@@ -1,8 +1,8 @@
 package it.polimi.ingsw.Model;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -13,8 +13,9 @@ import java.util.HashMap;
  * One method is added in this extending class: the clone method.
  */
 public class PlayableCard extends Card implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6L;
-    private HashMap<Resource, Integer> requirements;
+    private final HashMap<Resource, Integer> requirements;
 
 
 
@@ -36,8 +37,7 @@ public class PlayableCard extends Card implements Serializable {
      * @return an object of type PlayableCard which is exactly like the caller.
      */
     public PlayableCard clone(){
-        PlayableCard card = new PlayableCard(this.getId(),this.getRule(),this.getCorners(),this.getBackCorners(), this.getColor(), this.requirements);
-        return card;
+        return new PlayableCard(this.getId(), this.getRule(), this.getCorners(), this.getBackCorners(), this.getColor(), this.requirements);
     }
 
     /**

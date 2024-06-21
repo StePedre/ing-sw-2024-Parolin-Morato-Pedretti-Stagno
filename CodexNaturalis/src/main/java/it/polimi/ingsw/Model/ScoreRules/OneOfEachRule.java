@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Model.ScoreRules;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
 import it.polimi.ingsw.Model.PlayerGround;
@@ -10,12 +11,13 @@ import it.polimi.ingsw.Model.Resource;
  * potion and scroll). It gives three points for each said set.
  */
 public class OneOfEachRule implements ScoreRule, Serializable {
+    @Serial
     private static final long serialVersionUID = 17L;
     private final String name = "OER";
 
     /**
      * This method finds the minimal number between the total amount of plume appearances, potion appearances and
-     * scroll appearances. This gives the number of sets where all three are visible and it's finally multiplied by 3.
+     * scroll appearances. This gives the number of sets where all three are visible, and it's finally multiplied by 3.
      *
      * @param gameBoard is the instance of the player's play ground, where sets are looked for.
      * @return the total score from that objective.

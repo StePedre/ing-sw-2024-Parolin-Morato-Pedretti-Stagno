@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Model.ScoreRules;
 
 import it.polimi.ingsw.Model.PlayerGround;
-
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -9,6 +9,7 @@ import java.io.Serializable;
  * when it's placed on the ground. It may be 0.
  */
 public class FlatRule implements ScoreRule, Serializable {
+    @Serial
     private static final long serialVersionUID = 15L;
     private final String name = "FR";
     private final int flatPoints;

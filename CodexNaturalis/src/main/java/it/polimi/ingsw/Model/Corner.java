@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,8 +13,9 @@ import java.io.Serializable;
  */
 
     public class Corner implements Serializable {
+    @Serial
     private static final long serialVersionUID = 11L;
-    private String pos;
+    private final String pos;
     private Resource cornerRes;
     private boolean isAvailable;
 

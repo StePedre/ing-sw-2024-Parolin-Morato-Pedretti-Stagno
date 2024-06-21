@@ -22,7 +22,7 @@ class DeckTest {
         cards.add(card3);
         cards.add(card4);
         cards.add(card5);
-        return new Deck(5, "ResourceDeck", cards);
+        return new Deck(cards);
     }
 
     @Test

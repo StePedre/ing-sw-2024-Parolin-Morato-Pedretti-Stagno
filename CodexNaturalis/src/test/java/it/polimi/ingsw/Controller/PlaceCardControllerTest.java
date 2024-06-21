@@ -22,7 +22,7 @@ class PlaceCardControllerTest {
         Game g = new Game();
         g.setDecks(new Deck[] {resdeck, goldeck});
         Random r = new Random();
-        int i = r.nextInt(5);
+        int i = r.nextInt(5)+1;
         PlaceCardController.draw(i, g, p);
         if(resdeck.getCards().size()==39 || goldeck.getCards().size()==39){
         }

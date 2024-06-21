@@ -110,17 +110,6 @@ public class GUIClientSocket {
     }
 
     /**
-     * This method receives a string from the server.
-     *
-     * @return such String.
-     * @throws IOException if there has been problems regarding input or output.
-     * @throws ClassNotFoundException if there has been problems regarding the cast of an Object.
-     */
-    public String receiveString() throws IOException, ClassNotFoundException {
-        return (String) in.readObject();
-    }
-
-    /**
      * This method receives the winner (or the winners) of the game from the server.
      *
      * @return such list of players.
@@ -129,15 +118,6 @@ public class GUIClientSocket {
      */
     public ArrayList<Player> receiveWinnersFromServer() throws IOException, ClassNotFoundException {
         return (ArrayList<Player>) in.readObject();
-    }
-
-    /**
-     * This method resets the input stream.
-     *
-     * @throws IOException if there has been problems regarding input or output.
-     */
-    public void reset() throws IOException {
-        in.reset();
     }
 
     /**

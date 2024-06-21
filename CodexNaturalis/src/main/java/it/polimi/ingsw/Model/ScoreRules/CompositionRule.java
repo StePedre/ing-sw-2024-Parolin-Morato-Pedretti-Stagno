@@ -4,11 +4,8 @@ import it.polimi.ingsw.Model.PlayerGround;
 import it.polimi.ingsw.Model.Position;
 import it.polimi.ingsw.Model.Resource;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Class CompositionRule deals with calculating points from a specific type of ObjectiveCard at the end of the game.
@@ -18,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 public class CompositionRule implements ScoreRule, Serializable {
+    @Serial
     private static final long serialVersionUID = 13L;
     private final String name = "CR";
     private final Position[] offSets;

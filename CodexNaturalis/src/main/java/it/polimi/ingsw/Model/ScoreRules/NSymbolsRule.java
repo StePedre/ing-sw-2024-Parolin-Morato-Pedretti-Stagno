@@ -3,6 +3,7 @@ package it.polimi.ingsw.Model.ScoreRules;
 import it.polimi.ingsw.Model.PlayerGround;
 import it.polimi.ingsw.Model.Resource;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * as well as the number of times the same resource needs to appear and, of course, the resource itself.
  */
 public class NSymbolsRule implements ScoreRule, Serializable {
+    @Serial
     private static final long serialVersionUID = 16L;
     private final String name = "NSR";
     private final Resource symbol;

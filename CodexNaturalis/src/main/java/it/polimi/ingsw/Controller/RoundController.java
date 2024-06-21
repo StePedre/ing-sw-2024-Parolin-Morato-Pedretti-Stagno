@@ -15,7 +15,7 @@ import java.util.Random;
  * to state if the round is ending.
  */
 public class RoundController implements Serializable {
-    private ArrayList<Player> players = new ArrayList<Player>();
+    private final ArrayList<Player> players;
     private int round = -1;
     private final Random rand = new Random();
     private Player LastPlayer;

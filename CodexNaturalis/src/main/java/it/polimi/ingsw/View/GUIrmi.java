@@ -128,7 +128,7 @@ public class GUIrmi extends Application {
             }
             if (newValue.equals(buttonR)) {
                 try {
-                    controller.addRoomCreationInput(rooms);
+                    controller.addRoomCreationInput();
                     controller.getConfirmRoom().setOnAction(e -> {
                         boolean found, flag;
                         try {
