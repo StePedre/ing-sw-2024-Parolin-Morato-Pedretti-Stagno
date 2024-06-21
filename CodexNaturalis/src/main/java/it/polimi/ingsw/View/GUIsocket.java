@@ -616,7 +616,7 @@ public class GUIsocket extends Application{
      * @throws IOException if there has been problems regarding input or output.
      */
     public void switchToIpInput(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/IpInputScene.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ipInputScene.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.getAnchor10().getChildren().addFirst(background);
