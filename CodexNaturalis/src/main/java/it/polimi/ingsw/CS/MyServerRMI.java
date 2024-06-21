@@ -3,6 +3,7 @@ package it.polimi.ingsw.CS;
 import it.polimi.ingsw.Controller.PlaceCardController;
 import it.polimi.ingsw.Controller.PlayerController;
 import it.polimi.ingsw.Controller.RoomController;
+import it.polimi.ingsw.Controller.RoundController;
 import it.polimi.ingsw.Model.*;
 
 import java.rmi.RemoteException;
@@ -53,6 +54,7 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         }
         return null;
     }
+
 
     /**
      * See ServerRMIInterface for more details.
@@ -166,7 +168,10 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      */
     public boolean isCurrentPlayer(String roomName, String nickname) throws RemoteException{
         Room room = rooms.getRoom(roomName);
-        return room.getRoundController().getCurrentPlayer().getNickname().equals( nickname);
+        RoundController rc = room.getRoundController();
+        Player p = rc.getCurrentPlayer();
+        String nick = p.getNickname();
+        return room.getRoundController().getCurrentPlayer().getNickname().equals(nickname);
     }
 
     /**
@@ -279,8 +284,13 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         Player player = room.getGame().getPlayer(nickname);
         pc.setObjSecret(objSecret, player.getHand());
         pc.populateHand(room.getGame(),player);
-        room.getRoundController().addPlayer(player);
         room.getRoundController().setFirstPlayer();
+    }
+
+    public void addPlayerToRoundController(String nickname, String roomName) throws RemoteException{
+        Room room = rooms.getRoom(roomName);
+        Player player = room.getGame().getPlayer(nickname);
+        room.getRoundController().addPlayer(player);
     }
 
     /**
@@ -295,6 +305,8 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         Set<String> remainingColors = getRemainingColors(roomName);
         if(remainingColors.contains(color)) {
             rooms.getRoom(roomName).getGame().getPlayer(nickname).setColor(color);
+            remainingColors.remove(color);
+            rooms.getRoom(roomName).getGame().setColors(remainingColors);
             return false;
         }
         return true;

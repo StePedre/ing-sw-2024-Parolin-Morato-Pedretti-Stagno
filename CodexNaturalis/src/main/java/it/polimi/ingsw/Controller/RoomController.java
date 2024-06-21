@@ -95,18 +95,16 @@ public class RoomController implements Serializable {
     /**
      * The method checks if a player with a specified nickname already exist in a room.
      *
-     * @param game is the game to check.
-     * @param s is the nickname of the player.
+     * @param roomName is the room with the game to check.
+     * @param nickname is the nickname of the player.
      * @return true if the nickname already exists, false otherwise.
      */
-    public synchronized boolean alredyInGame(Game game, String s){
-        boolean flag = false;
-        for(Player p: game.getPlayers()){
-            if(p.getNickname().equals(s)){
-                flag=true;
-                break;
+    public synchronized boolean alreadyInGame(String roomName, String nickname){
+        for(Player p: getRoom(roomName).getGame().getPlayers()){
+            if(p.getNickname().equals(nickname)){
+              return true;
             }
         }
-        return flag;
+        return false;
     }
 }

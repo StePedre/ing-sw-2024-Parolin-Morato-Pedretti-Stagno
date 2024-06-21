@@ -198,7 +198,7 @@ public class ServerHandlerSocket implements Runnable{
         Boolean b;
         do {
             nickname = (String) in.readObject();
-            if(rooms.alredyInGame(room.getGame(),nickname)){// true trovato nome uguale
+            if(rooms.alreadyInGame(room.getName(),nickname)){// true trovato nome uguale
                 out.writeObject(true);
                 b=true;
             }

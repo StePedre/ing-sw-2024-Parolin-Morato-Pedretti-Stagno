@@ -55,7 +55,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      */
     private String controlNickname(boolean choice) throws RemoteException {
         String nickname = tui.insertNickname(choice);
-        if(server.getRooms().alredyInGame(server.getRooms().getRoom(roomJoined).getGame(),nickname)){
+        if(server.getRooms().alreadyInGame(roomJoined,nickname)){
             return controlNickname(false);
         }else{
             return nickname;
@@ -293,6 +293,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                 System.out.println("Wrong color");
             };
             tui.Welcome(player);
+            server.addPlayerToRoundController(nickname,roomJoined);
             waitingForPlayers = true;
             listenToPlayers();
             System.out.println("All players have joined, lets start the game!");

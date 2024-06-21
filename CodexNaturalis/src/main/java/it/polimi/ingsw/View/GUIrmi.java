@@ -32,6 +32,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -45,6 +46,8 @@ public class GUIrmi extends Application {
     private ImageView background,ivl,ivc,ivr;
 
     String roomName = "";
+
+    String nickname = "";
 
     private ServerRMIInterface guiServerRMI;
 
@@ -72,7 +75,7 @@ public class GUIrmi extends Application {
     }
 
     public void switchToIpInput(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/IpInputScene.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ipInputScene.fxml"));
         Parent root = loader.load();
         Controller controller = loader.getController();
         controller.getAnchor10().getChildren().addFirst(background);
@@ -165,12 +168,11 @@ public class GUIrmi extends Application {
                     controller.addRoomsMenu();
                     controller.getConfirmRoom().setOnAction(e2 -> {
                         try {
-                            Room roomJoined = guiServerRMI.getRooms().getRoom(controller.getMenu().getSelectionModel().getSelectedItem().getText());
-                            if (roomJoined.isFull()) {
+                            roomName = controller.getMenu().getSelectionModel().getSelectedItem().getText();
+                            if (guiServerRMI.getRooms().getRoom(roomName).isFull()) {
                                 controller.getTfRoom().setText("");
                                 controller.getLabelRoom().setText("Too late! The room is full!");
                             } else {
-                                roomName = roomJoined.getName();
                                 switchToLogin(stage);
                             }
                         } catch (IOException | ClassNotFoundException ex) {
@@ -195,7 +197,9 @@ public class GUIrmi extends Application {
         Button nickButton = controller.getNickButton();
         nickButton.setOnAction(actionEvent -> {
             try {
-                if (guiServerRMI.addNewPlayer(controller.getNickname(), roomName) == null) {
+                nickname = controller.getNickname();
+                System.out.println(nickname);
+                if (guiServerRMI.getRooms().alreadyInGame(roomName, nickname)) {
                     controller.getNickLabel().setPrefWidth(800);    // eventualmente aggiungere un'altra label
                     controller.getNickLabel().setStyle("-fx-text-fill: #b20b0b");
                     controller.getNickLabel().setText("This name is already taken, choose another one:");
@@ -272,17 +276,23 @@ public class GUIrmi extends Application {
                 boolean[] flag = {false};
                 controller.getConfirmColor().setOnAction(e->{
                     try {
-                        if (guiServerRMI.setPlayerColor(choice[0], controller.getNickname(), roomName)) {
+                        guiServerRMI.addNewPlayer(nickname,roomName);
+                        if (guiServerRMI.setPlayerColor(choice[0], nickname, roomName)) {
                             Set<String> colors2 = guiServerRMI.getRemainingColors(roomName);
                             showColor(colors2, controller);
                             controller.getColorValidLabel().setVisible(true);
                         } else {
                             flag[0] = true;
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
+                    } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                     if(flag[0]) {
+                        try {
+                            guiServerRMI.addPlayerToRoundController(nickname,roomName);
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         switchToWaitingStart(stage);
                     }
                 });
@@ -325,10 +335,10 @@ public class GUIrmi extends Application {
             ImageView frontStarterCard = controller.getFrontStarterCard();
             frontStarterCard.setOnMouseClicked(mouseEvent -> {
                 try {
-                    guiServerRMI.setFirstCard(card, controller.getNickname(), roomName);
+                    guiServerRMI.setFirstCard(card, nickname, roomName);
                     switchToSelectSecretObj(stage);
                     //simulateEnd(stage);
-                } catch (IOException | ClassNotFoundException | InvalidPositionException e) {
+                } catch (IOException | InvalidPositionException e) {
                     showError(stage);
                 }
             });
@@ -336,12 +346,12 @@ public class GUIrmi extends Application {
             backStarterCard.setOnMouseClicked(mouseEvent -> {
                 try {
                     card.flipCard();
-                    guiServerRMI.setFirstCard(card, controller.getNickname(), roomName);
+                    guiServerRMI.setFirstCard(card, nickname, roomName);
                     switchToSelectSecretObj(stage);
                     //simulateEnd(stage);
                 } catch (IOException e) {
                     showError(stage);
-                } catch (InvalidPositionException | ClassNotFoundException e) {
+                } catch (InvalidPositionException e) {
                     throw new RuntimeException(e);
                 }
             });
@@ -364,8 +374,8 @@ public class GUIrmi extends Application {
             ImageView secretObjLeft = controller.getSecretObjLeft();
             secretObjLeft.setOnMouseClicked(mouseEvent -> {
                 try {
-                    guiServerRMI.setObjSecret(objs[1], controller.getNickname(), roomName);
-                    initializePlayerGround(stage, roomName);
+                    guiServerRMI.setObjSecret(objs[0], nickname, roomName);
+                    initializePlayerGround(stage);
                 } catch (IOException | ClassNotFoundException e) {
                     showError(stage);
                 }
@@ -373,8 +383,8 @@ public class GUIrmi extends Application {
             ImageView secretObjRight = controller.getSecretObjRight();
             secretObjRight.setOnMouseClicked(mouseEvent -> {
                 try {
-                    guiServerRMI.setObjSecret(objs[1], controller.getNickname(), roomName);
-                    initializePlayerGround(stage,roomName);
+                    guiServerRMI.setObjSecret(objs[1], nickname, roomName);
+                    initializePlayerGround(stage);
                 } catch (IOException | ClassNotFoundException e) {
                     showError(stage);
                 }
@@ -385,25 +395,28 @@ public class GUIrmi extends Application {
         }
     }
 
-    public void initializePlayerGround(Stage stage, String roomName)throws ClassNotFoundException {
+    public void initializePlayerGround(Stage stage)throws ClassNotFoundException {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
+            System.out.println("Help");
             Parent root = loader.load();
             Controller controller = loader.getController();
             Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
-            Player p = g.getPlayer(controller.getNickname());
+            Player p = g.getPlayer(nickname);
             controller.addNames(g, p);
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
             controller.placeFirstCard(p);
-            if (guiServerRMI.isCurrentPlayer(controller.getNickname(), roomName)) {    // se è il suo turno
+
+            if (guiServerRMI.isCurrentPlayer(roomName,nickname)) {
                 yourTurn(stage, controller);
             } else {
                 notYourTurn(stage, g, p, controller);
             }
         }
         catch (IOException | RuntimeException e){
+            e.printStackTrace();
             showError(stage);
         }
 
@@ -416,7 +429,7 @@ public class GUIrmi extends Application {
             Game[] game = new Game[1];
             Player[] player = new Player[1];
             game[0] = guiServerRMI.getRooms().getRoom(roomName).getGame();
-            player[0] = game[0].getPlayer(controller.getNickname());
+            player[0] = game[0].getPlayer(nickname);
             controller.showAvailablePos(player[0].getPlayerGround().getAvailablePositions());
             controller.addGround(game[0], player[0]);
             for (ImageView zone : controller.getImageViewList()) {
@@ -470,15 +483,15 @@ public class GUIrmi extends Application {
             ivl.setOnDragDone(event -> {
                 try {
                     if (controller.getPosPlayed() != null) {
-                        guiServerRMI.placeCard(controller.getCardPlayed(),controller.reconvertPosition(controller.getPosPlayed()),roomName, controller.getNickname());
-                        controller.updateAfterPlay(guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(controller.getNickname()));
+                        guiServerRMI.placeCard(controller.getCardPlayed(),controller.reconvertPosition(controller.getPosPlayed()),roomName, nickname);
+                        controller.updateAfterPlay(guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(nickname));
                         controller.setPosPlayedNull();// works
                         if (guiServerRMI.isLastTurn(roomName)) {
                             switchToWaitingFinish(stage);
                         } else {
-                            if (guiServerRMI.isDeckEmpty(roomName)) {
+                            if (!guiServerRMI.isDeckEmpty(roomName)) {
                                 event.consume();
-                                switchToDraw(stage, game[0], controller);
+                                switchToDraw(stage, controller);
                             } else {
                                 event.consume();
                                 showZeroCards(stage);
@@ -493,15 +506,15 @@ public class GUIrmi extends Application {
             ivc.setOnDragDone(event -> {
                 try {
                     if (controller.getPosPlayed() != null) {
-                        guiServerRMI.placeCard(controller.getCardPlayed(),controller.reconvertPosition(controller.getPosPlayed()),roomName, controller.getNickname());
-                        controller.updateAfterPlay(guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(controller.getNickname()));
+                        guiServerRMI.placeCard(controller.getCardPlayed(),controller.reconvertPosition(controller.getPosPlayed()),roomName, nickname);
+                        controller.updateAfterPlay(guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(nickname));
                         controller.setPosPlayedNull();
                         if (guiServerRMI.isLastTurn(roomName)) {
                             switchToWaitingFinish(stage);
                         } else {
-                            if (guiServerRMI.isDeckEmpty(roomName)) {
+                            if (!guiServerRMI.isDeckEmpty(roomName)) {
                                 event.consume();
-                                switchToDraw(stage, game[0], controller);
+                                switchToDraw(stage, controller);
                             } else {
                                 event.consume();
                                 showZeroCards(stage);
@@ -518,15 +531,15 @@ public class GUIrmi extends Application {
             ivr.setOnDragDone(event -> {
                 try {
                     if (controller.getPosPlayed() != null) {
-                        guiServerRMI.placeCard(controller.getCardPlayed(),controller.reconvertPosition(controller.getPosPlayed()),roomName, controller.getNickname());
-                        controller.updateAfterPlay(guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(controller.getNickname()));
+                        guiServerRMI.placeCard(controller.getCardPlayed(),controller.reconvertPosition(controller.getPosPlayed()),roomName, nickname);
+                        controller.updateAfterPlay(guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(nickname));
                         controller.setPosPlayedNull();
                         if (guiServerRMI.isLastTurn(roomName)) {
                             switchToWaitingFinish(stage);
                         } else {
                             if (guiServerRMI.isDeckEmpty(roomName)) {
                                 event.consume();
-                                switchToDraw(stage, game[0], controller);
+                                switchToDraw(stage, controller);
                             } else {
                                 event.consume();
                                 showZeroCards(stage);
@@ -540,7 +553,7 @@ public class GUIrmi extends Application {
                     throw new RuntimeException(e);
                 }
             });
-        }catch (IOException | ClassNotFoundException e) {
+        }catch (IOException e) {
             showError(stage);
         }
     }
@@ -585,7 +598,11 @@ public class GUIrmi extends Application {
             Task<Integer> task = new Task<>() {
                 @Override
                 protected Integer call() throws Exception {
-                    //client.receiveBooleanFromServer();
+                    int i = 0;
+                    System.out.println("not your turn");
+                    while(!guiServerRMI.isCurrentPlayer(roomName, nickname)){
+                        i++;
+                    }
                     return null;
                 }
             };
@@ -651,7 +668,7 @@ public class GUIrmi extends Application {
     }
 
 
-    public void switchToDraw(Stage stage, Game game, Controller playgroundController){
+    public void switchToDraw(Stage stage, Controller playgroundController){
         try {
             playgroundController.removePlayedPos();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/drawpanel.fxml"));
@@ -662,6 +679,7 @@ public class GUIrmi extends Application {
             Scene scene = new Scene(root);
             stage2.setScene(scene);
             Controller controller = loader.getController();
+            Game game = guiServerRMI.getRooms().getRoom(roomName).getGame();
             controller.addCards(game.getDecks());
             stage2.show();
             DropShadow dropShadow = new DropShadow();
@@ -689,14 +707,13 @@ public class GUIrmi extends Application {
             controller.getResUp1().setOnMouseClicked(e -> {
                 if (game.getDecks()[0].getCards().getFirst() != null) {
                     try {
-                        guiServerRMI.drawCard(0,0,roomName, controller.getNickname());
+                        guiServerRMI.drawCard(0,0,roomName, nickname);
                         stage2.close();
                         Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
-                        Player p = g.getPlayer(controller.getNickname());
-                        if (!guiServerRMI.isCurrentPlayer(controller.getNickname(), roomName)) {
-                            notYourTurn(stage, g, p, playgroundController);
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
+                        Player p = g.getPlayer(nickname);
+                        guiServerRMI.nextRound(roomName);
+                        notYourTurn(stage, g, p, playgroundController);
+                    } catch (IOException ex) {
                         showError(stage);
                     }
                 }
@@ -705,14 +722,13 @@ public class GUIrmi extends Application {
             controller.getResUp2().setOnMouseClicked(e -> {
                 if (game.getDecks()[0].getCards().get(1) != null) {
                     try {
-                        guiServerRMI.drawCard(0,1,roomName, controller.getNickname());
+                        guiServerRMI.drawCard(0,1,roomName, nickname);
                         stage2.close();
                         Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
-                        Player p = g.getPlayer(controller.getNickname());
-                        if (!guiServerRMI.isCurrentPlayer(controller.getNickname(), roomName)) {
-                            notYourTurn(stage, g, p, playgroundController);
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
+                        Player p = g.getPlayer(nickname);
+                        guiServerRMI.nextRound(roomName);
+                        notYourTurn(stage, g, p, playgroundController);
+                    } catch (IOException ex) {
                         showError(stage);
                     }
                 }
@@ -720,14 +736,14 @@ public class GUIrmi extends Application {
             controller.getResDeck().setOnMouseClicked(e -> {
                 if (game.getDecks()[0].getCards().get(2) != null) {
                     try {
-                        guiServerRMI.drawCard(0,2,roomName, controller.getNickname());
+                        guiServerRMI.drawCard(0,2,roomName, nickname);
                         stage2.close();
                         Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
-                        Player p = g.getPlayer(controller.getNickname());
-                        if (!guiServerRMI.isCurrentPlayer(controller.getNickname(), roomName)) {
-                            notYourTurn(stage, g, p, playgroundController);
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
+                        Player p = g.getPlayer(nickname);
+                        guiServerRMI.nextRound(roomName);
+                        notYourTurn(stage, g, p, playgroundController);
+
+                    } catch (IOException ex) {
                         showError(stage);
                     }
                 }
@@ -735,14 +751,13 @@ public class GUIrmi extends Application {
             controller.getGoldUp1().setOnMouseClicked(e -> {
                 if (game.getDecks()[1].getCards().getFirst() != null) {
                     try {
-                        guiServerRMI.drawCard(1,0,roomName, controller.getNickname());
+                        guiServerRMI.drawCard(1,0,roomName, nickname);
                         stage2.close();
                         Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
-                        Player p = g.getPlayer(controller.getNickname());
-                        if (!guiServerRMI.isCurrentPlayer(controller.getNickname(), roomName)) {
-                            notYourTurn(stage, g, p, playgroundController);
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
+                        Player p = g.getPlayer(nickname);
+                        guiServerRMI.nextRound(roomName);
+                        notYourTurn(stage, g, p, playgroundController);
+                    } catch (IOException ex) {
                         showError(stage);
                     }
                 }
@@ -750,14 +765,13 @@ public class GUIrmi extends Application {
             controller.getGoldUp2().setOnMouseClicked(e -> {
                 if (game.getDecks()[1].getCards().get(1) != null) {
                     try {
-                        guiServerRMI.drawCard(1,1,roomName, controller.getNickname());
+                        guiServerRMI.drawCard(1,1,roomName, nickname);
                         stage2.close();
                         Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
-                        Player p = g.getPlayer(controller.getNickname());
-                        if (!guiServerRMI.isCurrentPlayer(controller.getNickname(), roomName)) {
-                            notYourTurn(stage, g, p, playgroundController);
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
+                        Player p = g.getPlayer(nickname);
+                        guiServerRMI.nextRound(roomName);
+                        notYourTurn(stage, g, p, playgroundController);
+                    } catch (IOException ex) {
                         showError(stage);
                     }
                 }
@@ -765,20 +779,20 @@ public class GUIrmi extends Application {
             controller.getGoldDeck().setOnMouseClicked(e -> {
                 if (game.getDecks()[1].getCards().get(2) != null) {
                     try {
-                        guiServerRMI.drawCard(1,2,roomName, controller.getNickname());
+                        guiServerRMI.drawCard(1,2,roomName, nickname);
                         stage2.close();
                         Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
-                        Player p = g.getPlayer(controller.getNickname());
-                        if (!guiServerRMI.isCurrentPlayer(controller.getNickname(), roomName)) {
-                            notYourTurn(stage, g, p, playgroundController);
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
+                        Player p = g.getPlayer(nickname);
+                        guiServerRMI.nextRound(roomName);
+                        notYourTurn(stage, g, p, playgroundController);
+                    } catch (IOException ex) {
                         showError(stage);
                     }
                 }
             });
         }
         catch (IOException e){
+            System.out.println("wellla");
             showError(stage);
         }}
 
@@ -788,16 +802,18 @@ public class GUIrmi extends Application {
             Parent root = loader.load();
             Controller controller = loader.getController();
             controller.getAnchor4().getChildren().addFirst(background);
-            Player player = guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(controller.getNickname());
+            Player player = guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(nickname);
             controller.getStartLabel().setText("Please " + player.getNickname() + ", wait for other players to join.");
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
-           /* Task<Integer> task = new Task<>() {
+            Task<Integer> task = new Task<>() {
                 @Override
                 protected Integer call() throws Exception {
-                    if (!client.receiveBooleanFromServer()) {
-                        if (client.receiveBooleanFromServer()) {
+                    boolean waitingForPlayers = true;
+                    while (waitingForPlayers) {
+                        if(guiServerRMI.getRooms().getRoom(roomName).isFull()) {
+                            waitingForPlayers = false;
                         }
                     }
                     return null;
@@ -811,9 +827,9 @@ public class GUIrmi extends Application {
             });
             task.setOnFailed(event ->{
                 showError(stage);
-            }); */
+            });
         }
-        catch (IOException | ClassNotFoundException e){
+        catch (IOException e){
             showError(stage);
         }
     }

@@ -110,6 +110,8 @@ public interface ServerRMIInterface extends Remote {
      */
     boolean isCurrentPlayer(String nickname, String roomName) throws RemoteException;
 
+    void addPlayerToRoundController(String nickname, String roomName) throws RemoteException;
+
     /**
      * This method gets the boolean that tells if a deck is empty or not.
      *

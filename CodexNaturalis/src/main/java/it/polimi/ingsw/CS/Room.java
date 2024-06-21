@@ -109,7 +109,7 @@ public class Room implements Serializable {
      * @return such boolean.
      */
     public synchronized boolean isFull() {
-        return game.getNumPlayer() == playerInRoom;
+        return game.getExpPlayers() == playerInRoom;
     }
 
     /**

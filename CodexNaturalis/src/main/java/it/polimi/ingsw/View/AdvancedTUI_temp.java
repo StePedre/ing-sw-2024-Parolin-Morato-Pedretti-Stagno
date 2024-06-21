@@ -67,11 +67,7 @@ public class AdvancedTUI_temp {
             contentLine4 += getGridLine5(ground[minX][maxY - j], false);
         }
         System.out.println("                   " + space + contentLine4 );
-
         contentLine4 = "";
-
-
-
         if(lengthX == 2){
             lengthX++;
         }
@@ -405,7 +401,9 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             return cardColor(card) + "█       "+ value +"       █" + "\u001B[0m";
         }
-
+        if (card.getFlip()) {
+            return cardColor(card) + "█        @        █" + "\u001B[0m";
+        }
         return cardColor(card) + "█                 █" + "\u001B[0m";
     }
     private static String getGridLine3(Card card){

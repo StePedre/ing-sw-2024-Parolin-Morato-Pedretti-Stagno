@@ -25,7 +25,7 @@ public class Game implements Serializable {
     private final ArrayList<ObjectiveCard> otherObjs;
     private boolean isOver = false;
     private final ArrayList<StarterCard> starterCards;
-    private final Set<String> colors = new HashSet<>();
+    private Set<String> colors = new HashSet<>();
 
     /**
      * Class constructor.
@@ -356,5 +356,13 @@ public class Game implements Serializable {
     public void setStarterCards(ArrayList<StarterCard> starterCards) {
         this.starterCards.addAll(starterCards);
     }
+
+
+    /**
+     * The method sets the Set of colors
+     *
+     * @param colors is the Set to set.
+     */
+    public void setColors(Set<String> colors){ this.colors = colors; }
 
 }

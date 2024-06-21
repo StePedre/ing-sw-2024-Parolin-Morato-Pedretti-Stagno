@@ -37,8 +37,8 @@ class RoomControllerTest {
         r1.getGame().setExpPlayers(1);
         r1.getGame().addPlayer(new Player("silvia"));
         rc.addRoom(r1);
-        assertTrue(rc.alredyInGame(r1.getGame(), "silvia"));
-        assertFalse(rc.alredyInGame(r1.getGame(), "teo"));
+        assertTrue(rc.alreadyInGame(r1.getName(), "silvia"));
+        assertFalse(rc.alreadyInGame(r1.getName(), "teo"));
     }
 
 }
