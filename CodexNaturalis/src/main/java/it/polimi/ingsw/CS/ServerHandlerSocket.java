@@ -146,7 +146,7 @@ public class ServerHandlerSocket implements Runnable{
                 else{
                     out.writeObject(false);
                 }
-                if(player.getPlayerGround().getPlayerScore()>=5 && !rc.isEnding()){
+                if(player.getPlayerGround().getPlayerScore()>=20 && !rc.isEnding()){
                     rc.setEnding();
                 }
                 if(!(rc.isLastTurn() || (game.getDecks()[0].getNumberOfCards()==0 && game.getDecks()[1].getNumberOfCards()==0))) {

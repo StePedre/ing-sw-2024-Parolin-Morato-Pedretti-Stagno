@@ -20,7 +20,7 @@
                   <Insets top="40.0" />
                </VBox.margin>
             </Label>
-            <Button defaultButton="true" mnemonicParsing="false" text="Ok">
+            <Button fx:id="errorButton" defaultButton="true" mnemonicParsing="false" text="Ok">
                <VBox.margin>
                   <Insets bottom="15.0" top="15.0" />
                </VBox.margin>

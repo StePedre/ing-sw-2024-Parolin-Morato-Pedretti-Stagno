@@ -209,13 +209,17 @@ public class GUIrmi extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/errorMessageBanner.fxml"));
             Parent root = loader.load();
+            Controller controller = loader.getController();
             Stage stage2 = new Stage();
             stage2.initModality(Modality.WINDOW_MODAL);  // finestra bloccante
             stage2.initOwner(stage);
             Scene scene = new Scene(root, 600, 200);
             stage2.setScene(scene);
-            stage2.showAndWait();
-            stage.close();
+            stage2.show();
+            controller.getErrorButton().setOnAction(e->{
+                stage2.close();
+                stage.close();
+            });
         } catch(IOException e){
             e.printStackTrace();
         }
@@ -274,7 +278,7 @@ public class GUIrmi extends Application {
         stage2.initOwner(stage);
         Scene scene = new Scene(root, 600, 200);
         stage2.setScene(scene);
-        stage2.showAndWait();
+        stage2.show();
         controller.getNotYourTurnButton().setOnAction(e -> {
             stage2.close();
         });
@@ -340,7 +344,7 @@ public class GUIrmi extends Application {
         stage2.initOwner(stage);
         Scene scene = new Scene(root, 600, 200);
         stage2.setScene(scene);
-        stage2.showAndWait();
+        stage2.show();
         controller.getYourTurnButton().setOnAction(e -> {
             stage2.close();
         });

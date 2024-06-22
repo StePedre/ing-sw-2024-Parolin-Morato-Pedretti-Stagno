@@ -47,7 +47,7 @@ public class Controller {
     @FXML
     private ImageView frontStarterCard, backStarterCard, secretObjLeft, secretObjRight, backgroundIV, sadFace, sadFace2;
     @FXML
-    private Button finishButton, finishButton2, buttonStart, confirmRoom, confirmColor, IpButton, flipButton, yourTurnButton, notYourTurnButton;
+    private Button finishButton, errorButton, finishButton2, buttonStart, confirmRoom, confirmColor, IpButton, flipButton, yourTurnButton, notYourTurnButton;
     @FXML
     private TextField nickTextField, numberPlayersTF, textFieldRoom, IpField;
     @FXML
@@ -449,6 +449,7 @@ public class Controller {
     public PlayableCard getCurrentHandRight() {
         return currentHandRight;
     }
+    public Button getErrorButton() {return errorButton;}
 
     public Button getFinishButton2() {
         return finishButton2;
