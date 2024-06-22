@@ -34,6 +34,8 @@ import java.util.Set;
  * The class GUIsocket manages all the scenes to display when using the GUI and the socket connection.
  * It has a Screen and two double in order to get the height and the width of the primary screen of the user.
  * It also has a GUIClientSocket in order to receive and send objects from and to the server.
+ * It also has four ImageView, one used to set the background Image of every scene, and the other three that represents
+ * the cards in hand of a player.
  * This class extends Application class.
  * Every scene is made with SceneBuilder.
  */
@@ -48,8 +50,8 @@ public class GUIsocket extends Application{
     /**
      * This method displays the initialize player ground scene, where the starter card is placed in the center of the
      * board and the names of the other players are added.
-     * Depending on whether it is the turn of the player, the next method called is your turn one.
-     * Otherwise, the not your turn one.
+     * Depending on whether it is the turn of the player, the next method called is yourTurn.
+     * Otherwise, the notYourTurn one.
      *
      * @param stage is the original stage on which the application is displayed.
      * @throws ClassNotFoundException if there has been problems regarding the cast of an Object.
@@ -79,7 +81,7 @@ public class GUIsocket extends Application{
 
     /**
      * This method manages the player when it is not their turn to play.
-     * Once the server sends back the boolean that tells it is now the turn to play, it calls your turn method.
+     * Once the server sends back the boolean that tells it is now the turn to play, it calls yourTurn method.
      * If any problem occurs, an error banner is displayed.
      *
      * @param stage is the original stage on which the application is displayed.
@@ -149,7 +151,7 @@ public class GUIsocket extends Application{
     }
 
     /**
-     * This method sets every color to be visible in the application.
+     * This method sets visible the available colors.
      *
      * @param colors is the list of color to be displayed.
      * @param controller is the controller of the application.
@@ -358,7 +360,13 @@ public class GUIsocket extends Application{
         }
     }
 
-
+    /**
+     * This method displays the loading scene.
+     * Once the user click any key, the switchToIpInput method is called.
+     *
+     * @param stage is the original stage on which the application is displayed.
+     * @throws IOException if there has been problems regarding input or output.
+     */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/loadingScene.fxml"));
@@ -382,7 +390,7 @@ public class GUIsocket extends Application{
     }
 
     /**
-     * This method launch the application.
+     * This method launches the application.
      */
     public static void startGUI(){
         launch();
@@ -456,7 +464,7 @@ public class GUIsocket extends Application{
 
     /**
      * This method displays the draw scene, where the player needs to pick a card to draw.
-     * After the card is picked, the not your turn method is called, as drawing a card is the last action a player can do
+     * After the card is picked, the notYourTurn method is called, as drawing a card is the last action a player can do
      * in their turn.
      * If any problem occurs, an error banner is displayed.
      *
@@ -863,7 +871,6 @@ public class GUIsocket extends Application{
                 try {
                     client.sendToServer(false);
                     switchToSelectSecretObj(stage);
-                    //simulateEnd(stage);
                 } catch (IOException e) {
                     showError(stage);
                 }
@@ -873,7 +880,6 @@ public class GUIsocket extends Application{
                 try {
                     client.sendToServer(true);
                     switchToSelectSecretObj(stage);
-                    //simulateEnd(stage);
                 } catch (IOException e) {
                     showError(stage);
                 }
@@ -890,6 +896,7 @@ public class GUIsocket extends Application{
      * If any problem occurs, an error banner is displayed.
      *
      * @param stage is the original stage on which the application is displayed.
+     * @throws ClassNotFoundException if there has been problems regarding the cast of an Object.
      */
     public void switchToWaitingFinish(Stage stage) throws ClassNotFoundException {
         try {
