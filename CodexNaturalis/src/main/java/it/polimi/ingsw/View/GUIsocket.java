@@ -623,7 +623,6 @@ public class GUIsocket extends Application{
             try{
                 String host = controller.getIpField().getText();
                 Socket socket = new Socket(InetAddress.getByName(host), 59090);
-                socket.setSoTimeout(0);
                 client = new GUIClientSocket(socket.getInputStream(),socket.getOutputStream());
                 switchToRoomChoice(stage);
             }
