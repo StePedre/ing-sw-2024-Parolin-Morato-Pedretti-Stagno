@@ -182,7 +182,7 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     public boolean isDeckEmpty(String roomName) throws RemoteException{
-        return rooms.getRoom(roomName).getGame().getDecks()[0].getCards().isEmpty() || rooms.getRoom(roomName).getGame().getDecks()[1].getCards().isEmpty();
+        return rooms.getRoom(roomName).getGame().getDecks()[0].getCards().size() <3 || rooms.getRoom(roomName).getGame().getDecks()[1].getCards().size() <3;
     }
 
     /**

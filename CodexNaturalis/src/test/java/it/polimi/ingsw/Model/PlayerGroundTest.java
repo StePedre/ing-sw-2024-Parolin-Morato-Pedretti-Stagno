@@ -43,7 +43,7 @@ class PlayerGroundTest {
         Position pos = new Position(41, 43);
         pg.placeCard(card1, pos);
         TUI tui = new TUI();
-        tui.showGround(game, player);
+        tui.yourTurnDraw(game, player);
     }
 
     /* Through visualization in the textual interface, the following method tests
@@ -64,7 +64,7 @@ class PlayerGroundTest {
         }
         System.out.println(card1.getRequirements());
         TUI tui = new TUI();
-        tui.showGround(game, player);
+        tui.yourTurnPlay(game, player);
     }
 
     @Test

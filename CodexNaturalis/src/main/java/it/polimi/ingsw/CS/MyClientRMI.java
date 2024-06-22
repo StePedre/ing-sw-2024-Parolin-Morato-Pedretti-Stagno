@@ -18,7 +18,7 @@ import java.util.Scanner;
  */
 
 public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterface, Serializable {
-    private final Scanner scan = new Scanner(System.in);
+
     TUI tui =  null;
     String nickname;
     String roomJoined;
@@ -86,17 +86,16 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      * If it is not, it recalls the method. This allows to keep asking for a valid name.
      * Otherwise, it returns the name of the room.
      *
-     * @param choice is the boolean that tells if the player wants to create or join a room.
      * @param rooms the list of rooms already created.
      * @return the name of the room.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    private String controlRoom2(boolean choice, ArrayList<Room> rooms) throws RemoteException{
-        String roomName = tui.getRoomName(choice, rooms);
+    private String controlRoom2(ArrayList<Room> rooms) throws RemoteException{
+        String roomName = tui.getRoomName(false, rooms);
         if(server.getRooms().alredyExist(roomName) || server.getRooms().getRoom(roomName).isFull()){
             return roomName;
         } else {
-            return controlRoom(choice, rooms);
+            return controlRoom(false, rooms);
 
         }
     }
@@ -132,7 +131,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                 default -> throw new Exception();
             };
         } catch (IOException | ClassNotFoundException e) {
-            //gestire ecc
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -226,13 +224,12 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      */
     private void startNormalGame() throws RemoteException, MissingResourcesException, InvalidPositionException {
 
-        while(!server.isGameOver(roomJoined)) {//fino a fine gioco, gestire primo turno
+        while(!server.isGameOver(roomJoined)) {
             while (!server.isCurrentPlayer(roomJoined, nickname)) {
                 if (server.isGameOver(roomJoined)) {
                     break;
                 }else{
                     Room room = server.getRooms().getRoom(roomJoined);
-                    //checkYourTurn();
                     tui.notYourTurn(room.getGame(), room.getGame().getPlayer(nickname));
                     int i = 0;
                     while(!server.isCurrentPlayer(roomJoined, nickname)){
@@ -253,7 +250,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                             while(card == null) {
                                 card = tui.inputCardToPlace(game, player);
                             }
-                                server.placeCard(card, tui.inputCoordinates(player), roomJoined, nickname);
+                                server.placeCard(card, tui.inputNumberPosition(player), roomJoined, nickname);
                                 game = server.getRooms().getRoom(roomJoined).getGame();
                                 player = game.getPlayer(nickname);
                                 drawCardFromDeck(tui.yourTurnDraw(game, player));
@@ -285,7 +282,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             server.addRoom(roomJoined);
             server.setPlayerNumber(tui.askPlayersNo(), roomJoined);
         }else{
-            roomJoined = controlRoom2( false, server.getRooms().getRooms());
+            roomJoined = controlRoom2(server.getRooms().getRooms());
         }
             nickname = controlNickname(true);
             Player player = server.addNewPlayer(nickname, roomJoined);

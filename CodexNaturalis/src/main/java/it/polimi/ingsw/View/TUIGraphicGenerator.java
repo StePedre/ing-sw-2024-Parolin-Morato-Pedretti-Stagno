@@ -13,7 +13,9 @@ import java.util.*;
 
 import static it.polimi.ingsw.Model.Resource.*;
 
-public class AdvancedTUI_temp {
+public class TUIGraphicGenerator {
+    static String ANSI_RESET = "\u001B[0m";
+    static String largeSpace = "                                                                                 ";
 
     public static void printGround(PlayerGround playerGround){
         Card[][] ground = playerGround.getGround();
@@ -21,33 +23,13 @@ public class AdvancedTUI_temp {
         Set<Position> unavailablePosition = new HashSet<>(playerGround.getUnavailablePositions());
         availablePosition.addAll(unavailablePosition);
 
-        /*Map<Integer, Position> numbers = playerGround.getAvailableNumbers();
+        int maxX = availablePosition.stream().mapToInt(Position::getX).max().orElse(0);
 
-        for (Map.Entry<Integer, Position> entry : numbers.entrySet()) {
-            Integer number = entry.getKey();
-            Position position = entry.getValue();
-            System.out.println("Number: " + number + ", Position: X: " + position.getX() + " Y: " + position.getY());
-        }*/
+        int maxY = availablePosition.stream().mapToInt(Position::getY).max().orElse(0);
 
-        int maxX = availablePosition.stream()
-                .mapToInt(Position::getX)
-                .max()
-                .orElse(0);
+        int minX = availablePosition.stream().mapToInt(Position::getX).min().orElse(0);
 
-        int maxY = availablePosition.stream()
-                .mapToInt(Position::getY)
-                .max()
-                .orElse(0);
-
-        int minX = availablePosition.stream()
-                .mapToInt(Position::getX)
-                .min()
-                .orElse(0);
-
-        int minY = availablePosition.stream()
-                .mapToInt(Position::getY)
-                .min()
-                .orElse(0);
+        int minY = availablePosition.stream().mapToInt(Position::getY).min().orElse(0);
 
         int lengthX = maxX - minX;
         int lengthY = maxY - minY;
@@ -56,36 +38,38 @@ public class AdvancedTUI_temp {
         String contentLine2 = "";
         String contentLine3 = "";
         String contentLine4 = "";
-
         String space = "";
+        
         if(lengthY <=11) {
             for (int i = 0; i <= 3 - lengthY / 2; i++) {
                 space += "                   ";
             }
         }
+        
         for (int j = lengthY; j >= 0; j--) {
-            contentLine4 += getGridLine5(ground[minX][maxY - j], false);
+            contentLine4 += generateGridLine5(ground[minX][maxY - j]);
         }
         System.out.println("                   " + space + contentLine4 );
+        
         contentLine4 = "";
+        
         if(lengthX == 2){
             lengthX++;
         }
+        
         for (int i = 0; i <= lengthX; i++) {
             for (int j = lengthY; j >= 0; j--) {
 
                 Card currentCard = ground[minX + i][maxY - j];
-                contentLine1 += getGridLine1(currentCard);
-                contentLine2 += getGridLine2(currentCard, minX + i, maxY - j, playerGround);
-                contentLine3 += getGridLine3(currentCard);
+                contentLine1 += generateGridLine1(currentCard);
+                contentLine2 += generateGridLine2(currentCard, minX + i, maxY - j, playerGround);
+                contentLine3 += generateGridLine3(currentCard);
 
                 if (currentCard == null && i+1 <=  lengthX) {
-                        contentLine4 += getGridLine5(ground[minX + i + 1][maxY - j], false);
+                        contentLine4 += generateGridLine5(ground[minX + i + 1][maxY - j]);
 
                 } else {
-
-                        contentLine4 += getGridLine4(currentCard, true);
-
+                        contentLine4 += generateGridLine4(currentCard);
                 }
             }
                 System.out.println(printResourceLegend((lengthX-i+1)*4, playerGround.getTotalResources()) + space + contentLine1);
@@ -108,7 +92,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             case 15: return "   RESOURCES:      ";
             case 13:{
                 int value = totalResources.get(MUSHROOM);
-                String string = resourceColor(MUSHROOM) + "   Mushrooms:  " + value + "  " + "\u001B[0m";
+                String string = resourceColor(MUSHROOM) + "   Mushrooms:  " + value + "  " + ANSI_RESET;
                 if (value >= 10) {
                     return string;
                 }
@@ -116,7 +100,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case 11:{
                 int value = totalResources.get(LEAF);
-                String string = resourceColor(LEAF) +"   Plants:  "+ value +"     " + "\u001B[0m";
+                String string = resourceColor(LEAF) +"   Plants:  "+ value +"     " + ANSI_RESET;
                 if (value >= 10) {
                     return  string;
                 }
@@ -124,7 +108,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case 9:{
                 int value = totalResources.get(BUG);
-                String string = resourceColor(BUG) +"   Bugs:  " + value + "       " + "\u001B[0m";
+                String string = resourceColor(BUG) +"   Bugs:  " + value + "       " + ANSI_RESET;
                 if (value >= 10) {
                     return  string;
                 }
@@ -132,7 +116,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case 7:{
                 int value = totalResources.get(FOX);
-                String string = resourceColor(FOX) +"   Animals:  "+ value +"    "+ "\u001B[0m";
+                String string = resourceColor(FOX) +"   Animals:  "+ value +"    "+ ANSI_RESET;
                 if (value >= 10) {
                     return  string;
                 }
@@ -140,7 +124,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case 5:{
                 int value = totalResources.get(PLUME);
-                String string = resourceColor(PLUME) +"   Plumes (P):  " + value + "  " + "\u001B[0m";
+                String string = resourceColor(PLUME) +"   Plumes (P):  " + value + "  " + ANSI_RESET;
                 if (value >= 10) {
                     return  string;
                 }
@@ -148,7 +132,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case 3:{
                 int value = totalResources.get(SCROLL);
-                String string = resourceColor(SCROLL) +"   Scrolls (S):  " + value + "\u001B[0m";
+                String string = resourceColor(SCROLL) +"   Scrolls (S):  " + value + ANSI_RESET;
                 if (value >= 10) {
                     return  string;
                 }
@@ -156,7 +140,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
             case 1:{
                 int value = totalResources.get(POTION);
-                String string = resourceColor(POTION) +"   Potions (T):  " + value + "\u001B[0m";
+                String string = resourceColor(POTION) +"   Potions (T):  " + value + ANSI_RESET;
                 if (value >= 10) {
                     return string;
                 }
@@ -175,18 +159,18 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         StringBuilder buttonBorder =  new StringBuilder();
 
         for(int i = 0; i <2; i++) {
-            topBorder.append(cornerColor(card.getShowedCorners()[0])).append(cardColor(card)).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append("\u001B[0m").append(cornerColor(card.getShowedCorners()[2])).append("  ");
-            contentLine1.append(cardColor(card)).append("█").append(cardContent(card)).append(cardColor(card)).append("█  ");
-            contentLine2.append(cardColor(card)).append("█").append(cardResource(card)).append(cardColor(card)).append("█  ");
-            contentLine3.append(cardColor(card)).append("█").append(cardRequirements(card)).append(cardColor(card)).append("█  ");
-            buttonBorder.append(cornerColor(card.getShowedCorners()[1])).append(cardColor(card)).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append("\u001B[0m").append(cornerColor(card.getShowedCorners()[3])).append("  ");
+            topBorder.append(cornerColor(card.getShowedCorners()[0])).append(cardColor(card)).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(card.getShowedCorners()[2])).append("  ");
+            contentLine1.append(cardColor(card)).append("█").append(generateHandAndDeckLine1(card)).append(cardColor(card)).append("█  ");
+            contentLine2.append(cardColor(card)).append("█").append(generateHandAndDeckLine2(card)).append(cardColor(card)).append("█  ");
+            contentLine3.append(cardColor(card)).append("█").append(generateHandAndDeckLine3(card)).append(cardColor(card)).append("█  ");
+            buttonBorder.append(cornerColor(card.getShowedCorners()[1])).append(cardColor(card)).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(card.getShowedCorners()[3])).append("  ");
         card.flipCard();
         }
-        System.out.println("                                                                                 " + topBorder);
-        System.out.println("                                                                                 " + contentLine1);
-        System.out.println("                                                                                 " + contentLine2);
-        System.out.println("                                                                                 " + contentLine3);
-        System.out.println("                                                                                 " + buttonBorder);
+        System.out.println(largeSpace + topBorder);
+        System.out.println(largeSpace + contentLine1);
+        System.out.println(largeSpace + contentLine2);
+        System.out.println(largeSpace + contentLine3);
+        System.out.println(largeSpace + buttonBorder);
     }
 
     public static void printDecks(Deck deck1, Deck deck2, String space){
@@ -196,16 +180,14 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         StringBuilder contentLine3 =  new StringBuilder();
         StringBuilder buttonBorder =  new StringBuilder();
 
-        String ANSI_RESET = "\u001B[0m";
-
         ArrayList<PlayableCard> cards1 = deck1.getCards();
         cards1.getFirst().flipCard();
 
         for(int i = 0; i <= 2; i++){
             topBorder.append(cornerColor(cards1.get(i).getShowedCorners()[0])).append(cardColor(cards1.get(i))).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards1.get(i).getShowedCorners()[2])).append("  ");
-            contentLine1.append(cardColor(cards1.get(i))).append("█").append(cardContent(cards1.get(i))).append(cardColor(cards1.get(i))).append("█  ");
-            contentLine2.append(cardColor(cards1.get(i))).append("█").append(cardResource(cards1.get(i))).append(cardColor(cards1.get(i))).append("█  ");
-            contentLine3.append(cardColor(cards1.get(i))).append("█").append(cardRequirements(cards1.get(i))).append(cardColor(cards1.get(i))).append("█  ");
+            contentLine1.append(cardColor(cards1.get(i))).append("█").append(generateHandAndDeckLine1(cards1.get(i))).append(cardColor(cards1.get(i))).append("█  ");
+            contentLine2.append(cardColor(cards1.get(i))).append("█").append(generateHandAndDeckLine2(cards1.get(i))).append(cardColor(cards1.get(i))).append("█  ");
+            contentLine3.append(cardColor(cards1.get(i))).append("█").append(generateHandAndDeckLine3(cards1.get(i))).append(cardColor(cards1.get(i))).append("█  ");
             buttonBorder.append(cornerColor(cards1.get(i).getShowedCorners()[1])).append(cardColor(cards1.get(i))).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards1.get(i).getShowedCorners()[3])).append("  ");
         }
         ArrayList<PlayableCard> cards2 = deck2.getCards();
@@ -219,9 +201,9 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
 
         for(int i = 0; i <= 2; i++){
             topBorder.append(cornerColor(cards2.get(i).getShowedCorners()[0])).append(cardColor(cards2.get(i))).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards2.get(i).getShowedCorners()[2])).append("  ");
-            contentLine1.append(cardColor(cards2.get(i))).append("█").append(cardContent(cards2.get(i))).append(cardColor(cards2.get(i))).append("█  ");
-            contentLine2.append(cardColor(cards2.get(i))).append("█").append(cardResource(cards2.get(i))).append(cardColor(cards2.get(i))).append("█  ");
-            contentLine3.append(cardColor(cards2.get(i))).append("█").append(cardRequirements(cards2.get(i))).append(cardColor(cards2.get(i))).append("█  ");
+            contentLine1.append(cardColor(cards2.get(i))).append("█").append(generateHandAndDeckLine1(cards2.get(i))).append(cardColor(cards2.get(i))).append("█  ");
+            contentLine2.append(cardColor(cards2.get(i))).append("█").append(generateHandAndDeckLine2(cards2.get(i))).append(cardColor(cards2.get(i))).append("█  ");
+            contentLine3.append(cardColor(cards2.get(i))).append("█").append(generateHandAndDeckLine3(cards2.get(i))).append(cardColor(cards2.get(i))).append("█  ");
             buttonBorder.append(cornerColor(cards2.get(i).getShowedCorners()[1])).append(cardColor(cards2.get(i))).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards2.get(i).getShowedCorners()[3])).append("  ");
         }
 
@@ -267,18 +249,18 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
 
         for(int i = 0; i< objectiveCards.length; i++) {
             topBorder.append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀    ");
-            contentLine1.append("\u001B[33m").append("█").append(firstLineObjective(objectiveCards[i])).append("\u001B[33m").append("█    ");
-            contentLine2.append("\u001B[33m").append("█").append(secondLineObjective(objectiveCards[i])).append("\u001B[33m").append("█    ");
-            contentLine3.append("\u001B[33m").append("█").append(thirdLineObjective(objectiveCards[i])).append("\u001B[33m").append("█    ");
-            buttonBorder.append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄    ").append("\u001B[0m");
+            contentLine1.append("\u001B[33m").append("█").append(generateObjectiveLine1(objectiveCards[i])).append("\u001B[33m").append("█    ");
+            contentLine2.append("\u001B[33m").append("█").append(generateObjectiveLine2(objectiveCards[i])).append("\u001B[33m").append("█    ");
+            contentLine3.append("\u001B[33m").append("█").append(generateObjectiveLine3(objectiveCards[i])).append("\u001B[33m").append("█    ");
+            buttonBorder.append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄    ").append(ANSI_RESET);
 
         }
 
-        System.out.println("                                                                                 " + topBorder);
-        System.out.println("                                                                                 " + contentLine1);
-        System.out.println("                                                                                 " + contentLine2);
-        System.out.println("                                                                                 " + contentLine3);
-        System.out.println("                                                                                 " + buttonBorder);
+        System.out.println(largeSpace + topBorder);
+        System.out.println(largeSpace + contentLine1);
+        System.out.println(largeSpace + contentLine2);
+        System.out.println(largeSpace + contentLine3);
+        System.out.println(largeSpace + buttonBorder);
 }
 
     public static void printStartingCard(StarterCard card){
@@ -289,30 +271,30 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         StringBuilder contentLine3 =  new StringBuilder();
         StringBuilder buttonBorder =  new StringBuilder();
 
-        String ANSI_RESET = "\u001B[0m";
         for(int i =0; i<2; i++) {
-            topBorder.append(cornerColor(card.getShowedCorners()[0])).append("\u001B[0m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(card.getShowedCorners()[2])).append("  ");
-            contentLine1.append("\u001B[0m").append("█").append(firstCardContent(card, 1)).append("\u001B[0m").append("█  ");
-            contentLine2.append("\u001B[0m").append("█").append(firstCardContent(card, 2)).append("\u001B[0m").append("█  ");
-            contentLine3.append("\u001B[0m").append("█").append(firstCardContent(card, 3)).append("\u001B[0m").append("█  ");
-            buttonBorder.append(cornerColor(card.getShowedCorners()[1])).append("\u001B[0m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(card.getShowedCorners()[3])).append("  ");
+            topBorder.append(cornerColor(card.getShowedCorners()[0])).append(ANSI_RESET).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(card.getShowedCorners()[2])).append("  ");
+            contentLine1.append(ANSI_RESET).append("█").append(generateFirstCardContent(card, 1)).append(ANSI_RESET).append("█  ");
+            contentLine2.append(ANSI_RESET).append("█").append(generateFirstCardContent(card, 2)).append(ANSI_RESET).append("█  ");
+            contentLine3.append(ANSI_RESET).append("█").append(generateFirstCardContent(card, 3)).append(ANSI_RESET).append("█  ");
+            buttonBorder.append(cornerColor(card.getShowedCorners()[1])).append(ANSI_RESET).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(card.getShowedCorners()[3])).append("  ");
             card.flipCard();
         }
         card.flipCard();
-        System.out.println("                                                                                 " + topBorder);
-        System.out.println("                                                                                 " + contentLine1);
-        System.out.println("                                                                                 " + contentLine2);
-        System.out.println("                                                                                 " + contentLine3);
-        System.out.println("                                                                                 " + buttonBorder);
+        System.out.println(largeSpace + topBorder);
+        System.out.println(largeSpace + contentLine1);
+        System.out.println(largeSpace + contentLine2);
+        System.out.println(largeSpace + contentLine3);
+        System.out.println(largeSpace + buttonBorder);
     }
-    private static String firstCardContent(StarterCard starterCard, int state){
+
+
+    private static String generateFirstCardContent(StarterCard starterCard, int state){
         if(!starterCard.getFlip()) {
             if (state == 1) {
                 Corner corner = new Corner("top", starterCard.getBackRes().getFirst(), true);
                 return "          " + cornerColor(corner) + "         ";
             }
             if (state == 2 && !starterCard.getBackRes().get(1).equals(BLANK)) {
-                //return "█    first card    █
                 Corner corner = new Corner("top", starterCard.getBackRes().get(1), true);
                 return "          " + cornerColor(corner) + "         ";
             }
@@ -334,25 +316,22 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         StringBuilder contentLine2 =  new StringBuilder();
         StringBuilder contentLine3 =  new StringBuilder();
         StringBuilder buttonBorder =  new StringBuilder();
-
-        String ANSI_RESET = "\u001B[0m";
-
-
+        //print Hand
         for(int i = 0; i<cards.length; i++){
             if(cards[i] !=null) {
                 topBorder.append(cornerColor(cards[i].getShowedCorners()[0])).append(cardColor(cards[i])).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[2])).append("  ");
-                contentLine1.append(cardColor(cards[i])).append("█").append(cardContent(cards[i])).append(cardColor(cards[i])).append("█  ");
-                contentLine2.append(cardColor(cards[i])).append("█").append(cardResource(cards[i])).append(cardColor(cards[i])).append("█  ");
-                contentLine3.append(cardColor(cards[i])).append("█").append(cardRequirements(cards[i])).append(cardColor(cards[i])).append("█  ");
+                contentLine1.append(cardColor(cards[i])).append("█").append(generateHandAndDeckLine1(cards[i])).append(cardColor(cards[i])).append("█  ");
+                contentLine2.append(cardColor(cards[i])).append("█").append(generateHandAndDeckLine2(cards[i])).append(cardColor(cards[i])).append("█  ");
+                contentLine3.append(cardColor(cards[i])).append("█").append(generateHandAndDeckLine3(cards[i])).append(cardColor(cards[i])).append("█  ");
                 buttonBorder.append(cornerColor(cards[i].getShowedCorners()[1])).append(cardColor(cards[i])).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards[i].getShowedCorners()[3])).append("  ");
             }
         }
         //print Secret Objective
         topBorder.append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ ");
-        contentLine1.append("\u001B[33m").append("█").append(firstLineObjective(objective)).append("\u001B[33m").append("█ ");
-        contentLine2.append("\u001B[33m").append("█").append(secondLineObjective(objective)).append("\u001B[33m").append("█ ");
-        contentLine3.append("\u001B[33m").append("█").append(thirdLineObjective(objective)).append("\u001B[33m").append("█ ");
-        buttonBorder.append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ ").append("\u001B[0m");
+        contentLine1.append("\u001B[33m").append("█").append(generateObjectiveLine1(objective)).append("\u001B[33m").append("█ ");
+        contentLine2.append("\u001B[33m").append("█").append(generateObjectiveLine2(objective)).append("\u001B[33m").append("█ ");
+        contentLine3.append("\u001B[33m").append("█").append(generateObjectiveLine3(objective)).append("\u001B[33m").append("█ ");
+        buttonBorder.append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ ").append(ANSI_RESET);
 
         topBorder.append("                                   ");
         contentLine1.append("                                   ");
@@ -363,10 +342,10 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         if(objectiveCards != null) {
             for (int i = 0; i < objectiveCards.length; i++) {
                 topBorder.append("\u001B[33m").append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀    ");
-                contentLine1.append("\u001B[33m").append("█").append(firstLineObjective(objectiveCards[i])).append("\u001B[33m").append("█    ");
-                contentLine2.append("\u001B[33m").append("█").append(secondLineObjective(objectiveCards[i])).append("\u001B[33m").append("█    ");
-                contentLine3.append("\u001B[33m").append("█").append(thirdLineObjective(objectiveCards[i])).append("\u001B[33m").append("█    ");
-                buttonBorder.append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄    ").append("\u001B[0m");
+                contentLine1.append("\u001B[33m").append("█").append(generateObjectiveLine1(objectiveCards[i])).append("\u001B[33m").append("█    ");
+                contentLine2.append("\u001B[33m").append("█").append(generateObjectiveLine2(objectiveCards[i])).append("\u001B[33m").append("█    ");
+                contentLine3.append("\u001B[33m").append("█").append(generateObjectiveLine3(objectiveCards[i])).append("\u001B[33m").append("█    ");
+                buttonBorder.append("\u001B[33m").append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄    ").append(ANSI_RESET);
 
             }
         }
@@ -378,86 +357,75 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         System.out.println("                        " + buttonBorder);
     }
 
-    private static String getGridLine1(Card card){
+    private static String generateGridLine1(Card card){
         if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
-            return getFirstGridLine(card, 1, true);
+            return generateGridFirstCardContent(card, 1, true);
         }
-        return cardColor(card) + "█                 █" + "\u001B[0m";
+        return cardColor(card) + "█                 █" + ANSI_RESET;
     }
-    private static String getGridLine2(Card card, int positionX, int positionY, PlayerGround ground){
+    private static String generateGridLine2(Card card, int positionX, int positionY, PlayerGround ground){
         if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
-            return getFirstGridLine(card, 2, true);
+            return generateGridFirstCardContent(card, 2, true);
         }
         if(card.getId() == -1){
             Position position = new Position(positionX,positionY);
             int value = findPosition(position, ground);
             if(value <10) {
-                return cardColor(card) + "█        "+ value +"        █" + "\u001B[0m";
+                return cardColor(card) + "█        "+ value +"        █" + ANSI_RESET;
             }
             if(value < 100){
-                return cardColor(card) + "█        "+ value +"       █" + "\u001B[0m";
+                return cardColor(card) + "█        "+ value +"       █" + ANSI_RESET;
             }
-            return cardColor(card) + "█       "+ value +"       █" + "\u001B[0m";
+            return cardColor(card) + "█       "+ value +"       █" + ANSI_RESET;
         }
         if (card.getFlip()) {
-            return cardColor(card) + "█        @        █" + "\u001B[0m";
+            return cardColor(card) + "█        @        █" + ANSI_RESET;
         }
-        return cardColor(card) + "█                 █" + "\u001B[0m";
+        return cardColor(card) + "█                 █" + ANSI_RESET;
     }
-    private static String getGridLine3(Card card){
+    private static String generateGridLine3(Card card){
         if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
-            return getFirstGridLine(card, 3, true);
+            return generateGridFirstCardContent(card, 3, true);
         }
         if(card.getId() == -1){
-            return cardColor(card) + "█                 █" + "\u001B[0m";
+            return cardColor(card) + "█                 █" + ANSI_RESET;
         }
-        return cardColor(card) + "█                 █" + "\u001B[0m";
+        return cardColor(card) + "█                 █" + ANSI_RESET;
     }
-    private static String getGridLine4(Card card, boolean state){
+    private static String generateGridLine4(Card card){
         if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
-            return getFirstGridLine(card, 4, state);
+            return generateGridFirstCardContent(card, 4, true);
         }
         if(card.getId() == -1){
-            return cardColor(card) + " ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ " + "\u001B[0m";
+            return cardColor(card) + " ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀ " + ANSI_RESET;
 
         }
-            if (state) {
-                return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
-            }
-            return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
-
-
+        return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀" + ANSI_RESET + cornerColor(card.getShowedCorners()[3]) + ANSI_RESET;
     }
 
-    private static String getGridLine5(Card card, boolean state){
+    private static String generateGridLine5(Card card){
         if(card == null) return "                   ";
         if(card.getId() >= 81 && card.getId() <= 86){
-            return getFirstGridLine(card, 4, state);
+            return generateGridFirstCardContent(card, 4, false);
         }
         if(card.getId() == -1){
-            return cardColor(card) + " ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + "\u001B[0m";
+            return cardColor(card) + " ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ " + ANSI_RESET;
         }
-            if (state) {
-                return cornerColor(card.getShowedCorners()[1]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
-            }
-            return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
-
-
+        return cornerColor(card.getShowedCorners()[0]) + cardColor(card) + "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄" + ANSI_RESET + cornerColor(card.getShowedCorners()[2]) + ANSI_RESET;
     }
 
 
-    private static String getFirstGridLine(Card card, int state, boolean status){
+    private static String generateGridFirstCardContent(Card card, int state, boolean status){
         StarterCard starterCard = (StarterCard) card;
         if(state == 1 && !starterCard.getFlip()){
             Corner corner = new Corner("top",starterCard.getBackRes().getFirst(), true);
             return "█        "+ cornerColor(corner) +"        █";
         }
         if(state == 2 && !starterCard.getFlip() && !starterCard.getBackRes().get(1).equals(BLANK)){
-            //return "█    first card    █
             Corner corner = new Corner("top",starterCard.getBackRes().get(1), true);
             return "█        "+ cornerColor(corner) +"        █";
         }
@@ -466,15 +434,15 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             return "█        "+ cornerColor(corner) +"        █";
         }
         if(state == 4 && !status){
-            return cornerColor(card.getShowedCorners()[0]) + "█████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[2]) + "\u001B[0m";
+            return cornerColor(card.getShowedCorners()[0]) + "█████████████████" + ANSI_RESET + cornerColor(card.getShowedCorners()[2]) + ANSI_RESET;
         }
         if(state == 4){
-            return cornerColor(card.getShowedCorners()[1]) + "█████████████████" + "\u001B[0m" + cornerColor(card.getShowedCorners()[3]) + "\u001B[0m";
+            return cornerColor(card.getShowedCorners()[1]) + "█████████████████" + ANSI_RESET + cornerColor(card.getShowedCorners()[3]) + ANSI_RESET;
         }
         return "█                 █";
     }
 
-    private static String firstLineObjective(ObjectiveCard objectiveCard){
+    private static String generateObjectiveLine1(ObjectiveCard objectiveCard){
         ScoreRule rule = objectiveCard.getRule();
         switch (rule.getName()){
             case "NSR", "OER" -> {
@@ -504,7 +472,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
 
     }
 
-    private static String secondLineObjective(ObjectiveCard objectiveCard){
+    private static String generateObjectiveLine2(ObjectiveCard objectiveCard){
         ScoreRule rule = objectiveCard.getRule();
         switch (rule.getName()){
             case "NSR" -> {
@@ -518,7 +486,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
                 return "      " + resource + "  " + resource + "  " + resource + "      ";
             }
             case "OER" -> {
-                return "\u001B[0m" + "     P   T   S     ";
+                return ANSI_RESET + "     P   T   S     ";
             }
             case "CR" -> {
                 CompositionRule compositionRule = (CompositionRule) rule;
@@ -533,7 +501,7 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         }
     }
 
-    private static String thirdLineObjective(ObjectiveCard objectiveCard){
+    private static String generateObjectiveLine3(ObjectiveCard objectiveCard){
         ScoreRule rule = objectiveCard.getRule();
         switch (rule.getName()){
             case "NSR", "OER" -> {
@@ -559,7 +527,8 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
             }
         }
     }
-    private static String cardContent(Card card){
+
+    private static String generateHandAndDeckLine1(Card card){
         if(card.getFlip()) return "                   ";
         switch (card.getRule().getName()){
             case "FR" -> {
@@ -590,7 +559,15 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
 
     }
 
-    private static String cardRequirements(PlayableCard card){
+    private static String generateHandAndDeckLine2(Card card){
+        if(card.getFlip()){
+            Corner corner = new Corner("top", card.getColor(), true);
+            return "         " + cornerColor(corner) + "         ";
+        }
+        return "                   ";
+    }
+
+    private static String generateHandAndDeckLine3(PlayableCard card){
         HashMap<Resource, Integer> map = card.getRequirements();
         StringBuilder result = new StringBuilder();
         int times = 0;
@@ -606,19 +583,11 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
                 }
             }
             if(times ==1){
-                return "       "+ result.toString() + "      ";
+                return "       "+ result + "      ";
             }
             else if(times == 2){
-                return "    "+ result.toString() + "   ";
+                return "    "+ result + "   ";
             }
-        }
-        return "                   ";
-    }
-
-    private static String cardResource(Card card){
-        if(card.getFlip()){
-            Corner corner = new Corner("top", card.getColor(), true);
-            return "         " + cornerColor(corner) + "         ";
         }
         return "                   ";
     }
@@ -668,32 +637,32 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         if(corner.getAvailability()) {
             switch (corner.getCornerRes()) {
                 case LEAF -> {
-                    return "\u001B[32m"+"@" + "\u001B[0m";
+                    return "\u001B[32m"+"@" + ANSI_RESET;
                 }
                 case BUG -> {
-                    return "\u001B[35m"+"@" + "\u001B[0m";
+                    return "\u001B[35m"+"@" + ANSI_RESET;
                 }
                 case FOX -> {
-                    return "\u001B[34m"+"@" + "\u001B[0m";
+                    return "\u001B[34m"+"@" + ANSI_RESET;
                 }
                 case MUSHROOM -> {
-                    return "\u001B[31m"+"@" + "\u001B[0m";
+                    return "\u001B[31m"+"@" + ANSI_RESET;
                 }
                 case PLUME -> {
-                    return "\u001B[0m"+"P";
+                    return ANSI_RESET+"P";
                 }
                 case POTION -> {
-                    return "\u001B[0m"+"T";
+                    return ANSI_RESET+"T";
                 }
                 case SCROLL -> {
-                    return "\u001B[0m"+"S";
+                    return ANSI_RESET+"S";
                 }
                 case null, default -> {
-                    return "\u001B[0m"+"@" + "\u001B[0m";
+                    return ANSI_RESET+"@" + ANSI_RESET;
                 }
             }
         }
-        return "\u001B[30m"+"@"+ "\u001B[0m";
+        return "\u001B[30m"+"@"+ ANSI_RESET;
     }
 
     public static int findPosition(Position position, PlayerGround ground) {
@@ -705,30 +674,4 @@ private static String printResourceLegend(int position, HashMap<Resource, Intege
         return 0;
     }
 
-
-    public static void main(String[] args) throws IOException, ParseException {
-
-        Random rand = new Random();
-        ParsingController pc = new ParsingController();
-        ArrayList<PlayableCard> cards = pc.parsingPlayableCards();
-        ArrayList<ObjectiveCard> objectiveCards = pc.createObjectiveCardsArray();
-        Deck resDeck = pc.createResDeck();
-        Deck goldDeck = pc.createGoldDeck();
-        PlayableCard[] handCards = new PlayableCard[3];
-        ObjectiveCard[] commonObj = new ObjectiveCard[2];
-        for(int i = 0; i < 3; i++){
-            handCards[i] = cards.get(rand.nextInt(cards.size()));
-        }
-        Hand hand = new Hand(handCards);
-        hand.setSecretObj(objectiveCards.get(rand.nextInt(objectiveCards.size())));
-        commonObj[0] = objectiveCards.get(rand.nextInt(objectiveCards.size()));
-        commonObj[1] = objectiveCards.get(rand.nextInt(objectiveCards.size()));
-        ObjectiveCard[] objectiveCardsArray = new ObjectiveCard[objectiveCards.size()];
-        objectiveCardsArray = objectiveCards.toArray(objectiveCardsArray);
-        resDeck.shuffle();
-        goldDeck.shuffle();
-        printObjectives(commonObj);
-        printHand(hand, objectiveCardsArray);
-        printObjectives(objectiveCardsArray);
-    }
 }

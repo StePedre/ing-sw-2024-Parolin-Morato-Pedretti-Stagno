@@ -145,7 +145,6 @@ public class MyClientSocket {
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         updateData();
         tui.Welcome(player);
-        tui.showGround(game,player);
         out.reset();
         boolean b =  (boolean) in.readObject();
         while(true){
@@ -160,7 +159,7 @@ public class MyClientSocket {
                     card = tui.inputCardToPlace(game,player);
                 }
                 out.writeObject(card);
-                out.writeObject(tui.inputCoordinates(player));
+                out.writeObject(tui.inputNumberPosition(player));
                 out.reset();
                 player = (Player) in.readObject();
                 if((boolean)in.readObject()){

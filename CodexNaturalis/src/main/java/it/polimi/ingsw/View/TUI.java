@@ -13,8 +13,6 @@ import java.util.*;
 public class TUI {
 
 
-    private static final String LOG_FILE_PATH = "debug.log";
-
     /**
      * Constructor of the class with no parameters.
      */
@@ -64,12 +62,12 @@ public class TUI {
      *                It is the list of game winners. It may be only one.
      */
     public void winnersPrint(ArrayList<Player> winners){
-        System.out.println("The game is over!");
+        System.out.println("\n                                                                                               The game is over!");
         if(winners.size()==1){
-            System.out.println("The winner is: " + winners.getFirst().getNickname());
+            System.out.println("\n                                                                                    The winner is: " + winners.getFirst().getNickname());
         }
         else{
-            System.out.println("It's a draw! The winners are:\n");
+            System.out.println("\n                                                                                          It's a draw! The winners are:\n");
             for(Player p: winners){
                 System.out.println(p.getNickname()+"\n");
             }
@@ -82,13 +80,13 @@ public class TUI {
      * toStringBackCorners (see such methods). The method also asks the player if they want to place the starter card
      * flipped or not, and returns the boolean value of the answer.
      *
-     * @param startcard is the player's StarterCard randomly chosen by the controller.
+     * @param starterCard is the player's StarterCard randomly chosen by the controller.
      * @return true if the player wants to place the starter card face down, false otherwise.
      */
-    public boolean showStarterCard(StarterCard startcard){
+    public boolean showStarterCard(StarterCard starterCard){
         System.out.println("\n                                                                                           Your first card is this:\n");
         System.out.println("                                                                                           1                        2");
-        AdvancedTUI_temp.printStartingCard(startcard);
+        TUIGraphicGenerator.printStartingCard(starterCard);
         System.out.println("\n                                                                           Do you want to place it to the front (1) or flipped (2)?\n");
         Scanner scanner = new Scanner(System.in);
         int choice;
@@ -116,7 +114,7 @@ public class TUI {
         int choice;
         System.out.println("\n                                                                                     Choose between two secret objectives:\n");
         System.out.println("                                                                                           1                        2");
-        AdvancedTUI_temp.printObjectives(new ObjectiveCard[]{obj1, obj2});
+        TUIGraphicGenerator.printObjectives(new ObjectiveCard[]{obj1, obj2});
         Scanner scanner = new Scanner(System.in);
         do {
             choice = scanner.nextInt();
@@ -126,11 +124,12 @@ public class TUI {
         return choice;
     }
 
-    public void printOtherGrounds(Game game, Player  player){
+
+    private void printOtherPlayersGrounds(Game game, Player  player){
         for(Player player1 : game.getPlayers()){
             if(!Objects.equals(player1.getNickname(), player.getNickname())){
                 System.out.println("\n                                                                               " + player1.getNickname() +" has " + player1.getPlayerGround().getPlayerScore() + " points. This is it's board:\n");
-                AdvancedTUI_temp.printGround(player1.getPlayerGround());
+                TUIGraphicGenerator.printGround(player1.getPlayerGround());
             }
         }
     }
@@ -153,14 +152,14 @@ public class TUI {
         Deck[] decks = game.getDecks();
         System.out.println("\n");
         System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
-        AdvancedTUI_temp.printDecks(decks[0], decks[1], "                        ");
+        TUIGraphicGenerator.printDecks(decks[0], decks[1], "                        ");
         System.out.println("\n");
-        AdvancedTUI_temp.printGround(player.getPlayerGround());
+        TUIGraphicGenerator.printGround(player.getPlayerGround());
         System.out.println("\n");
         System.out.println("                                                                                                    SECRET                                                  ");
         System.out.println("                                                    YOUR HAND:                                     OBJECTIVE                                                         COMMON OBJECTIVES:");
 
-        AdvancedTUI_temp.printHand(player.getHand(), game.getCommonObj());
+        TUIGraphicGenerator.printHand(player.getHand(), game.getCommonObj());
         System.out.println("\n                                                                   It's not your turn. You have to wait until the other players finish to play.\n");
     }
 
@@ -179,10 +178,10 @@ public class TUI {
         Deck[] decks = game.getDecks();
         System.out.println("\n");
         System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
-        AdvancedTUI_temp.printDecks(decks[0], decks[1], "                        ");
+        TUIGraphicGenerator.printDecks(decks[0], decks[1], "                        ");
         System.out.println("\n");
         System.out.println("\n                                                                                                YOU HAVE " + player.getPlayerGround().getPlayerScore() + " POINTS!\n");
-        AdvancedTUI_temp.printGround(player.getPlayerGround());
+        TUIGraphicGenerator.printGround(player.getPlayerGround());
         System.out.println("\n");
         return true;
     }
@@ -194,8 +193,8 @@ public class TUI {
      * @return desired position where to place the card.
      */
 
-    public Position inputCoordinates(Player player) {
-        AdvancedTUI_temp.printGround(player.getPlayerGround());
+    public Position inputNumberPosition(Player player) {
+        TUIGraphicGenerator.printGround(player.getPlayerGround());
         System.out.println("\n                                                              Where do you want to place the card? Insert the number of the corresponding position:\n");
         Scanner scanner = new Scanner(System.in);
         int position = -1;
@@ -244,7 +243,7 @@ public class TUI {
         }
 
         System.out.println("                                                                                           1                      2");
-        AdvancedTUI_temp.printCard(cardToPlay);
+        TUIGraphicGenerator.printCard(cardToPlay);
         System.out.println("\n                                                                                       To the front (1) or flipped (2)?");
 
         while (true) {
@@ -272,18 +271,57 @@ public class TUI {
     }
 
 
+
     /**
-     * The method implements the second part of a player's turn: the drawing section. The player can see the hand how
-     * many times he/she wants. When they finally choose to draw (input 2) the method chooseFromDecks() is invoked.
-     * See such method for further details.
-     * The return value of chooseFromDecks(), which is an integer, it's the number corresponding to the drawn card.
+     * The method implements the choice from decks when it's time to draw a card. There are 6 possibilities, since
+     * there are two decks (Resource deck and Golden deck) and both of them have two cards face up and one card face
+     * down (which is the top of the remaining deck).
      *
      * @param game is the instance of the game that is being played.
-     * @param player is the instance of the player who's playing.
-     * @return numeric choice corresponding to Playable Card drawn from Resource deck or Golden deck.
+     * @param player is the instance of the player that is drawing
+     * @return numeric choice corresponding to Playable Card drawn from Resource deck or Golden deck:
+     * - 0 is one out of two cards from Resource deck that are on the ground and facing up
+     * - 1 is the other card from Resource deck which is on the ground, facing up
+     * - 2 is the first face down card at the top of Resource deck
+     * - 3 same as 0 but from Golden deck
+     * - 4 same as 1 but from Golden deck
+     * - 5 same as 2 but from Golden deck
      */
+
     public int yourTurnDraw(Game game, Player player){
-        return chooseFromDecks(game, player);
+        Deck[] decks = game.getDecks();
+        TUIGraphicGenerator.printGround(player.getPlayerGround());
+        System.out.println("                                                                             SECRET");
+        System.out.println("                                         YOUR HAND:                         OBJECTIVE                                                         COMMON OBJECTIVES:");
+        TUIGraphicGenerator.printHand(player.getHand(), game.getCommonObj());
+        System.out.println("\n");
+        System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
+        System.out.println("                                  1                      2                      3                                              4                      5                      6");
+        TUIGraphicGenerator.printDecks(decks[0], decks[1], "                        ");
+        System.out.println("\n                                                              Choose a card to draw from the decks (1 to 6) or check other player's boards (7)\n");
+        Scanner scanner = new Scanner(System.in);
+        int choice = 0;
+        boolean valid = false;
+
+        do {
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+                if (choice >= 1 && choice <= 6) {
+                    valid = true;
+                } else if(choice == 7){
+                    printOtherPlayersGrounds(game, player);
+                    choice = yourTurnDraw(game, player);
+                    valid = true;
+                } else {
+                    System.out.println("                                                                            Invalid input. Please enter a number between 1 and 6.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("                                                                                Invalid input. Please enter a number between 1 and 6.");
+            }
+        } while (!valid);
+
+        return choice;
+
     }
 
     /**
@@ -296,106 +334,10 @@ public class TUI {
         System.out.println("                                                     YOUR HAND:                                     SECRET                                                  ");
         System.out.println("                                  1                      2                      3                  OBJECTIVE                                                         COMMON OBJECTIVES:");
 
-        AdvancedTUI_temp.printHand(player.getHand(), game.getCommonObj());
+        TUIGraphicGenerator.printHand(player.getHand(), game.getCommonObj());
         System.out.println("\n                                                                                     Choose a card in your hand to play (1 to 3):\n");
     }
 
-
-
-
-    /**
-     * The method builds and shows the player's ground as a matrix of 1 and 0: 1 if there is a card in the position
-     * identified by matrix coordinates, 0 otherwise. The method also shows the list of the current available positions.
-     *
-     * @param game is the instance of the game that is being played.
-     * @param player is the instance of the player whose ground needs to be displayed.
-     */
-    public void showGround(Game game, Player player){
-        ObjectiveCard[] commonObjs = game.getCommonObj();
-        System.out.println("                                                                                                       COMMON OBJECTIVES:");
-        AdvancedTUI_temp.printObjectives(commonObjs);
-
-        /*
-        Card[][] matrix = player.getPlayerGround().getGround();    // scrittura di una matrice 0 e 1 con 1 dove c'è una carta
-        int[][] matrixToPrint = new int[84][84];
-        for (int i = 0; i < 84; i++) {
-            for (int j = 0; j < 84; j++) {
-                if(matrix[i][j]==null){
-                    matrixToPrint[i][j] = 0;
-                }
-                else {
-                    matrixToPrint[i][j] = 1;
-                }
-            }
-        }
-        */
-        //stampa della matrice
-        System.out.println("Your play ground looks like this:\n");
-        AdvancedTUI_temp.printGround(player.getPlayerGround());
-        /*
-        for (int i = 0; i < 84; i++) {
-            for (int j = 0; j < 84; j++) {
-                System.out.print(matrixToPrint[i][j] + " ");
-            }
-            System.out.println();
-        } */
-
-        // stampa available positions
-        System.out.println("This is the list of positions where it is possible to place a card:\n");
-        for (Position pos: player.getPlayerGround().getAvailablePositions()) {
-            System.out.println("(" + pos.getX()+", " + pos.getY() + ") ");
-        }
-
-    }
-
-    /**
-     * The method implements the choice from decks when it's time to draw a card. There are 6 possibilities, since
-     * there are two decks (Resource deck and Golden deck) and both of them have two cards face up and one card face
-     * down (which is the top of the remaining deck).
-     *
-     * @param game is the instance of the game that is being played.
-     * @return numeric choice corresponding to Playable Card drawn from Resource deck or Golden deck:
-     * - 0 is one out of two cards from Resource deck that are on the ground and facing up
-     * - 1 is the other card from Resource deck which is on the ground, facing up
-     * - 2 is the first face down card at the top of Resource deck
-     * - 3 same as 0 but from Golden deck
-     * - 4 same as 1 but from Golden deck
-     * - 5 same as 2 but from Golden deck
-     */
-    public int chooseFromDecks(Game game, Player player){
-        Deck[] decks = game.getDecks();
-        AdvancedTUI_temp.printGround(player.getPlayerGround());
-        System.out.println("                                                                             SECRET");
-        System.out.println("                                         YOUR HAND:                         OBJECTIVE                                                         COMMON OBJECTIVES:");
-        AdvancedTUI_temp.printHand(player.getHand(), game.getCommonObj());
-        System.out.println("\n");
-        System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
-        System.out.println("                                  1                      2                      3                                              4                      5                      6");
-        AdvancedTUI_temp.printDecks(decks[0], decks[1], "                        ");
-        System.out.println("\n                                                              Choose a card to draw from the decks (1 to 6) or check other player's boards (7)\n");
-        Scanner scanner = new Scanner(System.in);
-        int choice = 0;
-        boolean valid = false;
-
-        do {
-            try {
-                choice = Integer.parseInt(scanner.nextLine());
-                if (choice >= 1 && choice <= 6) {
-                    valid = true;
-                } else if(choice == 7){
-                    printOtherGrounds(game, player);
-                    choice = chooseFromDecks(game, player);
-                    valid = true;
-                } else {
-                    System.out.println("                                                                            Invalid input. Please enter a number between 1 and 6.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("                                                                                Invalid input. Please enter a number between 1 and 6.");
-            }
-        } while (!valid);
-
-        return choice;
-    }
 
 
     public void showRoom(ArrayList<Room> rooms){
@@ -404,9 +346,11 @@ public class TUI {
         }
         else{
             System.out.println("These are the available rooms to play in:\n");
-            AdvancedTUI_temp.printRoomsTable(rooms);
+            TUIGraphicGenerator.printRoomsTable(rooms);
         }
     }
+
+
     public boolean chooseRoom() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("1. Create a room");
@@ -431,6 +375,8 @@ public class TUI {
 
         return choice == 1;
     }
+
+
     public String getRoomName(boolean b, ArrayList<Room> rooms){
         Scanner s = new Scanner(System.in);
         boolean nameOk = true;
@@ -467,9 +413,12 @@ public class TUI {
         return name;
     }
 
+
+
     public void playerJoined(Player player){
         System.out.println("Player " + player.getNickname() + " has joined the room");
     }
+
 
     public String chooseColor(Set<String> colors){
         System.out.println("Choose a color: ");
