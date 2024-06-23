@@ -380,38 +380,6 @@ public class PlayerGround implements Serializable {
     }
 
     /**
-     * This method
-     */
-    public void updateMissingNumbers() {
-        if (availableNumbers == null || availableNumbers.isEmpty()) {
-            return;
-        }
-        boolean missingNumbersExist = true;
-
-        while (missingNumbersExist) {
-            missingNumbersExist = false;
-            List<Integer> keys = new ArrayList<>(availableNumbers.keySet());
-            Collections.sort(keys);
-            int missingNumber = -1;
-            for (int i = 0; i < keys.size() - 1; i++) {
-                if (keys.get(i + 1) != keys.get(i) + 1) {
-                    missingNumber = keys.get(i) + 1;
-                    break;
-                }
-            }
-            if (missingNumber != -1) {
-                int highestNumber = keys.getLast();
-                Position highestPosition = availableNumbers.get(highestNumber);
-                availableNumbers.put(missingNumber, highestPosition);
-                availableNumbers.remove(highestNumber);
-                missingNumbersExist = true;
-            }
-        }
-    }
-
-
-
-    /**
      * The method is used to remove from the total resource count the resource on a card's corner (previously placed)
      * covered by a card added in the position passed as a parameter. For each of the four possible positions around
      * the placePosition, it gets the corresponding card and, if not null, it calculates the index of the
@@ -450,6 +418,40 @@ public class PlayerGround implements Serializable {
      * @param i the value of the score of the player to be set.
      */
     public void setPlayerScore(int i) { this.playerScore=i;}
+
+    /**
+     * This method updates the list of available numbers used to display the correct available position in which a player
+     * can place a card.
+     * If a number is missing in the list, it is added and all the numbers greater than that will be scaled down in order
+     * to get a sorted list of numbers.
+     * e.g.: if the list is (1,2,4,6,7) the updated list will be (1,2,3,4,5).
+     */
+    public void updateMissingNumbers() {
+        if (availableNumbers == null || availableNumbers.isEmpty()) {
+            return;
+        }
+        boolean missingNumbersExist = true;
+
+        while (missingNumbersExist) {
+            missingNumbersExist = false;
+            List<Integer> keys = new ArrayList<>(availableNumbers.keySet());
+            Collections.sort(keys);
+            int missingNumber = -1;
+            for (int i = 0; i < keys.size() - 1; i++) {
+                if (keys.get(i + 1) != keys.get(i) + 1) {
+                    missingNumber = keys.get(i) + 1;
+                    break;
+                }
+            }
+            if (missingNumber != -1) {
+                int highestNumber = keys.getLast();
+                Position highestPosition = availableNumbers.get(highestNumber);
+                availableNumbers.put(missingNumber, highestPosition);
+                availableNumbers.remove(highestNumber);
+                missingNumbersExist = true;
+            }
+        }
+    }
 
     /**
      * The method increases by one more than one resource type at the same time.
