@@ -18,7 +18,7 @@ import java.util.Objects;
  * The json file contains all the cards from Codex Naturalis and all their features. Methods are documented below.
  */
 public class ParsingController {
-    private final String filePath = "src/main/java/it/polimi/ingsw/Resources/carte.json";
+    private final String filePath = "src/main/resources/Resources/carte.json";
 
     /**
      * The method adds a requirement (of a specific Resource) to the map that stores all the requirements for a card.
