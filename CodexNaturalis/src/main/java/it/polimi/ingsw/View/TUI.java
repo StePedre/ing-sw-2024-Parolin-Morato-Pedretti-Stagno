@@ -10,28 +10,13 @@ import java.util.*;
  * Interactions are made through standard output (print on screen) and standard input (keyboard).
  * Methods from TUI class are invoked by clients both in RMI and socket implementation.
  */
-public class TUI {
 
+public class TUI {
 
     /**
      * Constructor of the class with no parameters.
      */
     public TUI(){}
-
-    /**
-     * The method asks for the client's nickname and returns it as a string.
-     *
-     * @return input nickname.
-     */
-    public String insertNickname(boolean choice){
-        if(choice) {
-            System.out.println("Insert your nickname, please: ");
-        }else{
-            System.out.println("Insert a valid nickname , please: ");
-        }
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
-    }
 
     /**
      * The method asks for the number of players that will be in the game. It should only be invoked
@@ -46,59 +31,24 @@ public class TUI {
     }
 
     /**
-     * The method prints a welcome message to the player passed as a parameter.
+     * This method allows a player to choose a preferred color from the remaining colors.
+     * If a color is already selected, a message telling that is displayed.
      *
-     * @param player gets the message.
+     * @param colors is the list od available colors in the game.
+     * @return a string corresponding to the selected color.
      */
-    public void Welcome(Player player) {
-        System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n"+"Please wait for others player");
-    }
-
-    /**
-     * When the game is over, this method prints the name(s) of the winner(s).
-     * To better understand the possibility of multiple winners, see Game.finish().
-     *
-     * @param winners is passed by the controller, which gets it from invoking game.finish().
-     *                It is the list of game winners. It may be only one.
-     */
-    public void winnersPrint(ArrayList<Player> winners){
-        System.out.println("\n                                                                                               The game is over!");
-        if(winners.size()==1){
-            System.out.println("\n                                                                                    The winner is: " + winners.getFirst().getNickname());
+    public String chooseColor(Set<String> colors){
+        System.out.println("Choose a color: ");
+        for(String s : colors){
+            System.out.println(s);
         }
-        else{
-            System.out.println("\n                                                                                          It's a draw! The winners are:\n");
-            for(Player p: winners){
-                System.out.println(p.getNickname()+"\n");
-            }
+        Scanner s = new Scanner(System.in);
+        String color = s.nextLine();
+        while (!colors.contains(color)){
+            System.out.println("Wrong color. Type a valid color");
+            color = s.nextLine();
         }
-
-    }
-
-    /**
-     * The method shows to a player its starting card, which is random, through the method showCard and
-     * toStringBackCorners (see such methods). The method also asks the player if they want to place the starter card
-     * flipped or not, and returns the boolean value of the answer.
-     *
-     * @param starterCard is the player's StarterCard randomly chosen by the controller.
-     * @return true if the player wants to place the starter card face down, false otherwise.
-     */
-    public boolean showStarterCard(StarterCard starterCard){
-        System.out.println("\n                                                                                           Your first card is this:\n");
-        System.out.println("                                                                                           1                        2");
-        TUIGraphicGenerator.printStartingCard(starterCard);
-        System.out.println("\n                                                                           Do you want to place it to the front (1) or flipped (2)?\n");
-        Scanner scanner = new Scanner(System.in);
-        int choice;
-        boolean flag = false;
-        do {
-            choice = scanner.nextInt();
-            if(choice == 1){
-                flag = true;
-            }
-            scanner.nextLine();
-        } while(!(choice == 1 || choice == 2));
-        return flag;
+        return color;
     }
 
     /**
@@ -124,98 +74,81 @@ public class TUI {
         return choice;
     }
 
-
-    private void printOtherPlayersGrounds(Game game, Player  player){
-        for(Player player1 : game.getPlayers()){
-            if(!Objects.equals(player1.getNickname(), player.getNickname())){
-                System.out.println("\n                                                                               " + player1.getNickname() +" has " + player1.getPlayerGround().getPlayerScore() + " points. This is it's board:\n");
-                TUIGraphicGenerator.printGround(player1.getPlayerGround());
-            }
-        }
-    }
-
-
- // aggiungere un while (nel client) che lo fa andare finchè non è il proprio turno
-
     /**
-     * The method allows a player (who is waiting for others to finish their turns) to check and see their hands,
-     * their playground, which contains the secret objective, and every card on the ground. This can happen through
-     * a menu with numeric options. Other methods are invoked to:
-     * - see player's hand: showHand();
-     * - see playground: showGround(game, player);
-     * - see a card on the ground: showCard(card).
+     * This method asks the player what they want to do regarding the room: 1 means the player wants to create a new room,
+     * 2 means the player wants to join an already existing room.
      *
-     * @param game   is the instance of the game that is being played.
-     * @param player is the instance of the player who's waiting.
+     * @return a boolean associated with the choice made by the player.
      */
-    public void notYourTurn(Game game, Player  player){
-        Deck[] decks = game.getDecks();
-        System.out.println("\n");
-        System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
-        TUIGraphicGenerator.printDecks(decks[0], decks[1], "                        ");
-        System.out.println("\n");
-        TUIGraphicGenerator.printGround(player.getPlayerGround());
-        System.out.println("\n");
-        System.out.println("                                                                                                    SECRET                                                  ");
-        System.out.println("                                                    YOUR HAND:                                     OBJECTIVE                                                         COMMON OBJECTIVES:");
-
-        TUIGraphicGenerator.printHand(player.getHand(), game.getCommonObj());
-        System.out.println("\n                                                                   It's not your turn. You have to wait until the other players finish to play.\n");
-    }
-
-    /**
-     * The method implements the first part of a player's turn. As in notYourTurn, this method allows to check multiple
-     * times the hand, the playground, which contains the secret objective, and every card on the ground.
-     * When the choice is 4, which is "play card", there are no more choices available: the method ends, and it should
-     * be followed by invocation of inputCoordinates() and inputCardToPlace();
-     *
-     * @param game is the instance of the game that is being played.
-     * @param player is the instance of the player whose turn it is.
-     * @exception IllegalStateException arises when an input error occurs.
-     */
-    public boolean yourTurnPlay(Game game, Player player){
-
-        Deck[] decks = game.getDecks();
-        System.out.println("\n");
-        System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
-        TUIGraphicGenerator.printDecks(decks[0], decks[1], "                        ");
-        System.out.println("\n");
-        System.out.println("\n                                                                                                YOU HAVE " + player.getPlayerGround().getPlayerScore() + " POINTS!\n");
-        TUIGraphicGenerator.printGround(player.getPlayerGround());
-        System.out.println("\n");
-        return true;
-    }
-
-    /**
-     * The method asks the player where to place the card. The client needs to input coordinates x and y to identify
-     * a specific position on the play ground, seen as a matrix.
-     *
-     * @return desired position where to place the card.
-     */
-
-    public Position inputNumberPosition(Player player) {
-        TUIGraphicGenerator.printGround(player.getPlayerGround());
-        System.out.println("\n                                                              Where do you want to place the card? Insert the number of the corresponding position:\n");
+    public boolean chooseRoom() {
         Scanner scanner = new Scanner(System.in);
-        int position = -1;
+        System.out.println("1. Create a room");
+        System.out.println("2. Join an existing room");
+        System.out.print("Enter your choice (1 or 2): ");
 
+        int choice = 0;
         while (true) {
             try {
-                position = Integer.parseInt(scanner.nextLine().trim());
-
-                if (position > 0 && position <= player.getPlayerGround().getAvailablePositions().size()) {
-                    break; // Valid position entered, exit loop
+                choice = Integer.parseInt(scanner.nextLine().trim());
+                if (choice == 1 || choice == 2) {
+                    break; // Valid choice entered, exit loop
                 } else {
-                    System.out.println("                                                                                   Please enter a valid position number.");
+                    System.out.println("Invalid choice. Please enter 1 or 2.");
+                    System.out.print("Enter your choice (1 or 2): ");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("                                                                                     Invalid input. Please enter a valid number.");
+                System.out.println("Invalid input. Please enter 1 or 2.");
+                System.out.print("Enter your choice (1 or 2): ");
             }
         }
 
-        // Retrieve and return the corresponding Position object
-        Map<Integer, Position> availableNumbers = player.getPlayerGround().getAvailableNumbers();
-        return new Position(availableNumbers.get(position).getX(), availableNumbers.get(position).getY());
+        return choice == 1;
+    }
+
+    /**
+     * This method gets the name of a room.
+     * Depending on the value of the boolean b (true means create a new room, false means join an existing one), the
+     * method asks the player to insert the name of the room to be created, or asks the name of which room they want to join.
+     * In both cases, a check on the validity of the name is done.
+     *
+     * @param b is the boolean that tells the decision of the player to create or join a room.
+     * @param rooms is the list of rooms already created.
+     * @return the name of the room.
+     */
+    public String getRoomName(boolean b, ArrayList<Room> rooms){
+        Scanner s = new Scanner(System.in);
+        boolean nameOk = true;
+        String name;
+        if(b){
+            do{
+                System.out.println("What is the name of the new room?");
+                name = s.nextLine();
+                for(Room r : rooms){
+                    if(name.equals(r.getName())){
+                        System.out.println("Please, enter a name that is not already taken");
+                        nameOk = false;
+                        break;
+                    }
+                }
+            } while(!nameOk);
+        }
+        else{
+            boolean check = false;
+            do{
+                System.out.println("Which room?");
+                name = s.nextLine();
+                for(Room r : rooms){
+                    if(name.equals(r.getName())){
+                        check = true;
+                    }
+                }
+                if(!check){
+                    System.out.println("Please enter a valid room name");
+                    nameOk = false;
+                }
+            } while(!nameOk);
+        }
+        return name;
     }
 
     /**
@@ -226,7 +159,6 @@ public class TUI {
      * @param player is the instance of the player who's playing.
      * @return the Playable Card to be placed, which is chosen from the player's hand.
      */
-
     public PlayableCard inputCardToPlace(Game game, Player player) {
         showHand(game, player);
         PlayableCard cardToPlay = null;
@@ -270,24 +202,203 @@ public class TUI {
         return cardToPlay;
     }
 
+    /**
+     * The method asks the player where to place the card. The client needs to input coordinates x and y to identify
+     * a specific position on the play ground, seen as a matrix.
+     *
+     * @return desired position where to place the card.
+     */
+    public Position inputNumberPosition(Player player) {
+        TUIGraphicGenerator.printGround(player.getPlayerGround());
+        System.out.println("\n                                                              Where do you want to place the card? Insert the number of the corresponding position:\n");
+        Scanner scanner = new Scanner(System.in);
+        int position = -1;
 
+        while (true) {
+            try {
+                position = Integer.parseInt(scanner.nextLine().trim());
+
+                if (position > 0 && position <= player.getPlayerGround().getAvailablePositions().size()) {
+                    break; // Valid position entered, exit loop
+                } else {
+                    System.out.println("                                                                                   Please enter a valid position number.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("                                                                                     Invalid input. Please enter a valid number.");
+            }
+        }
+
+        // Retrieve and return the corresponding Position object
+        Map<Integer, Position> availableNumbers = player.getPlayerGround().getAvailableNumbers();
+        return new Position(availableNumbers.get(position).getX(), availableNumbers.get(position).getY());
+    }
+
+    /**
+     * The method asks for the client's nickname and returns it as a string.
+     *
+     * @return input nickname.
+     */
+    public String insertNickname(boolean choice){
+        if(choice) {
+            System.out.println("Insert your nickname, please: ");
+        }else{
+            System.out.println("Insert a valid nickname , please: ");
+        }
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
+
+    /**
+     * The method allows a player (who is waiting for others to finish their turns) to check and see their hands,
+     * their playground, which contains the secret objective, and every card on the ground. This can happen through
+     * a menu with numeric options. Other methods are invoked to:
+     * - see player's hand: showHand();
+     * - see playground: showGround(game, player);
+     * - see a card on the ground: showCard(card).
+     *
+     * @param game is the instance of the game that is being played.
+     * @param player is the instance of the player who's waiting.
+     */
+    public void notYourTurn(Game game, Player  player){
+        Deck[] decks = game.getDecks();
+        System.out.println("\n");
+        System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
+        TUIGraphicGenerator.printDecks(decks[0], decks[1], "                        ");
+        System.out.println("\n");
+        TUIGraphicGenerator.printGround(player.getPlayerGround());
+        System.out.println("\n");
+        System.out.println("                                                                                                    SECRET                                                  ");
+        System.out.println("                                                    YOUR HAND:                                     OBJECTIVE                                                         COMMON OBJECTIVES:");
+
+        TUIGraphicGenerator.printHand(player.getHand(), game.getCommonObj());
+        System.out.println("\n                                                                   It's not your turn. You have to wait until the other players finish to play.\n");
+    }
+
+    /**
+     * This method prints a message telling a player has joined a room.
+     *
+     * @param player is the player whose name is printed.
+     */
+    public void playerJoined(Player player){
+        System.out.println("Player " + player.getNickname() + " has joined the room");
+    }
+
+    /**
+     * This method prints the other player's playground by invoking the printGround method on the TUIGraphicGenerator.
+     *
+     * @param game is the game in which to find the player.
+     * @param player is the player whose playground need to be printed.
+     */
+    private void printOtherPlayersGrounds(Game game, Player  player){
+        for(Player player1 : game.getPlayers()){
+            if(!Objects.equals(player1.getNickname(), player.getNickname())){
+                System.out.println("\n                                                                               " + player1.getNickname() +" has " + player1.getPlayerGround().getPlayerScore() + " points. This is it's board:\n");
+                TUIGraphicGenerator.printGround(player1.getPlayerGround());
+            }
+        }
+    }
+
+    /**
+     * The method shows each playable card of the hand (there are three of them) plus the secret objective. It also
+     * prints a legend with the acronym of each ScoreRule.
+     *
+     * @param player is the instance of the player who's waiting or playing.
+     */
+    public void showHand(Game game, Player player){
+        System.out.println("                                                     YOUR HAND:                                     SECRET                                                  ");
+        System.out.println("                                  1                      2                      3                  OBJECTIVE                                                         COMMON OBJECTIVES:");
+
+        TUIGraphicGenerator.printHand(player.getHand(), game.getCommonObj());
+        System.out.println("\n                                                                                     Choose a card in your hand to play (1 to 3):\n");
+    }
+
+    /**
+     * This method shows all the rooms available by invoking the printRoomsTable on the TUIGraphicGenerator.
+     * If the list of Room is empty, it prints a message telling that.
+     *
+     * @param rooms is the list of rooms to print.
+     */
+    public void showRoom(ArrayList<Room> rooms){
+        if(rooms.isEmpty()){
+            System.out.println("\nNo room is available!:\n");
+        }
+        else{
+            System.out.println("These are the available rooms to play in:\n");
+            TUIGraphicGenerator.printRoomsTable(rooms);
+        }
+    }
+
+    /**
+     * The method shows to a player its starting card, which is random, through the method showCard and
+     * toStringBackCorners (see such methods). The method also asks the player if they want to place the starter card
+     * flipped or not, and returns the boolean value of the answer.
+     *
+     * @param starterCard is the player's StarterCard randomly chosen by the controller.
+     * @return true if the player wants to place the starter card face down, false otherwise.
+     */
+    public boolean showStarterCard(StarterCard starterCard){
+        System.out.println("\n                                                                                           Your first card is this:\n");
+        System.out.println("                                                                                           1                        2");
+        TUIGraphicGenerator.printStartingCard(starterCard);
+        System.out.println("\n                                                                           Do you want to place it to the front (1) or flipped (2)?\n");
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        boolean flag = false;
+        do {
+            choice = scanner.nextInt();
+            if(choice == 1){
+                flag = true;
+            }
+            scanner.nextLine();
+        } while(!(choice == 1 || choice == 2));
+        return flag;
+    }
+
+    /**
+     * The method prints a welcome message to the player passed as a parameter.
+     *
+     * @param player gets the message.
+     */
+    public void Welcome(Player player) {
+        System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n"+"Please wait for others player");
+    }
+
+    /**
+     * When the game is over, this method prints the name(s) of the winner(s).
+     * To better understand the possibility of multiple winners, see Game.finish().
+     *
+     * @param winners is passed by the controller, which gets it from invoking game.finish().
+     *                It is the list of game winners. It may be only one.
+     */
+    public void winnersPrint(ArrayList<Player> winners){
+        System.out.println("\n                                                                                               The game is over!");
+        if(winners.size()==1){
+            System.out.println("\n                                                                                    The winner is: " + winners.getFirst().getNickname());
+        }
+        else{
+            System.out.println("\n                                                                                          It's a draw! The winners are:\n");
+            for(Player p: winners){
+                System.out.println(p.getNickname()+"\n");
+            }
+        }
+
+    }
 
     /**
      * The method implements the choice from decks when it's time to draw a card. There are 6 possibilities, since
      * there are two decks (Resource deck and Golden deck) and both of them have two cards face up and one card face
      * down (which is the top of the remaining deck).
-     *
-     * @param game is the instance of the game that is being played.
-     * @param player is the instance of the player that is drawing
-     * @return numeric choice corresponding to Playable Card drawn from Resource deck or Golden deck:
      * - 0 is one out of two cards from Resource deck that are on the ground and facing up
      * - 1 is the other card from Resource deck which is on the ground, facing up
      * - 2 is the first face down card at the top of Resource deck
      * - 3 same as 0 but from Golden deck
      * - 4 same as 1 but from Golden deck
      * - 5 same as 2 but from Golden deck
+     *
+     * @param game is the instance of the game that is being played.
+     * @param player is the instance of the player that is drawing
+     * @return numeric choice corresponding to Playable Card drawn from Resource deck or Golden deck:
      */
-
     public int yourTurnDraw(Game game, Player player){
         Deck[] decks = game.getDecks();
         TUIGraphicGenerator.printGround(player.getPlayerGround());
@@ -325,112 +436,40 @@ public class TUI {
     }
 
     /**
-     * The method shows each playable card of the hand (there are three of them) plus the secret objective. It also
-     * prints a legend with the acronym of each ScoreRule.
+     * The method implements the first part of a player's turn. As in notYourTurn, this method allows to check multiple
+     * times the hand, the playground, which contains the secret objective, and every card on the ground.
+     * When the choice is 4, which is "play card", there are no more choices available: the method ends, and it should
+     * be followed by invocation of inputCoordinates() and inputCardToPlace();
      *
-     * @param player is the instance of the player who's waiting or playing.
+     * @param game is the instance of the game that is being played.
+     * @param player is the instance of the player whose turn it is.
      */
-    public void showHand(Game game, Player player){
-        System.out.println("                                                     YOUR HAND:                                     SECRET                                                  ");
-        System.out.println("                                  1                      2                      3                  OBJECTIVE                                                         COMMON OBJECTIVES:");
+    public boolean yourTurnPlay(Game game, Player player){
 
-        TUIGraphicGenerator.printHand(player.getHand(), game.getCommonObj());
-        System.out.println("\n                                                                                     Choose a card in your hand to play (1 to 3):\n");
+        Deck[] decks = game.getDecks();
+        System.out.println("\n");
+        System.out.println("                                                   RESOURCE DECK:                                                                                 GOLD DECK:");
+        TUIGraphicGenerator.printDecks(decks[0], decks[1], "                        ");
+        System.out.println("\n");
+        System.out.println("\n                                                                                                YOU HAVE " + player.getPlayerGround().getPlayerScore() + " POINTS!\n");
+        TUIGraphicGenerator.printGround(player.getPlayerGround());
+        System.out.println("\n");
+        return true;
     }
 
 
 
-    public void showRoom(ArrayList<Room> rooms){
-        if(rooms.isEmpty()){
-            System.out.println("\nNo room is available!:\n");
-        }
-        else{
-            System.out.println("These are the available rooms to play in:\n");
-            TUIGraphicGenerator.printRoomsTable(rooms);
-        }
-    }
-
-
-    public boolean chooseRoom() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("1. Create a room");
-        System.out.println("2. Join an existing room");
-        System.out.print("Enter your choice (1 or 2): ");
-
-        int choice = 0;
-        while (true) {
-            try {
-                choice = Integer.parseInt(scanner.nextLine().trim());
-                if (choice == 1 || choice == 2) {
-                    break; // Valid choice entered, exit loop
-                } else {
-                    System.out.println("Invalid choice. Please enter 1 or 2.");
-                    System.out.print("Enter your choice (1 or 2): ");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter 1 or 2.");
-                System.out.print("Enter your choice (1 or 2): ");
-            }
-        }
-
-        return choice == 1;
-    }
-
-
-    public String getRoomName(boolean b, ArrayList<Room> rooms){
-        Scanner s = new Scanner(System.in);
-        boolean nameOk = true;
-        String name;
-        if(b){
-            do{
-                System.out.println("What is the name of the new room?");
-                name = s.nextLine();
-                for(Room r : rooms){
-                    if(name.equals(r.getName())){
-                        System.out.println("Please, enter a name that is not already taken");
-                        nameOk = false;
-                        break;
-                    }
-                }
-            } while(!nameOk);
-        }
-        else{
-            boolean check = false;
-            do{
-                System.out.println("Which room?");
-                name = s.nextLine();
-                for(Room r : rooms){
-                    if(name.equals(r.getName())){
-                        check = true;
-                    }
-                }
-                if(!check){
-                    System.out.println("Please enter a valid room name");
-                    nameOk = false;
-                }
-            } while(!nameOk);
-        }
-        return name;
-    }
 
 
 
-    public void playerJoined(Player player){
-        System.out.println("Player " + player.getNickname() + " has joined the room");
-    }
 
 
-    public String chooseColor(Set<String> colors){
-        System.out.println("Choose a color: ");
-        for(String s : colors){
-            System.out.println(s);
-        }
-        Scanner s = new Scanner(System.in);
-        String color = s.nextLine();
-        while (!colors.contains(color)){
-            System.out.println("Wrong color. Type a valid color");
-            color = s.nextLine();
-        }
-        return color;
-    }
+
+
+
+
+
+
+
+
 }
