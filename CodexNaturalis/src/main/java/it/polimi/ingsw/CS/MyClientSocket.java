@@ -54,9 +54,7 @@ public class MyClientSocket {
         try {
             System.out.println("Client connected");
             if(inter) {
-                System.out.println("Write the IP of the server");
-                Scanner s = new Scanner(System.in);
-                useTUI(59090, s.nextLine());
+                useTUI(59090);
             }else{
                 useGUI();
             }
@@ -99,13 +97,13 @@ public class MyClientSocket {
      * and ObjectInputStream.
      *
      * @param port is the port number of the server.
-     * @param host is the IP address of the server.
      * @throws IOException if there has been problems regarding input or output.
      * @throws ClassNotFoundException if there has been problems regarding the cast of an Object.
      * @throws InterruptedException if there has been problems during the activity of a thread.
      */
-    public void useTUI(int port, String host) throws IOException, ClassNotFoundException, InterruptedException {
+    public void useTUI(int port) throws IOException, ClassNotFoundException, InterruptedException {
         tui= new TUI();
+        String host = tui.inputIP();
         socket = new Socket(InetAddress.getByName(host), port);
         in = new ObjectInputStream(socket.getInputStream());
         out = new ObjectOutputStream(socket.getOutputStream());

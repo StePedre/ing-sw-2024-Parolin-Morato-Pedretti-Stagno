@@ -2,6 +2,8 @@ package it.polimi.ingsw.View;
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 
 /**
@@ -461,10 +463,40 @@ public class TUI {
         return true;
     }
 
+    public void lastTurn(){
+        System.out.println("\n                                                                                                            This is the last turn!");
+    }
 
+    public String inputIP() {
+        Scanner s = new Scanner(System.in);
+        String ip;
+        while (true) {
+            System.out.print("Write the IP of the server: ");
+            ip = s.nextLine();
+            if (isValidIPAddress(ip)) {
+                try {
+                    InetAddress inet = InetAddress.getByName(ip);
+                    if (inet.isReachable(5000)) {
+                        break;
+                    } else {
+                        System.out.println("IP address not reachable.");
+                    }
+                } catch (UnknownHostException e) {
+                    System.out.println("Invalid IP address format.");
+                } catch (Exception e) {
+                    System.out.println("Error checking IP address reachability.");
+                }
+            } else {
+                System.out.println("Invalid IP address format.");
+            }
+        }
+        return ip;
+    }
 
-
-
+    private boolean isValidIPAddress(String ip) {
+        String ipPattern = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        return ip.matches(ipPattern);
+    }
 
 
 

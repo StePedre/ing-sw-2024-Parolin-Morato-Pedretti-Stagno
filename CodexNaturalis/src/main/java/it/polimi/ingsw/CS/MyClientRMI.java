@@ -195,8 +195,9 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      * @throws InvalidPositionException if the position of the card does not belong to available positions set.
      * @throws MissingResourcesException if there are not the available resources to play that card.
      */
-    public void runClient() throws IOException, InvalidPositionException, MissingResourcesException {
-        System.out.println("Client connected");
+    public void runClient( TUI tui) throws IOException, InvalidPositionException, MissingResourcesException {
+        startServerCheckerThread();
+        this.tui = tui;
         useTUI();
     }
 
@@ -206,6 +207,33 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
 
     public void terminateClient() throws RemoteException {
         System.exit(0);
+    }
+
+    private void startServerCheckerThread() {
+        Thread checkerThread = new Thread(() -> {
+            while (true) {
+                try {
+                    server.ping();
+                } catch (RemoteException e) {
+                    System.out.println("\nServer is not responding, disconnecting...");
+                    try {
+                        terminateClient();
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    System.err.println("Thread interrupted: " + e.getMessage());
+                    break;
+                }
+            }
+        });
+
+        checkerThread.setDaemon(true);
+        checkerThread.start();
     }
 
     /**
@@ -314,7 +342,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      * @throws MissingResourcesException if there are not the available resources to play that card.
      */
     private void useTUI() throws IOException, InvalidPositionException, MissingResourcesException {
-        tui = new TUI();
         tui.showRoom(server.showRooms());
         if(tui.chooseRoom()){
             roomJoined = controlRoom(true, server.getRoomController().getRooms());
@@ -334,7 +361,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             };
             Player player = server.addNewPlayer(nickname, roomJoined);
             server.setPlayerColor(color, nickname, roomJoined);
-            //server.deregisterClient(this);
             tui.Welcome(player);
             listenToPlayers();
             System.out.println("All players have joined, lets start the game!");

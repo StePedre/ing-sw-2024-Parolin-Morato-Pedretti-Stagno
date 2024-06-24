@@ -60,8 +60,6 @@ public class GUIrmi extends Application {
     String nickname = "";
     private ServerRMIInterface guiServerRMI;
 
-    private MyClientRMI client;
-
     /**
      * This method displays the initialize player ground scene, where the starter card is placed in the center of the
      * board and the names of the other players are added.
@@ -481,7 +479,8 @@ public class GUIrmi extends Application {
                 boolean[] flag = {false};
                 controller.getConfirmColor().setOnAction(e->{
                     try {
-                        if (guiServerRMI.setPlayerColor(choice[0], nickname, roomName)) {
+
+                        if (!guiServerRMI.isValidColor(choice[0],roomName)) {
                             Set<String> colors2 = guiServerRMI.getRemainingColors(roomName);
                             showColor(colors2, controller);
                             controller.getColorValidLabel().setVisible(true);
@@ -494,6 +493,7 @@ public class GUIrmi extends Application {
                     if(flag[0]) {
                         try {
                             guiServerRMI.addNewPlayer(nickname,roomName);
+                            guiServerRMI.setPlayerColor(choice[0], nickname, roomName);
                         } catch (RemoteException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -556,7 +556,6 @@ public class GUIrmi extends Application {
                         stage2.close();
                         Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
-                        guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
                     } catch (IOException ex) {
                         showError(stage);
@@ -570,7 +569,6 @@ public class GUIrmi extends Application {
                         stage2.close();
                         Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
-                        guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
                     } catch (IOException ex) {
                         showError(stage);
@@ -584,9 +582,7 @@ public class GUIrmi extends Application {
                         stage2.close();
                         Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
-                        guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
-
                     } catch (IOException ex) {
                         showError(stage);
                     }
@@ -599,7 +595,6 @@ public class GUIrmi extends Application {
                         stage2.close();
                         Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
-                        guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
                     } catch (IOException ex) {
                         showError(stage);
@@ -613,7 +608,6 @@ public class GUIrmi extends Application {
                         stage2.close();
                         Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
-                        guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
                     } catch (IOException ex) {
                         showError(stage);
@@ -627,7 +621,6 @@ public class GUIrmi extends Application {
                         stage2.close();
                         Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
-                        guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
                     } catch (IOException ex) {
                         showError(stage);
@@ -1118,6 +1111,7 @@ public class GUIrmi extends Application {
                             } else {
                                 event.consume();
                                 showZeroCards(stage);
+                                guiServerRMI.nextRound(roomName);
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
                         }
@@ -1141,6 +1135,7 @@ public class GUIrmi extends Application {
                             } else {
                                 event.consume();
                                 showZeroCards(stage);
+                                guiServerRMI.nextRound(roomName);
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
                         }
@@ -1166,6 +1161,7 @@ public class GUIrmi extends Application {
                             } else {
                                 event.consume();
                                 showZeroCards(stage);
+                                guiServerRMI.nextRound(roomName);
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
                         }

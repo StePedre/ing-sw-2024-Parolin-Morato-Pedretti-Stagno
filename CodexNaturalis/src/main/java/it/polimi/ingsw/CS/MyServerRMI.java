@@ -49,6 +49,10 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         rooms.getRoom(roomJoined).addPlayerInRoom();
         clients.put(client, roomJoined);
     }
+    @Override
+    public void ping() throws RemoteException{
+
+    }
 
     public void checkClients() throws RemoteException {
         System.out.println("Checking clients:");

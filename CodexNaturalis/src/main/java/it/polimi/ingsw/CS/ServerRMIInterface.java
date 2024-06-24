@@ -228,4 +228,6 @@ public interface ServerRMIInterface extends Remote {
 
     boolean isTerminating(String roomName) throws RemoteException;
 
+    void ping() throws RemoteException;
+
 }

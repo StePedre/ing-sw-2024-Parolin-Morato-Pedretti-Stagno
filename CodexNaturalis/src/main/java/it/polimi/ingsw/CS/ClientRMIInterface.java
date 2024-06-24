@@ -3,6 +3,7 @@ package it.polimi.ingsw.CS;
 import it.polimi.ingsw.Model.InvalidPositionException;
 import it.polimi.ingsw.Model.MissingResourcesException;
 import it.polimi.ingsw.Model.Player;
+import it.polimi.ingsw.View.TUI;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -21,7 +22,7 @@ public interface ClientRMIInterface extends Remote {
      * @throws InvalidPositionException if the position of the card does not belong to available positions set.
      * @throws MissingResourcesException if there are not the available resources to play that card.
      */
-    void runClient() throws IOException, InvalidPositionException, MissingResourcesException;
+    void runClient(TUI tui) throws IOException, InvalidPositionException, MissingResourcesException;
 
     void ping() throws RemoteException;
 

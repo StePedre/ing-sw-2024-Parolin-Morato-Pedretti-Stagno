@@ -3,6 +3,7 @@ package it.polimi.ingsw.CS;
 import it.polimi.ingsw.Model.InvalidPositionException;
 import it.polimi.ingsw.Model.MissingResourcesException;
 import it.polimi.ingsw.View.GUIrmi;
+import it.polimi.ingsw.View.TUI;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -50,11 +51,10 @@ public class Client {
                         GUIrmi.startGUI();
                     }
                     else{
-                        System.out.println("Insert the correct ip address of the server you want to connect to:");
-                        Scanner scanner = new Scanner(System.in);
-                        String ip = scanner.nextLine();
+                        TUI tui = new TUI();
+                        String ip = tui.inputIP();
                         ClientRMIInterface myClientRMI = new MyClientRMI("rmi://"+ip+"/ServerRMI");
-                        myClientRMI.runClient();
+                        myClientRMI.runClient(tui);
                     }
                     flag=true;
                 } else if(choice.equalsIgnoreCase("socket")){
