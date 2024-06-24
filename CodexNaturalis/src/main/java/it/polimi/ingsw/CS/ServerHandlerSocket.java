@@ -102,13 +102,18 @@ public class ServerHandlerSocket implements Runnable{
         try {
             Thread t = new Thread(() ->{
                 while(true){
-                    if(game.getNumPlayer()!=game.getExpPlayers()){
+                    if(game.isTerminating()){
                         try {
                             socket.close();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                         break;
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             });
@@ -175,7 +180,8 @@ public class ServerHandlerSocket implements Runnable{
             socket.close();
         }
         catch (IOException | ClassNotFoundException | InvalidPositionException e) {
-            game.removePlayer(player.getNickname());
+            //game.removePlayer(player.getNickname());
+            game.setTermination();
             System.out.println("il player " + player.getNickname() + " si è disconnesso");
             //e.printStackTrace();
         } catch (InterruptedException e) {
