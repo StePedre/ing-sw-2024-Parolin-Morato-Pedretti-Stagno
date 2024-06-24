@@ -159,27 +159,9 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      */
     private void listenToPlayers() {
         try {
-            ArrayList<Player> oldPlayers = getPlayers();
             boolean waitingForPlayers = true;
             while (waitingForPlayers) {
-
                 ArrayList<Player> currentPlayers = getPlayers();
-
-                for (Player currentPlayer : currentPlayers) {
-                    boolean isNewPlayer = true;
-                    for (Player oldPlayer : oldPlayers) {
-                        if (currentPlayer.getNickname().equals(oldPlayer.getNickname())) {
-                            isNewPlayer = false;
-                            break;
-                        }
-                    }
-                    if (isNewPlayer) {
-                        tui.playerJoined(currentPlayer);
-                    }
-                }
-
-                oldPlayers = new ArrayList<>(currentPlayers);
-
                 if(currentPlayers.size() == server.getRoomController().getRoom(roomJoined).getGame().getExpPlayers())
                     waitingForPlayers = false;
             }

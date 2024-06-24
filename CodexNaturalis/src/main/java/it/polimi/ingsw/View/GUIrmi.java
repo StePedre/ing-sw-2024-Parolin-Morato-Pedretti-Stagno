@@ -981,6 +981,22 @@ public class GUIrmi extends Application {
         }
     }
 
+    private void checkForDisconnection(Stage stage){
+        Task<Integer> task = new Task<>(){
+            @Override
+            protected Integer call() throws Exception {
+                while(!guiServerRMI.isTerminating(roomName)){
+
+                }
+                showError(stage);
+                return null;
+            }
+        };
+        Thread t = new Thread(task);
+        t.setDaemon(true);
+        t.start();
+    }
+
     /**
      * This method displays the waiting start scene, where the player needs to wait until all the players have joined.
      * After that, the starter choice scene is displayed.
@@ -1015,7 +1031,9 @@ public class GUIrmi extends Application {
             t.setDaemon(true);
             t.start();
             task.setOnSucceeded(event -> {
+                //checkForDisconnection(stage);
                 switchToStarterChoice(stage);
+
             });
             task.setOnFailed(event ->{
                 showError(stage);
