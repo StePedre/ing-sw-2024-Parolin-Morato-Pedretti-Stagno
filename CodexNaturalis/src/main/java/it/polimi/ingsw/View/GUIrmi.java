@@ -23,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -655,13 +656,13 @@ public class GUIrmi extends Application {
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
-        controller.getIpButton().setOnAction(e -> {
+        Runnable switchThings = () -> {
             try {
                 String ip = controller.getIpField().getText();
                 try {
                     guiServerRMI = (ServerRMIInterface) Naming.lookup("rmi://" + ip + "/ServerRMI");
                     System.out.println("Connected to RMI server.");
-                } catch (Exception f) {
+                } catch (Exception e) {
                     System.err.println("Client exception: " + e.toString());
                 }
                 switchToRoomChoice(stage);
@@ -670,6 +671,16 @@ public class GUIrmi extends Application {
                     ex.printStackTrace();
                     switchToIpInput(stage);
                 } catch (IOException exc) {
+                }
+            }
+        };
+        controller.getIpButton().setOnAction(e -> {
+            switchThings.run();
+        });
+        scene.setOnKeyPressed(e-> {
+            if(e.getCode()== KeyCode.ENTER){
+                if(!controller.getIpField().getText().isEmpty()){
+                    switchThings.run();
                 }
             }
         });
@@ -693,8 +704,7 @@ public class GUIrmi extends Application {
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
-        Button nickButton = controller.getNickButton();
-        nickButton.setOnAction(actionEvent -> {
+        Runnable switchThings = () -> {
             try {
                 nickname = controller.getNickname();
                 System.out.println(nickname);
@@ -712,6 +722,16 @@ public class GUIrmi extends Application {
                 }
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
+            }
+        };
+        controller.getNickButton().setOnAction(actionEvent -> {
+            switchThings.run();
+        });
+        scene.setOnKeyPressed(e->{
+            if(e.getCode() == KeyCode.ENTER){
+                if(!controller.getNickTextField().getText().isEmpty()){
+                    switchThings.run();
+                }
             }
         });
     }

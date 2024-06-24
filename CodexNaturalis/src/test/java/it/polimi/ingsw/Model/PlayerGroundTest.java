@@ -6,6 +6,7 @@ import it.polimi.ingsw.Model.ScoreRules.CoveredCornersRule;
 import it.polimi.ingsw.Model.ScoreRules.FlatRule;
 import it.polimi.ingsw.Model.ScoreRules.ScoreRule;
 import it.polimi.ingsw.View.TUI;
+import it.polimi.ingsw.View.TUIGraphicGenerator;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
 
@@ -42,15 +43,14 @@ class PlayerGroundTest {
         game.setCommonObj(new ObjectiveCard[]{card2, card3});
         Position pos = new Position(41, 43);
         pg.placeCard(card1, pos);
-        TUI tui = new TUI();
-        tui.yourTurnDraw(game, player);
+        TUIGraphicGenerator.printGround(player.getPlayerGround());
     }
 
     /* Through visualization in the textual interface, the following method tests
     all the private methods inside addCard(), which is private as well and invoked by placeCard();
      */
     @Test
-    void addCard() throws MissingResourcesException, InvalidPositionException {
+    void addCard() throws MissingResourcesException, InvalidPositionException, IOException, ParseException {
         pg.placeCard(card0, new Position(42, 42));
         game.setCommonObj(new ObjectiveCard[]{card2, card3});
         for(Position pos: player.getPlayerGround().getAvailablePositions()){
@@ -63,6 +63,7 @@ class PlayerGroundTest {
             System.out.println(c.getPos() + " " + c.getAvailability() + " " + c.getCornerRes());
         }
         System.out.println(card1.getRequirements());
+        game.setDecks(new Deck[]{pc.createResDeck(), pc.createGoldDeck()});
         TUI tui = new TUI();
         tui.yourTurnPlay(game, player);
     }
@@ -93,10 +94,9 @@ class PlayerGroundTest {
     void calculateNumberOfCompositions() throws IOException, ParseException, MissingResourcesException, InvalidPositionException {
         Corner[] frontCorners = {new Corner("TLF", Resource.BUG, true),new Corner("BLF", Resource.MUSHROOM, true),new Corner("TRF", Resource.MUSHROOM, true),new Corner("BRF", Resource.MUSHROOM, true)};
         PlayableCard card = new PlayableCard(0, new FlatRule(0), frontCorners, new Corner[4], Resource.FOX, null);
-        PlayableCard card2 = new PlayableCard(0, new CompositionRule(new Position[]{new Position(1,1), new Position(2, 2)}, new Resource[]{Resource.FOX, Resource.FOX, Resource.FOX}, 2), frontCorners, new Corner[4], Resource.FOX, null);
         Player p = new Player("silvia");
-        p.getPlayerGround().getAvailablePositions().add(new Position(44, 44));
         p.getPlayerGround().getAvailablePositions().add(new Position(43, 43));
+        p.getPlayerGround().getAvailablePositions().add(new Position(44, 44));
         p.getPlayerGround().getAvailablePositions().add(new Position(37, 37));
         p.getPlayerGround().getAvailablePositions().add(new Position(38, 38));
         p.getPlayerGround().getAvailablePositions().add(new Position(39, 39));
@@ -104,8 +104,8 @@ class PlayerGroundTest {
         p.getPlayerGround().placeCard(card, new Position(43, 43));
         p.getPlayerGround().placeCard(card, new Position(44, 44));
         p.getPlayerGround().placeCard(card, new Position(37, 37));
-        p.getPlayerGround().placeCard(card, new Position(38, 38));
         p.getPlayerGround().placeCard(card, new Position(39, 39));
+        p.getPlayerGround().placeCard(card, new Position(38, 38));
         assertEquals(p.getPlayerGround().calculateNumberOfCompositions(new Position[]{new Position(1,1), new Position(2, 2)}, new Resource[]{Resource.FOX, Resource.FOX, Resource.FOX}), 2);
     }
 }

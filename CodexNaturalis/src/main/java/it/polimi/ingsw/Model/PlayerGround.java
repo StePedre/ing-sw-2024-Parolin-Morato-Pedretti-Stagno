@@ -402,7 +402,7 @@ public class PlayerGround implements Serializable {
                     int cornerPos = 3 - (i + 2 * j);
 
                     Resource resourceToRemove = card.getShowedCorners()[cornerPos].getCornerRes();
-                    card.getShowedCorners()[cornerPos].setAvailable(false);
+                    card.getShowedCorners()[cornerPos].setResource(Resource.BLANK);
                     updateSingleResource(-1, resourceToRemove);
 
 

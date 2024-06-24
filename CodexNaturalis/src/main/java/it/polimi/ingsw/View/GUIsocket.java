@@ -30,6 +30,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static javafx.scene.input.KeyCode.ENTER;
+
 /**
  * The class GUIsocket manages all the scenes to display when using the GUI and the socket connection.
  * It has a Screen and two double in order to get the height and the width of the primary screen of the user.
@@ -623,7 +625,7 @@ public class GUIsocket extends Application{
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
-        controller.getIpButton().setOnAction(e -> {
+        Runnable switchNick = () -> {
             try{
                 String host = controller.getIpField().getText();
                 Socket socket = new Socket(InetAddress.getByName(host), 59090);
@@ -637,6 +639,16 @@ public class GUIsocket extends Application{
                 } catch (IOException exc) {
                     showError(stage);
                     throw new RuntimeException(exc);
+                }
+            }
+        };
+        controller.getIpButton().setOnAction(e -> {
+            switchNick.run();
+        });
+        scene.setOnKeyPressed(e->{
+            if(e.getCode()==ENTER){
+                if(!controller.getIpField().getText().isEmpty()){
+                    switchNick.run();
                 }
             }
         });
@@ -660,8 +672,7 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
-        Button nickButton = controller.getNickButton();
-        nickButton.setOnAction(actionEvent -> {
+        Runnable switchThings = () -> {
             try {
                 String nick = controller.getNickname();
                 client.sendToServer(nick);
@@ -683,6 +694,16 @@ public class GUIsocket extends Application{
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
+        };
+        controller.getNickButton().setOnAction(actionEvent -> {
+            switchThings.run();
+        });
+        scene.setOnKeyPressed(e->{
+            if(e.getCode()==ENTER){
+                if(!controller.getNickTextField().getText().isEmpty()){
+                    switchThings.run();
+                }
+            }
         });
     }
 
@@ -702,14 +723,16 @@ public class GUIsocket extends Application{
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-        Button requestButton = controller.getRequestButton();
-        requestButton.setOnAction(event -> {
+        Runnable switchThings = () -> {
             try {
                 client.sendToServer(controller.getNumberPlayers());
                 switchToColorChoice(stage);
             } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
+        };
+        controller.getRequestButton().setOnAction(event ->{
+            switchThings.run();
         });
     }
 

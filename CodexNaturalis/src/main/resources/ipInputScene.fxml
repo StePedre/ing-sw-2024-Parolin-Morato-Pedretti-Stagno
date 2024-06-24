@@ -18,7 +18,7 @@
                   <Font name="Bookman Old Style" size="30.0" />
                </font>
             </Label>
-            <TextField fx:id ="IpField" prefHeight="120.0" prefWidth="600.0" promptText="Type here...">
+            <TextField fx:id ="IpField" prefHeight="120.0" prefWidth="600.0">
                <font>
                   <Font name="Bookman Old Style" size="30.0" />
                </font>
