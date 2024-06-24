@@ -9,7 +9,6 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * The class MyClientRMI manages all the action of a player in an RMI connection.
@@ -20,10 +19,9 @@ import java.util.Scanner;
 public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterface, Serializable {
 
     TUI tui =  null;
-    String nickname;
+    String nickname = null;
     String roomJoined;
     ServerRMIInterface server;
-    boolean waitingForPlayers = false;
 
     /**
      * Class constructor.
@@ -55,11 +53,19 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      */
     private String controlNickname(boolean choice) throws RemoteException {
         String nickname = tui.insertNickname(choice);
-        if(server.getRooms().alreadyInGame(roomJoined,nickname)){
+        if(server.getRoomController().alreadyInGame(roomJoined,nickname)){
             return controlNickname(false);
         }else{
             return nickname;
         }
+    }
+
+    public String getRoomJoined() throws RemoteException{
+        return roomJoined;
+    }
+
+    public String getNickname() throws RemoteException{
+        return nickname;
     }
 
     /**
@@ -74,7 +80,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      */
     private String controlRoom(boolean choice, ArrayList<Room> rooms) throws RemoteException{
         String roomName = tui.getRoomName(choice, rooms);
-        if(server.getRooms().alredyExist(roomName)){
+        if(server.getRoomController().alreadyExist(roomName)){
             return controlRoom(choice, rooms);
         } else {
             return roomName;
@@ -92,7 +98,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      */
     private String controlRoom2(ArrayList<Room> rooms) throws RemoteException{
         String roomName = tui.getRoomName(false, rooms);
-        if(server.getRooms().alredyExist(roomName) || server.getRooms().getRoom(roomName).isFull()){
+        if(server.getRoomController().alreadyExist(roomName) || server.getRoomController().getRoom(roomName).isFull() || server.getRoomController().getRoom(roomName).isOccupied()){
             return roomName;
         } else {
             return controlRoom(false, rooms);
@@ -143,7 +149,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     private ArrayList<Player> getPlayers() throws RemoteException {
-        return server.getRooms().getRoom(roomJoined).getGame().getPlayers();
+        return server.getRoomController().getRoom(roomJoined).getGame().getPlayers();
     }
 
     /**
@@ -154,6 +160,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     private void listenToPlayers() {
         try {
             ArrayList<Player> oldPlayers = getPlayers();
+            boolean waitingForPlayers = true;
             while (waitingForPlayers) {
 
                 ArrayList<Player> currentPlayers = getPlayers();
@@ -173,7 +180,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
 
                 oldPlayers = new ArrayList<>(currentPlayers);
 
-                if(currentPlayers.size() == server.getRooms().getRoom(roomJoined).getGame().getExpPlayers())
+                if(currentPlayers.size() == server.getRoomController().getRoom(roomJoined).getGame().getExpPlayers())
                     waitingForPlayers = false;
             }
         } catch (RemoteException e) {
@@ -193,6 +200,14 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         useTUI();
     }
 
+    @Override
+    public void ping() throws RemoteException {
+    }
+
+    public void terminateClient() throws RemoteException {
+        System.exit(0);
+    }
+
     /**
      * This method sets the starter card of a player (flipped or not depending on what the player has choosen) and the
      * secret objective card.
@@ -201,14 +216,32 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      * @throws IOException if there has been problems regarding input or output.
      * @throws InvalidPositionException if the position of the card does not belong to available positions set.
      */
-    private void startEarlyGame() throws IOException, InvalidPositionException {
-        StarterCard st = server.getFirstCard(roomJoined);
-        if(tui.showStarterCard(st)){
-            st.flipCard();
-        }
-        server.setFirstCard(st, nickname, roomJoined);
-        ObjectiveCard[] obj = server.getObjCards(roomJoined);
-        server.setObjSecret(obj[tui.chooseObjective(obj[0],obj[1])-1], nickname, roomJoined);
+    private void startEarlyGame() throws IOException, InvalidPositionException, MissingResourcesException {
+            checkDisconnection();
+            StarterCard st = server.getFirstCard(roomJoined);
+            if (tui.showStarterCard(st)) {
+                st.flipCard();
+            }
+            server.setFirstCard(st, nickname, roomJoined);
+            ObjectiveCard[] obj = server.getObjCards(roomJoined);
+            server.setObjSecret(obj[tui.chooseObjective(obj[0], obj[1]) - 1], nickname, roomJoined);
+            startNormalGame();
+    }
+
+    public void checkDisconnection() throws RemoteException {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(500);
+                    if(server.isTerminating(roomJoined)){
+                    System.out.println("Someone disconnected. Reload the game to play again!");
+                        terminateClient();
+                    }
+                } catch (InterruptedException | RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     /**
@@ -224,45 +257,51 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      */
     private void startNormalGame() throws RemoteException, MissingResourcesException, InvalidPositionException {
 
-        while(!server.isGameOver(roomJoined)) {
-            while (!server.isCurrentPlayer(roomJoined, nickname)) {
-                if (server.isGameOver(roomJoined)) {
-                    break;
-                }else{
-                    Room room = server.getRooms().getRoom(roomJoined);
-                    tui.notYourTurn(room.getGame(), room.getGame().getPlayer(nickname));
-                    int i = 0;
-                    while(!server.isCurrentPlayer(roomJoined, nickname)){
-                        i++;
-                    }
-                }
-            }
-            while(server.isCurrentPlayer(roomJoined, nickname)) {
-                if (server.isGameOver(roomJoined)) {
-                    break;
-                }else{
-                    Game game = server.getRooms().getRoom(roomJoined).getGame();
-                    Player player = game.getPlayer(nickname);
-                    if(tui.yourTurnPlay(game, player)){
-                        boolean status = true;
-                        while(status) {
-                            PlayableCard card = null;
-                            while(card == null) {
-                                card = tui.inputCardToPlace(game, player);
-                            }
-                                server.placeCard(card, tui.inputNumberPosition(player), roomJoined, nickname);
-                                game = server.getRooms().getRoom(roomJoined).getGame();
-                                player = game.getPlayer(nickname);
-                                drawCardFromDeck(tui.yourTurnDraw(game, player));
-                                server.nextRound(roomJoined);
-                                status = false;
+            while (!server.isGameOver(roomJoined)) {
+                while (!server.isCurrentPlayer(roomJoined, nickname)) {
+                    if (server.isGameOver(roomJoined)) {
+                        break;
+                    } else {
+                        Room room = server.getRoomController().getRoom(roomJoined);
+                        tui.notYourTurn(room.getGame(), room.getGame().getPlayer(nickname));
+                        int i = 0;
+                        while (!server.isCurrentPlayer(roomJoined, nickname)) {
+                            i++;
                         }
                     }
                 }
-            }
+                while (server.isCurrentPlayer(roomJoined, nickname)) {
+                    if (server.isGameOver(roomJoined)) {
+                        break;
+                    } else {
+                        Game game = server.getRoomController().getRoom(roomJoined).getGame();
+                        Player player = game.getPlayer(nickname);
+                        if (tui.yourTurnPlay(game, player)) {
+                            if (server.isLastTurn(roomJoined)) {
+                                System.out.println("This is the last turn!");
+                            }
+                            boolean status = true;
+                            while (status) {
+                                PlayableCard card = null;
+                                while (card == null) {
+                                    card = tui.inputCardToPlace(game, player);
+                                }
+                                server.placeCard(card, tui.inputNumberPosition(player), roomJoined, nickname);
+                                if (!server.isDeckEmpty(roomJoined) && !server.isLastTurn(roomJoined)) {
+                                    game = server.getRoomController().getRoom(roomJoined).getGame();
+                                    player = game.getPlayer(nickname);
+                                    drawCardFromDeck(tui.yourTurnDraw(game, player));
+                                }
+                                status = false;
+                            }
+                        }
+                    }
+                }
 
-        }
-        tui.winnersPrint(server.getMultiWinners(roomJoined));
+            }
+            tui.winnersPrint(server.getMultiWinners(roomJoined));
+        terminateClient();
+
     }
 
     /**
@@ -278,24 +317,28 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         tui = new TUI();
         tui.showRoom(server.showRooms());
         if(tui.chooseRoom()){
-            roomJoined = controlRoom(true, server.getRooms().getRooms());
+            roomJoined = controlRoom(true, server.getRoomController().getRooms());
             server.addRoom(roomJoined);
             server.setPlayerNumber(tui.askPlayersNo(), roomJoined);
+            server.registerClient(this);
         }else{
-            roomJoined = controlRoom2(server.getRooms().getRooms());
+            roomJoined = controlRoom2(server.getRoomController().getRooms());
+            server.registerClient(this);
         }
             nickname = controlNickname(true);
-            Player player = server.addNewPlayer(nickname, roomJoined);
-            while(server.setPlayerColor(tui.chooseColor(server.getRemainingColors(roomJoined)), nickname, roomJoined)){
-                System.out.println("Wrong color");
+
+        String color = tui.chooseColor(server.getRemainingColors(roomJoined));
+            while(!server.isValidColor(color, roomJoined)){
+                System.out.println("Color already taken!");
+                color = tui.chooseColor(server.getRemainingColors(roomJoined));
             };
+            Player player = server.addNewPlayer(nickname, roomJoined);
+            server.setPlayerColor(color, nickname, roomJoined);
+            //server.deregisterClient(this);
             tui.Welcome(player);
-            server.addPlayerToRoundController(nickname,roomJoined);
-            waitingForPlayers = true;
             listenToPlayers();
             System.out.println("All players have joined, lets start the game!");
             startEarlyGame();
-            startNormalGame();
     }
 
 }

@@ -22,6 +22,7 @@ public class RoundController implements Serializable {
     private boolean lastTurn = false;
     private boolean isEnding = false;
 
+
     /**
      * Class constructor.
      * It initializes the players.
@@ -93,6 +94,7 @@ public class RoundController implements Serializable {
      * The method sets the ending of the turn. It is called once all the players have completed their round of play.
      */
     public synchronized void setEnding(){isEnding = true;}
+
 
     /**
      * The method sets the first player to play in a turn. This method is only called at the start of a new game.

@@ -24,6 +24,8 @@ public class Game implements Serializable {
     private int numPlayers;
     private final ArrayList<ObjectiveCard> otherObjs;
     private boolean isOver = false;
+
+    private boolean isTerminating = false;
     private final ArrayList<StarterCard> starterCards;
     private Set<String> colors = new HashSet<>();
 
@@ -188,6 +190,10 @@ public class Game implements Serializable {
     public Deck[] getDecks() {
         return decks;
     }
+
+    public boolean isTerminating(){return isTerminating;}
+
+    public void setTermination(){isTerminating = true;}
 
     /**
      * The method gets the expected number of players.

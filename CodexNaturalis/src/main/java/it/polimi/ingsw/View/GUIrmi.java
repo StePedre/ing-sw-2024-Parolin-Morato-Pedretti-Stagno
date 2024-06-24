@@ -1,5 +1,6 @@
 package it.polimi.ingsw.View;
 
+import it.polimi.ingsw.CS.MyClientRMI;
 import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.CS.ServerRMIInterface;
 import it.polimi.ingsw.Model.*;
@@ -58,6 +59,8 @@ public class GUIrmi extends Application {
     String nickname = "";
     private ServerRMIInterface guiServerRMI;
 
+    private MyClientRMI client;
+
     /**
      * This method displays the initialize player ground scene, where the starter card is placed in the center of the
      * board and the names of the other players are added.
@@ -72,7 +75,7 @@ public class GUIrmi extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/playground.fxml"));
             Parent root = loader.load();
             Controller controller = loader.getController();
-            Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
+            Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
             Player p = g.getPlayer(nickname);
             controller.addNames(g, p);
             Scene scene = new Scene(root);
@@ -477,7 +480,6 @@ public class GUIrmi extends Application {
                 boolean[] flag = {false};
                 controller.getConfirmColor().setOnAction(e->{
                     try {
-                        guiServerRMI.addNewPlayer(nickname,roomName);
                         if (guiServerRMI.setPlayerColor(choice[0], nickname, roomName)) {
                             Set<String> colors2 = guiServerRMI.getRemainingColors(roomName);
                             showColor(colors2, controller);
@@ -490,7 +492,7 @@ public class GUIrmi extends Application {
                     }
                     if(flag[0]) {
                         try {
-                            guiServerRMI.addPlayerToRoundController(nickname,roomName);
+                            guiServerRMI.addNewPlayer(nickname,roomName);
                         } catch (RemoteException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -521,7 +523,7 @@ public class GUIrmi extends Application {
             Scene scene = new Scene(root);
             stage2.setScene(scene);
             Controller controller = loader.getController();
-            Game game = guiServerRMI.getRooms().getRoom(roomName).getGame();
+            Game game = guiServerRMI.getRoomController().getRoom(roomName).getGame();
             controller.addCards(game.getDecks());
             stage2.show();
             DropShadow dropShadow = new DropShadow();
@@ -551,7 +553,7 @@ public class GUIrmi extends Application {
                     try {
                         guiServerRMI.drawCard(0,0,roomName, nickname);
                         stage2.close();
-                        Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
+                        Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
                         guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
@@ -565,7 +567,7 @@ public class GUIrmi extends Application {
                     try {
                         guiServerRMI.drawCard(0,1,roomName, nickname);
                         stage2.close();
-                        Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
+                        Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
                         guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
@@ -579,7 +581,7 @@ public class GUIrmi extends Application {
                     try {
                         guiServerRMI.drawCard(0,2,roomName, nickname);
                         stage2.close();
-                        Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
+                        Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
                         guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
@@ -594,7 +596,7 @@ public class GUIrmi extends Application {
                     try {
                         guiServerRMI.drawCard(1,0,roomName, nickname);
                         stage2.close();
-                        Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
+                        Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
                         guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
@@ -608,7 +610,7 @@ public class GUIrmi extends Application {
                     try {
                         guiServerRMI.drawCard(1,1,roomName, nickname);
                         stage2.close();
-                        Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
+                        Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
                         guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
@@ -622,7 +624,7 @@ public class GUIrmi extends Application {
                     try {
                         guiServerRMI.drawCard(1,2,roomName, nickname);
                         stage2.close();
-                        Game g = guiServerRMI.getRooms().getRoom(roomName).getGame();
+                        Game g = guiServerRMI.getRoomController().getRoom(roomName).getGame();
                         Player p = g.getPlayer(nickname);
                         guiServerRMI.nextRound(roomName);
                         notYourTurn(stage, g, p, playgroundController);
@@ -696,7 +698,7 @@ public class GUIrmi extends Application {
             try {
                 nickname = controller.getNickname();
                 System.out.println(nickname);
-                if (guiServerRMI.getRooms().alreadyInGame(roomName, nickname)) {
+                if (guiServerRMI.getRoomController().alreadyInGame(roomName, nickname)) {
                     controller.getNickLabel().setPrefWidth(800);
                     controller.getNickLabel().setStyle("-fx-text-fill: #b20b0b");
                     controller.getNickLabel().setText("This name is already taken, choose another one:");
@@ -759,7 +761,7 @@ public class GUIrmi extends Application {
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
-        ArrayList<Room> rooms = guiServerRMI.getRooms().getRooms();
+        ArrayList<Room> rooms = guiServerRMI.getRoomController().getRooms();
         for (Room r : rooms) {
             Label elem = new Label(r.getName());
             elem.setFont(Font.font("Bookman Old Style"));
@@ -811,7 +813,7 @@ public class GUIrmi extends Application {
                     controller.getConfirmRoom().setOnAction(e2 -> {
                         try {
                             roomName = controller.getMenu().getSelectionModel().getSelectedItem().getText();
-                            if (guiServerRMI.getRooms().getRoom(roomName).isFull()) {
+                            if (guiServerRMI.getRoomController().getRoom(roomName).isFull()) {
                                 controller.getTfRoom().setText("");
                                 controller.getLabelRoom().setText("Too late! The room is full!");
                             } else {
@@ -979,7 +981,7 @@ public class GUIrmi extends Application {
             Parent root = loader.load();
             Controller controller = loader.getController();
             controller.getAnchor4().getChildren().addFirst(background);
-            Player player = guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(nickname);
+            Player player = guiServerRMI.getRoomController().getRoom(roomName).getGame().getPlayer(nickname);
             controller.getStartLabel().setText("Please " + player.getNickname() + ", wait for other players to join.");
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -989,7 +991,7 @@ public class GUIrmi extends Application {
                 protected Integer call() throws Exception {
                     boolean waitingForPlayers = true;
                     while (waitingForPlayers) {
-                        if(guiServerRMI.getRooms().getRoom(roomName).isFull()) {
+                        if(guiServerRMI.getRoomController().getRoom(roomName).isFull()) {
                             waitingForPlayers = false;
                         }
                     }
@@ -1029,7 +1031,7 @@ public class GUIrmi extends Application {
         try {
             Game[] game = new Game[1];
             Player[] player = new Player[1];
-            game[0] = guiServerRMI.getRooms().getRoom(roomName).getGame();
+            game[0] = guiServerRMI.getRoomController().getRoom(roomName).getGame();
             player[0] = game[0].getPlayer(nickname);
             controller.showAvailablePos(player[0].getPlayerGround().getAvailablePositions());
             controller.addGround(game[0], player[0]);
@@ -1085,7 +1087,7 @@ public class GUIrmi extends Application {
                 try {
                     if (controller.getPosPlayed() != null) {
                         guiServerRMI.placeCard(controller.getCardPlayed(),controller.reconvertPosition(controller.getPosPlayed()),roomName, nickname);
-                        controller.updateAfterPlay(guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(nickname));
+                        controller.updateAfterPlay(guiServerRMI.getRoomController().getRoom(roomName).getGame().getPlayer(nickname));
                         controller.setPosPlayedNull();// works
                         if (guiServerRMI.isLastTurn(roomName)) {
                             switchToWaitingFinish(stage);
@@ -1108,7 +1110,7 @@ public class GUIrmi extends Application {
                 try {
                     if (controller.getPosPlayed() != null) {
                         guiServerRMI.placeCard(controller.getCardPlayed(),controller.reconvertPosition(controller.getPosPlayed()),roomName, nickname);
-                        controller.updateAfterPlay(guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(nickname));
+                        controller.updateAfterPlay(guiServerRMI.getRoomController().getRoom(roomName).getGame().getPlayer(nickname));
                         controller.setPosPlayedNull();
                         if (guiServerRMI.isLastTurn(roomName)) {
                             switchToWaitingFinish(stage);
@@ -1133,7 +1135,7 @@ public class GUIrmi extends Application {
                 try {
                     if (controller.getPosPlayed() != null) {
                         guiServerRMI.placeCard(controller.getCardPlayed(),controller.reconvertPosition(controller.getPosPlayed()),roomName, nickname);
-                        controller.updateAfterPlay(guiServerRMI.getRooms().getRoom(roomName).getGame().getPlayer(nickname));
+                        controller.updateAfterPlay(guiServerRMI.getRoomController().getRoom(roomName).getGame().getPlayer(nickname));
                         controller.setPosPlayedNull();
                         if (guiServerRMI.isLastTurn(roomName)) {
                             switchToWaitingFinish(stage);

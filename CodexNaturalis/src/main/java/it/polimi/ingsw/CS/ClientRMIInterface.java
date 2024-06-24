@@ -23,4 +23,10 @@ public interface ClientRMIInterface extends Remote {
      */
     void runClient() throws IOException, InvalidPositionException, MissingResourcesException;
 
+    void ping() throws RemoteException;
+
+    String getRoomJoined() throws RemoteException;
+
+    void terminateClient() throws RemoteException;
+
 }

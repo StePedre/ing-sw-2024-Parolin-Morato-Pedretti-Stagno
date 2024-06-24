@@ -37,7 +37,7 @@ public class Server {
         }
         try {
             ServerRMIInterface serverRMI = new MyServerRMI(1099, rooms);
-            serverRMI.runServer();
+            serverRMI.checkClients();
         } catch (Exception e) {
             System.err.println("Server RMI exception: " + e.toString());
             e.printStackTrace();

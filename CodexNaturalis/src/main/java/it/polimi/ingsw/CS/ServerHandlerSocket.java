@@ -275,7 +275,7 @@ public class ServerHandlerSocket implements Runnable{
         do {
             if ((boolean) in.readObject()) {
                 room = new Room((String) in.readObject());
-                if (rooms.alredyExist(room.getName())) {
+                if (rooms.alreadyExist(room.getName())) {
                     out.writeObject(true);
                     b= true;
                 } else {

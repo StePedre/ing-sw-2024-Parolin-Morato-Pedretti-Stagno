@@ -9,7 +9,10 @@ import it.polimi.ingsw.Model.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The class MyServerRMI extends UnicastRemoteObject and implements ServerRMIInterface.
@@ -20,6 +23,8 @@ import java.util.Set;
 public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterface {
 
     RoomController rooms;
+    private Map<ClientRMIInterface, String> clients;
+
 
     /**
      * Class constructor.
@@ -31,12 +36,64 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      */
     public MyServerRMI(int port, RoomController room) throws RemoteException {
         this.rooms = room;
+        clients = new ConcurrentHashMap<>();
         java.rmi.registry.LocateRegistry.createRegistry(port);
         java.rmi.registry.Registry registry = java.rmi.registry.LocateRegistry.getRegistry();
         registry.rebind("ServerRMI", this);
         System.out.println("Server RMI started.");
     }
 
+    @Override
+    public void registerClient(ClientRMIInterface client) throws RemoteException {
+        String roomJoined = client.getRoomJoined();
+        rooms.getRoom(roomJoined).addPlayerInRoom();
+        clients.put(client, roomJoined);
+    }
+
+    public void checkClients() throws RemoteException {
+        System.out.println("Checking clients:");
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                    pingClients();
+                } catch (InterruptedException | RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void pingClients() throws RemoteException {
+        List<ClientRMIInterface> disconnectedClients = new ArrayList<>();
+        for (Map.Entry<ClientRMIInterface, String> entry : clients.entrySet()) {
+            ClientRMIInterface client = entry.getKey();
+            try {
+                client.ping();
+            } catch (RemoteException e) {
+                disconnectedClients.add(client);
+            }
+        }
+        for (ClientRMIInterface client : disconnectedClients) {
+            Game game = rooms.getRoom(clients.get(client)).getGame();
+            if(game.getPlayers().size() == game.getExpPlayers()){
+                game.setTermination();
+            }else {
+                rooms.getRoom(clients.get(client)).removePlayerInRoom();
+            }
+            clients.remove(client);
+        }
+    }
+
+
+
+    public void deregisterClient(ClientRMIInterface client) throws RemoteException {
+        clients.remove(client);
+    }
+
+    public boolean isTerminating(String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getGame().isTerminating();
+    }
     /**
      * See ServerRMIInterface for more details.
      *
@@ -48,13 +105,16 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         Player newPlayer = new Player(nickname);
         Game game = rooms.getRoom(roomName).getGame();
         if(game.getPlayer(nickname) == null) {
-            rooms.getRoom(roomName).addPlayerInRoom();
             game.addPlayer(newPlayer);
+            rooms.getRoom(roomName).getRoundController().addPlayer(newPlayer);
             return newPlayer;
         }
         return null;
     }
 
+    public boolean isValidColor(String color, String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getGame().getColors().contains(color);
+    }
 
     /**
      * See ServerRMIInterface for more details.
@@ -100,6 +160,11 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
     public void drawCard(int int1, int int2, String roomName, String nickname) throws RemoteException{
         Game game = rooms.getRoom(roomName).getGame();
         game.getPlayer(nickname).getHand().chooseCard(game.getDecks()[int1].drawCard(int2));
+        if(isDeckEmpty(roomName)){
+            rooms.getRoom(roomName).getRoundController().setEnding();
+        }
+        rooms.getRoom(roomName).getRoundController().nextRound();
+
     }
 
     /**
@@ -154,7 +219,7 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      * @return such room controller.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    public RoomController getRooms() throws RemoteException{
+    public RoomController getRoomController() throws RemoteException{
         return rooms;
     }
 
@@ -168,9 +233,6 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      */
     public boolean isCurrentPlayer(String roomName, String nickname) throws RemoteException{
         Room room = rooms.getRoom(roomName);
-        RoundController rc = room.getRoundController();
-        Player p = rc.getCurrentPlayer();
-        String nick = p.getNickname();
         return room.getRoundController().getCurrentPlayer().getNickname().equals(nickname);
     }
 
@@ -182,18 +244,18 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     public boolean isDeckEmpty(String roomName) throws RemoteException{
-        return rooms.getRoom(roomName).getGame().getDecks()[0].getCards().size() <3 || rooms.getRoom(roomName).getGame().getDecks()[1].getCards().size() <3;
+        return rooms.getRoom(roomName).getGame().getDecks()[0].getCards().isEmpty() && rooms.getRoom(roomName).getGame().getDecks()[1].getCards().isEmpty();
     }
 
     /**
      * See ServerRMIInterface for more details.
      *
-     * @param room is the name of the room in which to find the game.
+     * @param roomName is the name of the room in which to find the game.
      * @return such boolean.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    public boolean isFirstPlayer(String room) throws RemoteException{
-        return rooms.getRoom(room).getGame().isFirst();
+    public boolean isFirstPlayer(String roomName) throws RemoteException{
+        return rooms.getRoom(roomName).getGame().isFirst();
     }
 
     /**
@@ -216,6 +278,11 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      */
     public boolean isLastTurn(String roomName) throws RemoteException{
         return rooms.getRoom(roomName).getRoundController().isLastTurn();
+    }
+
+    public boolean isAlreadyInRoom(String roomName, String nickname) throws RemoteException{
+        Game game = rooms.getRoom(roomName).getGame();
+        return game.getPlayer(nickname) != null;
     }
 
     /**
@@ -243,16 +310,12 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         Player player = rooms.getRoom(roomName).getGame().getPlayer(nickname);
         PlaceCardController.place(card, player, position);
         PlaceCardController.removeFromHand(card,player);
+        RoundController rc = rooms.getRoom(roomName).getRoundController();
+        if(player.getPlayerGround().getPlayerScore() >= 20 && !rc.isEnding()){
+            rc.setEnding();
+        }
     }
 
-    /**
-     * See ServerRMIInterface for more details.
-     *
-     * @throws RemoteException if there has been problems during the execution of a remote method call.
-     */
-    public void runServer() throws RemoteException{
-
-    }
 
     /**
      * See ServerRMIInterface for more details.
@@ -285,12 +348,6 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         pc.setObjSecret(objSecret, player.getHand());
         pc.populateHand(room.getGame(),player);
         room.getRoundController().setFirstPlayer();
-    }
-
-    public void addPlayerToRoundController(String nickname, String roomName) throws RemoteException{
-        Room room = rooms.getRoom(roomName);
-        Player player = room.getGame().getPlayer(nickname);
-        room.getRoundController().addPlayer(player);
     }
 
     /**
@@ -329,8 +386,11 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      * @return such list of rooms.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    public ArrayList<Room> showRooms() throws RemoteException{
-        return rooms.getRooms();
+    public ArrayList<Room> showRooms() throws RemoteException {
+        List<Room> availableRooms = rooms.getRooms().stream()
+                .filter(room -> (!room.isFull() && !room.isOccupied()))
+                .toList();
+        return new ArrayList<>(availableRooms);
     }
 
 }

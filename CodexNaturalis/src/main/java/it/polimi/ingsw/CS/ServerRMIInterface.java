@@ -98,7 +98,7 @@ public interface ServerRMIInterface extends Remote {
      * @return such room controller.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    RoomController getRooms() throws RemoteException;
+    RoomController getRoomController() throws RemoteException;
 
     /**
      * This method tells if a player is the current player.
@@ -110,7 +110,11 @@ public interface ServerRMIInterface extends Remote {
      */
     boolean isCurrentPlayer(String nickname, String roomName) throws RemoteException;
 
-    void addPlayerToRoundController(String nickname, String roomName) throws RemoteException;
+    void deregisterClient(ClientRMIInterface client) throws RemoteException;
+
+    boolean isValidColor(String color, String roomName) throws RemoteException;
+
+    boolean isAlreadyInRoom(String roomName, String nickname) throws RemoteException;
 
     /**
      * This method gets the boolean that tells if a deck is empty or not.
@@ -169,12 +173,6 @@ public interface ServerRMIInterface extends Remote {
      */
     void placeCard(PlayableCard card, Position position, String roomName, String nickname) throws RemoteException, MissingResourcesException, InvalidPositionException;
 
-    /**
-     * This method starts the server.
-     *
-     * @throws RemoteException if there has been problems during the execution of a remote method call.
-     */
-    void runServer() throws RemoteException;
 
     /**
      * This method set the starter card to a player in a game.
@@ -223,5 +221,11 @@ public interface ServerRMIInterface extends Remote {
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     ArrayList<Room> showRooms() throws RemoteException;
+
+    void registerClient(ClientRMIInterface client) throws RemoteException;
+
+    void checkClients() throws RemoteException;
+
+    boolean isTerminating(String roomName) throws RemoteException;
 
 }

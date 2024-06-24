@@ -27,8 +27,8 @@ class RoomControllerTest {
     @Test
     void alreadyExists(){
         rc.addRoom(r1);
-        assertTrue(rc.alredyExist(r1.getName()));
-        assertFalse(rc.alredyExist(r2.getName()));
+        assertTrue(rc.alreadyExist(r1.getName()));
+        assertFalse(rc.alreadyExist(r2.getName()));
     }
     @Test
     void alreadyInGame(){

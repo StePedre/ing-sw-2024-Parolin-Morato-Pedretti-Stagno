@@ -168,9 +168,13 @@ public class TUI {
                 int card = Integer.parseInt(scanner.nextLine().trim());
                 if (card >= 1 && card <= 3) {
                     cardToPlay = player.getHand().getCard(card - 1);
+                }else if(card ==4){
+                    printOtherPlayersGrounds(game, player);
+                    yourTurnPlay(game, player);
+                    cardToPlay = inputCardToPlace(game,player);
                 }
             } catch (NumberFormatException e) {
-                System.out.println("                                                                              Invalid input. Please enter a number between 1 and 3");
+                System.out.println("                                                                              Invalid input. Please enter a number between 1 and 4");
             }
         }
 
@@ -309,7 +313,7 @@ public class TUI {
         System.out.println("                                  1                      2                      3                  OBJECTIVE                                                         COMMON OBJECTIVES:");
 
         TUIGraphicGenerator.printHand(player.getHand(), game.getCommonObj());
-        System.out.println("\n                                                                                     Choose a card in your hand to play (1 to 3):\n");
+        System.out.println("\n                                                                 Choose a card in your hand to play (1 to 3) or check other player's boards (4):\n");
     }
 
     /**

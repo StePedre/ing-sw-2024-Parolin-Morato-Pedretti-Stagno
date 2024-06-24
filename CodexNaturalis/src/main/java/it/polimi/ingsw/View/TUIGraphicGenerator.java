@@ -534,7 +534,10 @@ public class TUIGraphicGenerator {
         ArrayList<PlayableCard> cards1 = deck1.getCards();
         cards1.getFirst().flipCard();
 
-        for(int i = 0; i <= 2; i++){
+
+        int size = cards1.size() >=3 ? 2 : cards1.size();
+
+        for(int i = 0; i <= size; i++){
             topBorder.append(cornerColor(cards1.get(i).getShowedCorners()[0])).append(cardColor(cards1.get(i))).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards1.get(i).getShowedCorners()[2])).append("  ");
             contentLine1.append(cardColor(cards1.get(i))).append("█").append(generateHandAndDeckLine1(cards1.get(i))).append(cardColor(cards1.get(i))).append("█  ");
             contentLine2.append(cardColor(cards1.get(i))).append("█").append(generateHandAndDeckLine2(cards1.get(i))).append(cardColor(cards1.get(i))).append("█  ");
@@ -550,7 +553,8 @@ public class TUIGraphicGenerator {
         contentLine3.append(space);
         buttonBorder.append(space);
 
-        for(int i = 0; i <= 2; i++){
+        size = cards2.size() >=3 ? 2 : cards1.size();
+        for(int i = 0; i <= size; i++){
             topBorder.append(cornerColor(cards2.get(i).getShowedCorners()[0])).append(cardColor(cards2.get(i))).append("▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀").append(ANSI_RESET).append(cornerColor(cards2.get(i).getShowedCorners()[2])).append("  ");
             contentLine1.append(cardColor(cards2.get(i))).append("█").append(generateHandAndDeckLine1(cards2.get(i))).append(cardColor(cards2.get(i))).append("█  ");
             contentLine2.append(cardColor(cards2.get(i))).append("█").append(generateHandAndDeckLine2(cards2.get(i))).append(cardColor(cards2.get(i))).append("█  ");

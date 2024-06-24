@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Controller;
 
 import it.polimi.ingsw.CS.Room;
-import it.polimi.ingsw.Model.Game;
 import it.polimi.ingsw.Model.Player;
 
 import java.io.Serializable;
@@ -81,7 +80,7 @@ public class RoomController implements Serializable {
      * @param s is the name of the room.
      * @return true if the name already exists, false otherwise.
      */
-    public synchronized boolean alredyExist(String s){
+    public synchronized boolean alreadyExist(String s){
         boolean flag = false;
         for(Room r : rooms){
             if(r.getName().equals(s)){
