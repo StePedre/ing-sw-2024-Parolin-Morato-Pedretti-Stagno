@@ -209,6 +209,39 @@ public class TUI {
     }
 
     /**
+     * This method gets the IP address typed by the user.
+     * It checks if it is a valid address and returns it.
+     * Otherwise, it prints messages telling which kind of error have occurred.
+     *
+     * @return the valid IP address.
+     */
+    public String inputIP() {
+        Scanner s = new Scanner(System.in);
+        String ip;
+        while (true) {
+            System.out.print("Write the IP of the server: ");
+            ip = s.nextLine();
+            if (isValidIPAddress(ip)) {
+                try {
+                    InetAddress inet = InetAddress.getByName(ip);
+                    if (inet.isReachable(5000)) {
+                        break;
+                    } else {
+                        System.out.println("IP address not reachable.");
+                    }
+                } catch (UnknownHostException e) {
+                    System.out.println("Invalid IP address format.");
+                } catch (Exception e) {
+                    System.out.println("Error checking IP address reachability.");
+                }
+            } else {
+                System.out.println("Invalid IP address format.");
+            }
+        }
+        return ip;
+    }
+
+    /**
      * The method asks the player where to place the card. The client needs to input coordinates x and y to identify
      * a specific position on the play ground, seen as a matrix.
      *
@@ -252,6 +285,24 @@ public class TUI {
         }
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
+    }
+
+    /**
+     * This method checks if the IP address passed by parameter matches the correct format.
+     *
+     * @param ip is the IP address to check.
+     * @return a boolean that tells if the IP address is valid or not.
+     */
+    private boolean isValidIPAddress(String ip) {
+        String ipPattern = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        return ip.matches(ipPattern);
+    }
+
+    /**
+     * This method prints a message telling it is the last turn to play.
+     */
+    public void lastTurn(){
+        System.out.println("\n                                                                                                            This is the last turn!");
     }
 
     /**
@@ -462,50 +513,5 @@ public class TUI {
         System.out.println("\n");
         return true;
     }
-
-    public void lastTurn(){
-        System.out.println("\n                                                                                                            This is the last turn!");
-    }
-
-    public String inputIP() {
-        Scanner s = new Scanner(System.in);
-        String ip;
-        while (true) {
-            System.out.print("Write the IP of the server: ");
-            ip = s.nextLine();
-            if (isValidIPAddress(ip)) {
-                try {
-                    InetAddress inet = InetAddress.getByName(ip);
-                    if (inet.isReachable(5000)) {
-                        break;
-                    } else {
-                        System.out.println("IP address not reachable.");
-                    }
-                } catch (UnknownHostException e) {
-                    System.out.println("Invalid IP address format.");
-                } catch (Exception e) {
-                    System.out.println("Error checking IP address reachability.");
-                }
-            } else {
-                System.out.println("Invalid IP address format.");
-            }
-        }
-        return ip;
-    }
-
-    private boolean isValidIPAddress(String ip) {
-        String ipPattern = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
-        return ip.matches(ipPattern);
-    }
-
-
-
-
-
-
-
-
-
-
 
 }

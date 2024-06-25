@@ -41,6 +41,27 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
+    /**
+     * This method checks if some other player is disconnected from the game.
+     * In this case, it prints a message telling that and terminates the client.
+     *
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    public void checkDisconnection() throws RemoteException {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(500);
+                    if(server.isTerminating(roomJoined)){
+                        System.out.println("Someone disconnected. Reload the game to play again!");
+                        terminateClient();
+                    }
+                } catch (InterruptedException | RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
     /**
      * This method checks if a player's nickname is already in the game or not.
@@ -58,14 +79,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }else{
             return nickname;
         }
-    }
-
-    public String getRoomJoined() throws RemoteException{
-        return roomJoined;
-    }
-
-    public String getNickname() throws RemoteException{
-        return nickname;
     }
 
     /**
@@ -143,6 +156,16 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     }
 
     /**
+     * This method gets the nickname of a player.
+     *
+     * @return such nickname.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    public String getNickname() throws RemoteException{
+        return nickname;
+    }
+
+    /**
      * This method gets the list of players in the room.
      *
      * @return such list of players.
@@ -153,8 +176,17 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     }
 
     /**
+     * See ClientRMIInterface for more details.
+     *
+     * @return such name.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    public String getRoomJoined() throws RemoteException{
+        return roomJoined;
+    }
+
+    /**
      * This method manages the players that join a room.
-     * For each player that joins, it checks if it is a new player.
      * Once all have joined, the method ends.
      */
     private void listenToPlayers() {
@@ -169,8 +201,12 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
+    @Override
+    public void ping() throws RemoteException {
+    }
+
     /**
-     * This method calls the TUI starting method.
+     * See ClientRMIInterface for more details.
      *
      * @throws IOException if there has been problems regarding input or output.
      * @throws InvalidPositionException if the position of the card does not belong to available positions set.
@@ -180,41 +216,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         startServerCheckerThread();
         this.tui = tui;
         useTUI();
-    }
-
-    @Override
-    public void ping() throws RemoteException {
-    }
-
-    public void terminateClient() throws RemoteException {
-        System.exit(0);
-    }
-
-    private void startServerCheckerThread() {
-        Thread checkerThread = new Thread(() -> {
-            while (true) {
-                try {
-                    server.ping();
-                } catch (RemoteException e) {
-                    System.out.println("\nServer is not responding, disconnecting...");
-                    try {
-                        terminateClient();
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    break;
-                }
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    System.err.println("Thread interrupted: " + e.getMessage());
-                    break;
-                }
-            }
-        });
-
-        checkerThread.setDaemon(true);
-        checkerThread.start();
     }
 
     /**
@@ -235,22 +236,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             ObjectiveCard[] obj = server.getObjCards(roomJoined);
             server.setObjSecret(obj[tui.chooseObjective(obj[0], obj[1]) - 1], nickname, roomJoined);
             startNormalGame();
-    }
-
-    public void checkDisconnection() throws RemoteException {
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(500);
-                    if(server.isTerminating(roomJoined)){
-                    System.out.println("Someone disconnected. Reload the game to play again!");
-                        terminateClient();
-                    }
-                } catch (InterruptedException | RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 
     /**
@@ -311,6 +296,46 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
             tui.winnersPrint(server.getMultiWinners(roomJoined));
         terminateClient();
 
+    }
+
+    /**
+     * This method starts a thread that checks any kind of error and, in that case, it terminates the client.
+     * Every time an error occurs, a message is printed.
+     */
+    private void startServerCheckerThread() {
+        Thread checkerThread = new Thread(() -> {
+            while (true) {
+                try {
+                    server.ping();
+                } catch (RemoteException e) {
+                    System.out.println("\nServer is not responding, disconnecting...");
+                    try {
+                        terminateClient();
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    break;
+                }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    System.err.println("Thread interrupted: " + e.getMessage());
+                    break;
+                }
+            }
+        });
+
+        checkerThread.setDaemon(true);
+        checkerThread.start();
+    }
+
+    /**
+     * See ClientRMIInterface for more details.
+     *
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    public void terminateClient() throws RemoteException {
+        System.exit(0);
     }
 
     /**

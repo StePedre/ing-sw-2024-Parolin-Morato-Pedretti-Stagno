@@ -45,6 +45,22 @@ public interface ServerRMIInterface extends Remote {
     boolean checkCardRequirements(PlayableCard card, String nickname, String roomName) throws RemoteException;
 
     /**
+     * This method checks the clients with the ping method.
+     * Every exception that arises is caught.
+     *
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    void checkClients() throws RemoteException;
+
+    /**
+     * This method removes a client from the clients map.
+     *
+     * @param client is the client to remove.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    void deregisterClient(ClientRMIInterface client) throws RemoteException;
+
+    /**
      * This method draws a card for a player.
      *
      * @param int1 is the type of deck from which the card is drawn. (0 is the resource deck, 1 is the gold one)
@@ -101,6 +117,16 @@ public interface ServerRMIInterface extends Remote {
     RoomController getRoomController() throws RemoteException;
 
     /**
+     * This method checks if a player is already in a game or not.
+     *
+     * @param roomName is the name of the room in which to do the check.
+     * @param nickname is the name of the player to check.
+     * @return a boolean that tells if a player is already in a game or not.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    boolean isAlreadyInRoom(String roomName, String nickname) throws RemoteException;
+
+    /**
      * This method tells if a player is the current player.
      *
      * @param nickname is the name of the player.
@@ -109,12 +135,6 @@ public interface ServerRMIInterface extends Remote {
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     boolean isCurrentPlayer(String nickname, String roomName) throws RemoteException;
-
-    void deregisterClient(ClientRMIInterface client) throws RemoteException;
-
-    boolean isValidColor(String color, String roomName) throws RemoteException;
-
-    boolean isAlreadyInRoom(String roomName, String nickname) throws RemoteException;
 
     /**
      * This method gets the boolean that tells if a deck is empty or not.
@@ -153,12 +173,39 @@ public interface ServerRMIInterface extends Remote {
     boolean isLastTurn(String roomName) throws RemoteException;
 
     /**
+     * This method checks if a game in the Room called roomName is ending or not.
+     *
+     * @param roomName the name of the Room in which the game needs to be checked.
+     * @return a boolean that tells if the game is ending or not.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    boolean isTerminating(String roomName) throws RemoteException;
+
+    /**
+     * This method checks if a color is available to be picked or not.
+     *
+     * @param color is the color to check if it's still available.
+     * @param roomName is the name of the room in which to do the check.
+     * @return a boolean that tells if the color is available or not.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    boolean isValidColor(String color, String roomName) throws RemoteException;
+
+    /**
      * This method advances to the next round of the round controller.
      *
      * @param roomName is the name of the room in which to find the game.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     void nextRound(String roomName) throws RemoteException;
+
+    /**
+     * This method is used to catch an exception.
+     * It is called every 1 second on every client contained in the clients map.
+     *
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    void ping() throws RemoteException;
 
     /**
      * This method place a card in a specific position from the hand of a player.
@@ -168,11 +215,18 @@ public interface ServerRMIInterface extends Remote {
      * @param roomName is the name of the room in which to find the game.
      * @param nickname is the name of the player.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
-     * @throws MissingResourcesException if there are not the available resources to playe that card.
+     * @throws MissingResourcesException if there are not the available resources to play that card.
      * @throws InvalidPositionException if the position of the card does not belong to available positions set.
      */
     void placeCard(PlayableCard card, Position position, String roomName, String nickname) throws RemoteException, MissingResourcesException, InvalidPositionException;
 
+    /**
+     * This method adds a player to a room and puts the correlated client in the map clients.
+     *
+     * @param client is the client to add to the map and to the game.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    void registerClient(ClientRMIInterface client) throws RemoteException;
 
     /**
      * This method set the starter card to a player in a game.
@@ -221,13 +275,5 @@ public interface ServerRMIInterface extends Remote {
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     ArrayList<Room> showRooms() throws RemoteException;
-
-    void registerClient(ClientRMIInterface client) throws RemoteException;
-
-    void checkClients() throws RemoteException;
-
-    boolean isTerminating(String roomName) throws RemoteException;
-
-    void ping() throws RemoteException;
 
 }

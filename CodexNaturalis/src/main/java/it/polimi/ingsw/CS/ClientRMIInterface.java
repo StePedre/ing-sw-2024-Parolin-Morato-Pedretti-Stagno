@@ -16,6 +16,21 @@ import java.rmi.RemoteException;
 public interface ClientRMIInterface extends Remote {
 
     /**
+     * This method gets the name of the room joined by a player.
+     *
+     * @return such name.
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    String getRoomJoined() throws RemoteException;
+
+    /**
+     * This method is used to catch an exception.
+     *
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
+    void ping() throws RemoteException;
+
+    /**
      * This method starts the client and calls the method that start the TUI.
      *
      * @throws IOException if there has been problems regarding input or output.
@@ -24,10 +39,12 @@ public interface ClientRMIInterface extends Remote {
      */
     void runClient(TUI tui) throws IOException, InvalidPositionException, MissingResourcesException;
 
-    void ping() throws RemoteException;
-
-    String getRoomJoined() throws RemoteException;
-
+    /**
+     * This method terminates the client.
+     * It is called at the end of the game, or in case any of the players disconnects.
+     *
+     * @throws RemoteException if there has been problems during the execution of a remote method call.
+     */
     void terminateClient() throws RemoteException;
 
 }
