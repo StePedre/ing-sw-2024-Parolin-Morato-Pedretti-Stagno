@@ -41,6 +41,15 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         }
     }
 
+    public MyClientRMI(ServerRMIInterface server, String roomJoined, String nickname) throws RemoteException {
+        super();
+        this.server = server;
+        this.roomJoined = roomJoined;
+        this.nickname = nickname;
+    }
+
+    public ServerRMIInterface getServer(){return server;}
+
     /**
      * This method checks if some other player is disconnected from the game.
      * In this case, it prints a message telling that and terminates the client.
