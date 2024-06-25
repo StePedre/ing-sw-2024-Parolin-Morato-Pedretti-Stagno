@@ -161,8 +161,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         try {
             boolean waitingForPlayers = true;
             while (waitingForPlayers) {
-                ArrayList<Player> currentPlayers = getPlayers();
-                if(currentPlayers.size() == server.getRoomController().getRoom(roomJoined).getGame().getExpPlayers())
+                if(server.getRoomController().getRoom(roomJoined).isFull())
                     waitingForPlayers = false;
             }
         } catch (RemoteException e) {
