@@ -111,7 +111,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      */
     private String controlRoom2(ArrayList<Room> rooms) throws RemoteException{
         String roomName = tui.getRoomName(false, rooms);
-        if(server.getRoomController().alreadyExist(roomName) || server.getRoomController().getRoom(roomName).isFull() || server.getRoomController().getRoom(roomName).isOccupied()){
+        if(server.isValidRoom(roomName)){
             return roomName;
         } else {
             return controlRoom(false, rooms);
@@ -165,15 +165,6 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         return nickname;
     }
 
-    /**
-     * This method gets the list of players in the room.
-     *
-     * @return such list of players.
-     * @throws RemoteException if there has been problems during the execution of a remote method call.
-     */
-    private ArrayList<Player> getPlayers() throws RemoteException {
-        return server.getRoomController().getRoom(roomJoined).getGame().getPlayers();
-    }
 
     /**
      * See ClientRMIInterface for more details.
@@ -272,7 +263,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                         Player player = game.getPlayer(nickname);
                         if (tui.yourTurnPlay(game, player)) {
                             if (server.isLastTurn(roomJoined)) {
-                                System.out.println("This is the last turn!");
+                                tui.lastTurn();
                             }
                             boolean status = true;
                             while (status) {

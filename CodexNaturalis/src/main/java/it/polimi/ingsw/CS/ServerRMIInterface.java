@@ -124,7 +124,7 @@ public interface ServerRMIInterface extends Remote {
      * @return a boolean that tells if a player is already in a game or not.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    boolean isAlreadyInRoom(String roomName, String nickname) throws RemoteException;
+    boolean isValidRoom(String roomName) throws RemoteException;
 
     /**
      * This method tells if a player is the current player.

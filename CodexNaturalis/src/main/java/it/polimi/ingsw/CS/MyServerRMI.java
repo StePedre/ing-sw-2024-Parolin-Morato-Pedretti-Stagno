@@ -426,6 +426,18 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         return true;
     }
 
+    public boolean isValidRoom(String roomName) throws RemoteException{
+        for(Room room : rooms.getRooms()) {
+            if(room.getName().equals(roomName)){
+                if(!room.isFull() && !room.isOccupied() && !room.getGame().isTerminating()) {
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
     /**
      * See ServerRMIInterface for more details.
      *
@@ -445,7 +457,7 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      */
     public ArrayList<Room> showRooms() throws RemoteException {
         List<Room> availableRooms = rooms.getRooms().stream()
-                .filter(room -> (!room.isFull() && !room.isOccupied()))
+                .filter(room -> (!room.isFull() && !room.isOccupied() && !room.getGame().isTerminating()))
                 .toList();
         return new ArrayList<>(availableRooms);
     }

@@ -953,6 +953,8 @@ public class GUIrmi extends Application {
             Task<Integer> task = new Task<>(){
                 @Override
                 protected Integer call() throws Exception {
+                    while(!guiServerRMI.isGameOver(roomName)){
+                    }
                     winners[0] = guiServerRMI.getMultiWinners(roomName);
                     return null;
                 }
@@ -1173,7 +1175,7 @@ public class GUIrmi extends Application {
                         if (guiServerRMI.isLastTurn(roomName)) {
                             switchToWaitingFinish(stage);
                         } else {
-                            if (guiServerRMI.isDeckEmpty(roomName)) {
+                            if (!guiServerRMI.isDeckEmpty(roomName)) {
                                 event.consume();
                                 switchToDraw(stage, controller);
                             } else {

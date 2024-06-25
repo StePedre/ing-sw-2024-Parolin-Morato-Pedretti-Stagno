@@ -150,7 +150,7 @@ public class MyClientSocket {
                 updateData();
                 tui.yourTurnPlay(game,player);
                 if((boolean) in.readObject()){
-                    System.out.println("è l'ultimo turno");// Aggiungere a tui
+                    tui.lastTurn();
                 }
                 PlayableCard card =null;
                 while(card == null){
