@@ -130,13 +130,13 @@ public class MyClientSocket {
         }while(!(boolean)in.readObject());
         player = (Player) in.readObject();
         in.readObject();//legge false per non numero di player
-        tui.Welcome(player);
+        tui.Welcome(player.getNickname());
         in.readObject();//legge true per raggiungimento numero player
         out.writeObject(!tui.showStarterCard((StarterCard) in.readObject()));
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));
         updateData();
-        tui.Welcome(player);
+        tui.Welcome(player.getNickname());
         out.reset();
         boolean b =  (boolean) in.readObject();
         while(true){

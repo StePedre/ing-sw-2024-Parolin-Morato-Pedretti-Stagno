@@ -22,7 +22,7 @@ public interface ServerRMIInterface extends Remote {
      * @return such player.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    Player addNewPlayer(String nickname, String room) throws RemoteException;
+    int addNewPlayer(String color, String nickname, String room) throws RemoteException;
 
     /**
      * This method adds a room to the list of rooms.
@@ -276,6 +276,6 @@ public interface ServerRMIInterface extends Remote {
      * @return such list of rooms.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    ArrayList<Room> showRooms() throws RemoteException;
+    ArrayList<Room> getAvailableRooms() throws RemoteException;
 
 }

@@ -436,8 +436,8 @@ public class TUI {
      *
      * @param player gets the message.
      */
-    public void Welcome(Player player) {
-        System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n"+"Please wait for other players");
+    public void Welcome(String nickname) {
+        System.out.println("Welcome to Codex Naturalis, " + nickname + "!\n"+"Please wait for other players");
     }
 
     /**

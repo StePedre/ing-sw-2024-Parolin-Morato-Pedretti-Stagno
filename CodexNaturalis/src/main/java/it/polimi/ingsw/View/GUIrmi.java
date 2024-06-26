@@ -492,9 +492,11 @@ public class GUIrmi extends Application {
                     }
                     if(flag[0]) {
                         try {
-                            guiServerRMI.addNewPlayer(nickname,roomName);
-                            guiServerRMI.setPlayerColor(choice[0], nickname, roomName);
-                        } catch (RemoteException ex) {
+                            int credentialValue = guiServerRMI.addNewPlayer(choice[0], nickname,roomName);
+                            if( credentialValue == 1 || credentialValue == 2){
+                                switchToLogin(stage);
+                            }
+                        } catch (ClassNotFoundException | IOException ex) {
                             throw new RuntimeException(ex);
                         }
                         switchToWaitingStart(stage);
@@ -780,7 +782,7 @@ public class GUIrmi extends Application {
         Scene scene = new Scene(root, screenWidth, screenHeight);
         stage.setScene(scene);
         stage.show();
-        ArrayList<Room> rooms = guiServerRMI.showRooms();
+        ArrayList<Room> rooms = guiServerRMI.getAvailableRooms();
         for (Room r : rooms) {
             Label elem = new Label(r.getName());
             elem.setFont(Font.font("Bookman Old Style"));

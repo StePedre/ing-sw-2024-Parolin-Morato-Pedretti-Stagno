@@ -339,6 +339,19 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
         System.exit(0);
     }
 
+    private void inputCredentials() throws RemoteException{
+        boolean credentialsAccepted = false;
+        while(!credentialsAccepted){
+            nickname = controlNickname(true);
+            String color = tui.chooseColor(server.getRemainingColors(roomJoined));
+            switch(server.addNewPlayer(color, nickname, roomJoined)){
+                case 1 : System.out.println("Someone took that username before you!");
+                case 2 : System.out.println("Someone took that color before you!");
+                default: credentialsAccepted = true;
+            }
+        }
+    }
+
     /**
      * This method manages the pre-game of a player when using the text user interface.
      * It creates or joins a room, adds the player with their nickname, sets their color.
@@ -349,26 +362,20 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      * @throws MissingResourcesException if there are not the available resources to play that card.
      */
     private void useTUI() throws IOException, InvalidPositionException, MissingResourcesException {
-        tui.showRoom(server.showRooms());
+        tui.showRoom(server.getAvailableRooms());
         if(tui.chooseRoom()){
             roomJoined = controlRoom(true, server.getRoomController().getRooms());
-            server.addRoom(roomJoined);
+            while(!server.addRoom(roomJoined)){
+                roomJoined = controlRoom(true, server.getRoomController().getRooms());
+            }
             server.setPlayerNumber(tui.askPlayersNo(), roomJoined);
             server.registerClient(this);
         }else{
             roomJoined = controlRoom2(server.getRoomController().getRooms());
             server.registerClient(this);
         }
-            nickname = controlNickname(true);
-
-        String color = tui.chooseColor(server.getRemainingColors(roomJoined));
-            while(!server.isValidColor(color, roomJoined)){
-                System.out.println("Color already taken!");
-                color = tui.chooseColor(server.getRemainingColors(roomJoined));
-            };
-            Player player = server.addNewPlayer(nickname, roomJoined);
-            server.setPlayerColor(color, nickname, roomJoined);
-            tui.Welcome(player);
+            inputCredentials();
+            tui.Welcome(nickname);
             listenToPlayers();
             System.out.println("All players have joined, lets start the game!");
             startEarlyGame();

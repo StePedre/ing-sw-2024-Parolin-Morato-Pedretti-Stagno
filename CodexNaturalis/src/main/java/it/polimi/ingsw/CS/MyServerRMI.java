@@ -51,16 +51,26 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      * @return such player.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    public Player addNewPlayer(String nickname, String roomName) throws RemoteException{
+    public int addNewPlayer(String color, String nickname, String roomName) throws RemoteException{
+        Set<String> remainingColors = getRemainingColors(roomName);
         Player newPlayer = new Player(nickname);
         Game game = rooms.getRoom(roomName).getGame();
         if(game.getPlayer(nickname) == null) {
             game.addPlayer(newPlayer);
             rooms.getRoom(roomName).getRoundController().addPlayer(newPlayer);
-            return newPlayer;
+        }else{
+            return 1;
         }
-        return null;
+        if(remainingColors.contains(color)) {
+            rooms.getRoom(roomName).getGame().getPlayer(nickname).setColor(color);
+            remainingColors.remove(color);
+            rooms.getRoom(roomName).getGame().setColors(remainingColors);
+        }else{
+            return 2;
+        }
+        return 0;
     }
+
 
     /**
      * See ServerRMIInterface for more details.
@@ -463,7 +473,7 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      * @return such list of rooms.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    public ArrayList<Room> showRooms() throws RemoteException {
+    public ArrayList<Room> getAvailableRooms() throws RemoteException {
         List<Room> availableRooms = rooms.getRooms().stream()
                 .filter(room -> (!room.isFull() && !room.isOccupied() && !room.getGame().isTerminating()))
                 .toList();
