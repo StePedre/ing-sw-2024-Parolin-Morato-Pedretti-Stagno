@@ -138,7 +138,15 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         if(isDeckEmpty(roomName)){
             rooms.getRoom(roomName).getRoundController().setEnding();
         }
-        rooms.getRoom(roomName).getRoundController().nextRound();
+    }
+
+    public void endTurn(String roomName,String nickname)throws RemoteException{
+        RoundController rc = rooms.getRoom(roomName).getRoundController();
+        if(rc.isEnding() && rc.isLastTurn()){
+            rooms.getRoom(roomName).getGame().finish();
+        }else {
+            rooms.getRoom(roomName).getRoundController().nextRound();
+        }
 
     }
 
@@ -149,10 +157,11 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      * @return such card.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    public StarterCard getFirstCard( String roomName) throws RemoteException{
+    public StarterCard getFirstCard(String roomName) throws RemoteException{
         Room room = rooms.getRoom(roomName);
         return room.getPlayerController().pickCard(room.getGame());
     }
+
 
     /**
      * See ServerRMIInterface for more details.

@@ -1019,7 +1019,7 @@ public class GUIrmi extends Application {
             stage.setScene(scene);
             stage.show();
             MyClientRMI client = new MyClientRMI(guiServerRMI,roomName,nickname);
-            //client.getServer().registerClient(client);
+            guiServerRMI.registerClient(client);
             Task<Integer> task = new Task<>() {
                 @Override
                 protected Integer call() throws Exception {
@@ -1126,7 +1126,7 @@ public class GUIrmi extends Application {
                         controller.updateAfterPlay(guiServerRMI.getRoomController().getRoom(roomName).getGame().getPlayer(nickname));
                         controller.setPosPlayedNull();// works
                         if (guiServerRMI.isLastTurn(roomName)) {
-                            guiServerRMI.nextRound(roomName);
+                            guiServerRMI.endTurn(roomName, nickname);
                             switchToWaitingFinish(stage);
                         } else {
                             if (!guiServerRMI.isDeckEmpty(roomName)) {
@@ -1135,7 +1135,7 @@ public class GUIrmi extends Application {
                             } else {
                                 event.consume();
                                 showZeroCards(stage);
-                                guiServerRMI.nextRound(roomName);
+                                guiServerRMI.endTurn(roomName, nickname);
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
                         }
@@ -1151,7 +1151,7 @@ public class GUIrmi extends Application {
                         controller.updateAfterPlay(guiServerRMI.getRoomController().getRoom(roomName).getGame().getPlayer(nickname));
                         controller.setPosPlayedNull();
                         if (guiServerRMI.isLastTurn(roomName)) {
-                            guiServerRMI.nextRound(roomName);
+                            guiServerRMI.endTurn(roomName, nickname);
                             switchToWaitingFinish(stage);
                         } else {
                             if (!guiServerRMI.isDeckEmpty(roomName)) {
@@ -1160,7 +1160,7 @@ public class GUIrmi extends Application {
                             } else {
                                 event.consume();
                                 showZeroCards(stage);
-                                guiServerRMI.nextRound(roomName);
+                                guiServerRMI.endTurn(roomName, nickname);
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
                         }
@@ -1178,7 +1178,7 @@ public class GUIrmi extends Application {
                         controller.updateAfterPlay(guiServerRMI.getRoomController().getRoom(roomName).getGame().getPlayer(nickname));
                         controller.setPosPlayedNull();
                         if (guiServerRMI.isLastTurn(roomName)) {
-                            guiServerRMI.nextRound(roomName);
+                            guiServerRMI.endTurn(roomName, nickname);
                             switchToWaitingFinish(stage);
                         } else {
                             if (!guiServerRMI.isDeckEmpty(roomName)) {
@@ -1187,7 +1187,7 @@ public class GUIrmi extends Application {
                             } else {
                                 event.consume();
                                 showZeroCards(stage);
-                                guiServerRMI.nextRound(roomName);
+                                guiServerRMI.endTurn(roomName, nickname);
                                 notYourTurn(stage, game[0], player[0], controller);
                             }
                         }

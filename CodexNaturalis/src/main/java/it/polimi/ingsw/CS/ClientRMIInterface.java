@@ -47,4 +47,6 @@ public interface ClientRMIInterface extends Remote {
      */
     void terminateClient() throws RemoteException;
 
+    String getNickname() throws RemoteException;
+
 }

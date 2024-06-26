@@ -172,6 +172,8 @@ public interface ServerRMIInterface extends Remote {
      */
     boolean isLastTurn(String roomName) throws RemoteException;
 
+    void endTurn(String roomJoined,String nickname)throws RemoteException;
+
     /**
      * This method checks if a game in the Room called roomName is ending or not.
      *

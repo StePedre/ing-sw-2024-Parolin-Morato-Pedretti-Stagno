@@ -256,8 +256,8 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                     if (server.isGameOver(roomJoined)) {
                         break;
                     } else {
-                        Room room = server.getRoomController().getRoom(roomJoined);
-                        tui.notYourTurn(room.getGame(), room.getGame().getPlayer(nickname));
+                        Game game = server.getRoomController().getRoom(roomJoined).getGame();
+                        tui.notYourTurn(game, game.getPlayer(nickname));
                         int i = 0;
                         while (!server.isCurrentPlayer(roomJoined, nickname)) {
                             i++;
@@ -286,6 +286,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                                     player = game.getPlayer(nickname);
                                     drawCardFromDeck(tui.yourTurnDraw(game, player));
                                 }
+                                server.endTurn(roomJoined,nickname);
                                 status = false;
                             }
                         }
