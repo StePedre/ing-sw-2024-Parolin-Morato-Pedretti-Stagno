@@ -166,7 +166,7 @@
           <version>3.2.4</version>
           <executions>
             <execution>
-              <id>Client</id>
+              <id>Server</id>
               <phase>package</phase>
               <goals>
                 <goal>shade</goal>
@@ -181,7 +181,7 @@
               </configuration>
             </execution>
             <execution>
-              <id>Server</id>
+              <id>Client</id>
               <phase>package</phase>
               <goals>
                 <goal>shade</goal>
