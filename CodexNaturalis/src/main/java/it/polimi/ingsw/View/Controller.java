@@ -72,8 +72,8 @@ public class Controller {
     private Button nickButton, requestButton;
     private final ArrayList<Position> availablePos = new ArrayList<>();
     private final String emptyImagePath = String.valueOf(getClass().getResource("border_image.png"));
-    private final String imagesFrontPath = String.valueOf(getClass().getResource( "CODEX_cards_gold_front/"));
-    private final String imagesBackPath = String.valueOf(getClass().getResource("CODEX_cards_gold_back/"));
+    private final String imagesFrontPath = String.valueOf(getClass().getResource( "CODEX_cards_gold_front"))+"/";
+    private final String imagesBackPath = String.valueOf(getClass().getResource("CODEX_cards_gold_back"))+"/";
     private PlayableCard currentHandLeft, currentHandCenter, currentHandRight;
     private String nick2, nick3, nick4;
     private PlayableCard cardPlayed;
