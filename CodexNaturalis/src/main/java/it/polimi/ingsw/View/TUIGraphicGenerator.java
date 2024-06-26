@@ -532,7 +532,7 @@ public class TUIGraphicGenerator {
         StringBuilder buttonBorder =  new StringBuilder();
 
         ArrayList<PlayableCard> cards1 = deck1.getCards();
-        cards1.getFirst().flipCard();
+        cards1.get(2).flipCard();
 
 
         int size = cards1.size() >=3 ? 2 : cards1.size();
@@ -545,7 +545,7 @@ public class TUIGraphicGenerator {
             buttonBorder.append(cornerColor(cards1.get(i).getShowedCorners()[1])).append(cardColor(cards1.get(i))).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards1.get(i).getShowedCorners()[3])).append("  ");
         }
         ArrayList<PlayableCard> cards2 = deck2.getCards();
-        cards2.getFirst().flipCard();
+        cards2.get(2).flipCard();
 
         topBorder.append(space);
         contentLine1.append(space);
@@ -571,8 +571,8 @@ public class TUIGraphicGenerator {
 
     /**
      * This method prints the PlayerGround of a player, with their available position.
-     * It prints the starter card, the objective cards, the secret objective one, the hand and a legend that explain the
-     * printed symbols in relation to the Resources.
+     * it also prints a legend that explain the
+     * printed symbols in relation to the Resources, and their values.
      *
      * @param playerGround is the PlayerGround to display.
      */

@@ -99,7 +99,6 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
     public void checkClients() throws RemoteException {
-        System.out.println("Checking clients:");
         new Thread(() -> {
             while (true) {
                 try {
@@ -144,9 +143,9 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         RoundController rc = rooms.getRoom(roomName).getRoundController();
         if(rc.isEnding() && rc.isLastTurn()){
             rooms.getRoom(roomName).getGame().finish();
-        }else {
-            rooms.getRoom(roomName).getRoundController().nextRound();
         }
+        rooms.getRoom(roomName).getRoundController().nextRound();
+
 
     }
 

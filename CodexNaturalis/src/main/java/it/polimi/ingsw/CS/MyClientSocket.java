@@ -121,15 +121,9 @@ public class MyClientSocket {
         do {
             out.writeObject(tui.insertNickname(true));
         }while((boolean) in.readObject());
-        boolean NoOk = false;
         if((boolean)in.readObject()){
-            do {
-                int i = tui.askPlayersNo();
-                if(i>=2 && i<=4) {
-                    out.writeObject(i);
-                    NoOk = true;
-                }
-            }while(!NoOk);
+            int i = tui.askPlayersNo();
+            out.writeObject(i);
         }
         do{
             out.writeObject(tui.chooseColor((Set<String>) in.readObject()));

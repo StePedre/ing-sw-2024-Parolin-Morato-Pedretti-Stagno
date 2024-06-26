@@ -26,10 +26,26 @@ public class TUI {
      *
      * @return desired number of players.
      */
-    public int askPlayersNo(){
-        System.out.println("You're the first player, insert how many players you'd like, please: ");
+    public int askPlayersNo() {
+
+        System.out.println("You're the first player, insert how many players you'd like (2 up to 4): ");
         Scanner scanner = new Scanner(System.in);
-        return scanner.nextInt();
+        int number = 0;
+        boolean validInput = false;
+        while (!validInput) {
+            try {
+                number = scanner.nextInt();
+                if (number >= 2 && number <= 4) {
+                    validInput = true;
+                } else {
+                    System.out.println("Please insert a valid number of players (2 up to 4): ");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number between 2 and 4.");
+                scanner.next();
+            }
+        }
+        return number;
     }
 
     /**
@@ -173,7 +189,7 @@ public class TUI {
                 }else if(card ==4){
                     printOtherPlayersGrounds(game, player);
                     yourTurnPlay(game, player);
-                    cardToPlay = inputCardToPlace(game,player);
+                    return inputCardToPlace(game,player);
                 }
             } catch (NumberFormatException e) {
                 System.out.println("                                                                              Invalid input. Please enter a number between 1 and 4");
@@ -279,9 +295,9 @@ public class TUI {
      */
     public String insertNickname(boolean choice){
         if(choice) {
-            System.out.println("Insert your nickname, please: ");
+            System.out.println("Insert your nickname: ");
         }else{
-            System.out.println("Insert a valid nickname , please: ");
+            System.out.println("Insert a valid nickname: ");
         }
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
@@ -324,9 +340,13 @@ public class TUI {
         System.out.println("\n");
         TUIGraphicGenerator.printGround(player.getPlayerGround());
         System.out.println("\n");
-        System.out.println("                                                                                                    SECRET                                                  ");
-        System.out.println("                                                    YOUR HAND:                                     OBJECTIVE                                                         COMMON OBJECTIVES:");
-
+        if(player.getHand().getCards().length == 2){
+            System.out.println("                                                                               SECRET                                                  ");
+            System.out.println("                                 YOUR HAND:                                   OBJECTIVE                                                         COMMON OBJECTIVES:");
+        }else {
+            System.out.println("                                                                                                    SECRET                                                  ");
+            System.out.println("                                                    YOUR HAND:                                     OBJECTIVE                                                         COMMON OBJECTIVES:");
+        }
         TUIGraphicGenerator.printHand(player.getHand(), game.getCommonObj());
         System.out.println("\n                                                                   It's not your turn. You have to wait until the other players finish to play.\n");
     }
@@ -417,7 +437,7 @@ public class TUI {
      * @param player gets the message.
      */
     public void Welcome(Player player) {
-        System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n"+"Please wait for others player");
+        System.out.println("Welcome to Codex Naturalis, " + player.getNickname() + "!\n"+"Please wait for other players");
     }
 
     /**
@@ -430,7 +450,7 @@ public class TUI {
     public void winnersPrint(ArrayList<Player> winners){
         System.out.println("\n                                                                                               The game is over!");
         if(winners.size()==1){
-            System.out.println("\n                                                                                    The winner is: " + winners.getFirst().getNickname());
+            System.out.println("\n                                                                                         The winner is: " + winners.getFirst().getNickname());
         }
         else{
             System.out.println("\n                                                                                          It's a draw! The winners are:\n");
