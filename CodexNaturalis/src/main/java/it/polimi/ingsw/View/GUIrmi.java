@@ -1083,7 +1083,7 @@ public class GUIrmi extends Application {
                 controller.setDropZones(zone);
             }
             setLinkToPlayerGrounds(game[0], controller, stage);
-            if (!guiServerRMI.isGameOver(roomName)) {    // if not last turn
+            if (!guiServerRMI.isLastTurn(roomName)) {    // if not last turn
                 showYourTurn(stage);
             } else { // ultimo turno
                 showLastTurn(stage);
