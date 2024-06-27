@@ -71,9 +71,9 @@ public class Controller {
     @FXML
     private Button nickButton, requestButton;
     private final ArrayList<Position> availablePos = new ArrayList<>();
-    private final String emptyImagePath = Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/border_image.png")).getPath();
-    private final String imagesFrontPath = Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/CODEX_cards_gold_front")).getPath()+"/";
-    private final String imagesBackPath = Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/CODEX_cards_gold_back")).getPath()+"/";
+    private final String emptyImagePath = "/it/polimi/ingsw/border_image.png";
+    private final String imagesFrontPath = "/it/polimi/ingsw/CODEX_cards_gold_front/";
+    private final String imagesBackPath = "/it/polimi/ingsw/CODEX_cards_gold_back/";
     private PlayableCard currentHandLeft, currentHandCenter, currentHandRight;
     private String nick2, nick3, nick4;
     private PlayableCard cardPlayed;
@@ -88,34 +88,35 @@ public class Controller {
      */
     public void addCards(Deck[] decks) {
         if (decks[0].getCards().getFirst() == null) {
-            resUp1.setImage(new Image("file:" + emptyImagePath));
+            resUp1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
         } else {
-            resUp1.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().getFirst().getId() + ".png"));
+            resUp1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + decks[0].getCards().getFirst().getId() + ".png"))));
         }
         if (decks[0].getCards().get(1) == null) {
-            resUp2.setImage(new Image("file:" + emptyImagePath));
+            resUp2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
         } else {
-            resUp2.setImage(new Image("file:" + imagesFrontPath + decks[0].getCards().get(1).getId() + ".png"));
+            resUp2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + decks[0].getCards().get(1).getId() + ".png"))));
         }
         if (decks[0].getCards().get(2) == null) {
-            resDeck.setImage(new Image("file:" + emptyImagePath));
+            resDeck.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
         } else {
-            resDeck.setImage(new Image("file:" + imagesBackPath + decks[0].getCards().get(2).getId() + ".png"));
+            resDeck.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesBackPath + decks[0].getCards().get(2).getId() + ".png"))));
         }
+
         if (decks[1].getCards().getFirst() == null) {
-            goldUp1.setImage(new Image("file:" + emptyImagePath));
+            goldUp1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
         } else {
-            goldUp1.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().getFirst().getId() + ".png"));
+            goldUp1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + decks[1].getCards().getFirst().getId() + ".png"))));
         }
         if (decks[1].getCards().get(1) == null) {
-            goldUp2.setImage(new Image("file:" + emptyImagePath));
+            goldUp2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
         } else {
-            goldUp2.setImage(new Image("file:" + imagesFrontPath + decks[1].getCards().get(1).getId() + ".png"));
+            goldUp2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + decks[1].getCards().get(1).getId() + ".png"))));
         }
         if (decks[1].getCards().get(2) == null) {
-            goldDeck.setImage(new Image("file:" + emptyImagePath));
+            goldDeck.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
         } else {
-            goldDeck.setImage(new Image("file:" + imagesBackPath + decks[1].getCards().get(2).getId() + ".png"));
+            goldDeck.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesBackPath + decks[1].getCards().get(2).getId() + ".png"))));
         }
     }
 
@@ -125,8 +126,8 @@ public class Controller {
      * @param commonObj is the array that contains the two common objective cards.
      */
     public void addCommonObj(ObjectiveCard[] commonObj) {
-        commonObj1.setImage(new Image("file:" + imagesFrontPath + commonObj[0].getId() + ".png"));
-        commonObj2.setImage(new Image("file:" + imagesFrontPath + commonObj[1].getId() + ".png"));
+        commonObj1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + commonObj[0].getId() + ".png"))));
+        commonObj2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + commonObj[1].getId() + ".png"))));
     }
 
     /**
@@ -166,24 +167,24 @@ public class Controller {
      */
     public void addImages(Hand hand) {
         if (hand.getCard(0) == null) {
-            handCardLeft.setImage(new Image("file:" + emptyImagePath));
+            handCardLeft.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
             currentHandLeft = null;
         } else {
-            handCardLeft.setImage(new Image("file:" + imagesFrontPath + hand.getCard(0).getId() + ".png"));
+            handCardLeft.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + hand.getCard(0).getId() + ".png"))));
             currentHandLeft = hand.getCard(0);
         }
         if (hand.getCard(1) == null) {
-            handCardCenter.setImage(new Image("file:" + emptyImagePath));
+            handCardCenter.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
             currentHandCenter = null;
         } else {
-            handCardCenter.setImage(new Image("file:" + imagesFrontPath + hand.getCard(1).getId() + ".png"));
+            handCardCenter.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + hand.getCard(1).getId() + ".png"))));
             currentHandCenter = hand.getCard(1);
         }
         if (hand.getCard(2) == null) {
-            handCardRight.setImage(new Image("file:" + emptyImagePath));
+            handCardRight.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
             currentHandRight = null;
         } else {
-            handCardRight.setImage(new Image("file:" + imagesFrontPath + hand.getCard(2).getId() + ".png"));
+            handCardRight.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + hand.getCard(2).getId() + ".png"))));
             currentHandRight = hand.getCard(2);
         }
     }
@@ -228,9 +229,9 @@ public class Controller {
         ImageView iv;
         for(Move move : pg.getPlayerGround().getMoves()){
             if (pg.getPlayerGround().getGround()[move.getPos().getX()][move.getPos().getY()].getFlip()) {
-                iv = new ImageView(new Image("file:" + imagesBackPath + pg.getPlayerGround().getGround()[move.getPos().getX()][move.getPos().getY()].getId() + ".png", 150, 100, false, false));
+                iv = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesBackPath + pg.getPlayerGround().getGround()[move.getPos().getX()][move.getPos().getY()].getId() + ".png")), 150, 100, false, false));
             } else {
-                iv = new ImageView(new Image("file:" + imagesFrontPath + pg.getPlayerGround().getGround()[move.getPos().getX()][move.getPos().getY()].getId() + ".png", 150, 100, false, false));
+                iv = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + pg.getPlayerGround().getGround()[move.getPos().getX()][move.getPos().getY()].getId() + ".png")), 150, 100, false, false));
             }
             gridPaneGroundOther.add(iv,move.getPos().getY(),move.getPos().getX());
         }
@@ -284,8 +285,9 @@ public class Controller {
      * @param secretObjective is the secret objective card chosen by the player.
      */
     public void addSecretObj(ObjectiveCard secretObjective) {
-        secretObj.setImage(new Image("file:" + imagesFrontPath + secretObjective.getId() + ".png"));
+        secretObj.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + secretObjective.getId() + ".png"))));
     }
+
 
     /**
      * This method sets the Images of the two secret objective to display in the correct ImageViews.
@@ -293,8 +295,8 @@ public class Controller {
      * @param objs is the starter card to displayed.
      */
     public void addSecretObjImages(ObjectiveCard[] objs) {
-        secretObjLeft.setImage(new Image("file:" + imagesFrontPath + objs[0].getId() + ".png"));
-        secretObjRight.setImage(new Image("file:" + imagesFrontPath + objs[1].getId() + ".png"));
+        secretObjLeft.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + objs[0].getId() + ".png"))));
+        secretObjRight.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + objs[1].getId() + ".png"))));
     }
 
     /**
@@ -303,8 +305,8 @@ public class Controller {
      * @param card is the starter card to displayed.
      */
     public void addStarterImages(StarterCard card) {
-        frontStarterCard.setImage(new Image("file:" + imagesFrontPath + card.getId() + ".png"));
-        backStarterCard.setImage(new Image("file:" + imagesBackPath + card.getId() + ".png"));
+        frontStarterCard.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + card.getId() + ".png"))));
+        backStarterCard.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesBackPath + card.getId() + ".png"))));
     }
 
     /**
@@ -341,26 +343,27 @@ public class Controller {
             face = imagesBackPath;
         }
         if (hand.getCard(0) == null) {
-            handCardLeft.setImage(new Image("file:" + emptyImagePath));
+            handCardLeft.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
             currentHandLeft = null;
         } else {
-            handCardLeft.setImage(new Image("file:" + face + hand.getCard(0).getId() + ".png"));
+            handCardLeft.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(face + hand.getCard(0).getId() + ".png"))));
             currentHandLeft = hand.getCard(0);
             currentHandLeft.flipCard();
         }
+
         if (hand.getCard(1) == null) {
-            handCardCenter.setImage(new Image("file:" + emptyImagePath));
+            handCardCenter.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
             currentHandCenter = null;
         } else {
-            handCardCenter.setImage(new Image("file:" + face + hand.getCard(1).getId() + ".png"));
+            handCardCenter.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(face + hand.getCard(1).getId() + ".png"))));
             currentHandCenter = hand.getCard(1);
             currentHandCenter.flipCard();
         }
         if (hand.getCard(2) == null) {
-            handCardRight.setImage(new Image("file:" + emptyImagePath));
+            handCardRight.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath))));
             currentHandRight = null;
         } else {
-            handCardRight.setImage(new Image("file:" + face + hand.getCard(2).getId() + ".png"));
+            handCardRight.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(face + hand.getCard(2).getId() + ".png"))));
             currentHandRight = hand.getCard(2);
             currentHandRight.flipCard();
         }
@@ -669,12 +672,13 @@ public class Controller {
         Card sc = updatedP.getPlayerGround().getGround()[42][42];
         ImageView iv;
         if (sc.getFlip()) {
-            iv = new ImageView(new Image("file:" + imagesBackPath + sc.getId() + ".png", 150, 100, true, true));
+            iv = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesBackPath + sc.getId() + ".png")), 150, 100, true, true));
         } else {
-            iv = new ImageView(new Image("file:" + imagesFrontPath + sc.getId() + ".png", 150, 100, true, true));
+            iv = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagesFrontPath + sc.getId() + ".png")), 150, 100, true, true));
         }
         gridPaneGround.add(iv, 42, 42);
     }
+
 
     /**
      * This method switch the x and the y in a position due to the convention that: x = number of rows; y = number of columns.
@@ -698,7 +702,7 @@ public class Controller {
         for(Node n : gridPaneGround.getChildren()){
             if(n!=null) {
                 iv = (ImageView) n;
-                if (iv.getImage().getUrl()!=null && iv.getImage().getUrl().equals("file:" + emptyImagePath)) {
+                if (iv.getId()!=null && iv.getId().equals("empty")) {
                     toRemove.add(n);
                 }
             }
@@ -734,7 +738,7 @@ public class Controller {
      */
     public void setDropZones(ImageView zone) {
         zone.setOnDragOver(e -> {
-            if(zone.getImage().getUrl()!=null && zone.getImage().getUrl().equals("file:" + emptyImagePath)) {
+            if(zone.getId()!=null && zone.getId().equals("empty")) {
                 if (e.getDragboard().hasImage()) {
                     e.acceptTransferModes(TransferMode.MOVE);
                     e.consume();
@@ -742,7 +746,7 @@ public class Controller {
             }
         });
         zone.setOnDragEntered(e -> {
-            if(zone.getImage().getUrl()!=null && zone.getImage().getUrl().equals("file:" + emptyImagePath)) {
+            if(zone.getId()!=null && zone.getId().equals("empty")) {
                 ColorAdjust ca = new ColorAdjust();
                 ca.setBrightness(0.5);
                 zone.setEffect(ca);
@@ -758,6 +762,11 @@ public class Controller {
             boolean success = false;
             if (db.hasImage()) {
                 zone.setImage(db.getImage());
+                zone.setId("card");
+                zone.setFitHeight(100);
+                zone.setFitWidth(150);
+                zone.fitHeightProperty();
+                zone.fitWidthProperty();
                 zone.toFront();
                 success = true;
             }
@@ -801,7 +810,8 @@ public class Controller {
         for (Position p : pos) {
             y = p.getX();
             x = p.getY();
-            ImageView image = new ImageView(new Image("file:" + emptyImagePath, 150, 100, false, false));
+            ImageView image = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(emptyImagePath)), 150, 100, false, false));
+            image.setId("empty");
             imageViewArrayList.add(image);
             gridPaneGround.add(image, x, y);
             availablePos.add(new Position(x, y));
@@ -818,6 +828,7 @@ public class Controller {
         setTotalResource(p.getPlayerGround().getTotalResources());
         labelPoints.setText("Points: " + p.getPlayerGround().getPlayerScore());
     }
+
 
 }
 
