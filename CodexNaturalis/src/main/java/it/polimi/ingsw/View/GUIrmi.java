@@ -1097,9 +1097,9 @@ public class GUIrmi extends Application {
             ivl.setOnDragDetected(event -> {
                 if (player[0].getPlayerGround().checkRequirements(controller.getCurrentHandLeft()) || controller.getCurrentHandLeft().getFlip()) {
                     Dragboard db = ivl.startDragAndDrop(TransferMode.MOVE);
-                    Image dragMiniature = new Image(ivl.getImage().getUrl(), 150, 100, true, true);
+                    //Image dragMiniature = new Image(ivl.getImage().getUrl(), 150, 100, true, true);
                     ClipboardContent content = new ClipboardContent();
-                    content.putImage(dragMiniature);
+                    content.putImage(ivl.getImage());
                     db.setContent(content);
                     event.consume();
                     controller.setCardPlayed(controller.getCurrentHandLeft());
@@ -1108,9 +1108,9 @@ public class GUIrmi extends Application {
             ivc.setOnDragDetected(event -> {
                 if (player[0].getPlayerGround().checkRequirements(controller.getCurrentHandCenter()) || controller.getCurrentHandCenter().getFlip()) {
                     Dragboard db = ivc.startDragAndDrop(TransferMode.MOVE);
-                    Image dragMiniature = new Image(ivc.getImage().getUrl(), 150, 100, true, true);
+                    //Image dragMiniature = new Image(ivc.getImage().getUrl(), 150, 100, true, true);
                     ClipboardContent content = new ClipboardContent();
-                    content.putImage(dragMiniature);
+                    content.putImage(ivc.getImage());
                     db.setContent(content);
                     event.consume();
                     controller.setCardPlayed(controller.getCurrentHandCenter());
@@ -1119,9 +1119,9 @@ public class GUIrmi extends Application {
             ivr.setOnDragDetected(event -> {
                 if (player[0].getPlayerGround().checkRequirements(controller.getCurrentHandRight()) || controller.getCurrentHandRight().getFlip()) {
                     Dragboard db = ivr.startDragAndDrop(TransferMode.MOVE);
-                    Image dragMiniature = new Image(ivr.getImage().getUrl(), 150, 100, true, true);
+                    //Image dragMiniature = new Image(ivr.getImage().getUrl(), 150, 100, true, true);
                     ClipboardContent content = new ClipboardContent();
-                    content.putImage(dragMiniature);
+                    content.putImage(ivr.getImage());
                     db.setContent(content);
                     event.consume();
                     controller.setCardPlayed(controller.getCurrentHandRight());
