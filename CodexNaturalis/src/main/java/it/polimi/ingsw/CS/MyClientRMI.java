@@ -96,14 +96,13 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      * Otherwise, it returns the name of the room.
      *
      * @param choice is the boolean that tells if the player wants to create or join a room.
-     * @param rooms the list of rooms already created.
      * @return the name of the room.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    private String controlRoom(boolean choice, ArrayList<Room> rooms) throws RemoteException{
-        String roomName = tui.getRoomName(choice, rooms);
+    private String controlRoom(boolean choice) throws RemoteException{
+        String roomName = tui.getRoomName(choice, server.getAvailableRooms());
         if(server.getRoomController().alreadyExist(roomName)){
-            return controlRoom(choice, rooms);
+            return controlRoom(choice);
         } else {
             return roomName;
         }
@@ -113,17 +112,15 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
      * This method checks if the name of a room is already in the list of available rooms.
      * If it is not, it recalls the method. This allows to keep asking for a valid name.
      * Otherwise, it returns the name of the room.
-     *
-     * @param rooms the list of rooms already created.
      * @return the name of the room.
      * @throws RemoteException if there has been problems during the execution of a remote method call.
      */
-    private String controlRoom2(ArrayList<Room> rooms) throws RemoteException{
-        String roomName = tui.getRoomName(false, rooms);
+    private String controlRoom2() throws RemoteException{
+        String roomName = tui.getRoomName(false, server.getAvailableRooms());
         if(server.isValidRoom(roomName)){
             return roomName;
         } else {
-            return controlRoom(false, rooms);
+            return controlRoom(false);
 
         }
     }
@@ -197,7 +194,7 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
                     waitingForPlayers = false;
             }
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+
         }
     }
 
@@ -364,14 +361,14 @@ public class MyClientRMI extends UnicastRemoteObject implements ClientRMIInterfa
     private void useTUI() throws IOException, InvalidPositionException, MissingResourcesException {
         tui.showRoom(server.getAvailableRooms());
         if(tui.chooseRoom()){
-            roomJoined = controlRoom(true, server.getRoomController().getRooms());
+            roomJoined = controlRoom(true);
             while(!server.addRoom(roomJoined)){
-                roomJoined = controlRoom(true, server.getRoomController().getRooms());
+                roomJoined = controlRoom(true);
             }
             server.setPlayerNumber(tui.askPlayersNo(), roomJoined);
             server.registerClient(this);
         }else{
-            roomJoined = controlRoom2(server.getRoomController().getRooms());
+            roomJoined = controlRoom2();
             server.registerClient(this);
         }
             inputCredentials();

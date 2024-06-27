@@ -113,7 +113,7 @@ public class Room implements Serializable {
         if(game == null){
             return true;
         }
-        return game.getExpPlayers() == game.getPlayers().size();
+        return game.getExpPlayers() == game.getNumPlayer();
     }
 
     public synchronized boolean isOccupied(){

@@ -115,7 +115,6 @@ public class GUIrmi extends Application {
                 @Override
                 protected Integer call() throws Exception {
                     int i = 0;
-                    System.out.println("not your turn");
                     while(!guiServerRMI.isCurrentPlayer(roomName, nickname)){
                         i++;
                     }

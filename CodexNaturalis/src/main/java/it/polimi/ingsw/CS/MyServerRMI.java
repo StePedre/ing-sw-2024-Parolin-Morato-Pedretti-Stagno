@@ -55,19 +55,17 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         Set<String> remainingColors = getRemainingColors(roomName);
         Player newPlayer = new Player(nickname);
         Game game = rooms.getRoom(roomName).getGame();
-        if(game.getPlayer(nickname) == null) {
-            game.addPlayer(newPlayer);
-            rooms.getRoom(roomName).getRoundController().addPlayer(newPlayer);
-        }else{
+        if(game.getPlayer(nickname) != null) {
             return 1;
         }
-        if(remainingColors.contains(color)) {
-            rooms.getRoom(roomName).getGame().getPlayer(nickname).setColor(color);
-            remainingColors.remove(color);
-            rooms.getRoom(roomName).getGame().setColors(remainingColors);
-        }else{
+        if(!remainingColors.contains(color)) {
             return 2;
         }
+        game.addPlayer(newPlayer);
+        remainingColors.remove(color);
+        rooms.getRoom(roomName).getRoundController().addPlayer(newPlayer);
+        rooms.getRoom(roomName).getGame().getPlayer(nickname).setColor(color);
+        rooms.getRoom(roomName).getGame().setColors(remainingColors);
         return 0;
     }
 
@@ -390,6 +388,7 @@ public class MyServerRMI extends UnicastRemoteObject implements ServerRMIInterfa
         String roomJoined = client.getRoomJoined();
         rooms.getRoom(roomJoined).addPlayerInRoom();
         clients.put(client, roomJoined);
+        System.out.println("Client registered");
     }
 
     /**
