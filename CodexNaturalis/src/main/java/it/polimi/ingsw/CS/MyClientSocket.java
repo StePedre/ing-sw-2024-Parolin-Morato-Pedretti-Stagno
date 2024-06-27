@@ -110,10 +110,10 @@ public class MyClientSocket {
         ArrayList<Room> room = (ArrayList<Room>) in.readObject();
         tui.showRoom(room);
         do {
-            if (tui.chooseRoom()) { //create
+            if (tui.chooseRoom()) {
                 out.writeObject(true);
                 out.writeObject(tui.getRoomName(true, room));
-            } else { //join
+            } else {
                 out.writeObject(false);
                 out.writeObject(tui.getRoomName(false, room));
             }
@@ -129,9 +129,9 @@ public class MyClientSocket {
             out.writeObject(tui.chooseColor((Set<String>) in.readObject()));
         }while(!(boolean)in.readObject());
         player = (Player) in.readObject();
-        in.readObject();//legge false per non numero di player
+        in.readObject();
         tui.Welcome(player.getNickname());
-        in.readObject();//legge true per raggiungimento numero player
+        in.readObject();
         out.writeObject(!tui.showStarterCard((StarterCard) in.readObject()));
         ObjectiveCard[] objs =(ObjectiveCard[]) in.readObject();
         out.writeObject(tui.chooseObjective(objs[0],objs[1]));

@@ -119,22 +119,22 @@ public class ServerHandlerSocket implements Runnable{
             });
             game.addPlayer(player);
             rc.addPlayer(player);
-            while(game.getNumPlayer() != game.getExpPlayers()) {  // in gui schermata waiting
+            while(game.getNumPlayer() != game.getExpPlayers()) {
             }
             t.start();
             out.writeObject(true);
             playerinit();
             sendData();
             if(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
-                out.writeObject(false);  // non è il suo turno
+                out.writeObject(false);
             }
-            while(true){// start game flow
-                while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){// finchè non è il suo turno
+            while(true){
+                while(!(player.getNickname().equals(rc.getCurrentPlayer().getNickname()))){
                     if(socket.isClosed()){
                         throw new IOException();
                     }
                 }
-                out.writeObject(true);//è il tuo turno
+                out.writeObject(true);
                 sendData();
                 if(rc.isLastTurn()){
                     out.writeObject(true);
@@ -165,7 +165,7 @@ public class ServerHandlerSocket implements Runnable{
                     rc.setEnding();
                 }
                 sendData();
-                out.writeObject(false);//non è più il suo turno
+                out.writeObject(false);
                 out.reset();
                 rc.nextRound();
             }
@@ -204,7 +204,7 @@ public class ServerHandlerSocket implements Runnable{
         Boolean b;
         do {
             nickname = (String) in.readObject();
-            if(rooms.alreadyInGame(room.getName(),nickname)){// true trovato nome uguale
+            if(rooms.alreadyInGame(room.getName(),nickname)){
                 out.writeObject(true);
                 b=true;
             }
@@ -252,7 +252,6 @@ public class ServerHandlerSocket implements Runnable{
      */
     public void playerinit() throws IOException, ClassNotFoundException, InvalidPositionException {
         rc.setFirstPlayer();
-        //PlayerController pc = new PlayerController(player.getPlayerGround(),player.getHand());
         pc.populateHand(game,player);
         StarterCard st = pc.pickCard(game);
         out.writeObject(st);
@@ -274,7 +273,7 @@ public class ServerHandlerSocket implements Runnable{
      * @throws IOException if there has been problems regarding input or output.
      * @throws ClassNotFoundException if there has been problems regarding the cast of an Object.
      */
-    public void roomChoice() throws IOException, ClassNotFoundException { //controllo nome room
+    public void roomChoice() throws IOException, ClassNotFoundException {
         out.reset();
         out.writeObject(rooms.getRooms());
         boolean b;

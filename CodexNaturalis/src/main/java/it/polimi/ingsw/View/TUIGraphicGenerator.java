@@ -532,8 +532,9 @@ public class TUIGraphicGenerator {
         StringBuilder buttonBorder =  new StringBuilder();
 
         ArrayList<PlayableCard> cards1 = deck1.getCards();
-        cards1.get(2).flipCard();
-
+        if(!cards1.get(2).getFlip()) {
+            cards1.get(2).flipCard();
+        }
 
         int size = cards1.size() >=3 ? 2 : cards1.size();
 
@@ -545,7 +546,9 @@ public class TUIGraphicGenerator {
             buttonBorder.append(cornerColor(cards1.get(i).getShowedCorners()[1])).append(cardColor(cards1.get(i))).append("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄").append(ANSI_RESET).append(cornerColor(cards1.get(i).getShowedCorners()[3])).append("  ");
         }
         ArrayList<PlayableCard> cards2 = deck2.getCards();
-        cards2.get(2).flipCard();
+        if(!cards2.get(2).getFlip()) {
+            cards2.get(2).flipCard();
+        }
 
         topBorder.append(space);
         contentLine1.append(space);
