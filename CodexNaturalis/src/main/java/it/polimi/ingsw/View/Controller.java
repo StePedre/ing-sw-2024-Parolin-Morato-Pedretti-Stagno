@@ -1,6 +1,5 @@
 package it.polimi.ingsw.View;
 
-import it.polimi.ingsw.CS.Room;
 import it.polimi.ingsw.Model.*;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -15,6 +14,7 @@ import javafx.stage.Screen;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -71,9 +71,9 @@ public class Controller {
     @FXML
     private Button nickButton, requestButton;
     private final ArrayList<Position> availablePos = new ArrayList<>();
-    private final String emptyImagePath = String.valueOf(getClass().getResource("border_image.png"));
-    private final String imagesFrontPath = String.valueOf(getClass().getResource( "CODEX_cards_gold_front"))+"/";
-    private final String imagesBackPath = String.valueOf(getClass().getResource("CODEX_cards_gold_back"))+"/";
+    private final String emptyImagePath = Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/border_image.png")).getPath();
+    private final String imagesFrontPath = Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/CODEX_cards_gold_front")).getPath()+"/";
+    private final String imagesBackPath = Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/CODEX_cards_gold_back")).getPath()+"/";
     private PlayableCard currentHandLeft, currentHandCenter, currentHandRight;
     private String nick2, nick3, nick4;
     private PlayableCard cardPlayed;

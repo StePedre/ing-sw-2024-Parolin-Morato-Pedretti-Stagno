@@ -7,8 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -18,7 +17,33 @@ import java.util.Objects;
  * The json file contains all the cards from Codex Naturalis and all their features. Methods are documented below.
  */
 public class ParsingController {
-    private final String filePath = String.valueOf(getClass().getResource("/carte.json"));
+
+    private File filePath = null;
+
+    public ParsingController() {
+        if(Objects.requireNonNull(getClass().getResource("/it/polimi/ingsw/Resources/carte.json")).getProtocol().equals("jar")) {
+            try {
+                InputStream input = getClass().getResourceAsStream("/it/polimi/ingsw/Resources/carte.json");
+                filePath = File.createTempFile("tempFile", ".tmp");
+                OutputStream out = new FileOutputStream(filePath);
+                int read;
+                byte[] bytes = new byte[1024];
+
+                while ((read = input.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+                out.close();
+                filePath.deleteOnExit();
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        else{
+            filePath = new File("src/main/resources/it/polimi/ingsw/Resources/carte.json");
+        }
+    }
+
 
     /**
      * The method adds a requirement (of a specific Resource) to the map that stores all the requirements for a card.
